@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class UpdatingYamlConfig {
     public YamlConfiguration config;
-    private File configFile;
+    public File configFile;
     private final String name;
     private final boolean removeUnused;
 

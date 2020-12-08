@@ -61,6 +61,19 @@ spawn:
   middle-block: BEACON
   bottom-block: DIAMOND_BLOCK
 
+drops:
+  # EXAMPLE DROP - SET YOUR OWN!
+  '1':
+    ==: org.bukkit.inventory.ItemStack
+    v: 2584
+    type: NETHERITE_SWORD
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: ok
+      enchants:
+        ARROW_DAMAGE: 1
+
 sounds:
   # A sound is defined as follows:
   # broadcast - Should the whole server hear this or just the player?

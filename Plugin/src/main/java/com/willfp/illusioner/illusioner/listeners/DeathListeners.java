@@ -23,6 +23,10 @@ public class DeathListeners implements Listener {
             }
         });
 
+        IllusionerManager.OPTIONS.getDrops().forEach(drop -> {
+            event.getVictim().getLocation().getWorld().dropItemNaturally(event.getVictim().getLocation(), drop);
+        });
+
         event.getDeathEvent().setDroppedExp(IllusionerManager.OPTIONS.generateXp());
     }
 }

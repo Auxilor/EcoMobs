@@ -66,6 +66,10 @@ public class IllusionerOptions {
         gameplayOptions.reload();
 
         drops = new HashSet<>();
+        ConfigManager.getConfig().config.getConfigurationSection("drops").getKeys(false).forEach(key -> {
+            ItemStack itemStack = ConfigManager.getConfig().getItemStack("drops." + key);
+            drops.add(itemStack);
+        });
     }
 
     public BarColor getColor() {
