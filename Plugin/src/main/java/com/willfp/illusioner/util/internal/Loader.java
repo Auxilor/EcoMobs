@@ -131,7 +131,7 @@ public class Loader {
          */
 
         Logger.info("Hooking into bStats...");
-        new Metrics(IllusionerPlugin.getInstance(), 7666);
+        new Metrics(IllusionerPlugin.getInstance(), 9596);
         Logger.info("");
 
         /*
