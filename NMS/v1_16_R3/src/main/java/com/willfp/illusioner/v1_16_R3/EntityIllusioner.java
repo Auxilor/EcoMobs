@@ -15,8 +15,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class EntityIllusioner extends EntityIllagerIllusioner implements EntityIllusionerWrapper {
-    public EntityIllusioner(Location location, double maxHealth, double attackDamage) {
+    private final String displayName;
+
+    public EntityIllusioner(Location location, double maxHealth, double attackDamage, String name) {
         super(EntityTypes.ILLUSIONER, ((CraftWorld) location.getWorld()).getHandle());
+        this.displayName = name;
 
         this.setPosition(location.getX(), location.getY(), location.getZ());
 
@@ -43,7 +46,7 @@ public class EntityIllusioner extends EntityIllagerIllusioner implements EntityI
 
     @Override
     public void createBossbar(Plugin plugin, BarColor color, BarStyle style) {
-        String name = this.getName();
+        String name = this.getDisplayName().getText();
         BossBar bossBar = Bukkit.getServer().createBossBar(name, color, style, (BarFlag) null);
         Bukkit.getServer().getOnlinePlayers().forEach(bossBar::addPlayer);
         LivingEntity entity = (LivingEntity) this.getBukkitEntity();

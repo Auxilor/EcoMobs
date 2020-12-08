@@ -6,18 +6,7 @@ authors: [Auxilor]
 website: willfp.com
 load: STARTUP
 softdepend:
-  - WorldGuard
-  - GriefPrevention
-  - Towny
-  - FactionsUUID
-  - Lands
-  - Kingdoms
-  - NoCheatPlus
-  - AAC
-  - Matrix
-  - Spartan
   - PlaceholderAPI
-  - mcMMO
 
 commands:
   ilreload:

@@ -8,25 +8,9 @@ import com.willfp.illusioner.events.armorequip.ArmorListener;
 import com.willfp.illusioner.events.armorequip.DispenserArmorListener;
 import com.willfp.illusioner.events.entitydeathbyentity.EntityDeathByEntityListeners;
 import com.willfp.illusioner.events.naturalexpgainevent.NaturalExpGainListeners;
-import com.willfp.illusioner.illusioner.AttackListeners;
-import com.willfp.illusioner.illusioner.DeathListeners;
-import com.willfp.illusioner.illusioner.SpawnListeners;
-import com.willfp.illusioner.integrations.anticheat.AnticheatManager;
-import com.willfp.illusioner.integrations.anticheat.plugins.AnticheatAAC;
-import com.willfp.illusioner.integrations.anticheat.plugins.AnticheatMatrix;
-import com.willfp.illusioner.integrations.anticheat.plugins.AnticheatNCP;
-import com.willfp.illusioner.integrations.anticheat.plugins.AnticheatSpartan;
-import com.willfp.illusioner.integrations.antigrief.AntigriefManager;
-import com.willfp.illusioner.integrations.antigrief.plugins.AntigriefFactionsUUID;
-import com.willfp.illusioner.integrations.antigrief.plugins.AntigriefGriefPrevention;
-import com.willfp.illusioner.integrations.antigrief.plugins.AntigriefKingdoms;
-import com.willfp.illusioner.integrations.antigrief.plugins.AntigriefLands;
-import com.willfp.illusioner.integrations.antigrief.plugins.AntigriefTowny;
-import com.willfp.illusioner.integrations.antigrief.plugins.AntigriefWorldGuard;
-import com.willfp.illusioner.integrations.anvilgui.AnvilGUIManager;
-import com.willfp.illusioner.integrations.anvilgui.plugins.AnvilGUIImpl;
-import com.willfp.illusioner.integrations.mcmmo.McmmoManager;
-import com.willfp.illusioner.integrations.mcmmo.plugins.McmmoIntegrationImpl;
+import com.willfp.illusioner.illusioner.listeners.AttackListeners;
+import com.willfp.illusioner.illusioner.listeners.DeathListeners;
+import com.willfp.illusioner.illusioner.listeners.SpawnListeners;
 import com.willfp.illusioner.integrations.placeholder.PlaceholderManager;
 import com.willfp.illusioner.integrations.placeholder.plugins.PlaceholderIntegrationPAPI;
 import com.willfp.illusioner.nms.BlockBreak;
@@ -142,23 +126,8 @@ public class Loader {
         Logger.info("Loading Integrations...");
 
         final HashMap<String, Callable> integrations = new HashMap<String, Callable>() {{
-            // AntiGrief
-            put("WorldGuard", () -> AntigriefManager.register(new AntigriefWorldGuard()));
-            put("GriefPrevention", () -> AntigriefManager.register(new AntigriefGriefPrevention()));
-            put("FactionsUUID", () -> AntigriefManager.register(new AntigriefFactionsUUID()));
-            put("Towny", () -> AntigriefManager.register(new AntigriefTowny()));
-            put("Lands", () -> AntigriefManager.register(new AntigriefLands()));
-            put("Kingdoms", () -> AntigriefManager.register(new AntigriefKingdoms()));
-
-            // AntiCheat
-            put("AAC", () -> AnticheatManager.register(new AnticheatAAC()));
-            put("Matrix", () -> AnticheatManager.register(new AnticheatMatrix()));
-            put("NoCheatPlus", () -> AnticheatManager.register(new AnticheatNCP()));
-            put("Spartan", () -> AnticheatManager.register(new AnticheatSpartan()));
-
             // MISC
             put("PlaceholderAPI", () -> PlaceholderManager.addIntegration(new PlaceholderIntegrationPAPI()));
-            put("mcMMO", () -> McmmoManager.registerIntegration(new McmmoIntegrationImpl()));
         }};
 
         Set<String> enabledPlugins = Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(Plugin::getName).collect(Collectors.toSet());
@@ -176,7 +145,6 @@ public class Loader {
         }));
 
         Prerequisite.update();
-        AnvilGUIManager.registerIntegration(new AnvilGUIImpl()); // No direct lib, can always register
         Logger.info("");
 
 

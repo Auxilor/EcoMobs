@@ -32,10 +32,11 @@ public class NMSIllusioner {
      * @param location     The location to spawn it at
      * @param maxHealth    The max health for the illusioner to have
      * @param attackDamage The attack damage for the illusioner
+     * @param name         The name of the illusioner
      * @return The illusioner
      */
-    public static EntityIllusionerWrapper spawn(Location location, double maxHealth, double attackDamage) {
+    public static EntityIllusionerWrapper spawn(Location location, double maxHealth, double attackDamage, String name) {
         assert illusionerWrapper != null;
-        return illusionerWrapper.spawn(location, maxHealth, attackDamage);
+        return illusionerWrapper.spawn(location, maxHealth, attackDamage, name);
     }
 }
