@@ -2,6 +2,7 @@ package com.willfp.illusioner.illusioner.listeners;
 
 import com.willfp.illusioner.illusioner.IllusionerManager;
 import com.willfp.illusioner.util.NumberUtils;
+import com.willfp.illusioner.util.internal.OptionedSound;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -28,6 +29,13 @@ public class AttackListeners implements Listener {
             return;
 
         Player player = (Player) event.getEntity();
+
+        OptionedSound hitSound = IllusionerManager.OPTIONS.getGameplayOptions().getHitSound();
+        if(hitSound.isBroadcast()) {
+            player.getWorld().playSound(event.getEntity().getLocation(), hitSound.getSound(), hitSound.getVolume(), hitSound.getPitch());
+        } else {
+            player.playSound(event.getEntity().getLocation(), hitSound.getSound(), hitSound.getVolume(), hitSound.getPitch());
+        }
 
         IllusionerManager.OPTIONS.getGameplayOptions().getEffectOptions().forEach(effectOption -> {
             if(NumberUtils.randFloat(0, 100) > effectOption.getChance())
@@ -61,6 +69,13 @@ public class AttackListeners implements Listener {
                 loc.add(0, 1, 0);
             }
             player.getWorld().spawnEntity(loc, summonerOption.getType());
+
+            OptionedSound summonSound = IllusionerManager.OPTIONS.getGameplayOptions().getSummonSound();
+            if(summonSound.isBroadcast()) {
+                player.getWorld().playSound(event.getEntity().getLocation(), summonSound.getSound(), summonSound.getVolume(), summonSound.getPitch());
+            } else {
+                player.playSound(event.getEntity().getLocation(), summonSound.getSound(), summonSound.getVolume(), summonSound.getPitch());
+            }
         });
     }
 
