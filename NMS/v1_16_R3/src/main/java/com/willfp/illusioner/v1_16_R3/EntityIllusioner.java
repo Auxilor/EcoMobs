@@ -46,8 +46,7 @@ public class EntityIllusioner extends EntityIllagerIllusioner implements EntityI
 
     @Override
     public void createBossbar(Plugin plugin, BarColor color, BarStyle style) {
-        String name = this.getDisplayName().getText();
-        BossBar bossBar = Bukkit.getServer().createBossBar(name, color, style, (BarFlag) null);
+        BossBar bossBar = Bukkit.getServer().createBossBar(this.displayName, color, style, (BarFlag) null);
         Bukkit.getServer().getOnlinePlayers().forEach(bossBar::addPlayer);
         LivingEntity entity = (LivingEntity) this.getBukkitEntity();
 

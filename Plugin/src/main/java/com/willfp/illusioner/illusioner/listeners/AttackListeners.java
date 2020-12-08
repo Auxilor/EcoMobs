@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -25,10 +26,20 @@ public class AttackListeners implements Listener {
         if(!event.getDamager().getType().equals(EntityType.ILLUSIONER))
             return;
 
-        if(!(event.getEntity() instanceof Player))
+        Player temp = null;
+
+        if(event.getEntity() instanceof Player) {
+            temp = (Player) event.getEntity();
+        } else if(event.getEntity() instanceof Projectile) {
+            if(((Projectile) event.getEntity()).getShooter() instanceof Player) {
+                temp = (Player) ((Projectile) event.getEntity()).getShooter();
+            }
+        }
+
+        if(temp == null)
             return;
 
-        Player player = (Player) event.getEntity();
+        Player player = temp;
 
         OptionedSound hitSound = IllusionerManager.OPTIONS.getGameplayOptions().getHitSound();
         if(hitSound.isBroadcast()) {

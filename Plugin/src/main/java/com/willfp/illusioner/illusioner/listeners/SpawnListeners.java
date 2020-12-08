@@ -20,9 +20,24 @@ public class SpawnListeners implements Listener {
         boolean matches = false;
         Set<Block> match = new HashSet<>();
         for(int i = 0; i < 3; i++) {
-            Block block1 = event.getBlock().getRelative(0, i, 0);
-            Block block2 = event.getBlock().getRelative(0, -1 + i, 0);
-            Block block3 = event.getBlock().getRelative(0, -2 + i, 0);
+            Block block1;
+            Block block2;
+            Block block3;
+
+            if(i == 0) {
+                block3 = event.getBlock();
+                block2 = event.getBlock().getRelative(0, -1, 0);
+                block1 = event.getBlock().getRelative(0, -2, 0);
+            } else if(i == 1) {
+                block1 = event.getBlock();
+                block2 = event.getBlock().getRelative(0, 1, 0);
+                block3 = event.getBlock().getRelative(0, 2, 0);
+            } else {
+                block2 = event.getBlock();
+                block1 = event.getBlock().getRelative(0, -1, 0);
+                block3 = event.getBlock().getRelative(0, 1, 0);
+            }
+
             matches = BlockStructure.matches(new BlockStructure(block1.getType(), block2.getType(), block3.getType()));
             if(matches) {
                 match.add(block1);

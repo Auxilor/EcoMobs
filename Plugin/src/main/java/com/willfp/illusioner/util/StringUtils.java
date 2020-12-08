@@ -1,6 +1,5 @@
 package com.willfp.illusioner.util;
 
-import com.willfp.illusioner.integrations.placeholder.PlaceholderManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +20,6 @@ public class StringUtils {
      * @return The message, translated
      */
     public static String translate(String message, @Nullable Player player) {
-        message = PlaceholderManager.translatePlaceholders(message, player);
         message = translateHexColorCodes(message);
         message = ChatColor.translateAlternateColorCodes('&', message);
         return ChatColor.translateAlternateColorCodes('&', translateHexColorCodes(message));
@@ -35,7 +33,6 @@ public class StringUtils {
      * @see StringUtils#translate(String, Player)
      */
     public static String translate(String message) {
-        message = PlaceholderManager.translatePlaceholders(message, null);
         message = translateHexColorCodes(message);
         message = ChatColor.translateAlternateColorCodes('&', message);
         return ChatColor.translateAlternateColorCodes('&', translateHexColorCodes(message));

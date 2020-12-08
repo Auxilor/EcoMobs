@@ -8,29 +8,20 @@ import com.willfp.illusioner.events.armorequip.ArmorListener;
 import com.willfp.illusioner.events.armorequip.DispenserArmorListener;
 import com.willfp.illusioner.events.entitydeathbyentity.EntityDeathByEntityListeners;
 import com.willfp.illusioner.events.naturalexpgainevent.NaturalExpGainListeners;
+import com.willfp.illusioner.illusioner.IllusionerManager;
 import com.willfp.illusioner.illusioner.listeners.AttackListeners;
 import com.willfp.illusioner.illusioner.listeners.DeathListeners;
 import com.willfp.illusioner.illusioner.listeners.SpawnListeners;
-import com.willfp.illusioner.integrations.placeholder.PlaceholderManager;
-import com.willfp.illusioner.integrations.placeholder.plugins.PlaceholderIntegrationPAPI;
 import com.willfp.illusioner.nms.BlockBreak;
 import com.willfp.illusioner.nms.Cooldown;
 import com.willfp.illusioner.nms.NMSIllusioner;
 import com.willfp.illusioner.nms.OpenInventory;
 import com.willfp.illusioner.nms.TridentStack;
-import com.willfp.illusioner.util.interfaces.Callable;
 import com.willfp.illusioner.util.internal.updater.PlayerJoinListener;
 import com.willfp.illusioner.util.internal.updater.UpdateChecker;
-import com.willfp.illusioner.util.optional.Prerequisite;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Class containing methods for the loading and unloading of Illusioner
@@ -120,33 +111,11 @@ public class Loader {
         Logger.info("");
 
         /*
-        Load integrations
+        Register options
          */
-
-        Logger.info("Loading Integrations...");
-
-        final HashMap<String, Callable> integrations = new HashMap<String, Callable>() {{
-            // MISC
-            put("PlaceholderAPI", () -> PlaceholderManager.addIntegration(new PlaceholderIntegrationPAPI()));
-        }};
-
-        Set<String> enabledPlugins = Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(Plugin::getName).collect(Collectors.toSet());
-
-        integrations.forEach(((s, callable) -> {
-            StringBuilder log = new StringBuilder();
-            log.append(s).append(": ");
-            if (enabledPlugins.contains(s)) {
-                callable.call();
-                log.append("&aENABLED");
-            } else {
-                log.append("&9DISABLED");
-            }
-            Logger.info(log.toString());
-        }));
-
-        Prerequisite.update();
+        Logger.info("Loading options...");
+        IllusionerManager.OPTIONS.reload();
         Logger.info("");
-
 
         /*
         Load Commands
@@ -201,23 +170,6 @@ public class Loader {
             Logger.info("----------------------------");
         });
 
-        /*
-        Check for paper
-         */
-
-        if (!Prerequisite.HasPaper.isMet()) {
-            Logger.error("");
-            Logger.error("----------------------------");
-            Logger.error("");
-            Logger.error("You don't seem to be running paper!");
-            Logger.error("Paper is strongly recommended for all servers,");
-            Logger.error("and some features may not function properly without it");
-            Logger.error("Download Paper from &fhttps://papermc.io");
-            Logger.error("");
-            Logger.error("----------------------------");
-            Logger.error("");
-        }
-
         Logger.info("");
     }
 
@@ -234,5 +186,6 @@ public class Loader {
      */
     public static void reload() {
         ConfigManager.updateConfigs();
+        IllusionerManager.OPTIONS.reload();
     }
 }
