@@ -1,0 +1,38 @@
+package com.willfp.illusioner.nms;
+
+import com.willfp.illusioner.IllusionerPlugin;
+import com.willfp.illusioner.nms.api.CooldownWrapper;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
+
+/**
+ * Utility class to get the attack cooldown of a player
+ */
+public class Cooldown {
+    private static CooldownWrapper cooldown;
+
+    @ApiStatus.Internal
+    public static boolean init() {
+        try {
+            final Class<?> class2 = Class.forName("com.willfp.illusioner." + IllusionerPlugin.NMS_VERSION + ".Cooldown");
+            if (CooldownWrapper.class.isAssignableFrom(class2)) {
+                cooldown = (CooldownWrapper) class2.getConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            cooldown = null;
+        }
+        return cooldown != null;
+    }
+
+    /**
+     * Get a player's attack cooldown
+     *
+     * @param player The player to check
+     * @return A value between 0 and 1, with 1 representing max strength
+     */
+    public static double getCooldown(Player player) {
+        assert cooldown != null;
+        return cooldown.getAttackCooldown(player);
+    }
+}

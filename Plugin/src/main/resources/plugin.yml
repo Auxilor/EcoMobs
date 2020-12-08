@@ -1,0 +1,47 @@
+name: Illusioner
+version: ${projectVersion}
+main: com.willfp.illusioner.IllusionerPlugin
+api-version: 1.15
+authors: [Auxilor]
+website: willfp.com
+load: STARTUP
+softdepend:
+  - WorldGuard
+  - GriefPrevention
+  - Towny
+  - FactionsUUID
+  - Lands
+  - Kingdoms
+  - NoCheatPlus
+  - AAC
+  - Matrix
+  - Spartan
+  - PlaceholderAPI
+  - mcMMO
+
+commands:
+  ilreload:
+    description: Reloads config
+    permission: illusioner.reload
+  ildebug:
+    description: Debug information
+    permission: illusioner.debug
+
+permissions:
+  illusioner.*:
+    description: All illusioner permissions
+    default: op
+    children:
+      illusioner.reload: true
+      illusioner.updateannounce: true
+      illusioner.ecodebug: true
+
+  illusioner.updateannounce:
+    description: Informs admins of a new update
+    default: op
+  illusioner.reload:
+    description: Allows reloading the config
+    default: op
+  illusioner.ecodebug:
+    description: Allows the use of /ildebug to print verbose debug information to console
+    default: op

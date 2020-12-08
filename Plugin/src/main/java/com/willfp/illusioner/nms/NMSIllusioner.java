@@ -1,0 +1,41 @@
+package com.willfp.illusioner.nms;
+
+import com.willfp.illusioner.IllusionerPlugin;
+import com.willfp.illusioner.nms.api.EntityIllusionerWrapper;
+import com.willfp.illusioner.nms.api.IllusionerWrapper;
+import org.bukkit.Location;
+import org.jetbrains.annotations.ApiStatus;
+
+/**
+ * Utility class to manage NMS illusioner
+ */
+public class NMSIllusioner {
+    private static IllusionerWrapper illusionerWrapper;
+
+    @ApiStatus.Internal
+    public static boolean init() {
+        try {
+            final Class<?> class2 = Class.forName("com.willfp.illusioner." + IllusionerPlugin.NMS_VERSION + ".Illusioner");
+            if (IllusionerWrapper.class.isAssignableFrom(class2)) {
+                illusionerWrapper = (IllusionerWrapper) class2.getConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            illusionerWrapper = null;
+        }
+        return illusionerWrapper != null;
+    }
+
+    /**
+     * Spawn a new Illusioner Boss
+     *
+     * @param location     The location to spawn it at
+     * @param maxHealth    The max health for the illusioner to have
+     * @param attackDamage The attack damage for the illusioner
+     * @return The illusioner
+     */
+    public static EntityIllusionerWrapper spawn(Location location, double maxHealth, double attackDamage) {
+        assert illusionerWrapper != null;
+        return illusionerWrapper.spawn(location, maxHealth, attackDamage);
+    }
+}
