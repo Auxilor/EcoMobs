@@ -147,7 +147,7 @@ public class Loader {
      * Called after server is loaded
      */
     public static void postLoad() {
-        new UpdateChecker(IllusionerPlugin.getInstance(), 79573).getVersion((version) -> {
+        new UpdateChecker(IllusionerPlugin.getInstance(), 86576).getVersion((version) -> {
             DefaultArtifactVersion currentVersion = new DefaultArtifactVersion(IllusionerPlugin.getInstance().getDescription().getVersion());
             DefaultArtifactVersion mostRecentVersion = new DefaultArtifactVersion(version);
             Logger.info("----------------------------");
