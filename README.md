@@ -11,10 +11,10 @@
         <img alt="spigot" src="https://img.shields.io/badge/spigot-illusioner-brightgreen?style=for-the-badge"/>
     </a>
     <a href="https://bstats.org/plugin/bukkit/Illusioner" alt="bstats servers">
-        <img src="https://img.shields.io/bstats/servers/7666?color=brightgreen&style=for-the-badge"/>
+        <img src="https://img.shields.io/bstats/servers/9596?color=brightgreen&style=for-the-badge"/>
     </a>
     <a href="https://bstats.org/plugin/bukkit/Illusioner" alt="bstats players">
-        <img src="https://img.shields.io/bstats/players/7666?color=brightgreen&style=for-the-badge"/>
+        <img src="https://img.shields.io/bstats/players/9596?color=brightgreen&style=for-the-badge"/>
     </a>
     <a href="https://illusioner.willfp.com/" alt="Docs (gitbook)">
         <img src="https://img.shields.io/badge/docs-gitbook-brightgreen?style=for-the-badge&logo=appveyor"/>
