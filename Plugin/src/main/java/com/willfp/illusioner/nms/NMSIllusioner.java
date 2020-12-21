@@ -4,6 +4,7 @@ import com.willfp.illusioner.IllusionerPlugin;
 import com.willfp.illusioner.nms.api.EntityIllusionerWrapper;
 import com.willfp.illusioner.nms.api.IllusionerWrapper;
 import org.bukkit.Location;
+import org.bukkit.entity.Illusioner;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -38,5 +39,19 @@ public class NMSIllusioner {
     public static EntityIllusionerWrapper spawn(Location location, double maxHealth, double attackDamage, String name) {
         assert illusionerWrapper != null;
         return illusionerWrapper.spawn(location, maxHealth, attackDamage, name);
+    }
+
+    /**
+     * Adapt an existing Illusioner into an Illusioner boss
+     *
+     * @param illusioner   The Illusioner to adapt
+     * @param maxHealth    The max health for the illusioner to have
+     * @param attackDamage The attack damage for the illusioner
+     * @param name         The name of the Illusioner
+     * @return The illusioner
+     */
+    public static EntityIllusionerWrapper convertIllusioner(Illusioner illusioner, double maxHealth, double attackDamage, String name) {
+        assert illusionerWrapper != null;
+        return illusionerWrapper.adapt(illusioner, illusioner.getLocation(), maxHealth, attackDamage, name);
     }
 }

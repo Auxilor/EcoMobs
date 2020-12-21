@@ -7,9 +7,11 @@ import com.willfp.illusioner.nms.NMSIllusioner;
 import com.willfp.illusioner.nms.api.EntityIllusionerWrapper;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Illusioner;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -61,5 +63,16 @@ public class SpawnListeners implements Listener {
 
         EntityIllusionerWrapper illusioner = NMSIllusioner.spawn(event.getBlock().getLocation(), IllusionerManager.OPTIONS.getMaxHealth(), IllusionerManager.OPTIONS.getAttackDamage(), IllusionerManager.OPTIONS.getName());
         illusioner.createBossbar(IllusionerPlugin.getInstance(), IllusionerManager.OPTIONS.getColor(), IllusionerManager.OPTIONS.getStyle());
+    }
+
+    @EventHandler
+    public void onExternalSpawn(EntitySpawnEvent event) {
+        if(!(event.getEntity() instanceof Illusioner))
+            return;
+
+        Illusioner illusioner = (Illusioner) event.getEntity();
+        EntityIllusionerWrapper internalIllusioner = NMSIllusioner.convertIllusioner(illusioner, IllusionerManager.OPTIONS.getMaxHealth(), IllusionerManager.OPTIONS.getAttackDamage(), IllusionerManager.OPTIONS.getName());
+        if(internalIllusioner == null) return;
+        internalIllusioner.createBossbar(IllusionerPlugin.getInstance(), IllusionerManager.OPTIONS.getColor(), IllusionerManager.OPTIONS.getStyle());
     }
 }
