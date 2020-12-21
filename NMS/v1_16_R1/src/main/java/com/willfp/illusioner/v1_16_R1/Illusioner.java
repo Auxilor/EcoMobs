@@ -16,9 +16,10 @@ public class Illusioner implements IllusionerWrapper {
 
     @Override
     public EntityIllusionerWrapper adapt(org.bukkit.entity.Illusioner illusioner, Location location, double maxHealth, double attackDamage, String name) {
-        EntityIllusioner internalIllusioner = new EntityIllusioner(location, maxHealth, attackDamage, name);
-        if(!(illusioner instanceof CraftIllusioner)) return null;
-        ((CraftIllusioner) illusioner).setHandle(internalIllusioner);
-        return internalIllusioner;
+        if(illusioner instanceof CraftIllusioner) {
+            if(((CraftIllusioner) illusioner).getHandle() instanceof EntityIllusionerWrapper) return null;
+        } else return null;
+        illusioner.remove();
+        return spawn(location, maxHealth, attackDamage, name);
     }
 }
