@@ -13,6 +13,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("unchecked")
 public class EntityIllusioner extends EntityIllagerIllusioner implements EntityIllusionerWrapper {
     private final String displayName;
 
