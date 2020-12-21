@@ -1,7 +1,5 @@
 package com.willfp.illusioner.util.internal;
 
-import com.willfp.ecoenchants.util.interfaces.Callable;
-import com.willfp.ecoenchants.util.optional.Prerequisite;
 import com.willfp.illusioner.IllusionerPlugin;
 import com.willfp.illusioner.command.commands.CommandIldebug;
 import com.willfp.illusioner.command.commands.CommandIlreload;
@@ -21,6 +19,7 @@ import com.willfp.illusioner.nms.Cooldown;
 import com.willfp.illusioner.nms.NMSIllusioner;
 import com.willfp.illusioner.nms.OpenInventory;
 import com.willfp.illusioner.nms.TridentStack;
+import com.willfp.illusioner.util.interfaces.Callable;
 import com.willfp.illusioner.util.internal.updater.PlayerJoinListener;
 import com.willfp.illusioner.util.internal.updater.UpdateChecker;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
@@ -128,7 +127,6 @@ public class Loader {
             Logger.info(log.toString());
         }));
 
-        Prerequisite.update();
         Logger.info("");
 
         /*
