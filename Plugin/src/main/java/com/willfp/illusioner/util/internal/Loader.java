@@ -4,21 +4,13 @@ import com.willfp.illusioner.IllusionerPlugin;
 import com.willfp.illusioner.command.commands.CommandIldebug;
 import com.willfp.illusioner.command.commands.CommandIlreload;
 import com.willfp.illusioner.config.ConfigManager;
-import com.willfp.illusioner.events.armorequip.ArmorListener;
-import com.willfp.illusioner.events.armorequip.DispenserArmorListener;
-import com.willfp.illusioner.events.entitydeathbyentity.EntityDeathByEntityListeners;
-import com.willfp.illusioner.events.naturalexpgainevent.NaturalExpGainListeners;
 import com.willfp.illusioner.illusioner.IllusionerManager;
 import com.willfp.illusioner.illusioner.listeners.AttackListeners;
 import com.willfp.illusioner.illusioner.listeners.DeathListeners;
 import com.willfp.illusioner.illusioner.listeners.SpawnListeners;
 import com.willfp.illusioner.integrations.ecoenchants.EcoEnchantsManager;
 import com.willfp.illusioner.integrations.ecoenchants.plugins.EcoEnchantsIntegrationImpl;
-import com.willfp.illusioner.nms.BlockBreak;
-import com.willfp.illusioner.nms.Cooldown;
 import com.willfp.illusioner.nms.NMSIllusioner;
-import com.willfp.illusioner.nms.OpenInventory;
-import com.willfp.illusioner.nms.TridentStack;
 import com.willfp.illusioner.util.interfaces.Callable;
 import com.willfp.illusioner.util.internal.updater.PlayerJoinListener;
 import com.willfp.illusioner.util.internal.updater.UpdateChecker;
@@ -62,38 +54,6 @@ public class Loader {
 
         Logger.info("Loading NMS APIs...");
 
-        if (Cooldown.init()) {
-            Logger.info("Cooldown: &aSUCCESS");
-        } else {
-            Logger.info("Cooldown: &cFAILURE");
-            Logger.error("&cAborting...");
-            Bukkit.getPluginManager().disablePlugin(IllusionerPlugin.getInstance());
-        }
-
-        if (TridentStack.init()) {
-            Logger.info("Trident API: &aSUCCESS");
-        } else {
-            Logger.info("Trident API: &cFAILURE");
-            Logger.error("&cAborting...");
-            Bukkit.getPluginManager().disablePlugin(IllusionerPlugin.getInstance());
-        }
-
-        if (BlockBreak.init()) {
-            Logger.info("Block Break: &aSUCCESS");
-        } else {
-            Logger.info("Block Break: &cFAILURE");
-            Logger.error("&cAborting...");
-            Bukkit.getPluginManager().disablePlugin(IllusionerPlugin.getInstance());
-        }
-
-        if (OpenInventory.init()) {
-            Logger.info("Open Inventory: &aSUCCESS");
-        } else {
-            Logger.info("Open Inventory: &cFAILURE");
-            Logger.error("&cAborting...");
-            Bukkit.getPluginManager().disablePlugin(IllusionerPlugin.getInstance());
-        }
-
         if (NMSIllusioner.init()) {
             Logger.info("NMS Illusioner: &aSUCCESS");
         } else {
@@ -134,11 +94,7 @@ public class Loader {
          */
 
         Logger.info("Registering Events...");
-        Bukkit.getPluginManager().registerEvents(new ArmorListener(), IllusionerPlugin.getInstance());
-        Bukkit.getPluginManager().registerEvents(new DispenserArmorListener(), IllusionerPlugin.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), IllusionerPlugin.getInstance());
-        Bukkit.getPluginManager().registerEvents(new EntityDeathByEntityListeners(), IllusionerPlugin.getInstance());
-        Bukkit.getPluginManager().registerEvents(new NaturalExpGainListeners(), IllusionerPlugin.getInstance());
         Bukkit.getPluginManager().registerEvents(new AttackListeners(), IllusionerPlugin.getInstance());
         Bukkit.getPluginManager().registerEvents(new DeathListeners(), IllusionerPlugin.getInstance());
         Bukkit.getPluginManager().registerEvents(new SpawnListeners(), IllusionerPlugin.getInstance());
