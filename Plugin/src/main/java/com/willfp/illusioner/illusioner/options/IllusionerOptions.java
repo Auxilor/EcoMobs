@@ -26,6 +26,7 @@ public class IllusionerOptions {
     private double attackDamage;
     private Set<ItemStack> drops;
     private final GameplayOptions gameplayOptions = new GameplayOptions();
+    private boolean override;
 
     public IllusionerOptions() {
         reload();
@@ -38,6 +39,7 @@ public class IllusionerOptions {
         xpBounds = new Pair<>(ConfigManager.getConfig().getInt("xp.minimum"), ConfigManager.getConfig().getInt("xp.maximum"));
         maxHealth = ConfigManager.getConfig().getDouble("max-health");
         attackDamage = ConfigManager.getConfig().getDouble("attack-damage");
+        override = ConfigManager.getConfig().getBool("override");
 
         spawnSounds = new HashSet<>();
         ConfigManager.getConfig().config.getConfigurationSection("sounds.spawn").getKeys(false).forEach(key -> {
@@ -114,5 +116,9 @@ public class IllusionerOptions {
 
     public GameplayOptions getGameplayOptions() {
         return gameplayOptions;
+    }
+
+    public boolean isOverride() {
+        return override;
     }
 }

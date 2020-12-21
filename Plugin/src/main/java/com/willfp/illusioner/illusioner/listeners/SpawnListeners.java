@@ -70,6 +70,9 @@ public class SpawnListeners implements Listener {
         if(!(event.getEntity() instanceof Illusioner))
             return;
 
+        if(!IllusionerManager.OPTIONS.isOverride())
+            return;
+
         Illusioner illusioner = (Illusioner) event.getEntity();
         EntityIllusionerWrapper internalIllusioner = NMSIllusioner.convertIllusioner(illusioner, IllusionerManager.OPTIONS.getMaxHealth(), IllusionerManager.OPTIONS.getAttackDamage(), IllusionerManager.OPTIONS.getName());
         if(internalIllusioner == null) return;

@@ -5,6 +5,8 @@
 
 name: "Illusioner" # What should the display name of the Illusioner be?
 
+override: false # Should the illusioner override all "vanilla" illusioners (adds support for /spawn but may cause issues with other custom mob plugins)
+
 bossbar:
   color: BLUE # Choose from: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
   style: SOLID # Choose from: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
