@@ -2,6 +2,7 @@ package com.willfp.illusioner.illusioner.listeners;
 
 import com.willfp.illusioner.events.entitydeathbyentity.EntityDeathByEntityEvent;
 import com.willfp.illusioner.illusioner.IllusionerManager;
+import com.willfp.illusioner.integrations.ecoenchants.EcoEnchantsManager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,12 @@ public class DeathListeners implements Listener {
         });
 
         IllusionerManager.OPTIONS.getDrops().forEach(drop -> {
+            if(event.getKiller() instanceof Player) {
+                if (EcoEnchantsManager.isRegistered()) {
+                    EcoEnchantsManager.dropQueueItems((Player) event.getKiller(), event.getVictim().getLocation(), drop);
+                    return;
+                }
+            }
             event.getVictim().getLocation().getWorld().dropItemNaturally(event.getVictim().getLocation(), drop);
         });
 

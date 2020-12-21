@@ -1,5 +1,7 @@
 package com.willfp.illusioner.util.internal;
 
+import com.willfp.ecoenchants.util.interfaces.Callable;
+import com.willfp.ecoenchants.util.optional.Prerequisite;
 import com.willfp.illusioner.IllusionerPlugin;
 import com.willfp.illusioner.command.commands.CommandIldebug;
 import com.willfp.illusioner.command.commands.CommandIlreload;
@@ -12,6 +14,8 @@ import com.willfp.illusioner.illusioner.IllusionerManager;
 import com.willfp.illusioner.illusioner.listeners.AttackListeners;
 import com.willfp.illusioner.illusioner.listeners.DeathListeners;
 import com.willfp.illusioner.illusioner.listeners.SpawnListeners;
+import com.willfp.illusioner.integrations.ecoenchants.EcoEnchantsManager;
+import com.willfp.illusioner.integrations.ecoenchants.plugins.EcoEnchantsIntegrationImpl;
 import com.willfp.illusioner.nms.BlockBreak;
 import com.willfp.illusioner.nms.Cooldown;
 import com.willfp.illusioner.nms.NMSIllusioner;
@@ -22,6 +26,12 @@ import com.willfp.illusioner.util.internal.updater.UpdateChecker;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Class containing methods for the loading and unloading of Illusioner
@@ -93,6 +103,32 @@ public class Loader {
             Bukkit.getPluginManager().disablePlugin(IllusionerPlugin.getInstance());
         }
 
+        Logger.info("");
+
+        /*
+        Register Integrations
+         */
+        Logger.info("Loading Integrations...");
+
+        final HashMap<String, Callable> integrations = new HashMap<String, Callable>() {{
+            put("EcoEnchants", () -> EcoEnchantsManager.register(new EcoEnchantsIntegrationImpl()));
+        }};
+
+        Set<String> enabledPlugins = Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(Plugin::getName).collect(Collectors.toSet());
+
+        integrations.forEach(((s, callable) -> {
+            StringBuilder log = new StringBuilder();
+            log.append(s).append(": ");
+            if (enabledPlugins.contains(s)) {
+                callable.call();
+                log.append("&aENABLED");
+            } else {
+                log.append("&9DISABLED");
+            }
+            Logger.info(log.toString());
+        }));
+
+        Prerequisite.update();
         Logger.info("");
 
         /*
