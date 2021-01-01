@@ -1,0 +1,22 @@
+# EXAMPLE DROP - SET YOUR OWN!
+'1':
+  ==: org.bukkit.inventory.ItemStack
+  v: 2584
+  type: NETHERITE_SWORD
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: ok
+    enchants:
+      ARROW_DAMAGE: 1
+# Example second drop
+'2':
+  ==: org.bukkit.inventory.ItemStack
+  v: 2584
+  type: DIAMOND_SWORD
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: ok
+    enchants:
+      ARROW_DAMAGE: 1

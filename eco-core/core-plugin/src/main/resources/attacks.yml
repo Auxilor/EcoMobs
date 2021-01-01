@@ -1,0 +1,34 @@
+# All chances are percentages and can include decimals
+
+shuffle: # Shuffles the items around in your hotbar
+  enabled: true
+  chance: 5
+
+effects:
+  # Types can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
+  # Duration is in ticks, there are 20 ticks in a second
+  1:
+    type: BLINDNESS
+    level: 1
+    duration: 40
+    chance: 20
+  2:
+    type: CONFUSION
+    level: 10
+    duration: 200
+    chance: 10
+  3:
+    type: SLOW
+    level: 3
+    duration: 60
+    chance: 10
+
+summons:
+  # Entity Types can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+  # Entities are summoned close to the player
+  1:
+    type: VINDICATOR
+    chance: 10
+  2:
+    type: EVOKER
+    chance: 10

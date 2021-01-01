@@ -1,0 +1,47 @@
+# A sound is defined as follows:
+# broadcast - Should the whole server hear this or just the player?
+# volume - How far away should people be able to hear this?
+# pitch - Range is 0.5 to 2, 0.5 is lower pitch and half speed, 2 is higher pitch and double speed
+# Add as many sounds as you want
+
+hit:
+  # When the player attacks the illusioner
+  broadcast: false
+  sound: ENTITY_ILLUSIONER_CAST_SPELL
+  volume: 1
+  pitch: 2
+
+summon:
+  # When an entity is summoned by the illusioner
+  broadcast: false
+  sound: ENTITY_EVOKER_PREPARE_ATTACK
+  volume: 1
+  pitch: 2
+
+spawn:
+  1:
+    broadcast: true
+    sound: ENTITY_ILLUSIONER_MIRROR_MOVE
+    volume: 1000
+    pitch: 0.5
+  2:
+    broadcast: true
+    sound: ENTITY_WITHER_SPAWN
+    volume: 1000
+    pitch: 2
+death:
+  1:
+    broadcast: true
+    sound: ENTITY_EVOKER_PREPARE_WOLOLO
+    volume: 50
+    pitch: 0.8
+  2:
+    broadcast: true
+    sound: ENTITY_ILLUSIONER_PREPARE_BLINDNESS
+    volume: 50
+    pitch: 1
+  3:
+    broadcast: true
+    sound: ENTITY_WITHER_DEATH
+    volume: 50
+    pitch: 2
