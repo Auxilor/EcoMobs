@@ -4,6 +4,7 @@ import com.willfp.eco.util.config.Configs;
 import com.willfp.illusioner.config.IllusionerConfigs;
 import com.willfp.illusioner.illusioner.OptionedSound;
 import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+@ToString
 public class GameplayOptions {
     /**
      * The sound played when the illusioner takes damage.

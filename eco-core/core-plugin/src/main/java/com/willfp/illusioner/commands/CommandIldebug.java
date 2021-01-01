@@ -2,6 +2,7 @@ package com.willfp.illusioner.commands;
 
 import com.willfp.eco.util.command.AbstractCommand;
 import com.willfp.illusioner.IllusionerPlugin;
+import com.willfp.illusioner.illusioner.IllusionerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,6 +33,7 @@ public class CommandIldebug extends AbstractCommand {
             this.getPlugin().getLog().info("");
         }
 
+        this.getPlugin().getLog().info("Options: " + IllusionerManager.OPTIONS.toString());
 
         this.getPlugin().getLog().info("Running Version: " + IllusionerPlugin.getInstance().getDescription().getVersion());
         this.getPlugin().getLog().info("");

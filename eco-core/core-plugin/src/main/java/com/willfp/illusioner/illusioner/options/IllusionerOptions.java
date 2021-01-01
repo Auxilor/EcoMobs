@@ -7,6 +7,7 @@ import com.willfp.illusioner.config.IllusionerConfigs;
 import com.willfp.illusioner.illusioner.BlockStructure;
 import com.willfp.illusioner.illusioner.OptionedSound;
 import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashSet;
 import java.util.Set;
 
+@ToString
 public class IllusionerOptions {
     /**
      * The boss bar color.
