@@ -31,6 +31,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unchecked")
 public class EntityIllusioner extends EntityIllagerIllusioner implements EntityIllusionerProxy {
     /**
      * The display name for the illusioner.
