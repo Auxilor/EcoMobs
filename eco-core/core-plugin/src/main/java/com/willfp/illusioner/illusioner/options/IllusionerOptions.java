@@ -109,19 +109,19 @@ public class IllusionerOptions {
 
         spawnSounds = new HashSet<>();
         IllusionerConfigs.SOUNDS.getConfig().getConfigurationSection("spawn").getKeys(false).forEach(key -> {
-            Sound sound = Sound.valueOf(Configs.CONFIG.getString("spawn." + key + ".sound"));
-            boolean broadcast = Configs.CONFIG.getBool("spawn." + key + ".broadcast");
-            float volume = (float) Configs.CONFIG.getDouble("spawn." + key + ".volume");
-            float pitch = (float) Configs.CONFIG.getDouble("spawn." + key + ".pitch");
+            Sound sound = Sound.valueOf(IllusionerConfigs.SOUNDS.getString("spawn." + key + ".sound"));
+            boolean broadcast = IllusionerConfigs.SOUNDS.getBool("spawn." + key + ".broadcast");
+            float volume = (float) IllusionerConfigs.SOUNDS.getDouble("spawn." + key + ".volume");
+            float pitch = (float) IllusionerConfigs.SOUNDS.getDouble("spawn." + key + ".pitch");
             spawnSounds.add(new OptionedSound(sound, volume, pitch, broadcast));
         });
 
         deathSounds = new HashSet<>();
         IllusionerConfigs.SOUNDS.getConfig().getConfigurationSection("death").getKeys(false).forEach(key -> {
-            Sound sound = Sound.valueOf(Configs.CONFIG.getString("death." + key + ".sound"));
-            boolean broadcast = Configs.CONFIG.getBool("death." + key + ".broadcast");
-            float volume = (float) Configs.CONFIG.getDouble("death." + key + ".volume");
-            float pitch = (float) Configs.CONFIG.getDouble("death." + key + ".pitch");
+            Sound sound = Sound.valueOf(IllusionerConfigs.SOUNDS.getString("death." + key + ".sound"));
+            boolean broadcast = IllusionerConfigs.SOUNDS.getBool("death." + key + ".broadcast");
+            float volume = (float) IllusionerConfigs.SOUNDS.getDouble("death." + key + ".volume");
+            float pitch = (float) IllusionerConfigs.SOUNDS.getDouble("death." + key + ".pitch");
             deathSounds.add(new OptionedSound(sound, volume, pitch, broadcast));
         });
 
@@ -135,7 +135,7 @@ public class IllusionerOptions {
 
         drops = new HashSet<>();
         IllusionerConfigs.DROPS.getConfig().getKeys(false).forEach(key -> {
-            ItemStack itemStack = Configs.CONFIG.getConfig().getItemStack(key);
+            ItemStack itemStack = IllusionerConfigs.DROPS.getConfig().getItemStack(key);
             drops.add(itemStack);
         });
     }
