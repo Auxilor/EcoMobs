@@ -81,9 +81,9 @@ clean.doLast {
 }
 
 shadowJar {
-    relocate('org.apache.maven', 'com.willfp.ecoenchants.eco.shaded.maven')
-    relocate('org.bstats', 'com.willfp.ecoenchants.eco.shaded.bstats')
-    relocate('com.willfp.eco.', 'com.willfp.ecoenchants.eco.') // Dot is to prevent plugin being shaded into itself
+    relocate('org.apache.maven', 'com.willfp.illusioner.eco.shaded.maven')
+    relocate('org.bstats', 'com.willfp.illusioner.eco.shaded.bstats')
+    relocate('com.willfp.eco.', 'com.willfp.illusioner.eco.')
     archiveFileName = findProperty("plugin-name") + " v" + findProperty("version") + ".jar"
 }
 
