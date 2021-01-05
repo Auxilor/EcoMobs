@@ -23,7 +23,7 @@ public class IllusionerPlugin extends AbstractEcoPlugin {
      * Internal constructor called by bukkit on plugin load.
      */
     public IllusionerPlugin() {
-        super("Illusioner", 86576, 9596, "com.willfp.illusioner.proxy");
+        super("Illusioner", 86576, 9596, "com.willfp.illusioner.proxy", "&9");
     }
 
     /**
