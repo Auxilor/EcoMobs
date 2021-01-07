@@ -26,6 +26,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -89,8 +90,14 @@ public class EntityIllusioner extends EntityIllagerIllusioner implements EntityI
         }
         BossBar bossBar = Bukkit.getServer().createBossBar(this.displayName, color, style, (BarFlag) null);
         this.bossBar = bossBar;
-        Bukkit.getServer().getOnlinePlayers().forEach(bossBar::addPlayer);
+
         LivingEntity entity = (LivingEntity) this.getBukkitEntity();
+
+        entity.getNearbyEntities(50, 50, 50).forEach(entity1 -> {
+            if (entity1 instanceof Player) {
+                bossBar.addPlayer((Player) entity1);
+            }
+        });
 
         new BukkitRunnable() {
             @Override
