@@ -1,6 +1,7 @@
 package com.willfp.illusioner.illusioner.options;
 
-import com.willfp.eco.util.config.Configs;
+import com.willfp.eco.util.internal.PluginDependent;
+import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.illusioner.config.IllusionerConfigs;
 import com.willfp.illusioner.illusioner.OptionedSound;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ToString
-public class GameplayOptions {
+public class GameplayOptions extends PluginDependent {
     /**
      * The sound played when the illusioner takes damage.
      */
@@ -58,6 +59,14 @@ public class GameplayOptions {
     private boolean ignoreExplosionDamage;
 
     /**
+     * Gameplay options.
+     * @param plugin The plugin.
+     */
+    public GameplayOptions(@NotNull final AbstractEcoPlugin plugin) {
+        super(plugin);
+    }
+
+    /**
      * Reload the options.
      */
     public void reload() {
@@ -77,7 +86,7 @@ public class GameplayOptions {
 
         shuffle = IllusionerConfigs.ATTACKS.getBool("shuffle.enabled");
         shuffleChance = IllusionerConfigs.ATTACKS.getDouble("shuffle.chance");
-        ignoreExplosionDamage = Configs.CONFIG.getBool("ignore-explosion-damage");
+        ignoreExplosionDamage = this.getPlugin().getConfigYml().getBool("ignore-explosion-damage");
 
         effectOptions.clear();
         IllusionerConfigs.ATTACKS.getConfig().getConfigurationSection("effects").getKeys(false).forEach(key -> {

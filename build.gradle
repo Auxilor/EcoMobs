@@ -7,7 +7,6 @@ plugins {
 
 dependencies {
     implementation project(":eco-core").getSubprojects()
-    implementation 'com.willfp:eco:1.0.6'
 }
 
 allprojects {
@@ -48,6 +47,8 @@ allprojects {
     }
 
     dependencies {
+        compileOnly 'com.willfp:eco:3.0.0'
+
         compileOnly 'org.jetbrains:annotations:19.0.0'
 
         compileOnly 'org.projectlombok:lombok:1.18.16'
@@ -81,9 +82,6 @@ clean.doLast {
 }
 
 shadowJar {
-    relocate('org.apache.maven', 'com.willfp.illusioner.eco.shaded.maven')
-    relocate('org.bstats', 'com.willfp.illusioner.eco.shaded.bstats')
-    relocate('com.willfp.eco.', 'com.willfp.illusioner.eco.')
     archiveFileName = findProperty("plugin-name") + " v" + findProperty("version") + ".jar"
 }
 

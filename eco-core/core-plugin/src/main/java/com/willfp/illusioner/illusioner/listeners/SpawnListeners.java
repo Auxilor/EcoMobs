@@ -1,12 +1,11 @@
 package com.willfp.illusioner.illusioner.listeners;
-
-import com.willfp.eco.util.ProxyUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.illusioner.illusioner.BlockStructure;
 import com.willfp.illusioner.illusioner.IllusionerManager;
 import com.willfp.illusioner.proxy.proxies.EntityIllusionerProxy;
 import com.willfp.illusioner.proxy.proxies.IllusionerHelperProxy;
+import com.willfp.illusioner.util.ProxyUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Illusioner;

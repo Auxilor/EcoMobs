@@ -1,6 +1,7 @@
 package com.willfp.illusioner.commands;
 
 import com.willfp.eco.util.command.AbstractCommand;
+import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.illusioner.IllusionerPlugin;
 import com.willfp.illusioner.illusioner.IllusionerManager;
 import org.bukkit.Bukkit;

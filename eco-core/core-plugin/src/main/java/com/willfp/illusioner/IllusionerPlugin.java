@@ -11,6 +11,7 @@ import com.willfp.illusioner.illusioner.IllusionerManager;
 import com.willfp.illusioner.illusioner.listeners.AttackListeners;
 import com.willfp.illusioner.illusioner.listeners.DeathListeners;
 import com.willfp.illusioner.illusioner.listeners.SpawnListeners;
+import lombok.Getter;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
@@ -20,10 +21,17 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class IllusionerPlugin extends AbstractEcoPlugin {
     /**
+     * Instance of the plugin.
+     */
+    @Getter
+    private static IllusionerPlugin instance;
+
+    /**
      * Internal constructor called by bukkit on plugin load.
      */
     public IllusionerPlugin() {
         super("Illusioner", 86576, 9596, "com.willfp.illusioner.proxy", "&9");
+        instance = this;
     }
 
     /**

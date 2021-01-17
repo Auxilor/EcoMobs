@@ -1,7 +1,8 @@
 package com.willfp.illusioner.illusioner.options;
 
 import com.willfp.eco.util.NumberUtils;
-import com.willfp.eco.util.config.Configs;
+import com.willfp.eco.util.internal.PluginDependent;
+import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.tuplets.Pair;
 import com.willfp.illusioner.config.IllusionerConfigs;
 import com.willfp.illusioner.illusioner.BlockStructure;
@@ -13,12 +14,13 @@ import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @ToString
-public class IllusionerOptions {
+public class IllusionerOptions extends PluginDependent {
     /**
      * The boss bar color.
      */
@@ -82,7 +84,7 @@ public class IllusionerOptions {
      * The gameplay options.
      */
     @Getter
-    private final GameplayOptions gameplayOptions = new GameplayOptions();
+    private final GameplayOptions gameplayOptions = new GameplayOptions(this.getPlugin());
 
     /**
      * If plugin-based illusioners should override vanilla illusioners.
@@ -92,8 +94,11 @@ public class IllusionerOptions {
 
     /**
      * Create new illusioner options.
+     *
+     * @param plugin The plugin.
      */
-    public IllusionerOptions() {
+    public IllusionerOptions(@NotNull final AbstractEcoPlugin plugin) {
+        super(plugin);
         reload();
     }
 
@@ -101,13 +106,13 @@ public class IllusionerOptions {
      * Reload options from config.
      */
     public void reload() {
-        color = BarColor.valueOf(Configs.CONFIG.getString("bossbar.color"));
-        style = BarStyle.valueOf(Configs.CONFIG.getString("bossbar.style"));
-        name = Configs.CONFIG.getString("name");
-        xpBounds = new Pair<>(Configs.CONFIG.getInt("xp.minimum"), Configs.CONFIG.getInt("xp.maximum"));
-        maxHealth = Configs.CONFIG.getDouble("max-health");
-        attackDamage = Configs.CONFIG.getDouble("attack-damage");
-        override = Configs.CONFIG.getBool("override");
+        color = BarColor.valueOf(this.getPlugin().getConfigYml().getString("bossbar.color"));
+        style = BarStyle.valueOf(this.getPlugin().getConfigYml().getString("bossbar.style"));
+        name = this.getPlugin().getConfigYml().getString("name");
+        xpBounds = new Pair<>(this.getPlugin().getConfigYml().getInt("xp.minimum"), this.getPlugin().getConfigYml().getInt("xp.maximum"));
+        maxHealth = this.getPlugin().getConfigYml().getDouble("max-health");
+        attackDamage = this.getPlugin().getConfigYml().getDouble("attack-damage");
+        override = this.getPlugin().getConfigYml().getBool("override");
 
         spawnSounds = new HashSet<>();
         IllusionerConfigs.SOUNDS.getConfig().getConfigurationSection("spawn").getKeys(false).forEach(key -> {
@@ -128,9 +133,9 @@ public class IllusionerOptions {
         });
 
         spawnStructure = new BlockStructure(
-                Material.valueOf(Configs.CONFIG.getString("spawn.bottom-block")),
-                Material.valueOf(Configs.CONFIG.getString("spawn.middle-block")),
-                Material.valueOf(Configs.CONFIG.getString("spawn.top-block"))
+                Material.valueOf(this.getPlugin().getConfigYml().getString("spawn.bottom-block")),
+                Material.valueOf(this.getPlugin().getConfigYml().getString("spawn.middle-block")),
+                Material.valueOf(this.getPlugin().getConfigYml().getString("spawn.top-block"))
         );
 
         gameplayOptions.reload();
