@@ -3,3 +3,6 @@ messages:
   no-permission: "&cYou don't have permission to do this!"
   not-player: "&cThis command must be run by a player"
   reloaded: "Reloaded!"
+  no-item-held: "&cYou aren't holding an item!"
+  added-drop: "Added drop to Illusioner"
+  reload-plugin: "Run /ilreload to reload illusioner!"

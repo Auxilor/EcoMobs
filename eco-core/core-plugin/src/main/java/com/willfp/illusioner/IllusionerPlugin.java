@@ -4,7 +4,7 @@ import com.willfp.eco.util.command.AbstractCommand;
 import com.willfp.eco.util.integrations.IntegrationLoader;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.protocollib.AbstractPacketAdapter;
-import com.willfp.illusioner.commands.CommandIldebug;
+import com.willfp.illusioner.commands.CommandIldrop;
 import com.willfp.illusioner.commands.CommandIlreload;
 import com.willfp.illusioner.config.IllusionerConfigs;
 import com.willfp.illusioner.illusioner.IllusionerManager;
@@ -92,8 +92,8 @@ public class IllusionerPlugin extends AbstractEcoPlugin {
     @Override
     public List<AbstractCommand> getCommands() {
         return Arrays.asList(
-                new CommandIldebug(this),
-                new CommandIlreload(this)
+                new CommandIlreload(this),
+                new CommandIldrop(this)
         );
     }
 
