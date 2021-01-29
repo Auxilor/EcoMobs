@@ -28,6 +28,7 @@ public class IllusionerConfigs {
      */
     @ConfigUpdater
     public void updateConfigs() {
+        DROPS.save();
         SOUNDS.update();
         ATTACKS.update();
     }
