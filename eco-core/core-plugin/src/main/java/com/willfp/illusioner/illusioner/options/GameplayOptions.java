@@ -130,7 +130,7 @@ public class GameplayOptions extends PluginDependent {
 
         teleport = this.getPlugin().getConfigYml().getBool("teleport-on-damage.enabled");
         teleportRange = this.getPlugin().getConfigYml().getInt("teleport-on-damage.range");
-        teleportChance = this.getPlugin().getConfigYml().getInt("teleport-on-damage.chance");
+        teleportChance = this.getPlugin().getConfigYml().getDouble("teleport-on-damage.chance");
 
         Sound sound = Sound.valueOf(IllusionerConfigs.SOUNDS.getString("teleport.sound"));
         float volume = (float) IllusionerConfigs.SOUNDS.getDouble("teleport.volume");

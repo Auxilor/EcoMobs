@@ -134,24 +134,36 @@ public class AttackListeners implements Listener {
         if (IllusionerManager.OPTIONS.getGameplayOptions().isTeleport()) {
             if (NumberUtils.randFloat(0, 100) < IllusionerManager.OPTIONS.getGameplayOptions().getTeleportChance()) {
                 int range = IllusionerManager.OPTIONS.getGameplayOptions().getTeleportRange();
+                List<Location> valid = new ArrayList<>();
                 for (int x = -range; x <= range; x++) {
                     for (int y = -range; y <= range; y++) {
                         for (int z = -range; z <= range; z++) {
                             Location location = event.getEntity().getLocation().clone();
-                            location.setX(x);
-                            location.setY(y);
-                            location.setZ(z);
+                            location.setX(location.getX() + x);
+                            location.setY(location.getY() + y);
+                            location.setZ(location.getZ() + z);
 
                             Block block = location.getBlock();
 
-                            if (block.getType() == Material.AIR && block.getRelative(BlockFace.UP).getType() == Material.AIR) {
-                                event.getEntity().teleport(location);
-                                OptionedSound optionedSound = IllusionerManager.OPTIONS.getGameplayOptions().getTeleportSound();
-                                location.getWorld().playSound(location, optionedSound.getSound(), optionedSound.getVolume(), optionedSound.getPitch());
+                            if (block.getType() == Material.AIR
+                                    && block.getRelative(BlockFace.UP).getType() == Material.AIR
+                                    && !(block.getRelative(BlockFace.DOWN).isLiquid() || block.getRelative(BlockFace.DOWN).getType() == Material.AIR)) {
+                                valid.add(location);
                             }
                         }
                     }
                 }
+
+                if (valid.isEmpty()) {
+                    return;
+                }
+
+                Collections.shuffle(valid);
+                Location location = valid.get(0);
+
+                event.getEntity().teleport(location);
+                OptionedSound optionedSound = IllusionerManager.OPTIONS.getGameplayOptions().getTeleportSound();
+                location.getWorld().playSound(location, optionedSound.getSound(), optionedSound.getVolume(), optionedSound.getPitch());
             }
         }
     }
