@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="https://i.imgur.com/xxYx7cK.png" alt="Illusioner logo" width="256">
+  <img src="https://i.imgur.com/I74yjwu.png" alt="Illusioner logo" width="256">
   <br>
 </h1>
 
