@@ -18,6 +18,12 @@ summon:
   volume: 1
   pitch: 2
 
+teleport:
+  # When the illusioner teleports
+  sound: ENTITY_ENDERMAN_TELEPORT
+  volume: 1
+  pitch: 0.7
+
 spawn:
   1:
     broadcast: true

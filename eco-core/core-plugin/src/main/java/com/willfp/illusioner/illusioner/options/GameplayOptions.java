@@ -71,7 +71,32 @@ public class GameplayOptions extends PluginDependent {
     private boolean ignoreSuffocation;
 
     /**
+     * If the illusioner can teleport.
+     */
+    @Getter
+    private boolean teleport;
+
+    /**
+     * Teleport range.
+     */
+    @Getter
+    private int teleportRange;
+
+    /**
+     * Teleport chance.
+     */
+    @Getter
+    private double teleportChance;
+
+    /**
+     * Teleport sound.
+     */
+    @Getter
+    private OptionedSound teleportSound;
+
+    /**
      * Gameplay options.
+     *
      * @param plugin The plugin.
      */
     public GameplayOptions(@NotNull final AbstractEcoPlugin plugin) {
@@ -98,9 +123,19 @@ public class GameplayOptions extends PluginDependent {
 
         shuffle = IllusionerConfigs.ATTACKS.getBool("shuffle.enabled");
         shuffleChance = IllusionerConfigs.ATTACKS.getDouble("shuffle.chance");
+
         ignoreExplosionDamage = this.getPlugin().getConfigYml().getBool("ignore-explosion-damage");
         ignoreFire = this.getPlugin().getConfigYml().getBool("ignore-fire-damage");
         ignoreSuffocation = this.getPlugin().getConfigYml().getBool("ignore-suffocation-damage");
+
+        teleport = this.getPlugin().getConfigYml().getBool("teleport-on-damage.enabled");
+        teleportRange = this.getPlugin().getConfigYml().getInt("teleport-on-damage.range");
+        teleportChance = this.getPlugin().getConfigYml().getInt("teleport-on-damage.chance");
+
+        Sound sound = Sound.valueOf(IllusionerConfigs.SOUNDS.getString("teleport.sound"));
+        float volume = (float) IllusionerConfigs.SOUNDS.getDouble("teleport.volume");
+        float pitch = (float) IllusionerConfigs.SOUNDS.getDouble("teleport.pitch");
+        teleportSound = new OptionedSound(sound, volume, pitch, true);
 
         effectOptions.clear();
         IllusionerConfigs.ATTACKS.getConfig().getConfigurationSection("effects").getKeys(false).forEach(key -> {

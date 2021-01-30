@@ -1,13 +1,13 @@
 package com.willfp.illusioner.config.configs;
 
-import com.willfp.eco.util.config.StaticBaseConfig;
+import com.willfp.eco.util.config.BaseConfig;
 import com.willfp.illusioner.IllusionerPlugin;
 
-public class Sounds extends StaticBaseConfig {
+public class Sounds extends BaseConfig {
     /**
      * Instantiate sounds.yml.
      */
     public Sounds() {
-        super("sounds", IllusionerPlugin.getInstance());
+        super("sounds", false, IllusionerPlugin.getInstance());
     }
 }

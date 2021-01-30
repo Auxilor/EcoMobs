@@ -18,9 +18,15 @@ xp:
 
 max-health: 600 # Hearts is this number divided by 2, eg 600 is 300 hearts
 attack-damage: 50 # This isn't an easy boss. Recommend to keep this high
+
 ignore-explosion-damage: true
 ignore-fire-damage: false
 ignore-suffocation-damage: true
+
+teleport-on-damage:
+  enabled: true
+  range: 10
+  chance: 15 # As a percentage
 
 spawn:
   # Configure a 3x1 tall column of blocks to summon an illusioner

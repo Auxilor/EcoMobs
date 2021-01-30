@@ -6,6 +6,8 @@ import com.willfp.illusioner.illusioner.OptionedSound;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -126,6 +128,30 @@ public class AttackListeners implements Listener {
         if (IllusionerManager.OPTIONS.getGameplayOptions().isIgnoreSuffocation()) {
             if (event.getCause().equals(EntityDamageEvent.DamageCause.SUFFOCATION)) {
                 event.setCancelled(true);
+            }
+        }
+
+        if (IllusionerManager.OPTIONS.getGameplayOptions().isTeleport()) {
+            if (NumberUtils.randFloat(0, 100) < IllusionerManager.OPTIONS.getGameplayOptions().getTeleportChance()) {
+                int range = IllusionerManager.OPTIONS.getGameplayOptions().getTeleportRange();
+                for (int x = -range; x <= range; x++) {
+                    for (int y = -range; y <= range; y++) {
+                        for (int z = -range; z <= range; z++) {
+                            Location location = event.getEntity().getLocation().clone();
+                            location.setX(x);
+                            location.setY(y);
+                            location.setZ(z);
+
+                            Block block = location.getBlock();
+
+                            if (block.getType() == Material.AIR && block.getRelative(BlockFace.UP).getType() == Material.AIR) {
+                                event.getEntity().teleport(location);
+                                OptionedSound optionedSound = IllusionerManager.OPTIONS.getGameplayOptions().getTeleportSound();
+                                location.getWorld().playSound(location, optionedSound.getSound(), optionedSound.getVolume(), optionedSound.getPitch());
+                            }
+                        }
+                    }
+                }
             }
         }
     }
