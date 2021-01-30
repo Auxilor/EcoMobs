@@ -59,6 +59,18 @@ public class GameplayOptions extends PluginDependent {
     private boolean ignoreExplosionDamage;
 
     /**
+     * If the illusioner is immune to fire damage.
+     */
+    @Getter
+    private boolean ignoreFire;
+
+    /**
+     * If the illusioner is immune to suffocation damage.
+     */
+    @Getter
+    private boolean ignoreSuffocation;
+
+    /**
      * Gameplay options.
      * @param plugin The plugin.
      */
@@ -87,6 +99,8 @@ public class GameplayOptions extends PluginDependent {
         shuffle = IllusionerConfigs.ATTACKS.getBool("shuffle.enabled");
         shuffleChance = IllusionerConfigs.ATTACKS.getDouble("shuffle.chance");
         ignoreExplosionDamage = this.getPlugin().getConfigYml().getBool("ignore-explosion-damage");
+        ignoreFire = this.getPlugin().getConfigYml().getBool("ignore-fire-damage");
+        ignoreSuffocation = this.getPlugin().getConfigYml().getBool("ignore-suffocation-damage");
 
         effectOptions.clear();
         IllusionerConfigs.ATTACKS.getConfig().getConfigurationSection("effects").getKeys(false).forEach(key -> {

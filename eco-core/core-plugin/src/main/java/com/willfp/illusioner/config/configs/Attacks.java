@@ -1,14 +1,13 @@
 package com.willfp.illusioner.config.configs;
 
-import com.willfp.eco.util.config.BaseConfig;
-import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+import com.willfp.eco.util.config.StaticBaseConfig;
 import com.willfp.illusioner.IllusionerPlugin;
 
-public class Attacks extends BaseConfig {
+public class Attacks extends StaticBaseConfig {
     /**
      * Instantiate attacks.yml.
      */
     public Attacks() {
-        super("attacks", false, IllusionerPlugin.getInstance());
+        super("attacks", IllusionerPlugin.getInstance());
     }
 }

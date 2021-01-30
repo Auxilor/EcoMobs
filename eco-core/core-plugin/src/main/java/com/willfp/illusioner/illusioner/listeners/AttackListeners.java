@@ -116,5 +116,17 @@ public class AttackListeners implements Listener {
                 event.setCancelled(true);
             }
         }
+
+        if (IllusionerManager.OPTIONS.getGameplayOptions().isIgnoreFire()) {
+            if (event.getCause().equals(EntityDamageEvent.DamageCause.FIRE) || event.getCause().equals(EntityDamageEvent.DamageCause.FIRE_TICK)) {
+                event.setCancelled(true);
+            }
+        }
+
+        if (IllusionerManager.OPTIONS.getGameplayOptions().isIgnoreSuffocation()) {
+            if (event.getCause().equals(EntityDamageEvent.DamageCause.SUFFOCATION)) {
+                event.setCancelled(true);
+            }
+        }
     }
 }

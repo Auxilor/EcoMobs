@@ -78,13 +78,8 @@ public class SpawnListeners extends PluginDependent implements Listener {
             }
         });
 
-        EntityIllusionerProxy illusioner = ProxyUtils.getProxy(IllusionerHelperProxy.class).spawn(
-                event.getBlock().getLocation(),
-                IllusionerManager.OPTIONS.getMaxHealth(),
-                IllusionerManager.OPTIONS.getAttackDamage(),
-                IllusionerManager.OPTIONS.getName()
-        );
-        illusioner.createBossbar(this.getPlugin(), IllusionerManager.OPTIONS.getColor(), IllusionerManager.OPTIONS.getStyle());
+        EntityIllusionerProxy illusioner = ProxyUtils.getProxy(IllusionerHelperProxy.class).spawn(event.getBlock().getLocation());
+        illusioner.createBossbar(this.getPlugin());
     }
 
     /**
@@ -104,17 +99,11 @@ public class SpawnListeners extends PluginDependent implements Listener {
 
         Illusioner illusioner = (Illusioner) event.getEntity();
 
-        EntityIllusionerProxy internalIllusioner = ProxyUtils.getProxy(IllusionerHelperProxy.class).adapt(
-                illusioner,
-                illusioner.getLocation(),
-                IllusionerManager.OPTIONS.getMaxHealth(),
-                IllusionerManager.OPTIONS.getAttackDamage(),
-                IllusionerManager.OPTIONS.getName()
-        );
+        EntityIllusionerProxy internalIllusioner = ProxyUtils.getProxy(IllusionerHelperProxy.class).adapt(illusioner);
 
         if (internalIllusioner == null) {
             return;
         }
-        internalIllusioner.createBossbar(this.getPlugin(), IllusionerManager.OPTIONS.getColor(), IllusionerManager.OPTIONS.getStyle());
+        internalIllusioner.createBossbar(this.getPlugin());
     }
 }

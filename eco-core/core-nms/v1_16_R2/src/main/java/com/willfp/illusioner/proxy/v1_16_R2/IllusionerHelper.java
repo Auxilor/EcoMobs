@@ -10,21 +10,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class IllusionerHelper implements IllusionerHelperProxy {
     @Override
-    public EntityIllusionerProxy spawn(@NotNull final Location location,
-                                       final double maxHealth,
-                                       final double attackDamage,
-                                       @NotNull final String name) {
-        EntityIllusioner illusioner = new EntityIllusioner(location, maxHealth, attackDamage, name);
+    public EntityIllusionerProxy spawn(@NotNull final Location location) {
+        EntityIllusioner illusioner = new EntityIllusioner(location);
         ((CraftWorld) location.getWorld()).getHandle().addEntity(illusioner);
         return illusioner;
     }
 
     @Override
-    public EntityIllusionerProxy adapt(@NotNull final Illusioner illusioner,
-                                       @NotNull final Location location,
-                                       final double maxHealth,
-                                       final double attackDamage,
-                                       @NotNull final String name) {
+    public EntityIllusionerProxy adapt(@NotNull final Illusioner illusioner) {
         if (illusioner instanceof CraftIllusioner) {
             if (((CraftIllusioner) illusioner).getHandle() instanceof EntityIllusionerProxy) {
                 return null;
@@ -33,6 +26,6 @@ public class IllusionerHelper implements IllusionerHelperProxy {
             return null;
         }
         illusioner.remove();
-        return spawn(location, maxHealth, attackDamage, name);
+        return spawn(illusioner.getLocation());
     }
 }
