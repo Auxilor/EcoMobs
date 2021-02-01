@@ -143,6 +143,9 @@ public class IllusionerOptions extends PluginDependent {
         drops = new HashSet<>();
         IllusionerConfigs.DROPS.getConfig().getKeys(false).forEach(key -> {
             ItemStack itemStack = IllusionerConfigs.DROPS.getConfig().getItemStack(key);
+            if (itemStack == null || itemStack.getType() == Material.AIR) {
+                return;
+            }
             drops.add(itemStack);
         });
     }
