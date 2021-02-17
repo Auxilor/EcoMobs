@@ -4,8 +4,10 @@ package com.willfp.illusioner.illusioner.listeners;
 import com.willfp.eco.util.drops.DropQueue;
 import com.willfp.eco.util.events.entitydeathbyentity.EntityDeathByEntityEvent;
 import com.willfp.illusioner.illusioner.IllusionerManager;
+import com.willfp.illusioner.illusioner.OptionedSound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
@@ -22,18 +24,28 @@ public class DeathListeners implements Listener {
             return;
         }
 
-        IllusionerManager.OPTIONS.getDeathSounds().forEach(optionedSound -> {
-            if (optionedSound.isBroadcast()) {
-                event.getKiller().getWorld().playSound(event.getVictim().getLocation(), optionedSound.getSound(), optionedSound.getVolume(), optionedSound.getPitch());
-            } else {
-                if (event.getKiller() instanceof Player) {
-                    ((Player) event.getKiller()).playSound(event.getVictim().getLocation(), optionedSound.getSound(), optionedSound.getVolume(), optionedSound.getPitch());
-                }
-            }
-        });
+        Player player = null;
 
         if (event.getKiller() instanceof Player) {
-            new DropQueue((Player) event.getKiller())
+            player = (Player) event.getKiller();
+        } else if (event.getKiller() instanceof Projectile) {
+            if (((Projectile) event.getKiller()).getShooter() instanceof Player) {
+                player = (Player) ((Projectile) event.getKiller()).getShooter();
+            }
+        }
+
+        for (OptionedSound sound : IllusionerManager.OPTIONS.getDeathSounds()) {
+            if (sound.isBroadcast()) {
+                event.getKiller().getWorld().playSound(event.getVictim().getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            } else {
+                if (player != null) {
+                    player.playSound(event.getVictim().getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+                }
+            }
+        }
+
+        if (player != null) {
+            new DropQueue(player)
                     .addItems(IllusionerManager.OPTIONS.getDrops())
                     .addXP(IllusionerManager.OPTIONS.generateXp())
                     .setLocation(event.getVictim().getLocation())
