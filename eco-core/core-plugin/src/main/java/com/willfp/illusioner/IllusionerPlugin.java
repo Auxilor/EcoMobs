@@ -1,6 +1,7 @@
 package com.willfp.illusioner;
 
 import com.willfp.eco.util.command.AbstractCommand;
+import com.willfp.eco.util.display.DisplayModule;
 import com.willfp.eco.util.integrations.IntegrationLoader;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.protocollib.AbstractPacketAdapter;
@@ -13,6 +14,7 @@ import com.willfp.illusioner.illusioner.listeners.DeathListeners;
 import com.willfp.illusioner.illusioner.listeners.SpawnListeners;
 import lombok.Getter;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,5 +128,11 @@ public class IllusionerPlugin extends AbstractEcoPlugin {
         return Arrays.asList(
                 IllusionerConfigs.class
         );
+    }
+
+    @Override
+    @Nullable
+    protected DisplayModule createDisplayModule() {
+        return null;
     }
 }
