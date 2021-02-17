@@ -6,6 +6,7 @@ import com.willfp.illusioner.config.IllusionerConfigs;
 import com.willfp.illusioner.illusioner.OptionedSound;
 import lombok.Getter;
 import lombok.ToString;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
@@ -148,10 +149,13 @@ public class GameplayOptions extends PluginDependent {
 
         summonerOptions.clear();
         IllusionerConfigs.ATTACKS.getConfig().getConfigurationSection("summons").getKeys(false).forEach(key -> {
+            Bukkit.getLogger().info(key + " bruh ");
             EntityType type = EntityType.valueOf(IllusionerConfigs.ATTACKS.getString("summons." + key + ".type"));
             double chance = IllusionerConfigs.ATTACKS.getDouble("summons." + key + ".chance");
             summonerOptions.add(new SummonerOption(chance, type));
         });
+
+        Bukkit.getLogger().info(summonerOptions.toString());
     }
 
     public static class EffectOption {

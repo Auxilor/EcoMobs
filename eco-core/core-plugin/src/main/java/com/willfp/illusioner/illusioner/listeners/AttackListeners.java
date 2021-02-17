@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -35,13 +36,31 @@ public class AttackListeners implements Listener {
             return;
         }
 
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        handleAttack((LivingEntity) event.getDamager(), (Player) event.getEntity());
+    }
+
+    /**
+     * Called when a player attacks an illusioner.
+     *
+     * @param event The event to listen for.
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onAttackIllusioner(@NotNull final EntityDamageByEntityEvent event) {
+        if (!event.getEntity().getType().equals(EntityType.ILLUSIONER)) {
+            return;
+        }
+
         Player temp = null;
 
-        if (event.getEntity() instanceof Player) {
-            temp = (Player) event.getEntity();
-        } else if (event.getEntity() instanceof Projectile) {
-            if (((Projectile) event.getEntity()).getShooter() instanceof Player) {
-                temp = (Player) ((Projectile) event.getEntity()).getShooter();
+        if (event.getDamager() instanceof Player) {
+            temp = (Player) event.getDamager();
+        } else if (event.getDamager() instanceof Projectile) {
+            if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
+                temp = (Player) ((Projectile) event.getDamager()).getShooter();
             }
         }
 
@@ -51,11 +70,16 @@ public class AttackListeners implements Listener {
 
         Player player = temp;
 
+        handleAttack((LivingEntity) event.getEntity(), player);
+    }
+
+    private void handleAttack(@NotNull final LivingEntity illusioner,
+                              @NotNull final Player player) {
         OptionedSound hitSound = IllusionerManager.OPTIONS.getGameplayOptions().getHitSound();
         if (hitSound.isBroadcast()) {
-            player.getWorld().playSound(event.getEntity().getLocation(), hitSound.getSound(), hitSound.getVolume(), hitSound.getPitch());
+            player.getWorld().playSound(illusioner.getLocation(), hitSound.getSound(), hitSound.getVolume(), hitSound.getPitch());
         } else {
-            player.playSound(event.getEntity().getLocation(), hitSound.getSound(), hitSound.getVolume(), hitSound.getPitch());
+            player.playSound(illusioner.getLocation(), hitSound.getSound(), hitSound.getVolume(), hitSound.getPitch());
         }
 
         IllusionerManager.OPTIONS.getGameplayOptions().getEffectOptions().forEach(effectOption -> {
@@ -95,9 +119,9 @@ public class AttackListeners implements Listener {
 
             OptionedSound summonSound = IllusionerManager.OPTIONS.getGameplayOptions().getSummonSound();
             if (summonSound.isBroadcast()) {
-                player.getWorld().playSound(event.getEntity().getLocation(), summonSound.getSound(), summonSound.getVolume(), summonSound.getPitch());
+                player.getWorld().playSound(illusioner.getLocation(), summonSound.getSound(), summonSound.getVolume(), summonSound.getPitch());
             } else {
-                player.playSound(event.getEntity().getLocation(), summonSound.getSound(), summonSound.getVolume(), summonSound.getPitch());
+                player.playSound(illusioner.getLocation(), summonSound.getSound(), summonSound.getVolume(), summonSound.getPitch());
             }
         });
     }

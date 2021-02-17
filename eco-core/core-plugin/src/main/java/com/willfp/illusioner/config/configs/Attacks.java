@@ -8,6 +8,6 @@ public class Attacks extends BaseConfig {
      * Instantiate attacks.yml.
      */
     public Attacks() {
-        super("attacks", false, IllusionerPlugin.getInstance());
+        super("attacks", false, IllusionerPlugin.getInstance(), "effects.", "summons.");
     }
 }
