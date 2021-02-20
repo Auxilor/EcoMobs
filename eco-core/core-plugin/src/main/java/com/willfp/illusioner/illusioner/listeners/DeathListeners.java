@@ -9,7 +9,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class DeathListeners implements Listener {
@@ -43,16 +45,11 @@ public class DeathListeners implements Listener {
                 }
             }
         }
+    }
 
-        if (player != null) {
-            new DropQueue(player)
-                    .addItems(IllusionerManager.OPTIONS.getDrops())
-                    .addXP(IllusionerManager.OPTIONS.generateXp())
-                    .setLocation(event.getVictim().getLocation())
-                    .push();
-        }
-
-
-        event.getDeathEvent().setDroppedExp(0);
+    @EventHandler(priority = EventPriority.LOW)
+    public void onOtherDeath(@NotNull final EntityDeathEvent event) {
+        event.getDrops().addAll(IllusionerManager.OPTIONS.getDrops());
+        event.setDroppedExp(IllusionerManager.OPTIONS.generateXp());
     }
 }
