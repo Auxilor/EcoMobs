@@ -49,6 +49,10 @@ public class DeathListeners implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onOtherDeath(@NotNull final EntityDeathEvent event) {
+        if (event.getEntityType() != EntityType.ILLUSIONER) {
+            return;
+        }
+
         event.getDrops().addAll(IllusionerManager.OPTIONS.getDrops());
         event.setDroppedExp(IllusionerManager.OPTIONS.generateXp());
     }
