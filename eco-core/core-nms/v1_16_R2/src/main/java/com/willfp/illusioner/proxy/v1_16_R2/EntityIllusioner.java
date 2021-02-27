@@ -25,8 +25,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BossBar;
 import org.bukkit.craftbukkit.v1_16_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R2.util.CraftNamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityIllusioner extends EntityIllagerIllusioner implements EntityIllusionerProxy {
@@ -47,6 +49,8 @@ public class EntityIllusioner extends EntityIllagerIllusioner implements EntityI
      */
     public EntityIllusioner(@NotNull final Location location) {
         super(EntityTypes.ILLUSIONER, ((CraftWorld) location.getWorld()).getHandle());
+
+        this.getBukkitEntity().getPersistentDataContainer().set(CraftNamespacedKey.fromString("illusioner:illusioner"), PersistentDataType.INTEGER, 1);
 
         this.displayName = IllusionerManager.OPTIONS.getName();
 
