@@ -16,7 +16,9 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @ToString
@@ -78,7 +80,7 @@ public class IllusionerOptions extends PluginDependent {
      * The drops.
      */
     @Getter
-    private Set<ItemStack> drops;
+    private List<ItemStack> drops;
 
     /**
      * The gameplay options.
@@ -140,14 +142,14 @@ public class IllusionerOptions extends PluginDependent {
 
         gameplayOptions.reload();
 
-        drops = new HashSet<>();
-        IllusionerConfigs.DROPS.getConfig().getKeys(false).forEach(key -> {
+        drops = new ArrayList<>();
+        for (String key : IllusionerConfigs.DROPS.getConfig().getKeys(false)) {
             ItemStack itemStack = IllusionerConfigs.DROPS.getConfig().getItemStack(key);
             if (itemStack == null || itemStack.getType() == Material.AIR) {
-                return;
+                continue;
             }
             drops.add(itemStack);
-        });
+        }
     }
 
     /**

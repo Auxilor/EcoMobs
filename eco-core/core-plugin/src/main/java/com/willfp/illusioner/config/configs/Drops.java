@@ -1,16 +1,16 @@
 package com.willfp.illusioner.config.configs;
 
-import com.willfp.eco.util.config.StaticBaseConfig;
+import com.willfp.eco.util.config.BaseConfig;
 import com.willfp.illusioner.IllusionerPlugin;
 
 import java.io.IOException;
 
-public class Drops extends StaticBaseConfig {
+public class Drops extends BaseConfig {
     /**
      * Instantiate drops.yml.
      */
     public Drops() {
-        super("drops", IllusionerPlugin.getInstance());
+        super("drops", false, IllusionerPlugin.getInstance());
     }
 
     /**

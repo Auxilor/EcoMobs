@@ -1,9 +1,9 @@
 package com.willfp.illusioner.commands;
 
+import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.command.AbstractCommand;
 import com.willfp.illusioner.IllusionerPlugin;
 import com.willfp.illusioner.config.IllusionerConfigs;
-import com.willfp.illusioner.illusioner.IllusionerManager;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,8 +32,11 @@ public class CommandIldrop extends AbstractCommand {
             return;
         }
 
-        IllusionerConfigs.DROPS.getConfig().set(String.valueOf(IllusionerManager.OPTIONS.getDrops().size()), itemStack);
+        IllusionerConfigs.DROPS.getConfig().set(String.valueOf(NumberUtils.randInt(0, 100000)), itemStack);
+        IllusionerConfigs.DROPS.save();
+        IllusionerConfigs.DROPS.clearCache();
         player.sendMessage(this.getPlugin().getLangYml().getMessage("added-drop"));
-        player.sendMessage(this.getPlugin().getLangYml().getMessage("reload-plugin"));
+
+        this.getPlugin().reload();
     }
 }
