@@ -19,6 +19,7 @@ import net.minecraft.server.v1_16_R3.PathfinderGoalRandomStroll;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.util.CraftNamespacedKey;
+import org.bukkit.entity.Illusioner;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,9 +53,9 @@ public class CustomIllusioner extends EntityIllagerIllusioner implements CustomI
     }
 
     @Override
-    public CustomIllusionerProxy spawn(@NotNull final Location location) {
+    public Illusioner spawn(@NotNull final Location location) {
         CustomIllusioner illusioner = new CustomIllusioner(location);
         ((CraftWorld) location.getWorld()).getHandle().addEntity(illusioner);
-        return illusioner;
+        return (Illusioner) illusioner.getBukkitEntity();
     }
 }

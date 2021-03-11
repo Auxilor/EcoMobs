@@ -61,7 +61,7 @@ public class EcoBosses {
         }
 
         for (String defaultSetName : DEFAULT_BOSSES) {
-            new EcoBoss(defaultSetName, new BaseBossConfig(defaultSetName));
+            new EcoBoss(defaultSetName, new BaseBossConfig(defaultSetName), EcoBossesPlugin.getInstance());
         }
 
         try {
@@ -69,9 +69,10 @@ public class EcoBosses {
                     .filter(Files::isRegularFile)
                     .forEach(path -> {
                         String name = path.getFileName().toString().replace(".yml", "");
-                        new EcoBoss (
+                        new EcoBoss(
                                 name,
-                                new CustomConfig(name, YamlConfiguration.loadConfiguration(path.toFile()))
+                                new CustomConfig(name, YamlConfiguration.loadConfiguration(path.toFile())),
+                                EcoBossesPlugin.getInstance()
                         );
                     });
         } catch (IOException e) {

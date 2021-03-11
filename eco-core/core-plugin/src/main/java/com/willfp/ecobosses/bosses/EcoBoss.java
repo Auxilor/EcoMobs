@@ -1,22 +1,17 @@
 package com.willfp.ecobosses.bosses;
 
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
-import com.willfp.ecobosses.EcoBossesPlugin;
+import com.willfp.eco.util.internal.PluginDependent;
+import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-@SuppressWarnings("unchecked")
-public class EcoBoss {
+public class EcoBoss extends PluginDependent {
     /**
-     * Instance of EcoArmor.
-     */
-    private static final EcoBossesPlugin PLUGIN = EcoBossesPlugin.getInstance();
-
-    /**
-     * The name of the set.
+     * The name of the boss.
      */
     @Getter
     private final String name;
@@ -32,9 +27,12 @@ public class EcoBoss {
      *
      * @param name   The name of the set.
      * @param config The set's config.
+     * @param plugin Instance of EcoBosses.
      */
     public EcoBoss(@NotNull final String name,
-                   @NotNull final AbstractUndefinedConfig config) {
+                   @NotNull final AbstractUndefinedConfig config,
+                   @NotNull final AbstractEcoPlugin plugin) {
+        super(plugin);
         this.config = config;
         this.name = name;
 

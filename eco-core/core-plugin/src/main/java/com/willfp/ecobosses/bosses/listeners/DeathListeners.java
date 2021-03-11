@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DeathListeners implements Listener {
     /**
-     * Called when the illusioner dies.
+     * Called when a boss dies.
      *
      * @param event The event to listen for.
      */
