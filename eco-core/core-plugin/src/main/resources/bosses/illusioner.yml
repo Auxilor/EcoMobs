@@ -44,6 +44,9 @@ defence:
     chance: 15 # As a percentage
 
 attacks:
+  # Chance is rolled when boss attacks player
+  on-injure: true # If chance should be rolled when boss is attacked too
+
   # Potion effects are formatted like this:
   # effect:level:duration:chance
   # Duration is in ticks, chance is as a percentage
