@@ -1,30 +1,31 @@
-name: Illusioner
+name: EcoBosses
 version: ${projectVersion}
-main: com.willfp.illusioner.IllusionerPlugin
+main: com.willfp.ecobosses.EcoBossesPlugin
 api-version: 1.15
 authors: [Auxilor]
 website: willfp.com
 load: STARTUP
 
 commands:
-  ilreload:
+  ebreload:
     description: Reloads config
-    permission: illusioner.reload
-  ildrop:
-    description: Adds the item in your hand as a drop
-    permission: illusioner.drop
+    permission: ecobosses.reload
+  ebdrop:
+    description: Sends the held item to console to be added as a drop
+    permission: ecobosses.ebdrop
 
 permissions:
-  illusioner.*:
-    description: All illusioner permissions
+  ecobosses.*:
+    description: All ecobosses permissions
     default: op
     children:
-      illusioner.reload: true
-      illusioner.updateannounce: true
+      ecobosses.reload: true
+      ecobosses.ebdrop: true
 
-  illusioner.updateannounce:
-    description: Informs admins of a new update
-    default: op
-  illusioner.reload:
+  ecobosses.reload:
     description: Allows reloading the config
+    default: op
+
+  ecobosses.ebdrop:
+    description: Allows the use of /ebdrop
     default: op

@@ -1,0 +1,85 @@
+enabled: true
+
+name: "Illusioner" # Display name
+base-mob: custom_illusioner # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
+
+spawn-egg:
+  mob-type: illusioner
+  display-name: "Illusioner Spawn Egg"
+  lore: []
+
+bossbar:
+  enabled: true
+  color: BLUE # Choose from: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
+  style: SOLID # Choose from: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+
+max-health: 600
+attack-damage: 50
+
+spawn-totem:
+  enabled: true
+  top: carved_pumpkin
+  middle: beacon
+  bottom: diamond
+
+rewards:
+  xp:
+    minimum: 20000
+    maximum: 25000
+  drops:
+    # Get items to add here by copying the console output for /ebdrop
+
+defence:
+  immunities:
+    explosion: true
+    fire: false
+    drowning: true
+    projectiles: false
+    suffocation: true
+
+  # If the boss should teleport when damaged
+  teleport:
+    enabled: false
+    range: 7
+    chance: 15 # As a percentage
+
+attacks:
+  # Potion effects are formatted like this:
+  # effect:level:duration:chance
+  # Duration is in ticks, chance is as a percentage
+  potion-effects:
+    - "confusion:10:200:10"
+    - "blindness:1:40:20"
+
+  # Bonus enemies that spawn to fight you
+  # entity:chance
+  # Chance is as a percentage
+  summons:
+    - "evoker:10"
+    - "vindicator:10"
+
+  # Chance to shuffle your hotbar as a percentage - set to 0 to disable.
+  shuffle-chance: 10
+
+sounds:
+  # Sounds are formatted like this:
+  # sound:volume:pitch
+
+  # Sound is the sound ID
+  # Volume is the distance that it can be heard from
+  # Pitch is 0.5-2
+
+  spawn: # On spawn
+    - "entity_illusioner_mirror_move:1000:0.5"
+    - "entity_wither_spawn:1000L:2"
+
+  death: # On death
+    - "entity_evoker_prepare_wololo:50:0.8"
+    - "entity_illusioner_prepare_blindness:50:1"
+    - "entity_wither_death:50:2"
+
+  summon: # On summon enemy
+    - "entity_evoker_prepare_attack:1:2"
+
+  injure: # On take damage
+    - "entity_illusioner_cast_spell:1:2"

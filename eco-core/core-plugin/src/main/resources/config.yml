@@ -1,36 +1,4 @@
 #
-# Illusioner
+# EcoBosses
 # by Auxilor
 #
-
-name: "Illusioner" # What should the display name of the Illusioner be?
-
-override: true # Should the illusioner override all "vanilla" illusioners (adds support for /spawn but may cause issues with other custom mob plugins)
-
-bossbar:
-  color: BLUE # Choose from: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
-  style: SOLID # Choose from: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
-
-xp:
-  # Chosen at random between a minimum and maximum
-  minimum: 20000 # Xp points, not levels
-  maximum: 25000
-
-max-health: 600 # Hearts is this number divided by 2, eg 600 is 300 hearts
-attack-damage: 50 # This isn't an easy boss. Recommend to keep this high
-
-ignore-explosion-damage: true
-ignore-fire-damage: false
-ignore-suffocation-damage: true
-
-teleport-on-damage:
-  enabled: true
-  range: 7
-  chance: 15 # As a percentage
-
-spawn:
-  # Configure a 3x1 tall column of blocks to summon an illusioner
-  # Plan to add support for other shapes in the future
-  top-block: CARVED_PUMPKIN
-  middle-block: BEACON
-  bottom-block: DIAMOND_BLOCK
