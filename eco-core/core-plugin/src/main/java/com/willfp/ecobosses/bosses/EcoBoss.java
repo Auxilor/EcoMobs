@@ -3,6 +3,9 @@ package com.willfp.ecobosses.bosses;
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+import com.willfp.ecobosses.bosses.util.BossbarProperties;
+import com.willfp.ecobosses.bosses.util.SpawnTotem;
+import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +24,36 @@ public class EcoBoss extends PluginDependent {
      */
     @Getter(AccessLevel.PRIVATE)
     private final AbstractUndefinedConfig config;
+
+    /**
+     * The base entity spawner.
+     */
+    @Getter
+    private final BossType bossType;
+
+    /**
+     * If the boss bar is enabled.
+     */
+    @Getter
+    private final boolean bossbarEnabled;
+
+    /**
+     * The BossBar properties.
+     */
+    @Getter
+    private final BossbarProperties bossbarProperties;
+
+    /**
+     * If spawn totem is enabled.
+     */
+    @Getter
+    private final boolean spawnTotemEnabled;
+
+    /**
+     * The spawn totem.
+     */
+    @Getter
+    private final SpawnTotem spawnTotem;
 
     /**
      * Create a new Boss.

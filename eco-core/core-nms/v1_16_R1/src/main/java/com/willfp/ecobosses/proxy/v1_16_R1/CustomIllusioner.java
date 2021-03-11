@@ -18,20 +18,17 @@ import net.minecraft.server.v1_16_R1.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.server.v1_16_R1.PathfinderGoalRandomStroll;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R1.util.CraftNamespacedKey;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.entity.Illusioner;
 import org.jetbrains.annotations.NotNull;
 
 public class CustomIllusioner extends EntityIllagerIllusioner implements CustomIllusionerProxy {
     /**
      * Instantiate a new custom illusioner entity.
      *
-     * @param location     The location to spawn it at.
+     * @param location The location to spawn it at.
      */
     public CustomIllusioner(@NotNull final Location location) {
         super(EntityTypes.ILLUSIONER, ((CraftWorld) location.getWorld()).getHandle());
-
-        this.getBukkitEntity().getPersistentDataContainer().set(CraftNamespacedKey.fromString("ecobosses:type"), PersistentDataType.STRING, "custom_illusioner");
 
         this.setPosition(location.getX(), location.getY(), location.getZ());
 
@@ -51,10 +48,15 @@ public class CustomIllusioner extends EntityIllagerIllusioner implements CustomI
         this.targetSelector.a(3, (new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, false)).a(300));
     }
 
-    @Override
-    public CustomIllusionerProxy spawn(@NotNull final Location location) {
+    /**
+     * Spawn illusioner.
+     *
+     * @param location The location.
+     * @return The illusioner.
+     */
+    public static Illusioner spawn(@NotNull final Location location) {
         CustomIllusioner illusioner = new CustomIllusioner(location);
         ((CraftWorld) location.getWorld()).getHandle().addEntity(illusioner);
-        return illusioner;
+        return (Illusioner) illusioner.getBukkitEntity();
     }
 }
