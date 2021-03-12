@@ -1,4 +1,4 @@
-package com.willfp.ecobosses.config.configs;
+package com.willfp.ecobosses.config;
 
 import com.willfp.eco.util.config.ExtendableConfig;
 import com.willfp.ecobosses.EcoBossesPlugin;
