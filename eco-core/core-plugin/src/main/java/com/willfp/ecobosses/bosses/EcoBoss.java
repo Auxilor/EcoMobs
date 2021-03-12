@@ -27,6 +27,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -228,9 +229,12 @@ public class EcoBoss extends PluginDependent {
 
         // Rewards
         this.drops = new ArrayList<>();
-        this.getConfig().getSection("rewards.drops").getKeys(false).forEach(s -> {
-            this.drops.add(this.getConfig().getConfig().getItemStack("rewards.drops." + s));
-        });
+        ConfigurationSection dropsSection = this.getConfig().getSectionOrNull("rewards.drops");
+        if (dropsSection != null) {
+            dropsSection.getKeys(false).forEach(s -> {
+                this.drops.add(this.getConfig().getConfig().getItemStack("rewards.drops." + s));
+            });
+        }
         this.experienceOptions = new ExperienceOptions(
                 this.getConfig().getInt("rewards.xp.minimum"),
                 this.getConfig().getInt("rewards.xp.maximum")
@@ -317,7 +321,7 @@ public class EcoBoss extends PluginDependent {
         }
 
         // Spawn egg
-        Material eggMaterial = Material.matchMaterial("spawn-egg.egg-material");
+        Material eggMaterial = Material.matchMaterial(this.getConfig().getString("spawn-egg.egg-material").toUpperCase());
         assert eggMaterial != null;
         this.spawnEgg = new ItemStack(eggMaterial);
         SpawnEggMeta meta = (SpawnEggMeta) this.spawnEgg.getItemMeta();
@@ -356,6 +360,8 @@ public class EcoBoss extends PluginDependent {
         AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         assert maxHealth != null;
         maxHealth.setBaseValue(this.getMaxHealth());
+
+        entity.setHealth(maxHealth.getValue());
 
         AttributeInstance attackDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
         assert attackDamage != null;
@@ -418,7 +424,7 @@ public class EcoBoss extends PluginDependent {
 
         for (EffectOption effect : this.getEffects()) {
             if (NumberUtils.randFloat(0, 100) > effect.getChance()) {
-                return;
+                continue;
             }
 
             player.addPotionEffect(new PotionEffect(effect.getEffectType(), effect.getDuration(), effect.getLevel()));
@@ -440,7 +446,7 @@ public class EcoBoss extends PluginDependent {
 
         for (SummonsOption summon : this.getSummons()) {
             if (NumberUtils.randFloat(0, 100) > summon.getChance()) {
-                return;
+                continue;
             }
 
             Location loc = player.getLocation().add(NumberUtils.randInt(2, 6), 0, NumberUtils.randInt(2, 6));

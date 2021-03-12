@@ -12,6 +12,7 @@ import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
 import com.willfp.ecobosses.commands.CommandEbdrop;
 import com.willfp.ecobosses.commands.CommandEbreload;
 import com.willfp.ecobosses.commands.CommandEbspawn;
+import com.willfp.ecobosses.commands.TabCompleterEbspawn;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
@@ -127,7 +128,8 @@ public class EcoBossesPlugin extends AbstractEcoPlugin {
     @Override
     public List<Class<?>> getUpdatableClasses() {
         return Arrays.asList(
-                EcoBosses.class
+                EcoBosses.class,
+                TabCompleterEbspawn.class
         );
     }
 

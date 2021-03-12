@@ -5,6 +5,8 @@ api-version: 1.15
 authors: [Auxilor]
 website: willfp.com
 load: STARTUP
+depend:
+  - eco
 
 commands:
   ebreload:

@@ -19,13 +19,15 @@ public class BossEntityUtils {
      */
     @Nullable
     public static BossType getBossType(@NotNull final String id) {
-        Class<? extends CustomEntity<? extends LivingEntity>> proxy = CustomEntities.getEntityClass(id.toLowerCase());
-        Class<? extends LivingEntity> type = (Class<? extends LivingEntity>) EntityType.valueOf(id.toUpperCase()).getEntityClass();
-        if (proxy != null) {
-            return new CustomBossType(proxy);
-        }
-        if (type != null) {
+        try {
+            Class<? extends LivingEntity> type = (Class<? extends LivingEntity>) EntityType.valueOf(id.toUpperCase()).getEntityClass();
+            assert type != null;
             return new VanillaBossType(type);
+        } catch (IllegalArgumentException e) {
+            Class<? extends CustomEntity<? extends LivingEntity>> proxy = CustomEntities.getEntityClass(id.toLowerCase());
+            if (proxy != null) {
+                return new CustomBossType(proxy);
+            }
         }
 
         return null;

@@ -76,9 +76,7 @@ public class AttackListeners implements Listener {
             return;
         }
 
-        if (boss.isAttackOnInjure()) {
-            boss.handleAttack(entity, player);
-        }
+        boss.handleAttack(entity, player);
     }
 
     /**

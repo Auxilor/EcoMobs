@@ -4,7 +4,7 @@ name: "Illusioner" # Display name
 base-mob: custom_illusioner # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
 
 spawn-egg:
-  egg-material: illusioner_spawn_egg
+  egg-material: squid_spawn_egg
   display-name: "Illusioner Spawn Egg"
   lore: []
 
@@ -76,7 +76,7 @@ sounds:
 
   spawn: # On spawn
     - "entity_illusioner_mirror_move:1000:0.5"
-    - "entity_wither_spawn:1000L:2"
+    - "entity_wither_spawn:1000:2"
 
   death: # On death
     - "entity_evoker_prepare_wololo:50:0.8"
