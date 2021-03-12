@@ -72,6 +72,8 @@ sounds:
   # Volume is the distance that it can be heard from
   # Pitch is 0.5-2
 
+  # All the sounds for a given category are played at the same time (layered)
+
   spawn: # On spawn
     - "entity_illusioner_mirror_move:1000:0.5"
     - "entity_wither_spawn:1000L:2"
