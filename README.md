@@ -16,7 +16,7 @@
     <a href="https://bstats.org/plugin/bukkit/EcoBosses" alt="bstats players">
         <img src="https://img.shields.io/bstats/players/10635?color=blue&style=for-the-badge"/>
     </a>
-    <a href="https://illusioner.willfp.com/" alt="Docs (gitbook)">
+    <a href="https://ecobosses.willfp.com/" alt="Docs (gitbook)">
         <img src="https://img.shields.io/badge/docs-gitbook-blue?style=for-the-badge&logo=appveyor"/>
     </a>
     <a href="https://discord.gg/ZcwpSsE/" alt="Discord">
