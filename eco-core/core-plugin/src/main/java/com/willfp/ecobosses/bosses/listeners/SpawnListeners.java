@@ -1,8 +1,7 @@
 package com.willfp.ecobosses.bosses.listeners;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
-import com.willfp.ecobosses.bosses.util.SpawnTotem;
-import com.willfp.ecobosses.proxy.proxies.CustomEntitySpawnerProxy;
+import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import com.willfp.ecobosses.proxy.proxies.CustomIllusionerProxy;
 import com.willfp.ecobosses.util.ProxyUtils;
 import org.bukkit.Material;

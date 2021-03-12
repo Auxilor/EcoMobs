@@ -1,4 +1,4 @@
-package com.willfp.ecobosses.bosses.util;
+package com.willfp.ecobosses.bosses.util.obj;
 
 import lombok.Data;
 import org.bukkit.Material;

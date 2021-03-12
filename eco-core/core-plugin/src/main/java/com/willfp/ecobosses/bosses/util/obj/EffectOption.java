@@ -1,4 +1,4 @@
-package com.willfp.ecobosses.bosses.util;
+package com.willfp.ecobosses.bosses.util.obj;
 
 import lombok.Getter;
 import org.bukkit.potion.PotionEffectType;

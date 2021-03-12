@@ -2,8 +2,8 @@ package com.willfp.ecobosses.bosses.options;
 
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
-import com.willfp.ecobosses.bosses.util.EffectOption;
-import com.willfp.ecobosses.bosses.util.OptionedSound;
+import com.willfp.ecobosses.bosses.util.obj.EffectOption;
+import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.config.EcoBossesConfigs;
 import lombok.Getter;
 import lombok.ToString;

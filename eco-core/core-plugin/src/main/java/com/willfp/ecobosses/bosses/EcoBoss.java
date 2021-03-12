@@ -3,13 +3,25 @@ package com.willfp.ecobosses.bosses;
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
-import com.willfp.ecobosses.bosses.util.BossbarProperties;
-import com.willfp.ecobosses.bosses.util.SpawnTotem;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
+import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
+import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
+import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 
 public class EcoBoss extends PluginDependent {
@@ -28,7 +40,6 @@ public class EcoBoss extends PluginDependent {
     /**
      * The base entity spawner.
      */
-    @Getter
     private final BossType bossType;
 
     /**
@@ -56,6 +67,30 @@ public class EcoBoss extends PluginDependent {
     private final SpawnTotem spawnTotem;
 
     /**
+     * The max health.
+     */
+    @Getter
+    private final int maxHealth;
+
+    /**
+     * The attack damage.
+     */
+    @Getter
+    private final int attackDamage;
+
+    /**
+     * The immunity options.
+     */
+    @Getter
+    private final ImmunityOptions immunityOptions;
+
+    /**
+     * The drops.
+     */
+    @Getter
+    private final List<ItemStack> drops;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -72,6 +107,61 @@ public class EcoBoss extends PluginDependent {
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);
         }
+    }
+
+    /**
+     * Spawn the boss.
+     *
+     * @param location The location.
+     */
+    public void spawn(@NotNull final Location location) {
+        LivingEntity entity = bossType.spawnBossEntity(location);
+        entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, name);
+        entity.setPersistent(true);
+
+        AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        assert maxHealth != null;
+        maxHealth.setBaseValue(this.getMaxHealth());
+
+        AttributeInstance attackDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        assert attackDamage != null;
+        attackDamage.setBaseValue(this.getAttackDamage());
+
+        createBossBar(entity);
+    }
+
+    private void createBossBar(@NotNull final LivingEntity entity) {
+        BossBar bossBar = Bukkit.getServer().createBossBar(
+                this.getDisplayName(),
+                this.getBossbarProperties().getColor(),
+                this.getBossbarProperties().getStyle(),
+                (BarFlag) null
+        );
+
+        int radius = this.getPlugin().getConfigYml().getInt("bossbar-radius");
+
+        this.getPlugin().getRunnableFactory().create(runnable -> {
+            if (!entity.isDead()) {
+                bossBar.getPlayers().forEach(bossBar::removePlayer);
+                entity.getNearbyEntities(radius, radius, radius).forEach(entity1 -> {
+                    if (entity1 instanceof Player) {
+                        bossBar.addPlayer((Player) entity1);
+                    }
+                });
+            } else {
+                runnable.cancel();
+            }
+        }).runTaskTimer(0, 40);
+
+        this.getPlugin().getRunnableFactory().create(runnable -> {
+            if (!entity.isDead()) {
+                bossBar.setProgress(entity.getHealth() / entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            } else {
+                bossBar.getPlayers().forEach(bossBar::removePlayer);
+                bossBar.setVisible(false);
+                runnable.cancel();
+            }
+        }).runTaskTimer(0, 1);
     }
 
     @Override

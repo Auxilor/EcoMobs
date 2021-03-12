@@ -2,7 +2,7 @@ package com.willfp.ecobosses.bosses.listeners;
 
 
 import com.willfp.eco.util.events.entitydeathbyentity.EntityDeathByEntityEvent;
-import com.willfp.ecobosses.bosses.util.OptionedSound;
+import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

@@ -1,7 +1,7 @@
 package com.willfp.ecobosses.bosses.listeners;
 
 import com.willfp.eco.util.NumberUtils;
-import com.willfp.ecobosses.bosses.util.OptionedSound;
+import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
