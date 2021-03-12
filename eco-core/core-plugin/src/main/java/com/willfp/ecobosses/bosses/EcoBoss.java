@@ -1,8 +1,10 @@
 package com.willfp.ecobosses.bosses;
 
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
+import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
 import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
@@ -16,19 +18,24 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -181,6 +188,9 @@ public class EcoBoss extends PluginDependent {
 
         this.displayName = this.getConfig().getString("name");
 
+        // Boss Type
+        this.bossType = BossEntityUtils.getBossType(this.getConfig().getString("base-mob"));
+
         // Boss Bar
         this.bossbarEnabled = this.getConfig().getBool("bossbar.enabled");
         this.bossbarProperties = new BossbarProperties(
@@ -219,6 +229,91 @@ public class EcoBoss extends PluginDependent {
                 this.getConfig().getBool("defence.immunities.explosion")
         );
 
+        // Effects
+        this.effects = new HashSet<>();
+        for (String string : this.getConfig().getStrings("attacks.potion-effects")) {
+            String[] split = string.split(":");
+            PotionEffectType type = PotionEffectType.getByName(split[0].toUpperCase());
+            assert type != null;
+            this.effects.add(new EffectOption(
+                    Double.parseDouble(split[3]),
+                    Integer.parseInt(split[1]) - 1,
+                    Integer.parseInt(split[2]),
+                    type
+            ));
+        }
+
+        // Summons
+        this.summons = new HashSet<>();
+        for (String string : this.getConfig().getStrings("attacks.summons")) {
+            String[] split = string.split(":");
+            this.summons.add(new SummonsOption(
+                    Double.parseDouble(split[1]),
+                    EntityType.valueOf(split[0].toUpperCase())
+            ));
+        }
+
+        // Shuffle
+        this.shuffleChance = this.getConfig().getDouble("attacks.shuffle-chance");
+
+        // Attack on injure
+        this.attackOnInjure = this.getConfig().getBool("attacks.on-injure");
+
+        // Sounds
+        this.injureSounds = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("sounds.injure")) {
+            String[] split = string.split(":");
+            this.injureSounds.add(new OptionedSound(
+                    Sound.valueOf(split[0].toUpperCase()),
+                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[2])
+            ));
+        }
+
+        this.deathSounds = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("sounds.death")) {
+            String[] split = string.split(":");
+            this.deathSounds.add(new OptionedSound(
+                    Sound.valueOf(split[0].toUpperCase()),
+                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[2])
+            ));
+        }
+
+        this.summonSounds = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("sounds.summon")) {
+            String[] split = string.split(":");
+            this.summonSounds.add(new OptionedSound(
+                    Sound.valueOf(split[0].toUpperCase()),
+                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[2])
+            ));
+        }
+
+        this.spawnSounds = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("sounds.spawn")) {
+            String[] split = string.split(":");
+            this.spawnSounds.add(new OptionedSound(
+                    Sound.valueOf(split[0].toUpperCase()),
+                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[2])
+            ));
+        }
+
+        // Spawn egg
+        Material eggMaterial = Material.matchMaterial("spawn-egg.egg-material");
+        assert eggMaterial != null;
+        this.spawnEgg = new ItemStack(eggMaterial);
+        SpawnEggMeta meta = (SpawnEggMeta) this.spawnEgg.getItemMeta();
+        assert meta != null;
+        List<String> lore = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("spawn-egg.lore")) {
+            lore.add(StringUtils.translate(string));
+        }
+        meta.setLore(lore);
+        meta.setDisplayName(this.getConfig().getString("spawn-egg.display-name"));
+        meta.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getName());
+        this.spawnEgg.setItemMeta(meta);
 
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);

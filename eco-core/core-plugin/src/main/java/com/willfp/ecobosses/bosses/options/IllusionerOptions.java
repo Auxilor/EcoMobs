@@ -4,7 +4,6 @@ import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.tuples.Pair;
-import com.willfp.ecobosses.config.EcoBossesConfigs;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import lombok.Getter;

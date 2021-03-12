@@ -5,12 +5,12 @@ import com.willfp.eco.util.display.DisplayModule;
 import com.willfp.eco.util.integrations.IntegrationLoader;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.protocollib.AbstractPacketAdapter;
-import com.willfp.ecobosses.commands.CommandEbdrop;
-import com.willfp.ecobosses.commands.CommandEbreload;
-import com.willfp.ecobosses.config.EcoBossesConfigs;
+import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.listeners.AttackListeners;
 import com.willfp.ecobosses.bosses.listeners.DeathListeners;
 import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
+import com.willfp.ecobosses.commands.CommandEbdrop;
+import com.willfp.ecobosses.commands.CommandEbreload;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public class EcoBossesPlugin extends AbstractEcoPlugin {
      */
     @Override
     public void onReload() {
-        IllusionerManager.OPTIONS.reload();
+
     }
 
     /**
@@ -125,7 +125,7 @@ public class EcoBossesPlugin extends AbstractEcoPlugin {
     @Override
     public List<Class<?>> getUpdatableClasses() {
         return Arrays.asList(
-                EcoBossesConfigs.class
+                EcoBosses.class
         );
     }
 
