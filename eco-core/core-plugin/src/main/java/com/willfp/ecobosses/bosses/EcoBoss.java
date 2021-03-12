@@ -1,6 +1,7 @@
 package com.willfp.ecobosses.bosses;
 
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
+import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
@@ -11,6 +12,7 @@ import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
+import com.willfp.ecobosses.bosses.util.obj.TeleportOptions;
 import com.willfp.ecobosses.bosses.util.obj.attacks.EffectOption;
 import com.willfp.ecobosses.bosses.util.obj.attacks.SummonsOption;
 import lombok.AccessLevel;
@@ -31,10 +33,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -171,6 +175,18 @@ public class EcoBoss extends PluginDependent {
      */
     @Getter
     private final List<OptionedSound> summonSounds;
+
+    /**
+     * If the boss can teleport.
+     */
+    @Getter
+    private final boolean teleportationEnabled;
+
+    /**
+     * Teleport options.
+     */
+    @Getter
+    private final TeleportOptions teleportOptions;
 
     /**
      * Create a new Boss.
@@ -315,6 +331,13 @@ public class EcoBoss extends PluginDependent {
         meta.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getName());
         this.spawnEgg.setItemMeta(meta);
 
+        // Teleportation
+        this.teleportationEnabled = this.getConfig().getBool("defence.teleport.enabled");
+        this.teleportOptions = new TeleportOptions(
+                this.getConfig().getInt("defence.teleport.range"),
+                this.getConfig().getDouble("defence.teleport.chance")
+        );
+
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);
         }
@@ -337,6 +360,10 @@ public class EcoBoss extends PluginDependent {
         AttributeInstance attackDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
         assert attackDamage != null;
         attackDamage.setBaseValue(this.getAttackDamage());
+
+        for (OptionedSound sound : this.getSpawnSounds()) {
+            location.getWorld().playSound(location, sound.getSound(), sound.getVolume(), sound.getPitch());
+        }
 
         if (this.isBossbarEnabled()) {
             createBossBar(entity);
@@ -375,6 +402,57 @@ public class EcoBoss extends PluginDependent {
                 runnable.cancel();
             }
         }).runTaskTimer(0, 1);
+    }
+
+    /**
+     * Handle an attack to the player.
+     *
+     * @param entity The entity.
+     * @param player The player.
+     */
+    public void handleAttack(@NotNull final LivingEntity entity,
+                             @NotNull final Player player) {
+        for (OptionedSound sound : this.getInjureSounds()) {
+            player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+        }
+
+        for (EffectOption effect : this.getEffects()) {
+            if (NumberUtils.randFloat(0, 100) > effect.getChance()) {
+                return;
+            }
+
+            player.addPotionEffect(new PotionEffect(effect.getEffectType(), effect.getDuration(), effect.getLevel()));
+        }
+
+        if (NumberUtils.randFloat(0, 100) < this.getShuffleChance()) {
+            List<ItemStack> hotbar = new ArrayList<>();
+            for (int i = 0; i < 9; i++) {
+                hotbar.add(player.getInventory().getItem(i));
+            }
+            Collections.shuffle(hotbar);
+            int i2 = 0;
+            for (ItemStack item : hotbar) {
+                player.getInventory().setItem(i2, item);
+                i2++;
+            }
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_PEARL_THROW, 1, 0.5f);
+        }
+
+        for (SummonsOption summon : this.getSummons()) {
+            if (NumberUtils.randFloat(0, 100) > summon.getChance()) {
+                return;
+            }
+
+            Location loc = player.getLocation().add(NumberUtils.randInt(2, 6), 0, NumberUtils.randInt(2, 6));
+            while (!loc.getBlock().getType().equals(Material.AIR)) {
+                loc.add(0, 1, 0);
+            }
+            player.getWorld().spawnEntity(loc, summon.getType());
+
+            for (OptionedSound sound : this.getSummonSounds()) {
+                player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            }
+        }
     }
 
     @Override

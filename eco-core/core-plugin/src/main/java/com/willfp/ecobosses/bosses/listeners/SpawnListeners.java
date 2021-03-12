@@ -1,20 +1,15 @@
 package com.willfp.ecobosses.bosses.listeners;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+import com.willfp.ecobosses.bosses.EcoBoss;
+import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
-import com.willfp.ecobosses.proxy.proxies.CustomIllusionerProxy;
-import com.willfp.ecobosses.util.ProxyUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Illusioner;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class SpawnListeners extends PluginDependent implements Listener {
     /**
@@ -32,9 +27,7 @@ public class SpawnListeners extends PluginDependent implements Listener {
      * @param event The event to listen for.
      */
     @EventHandler
-    public void onSpawn(@NotNull final BlockPlaceEvent event) {
-        boolean matches = false;
-        Set<Block> match = new HashSet<>();
+    public void spawnTotem(@NotNull final BlockPlaceEvent event) {
         for (int i = 0; i < 3; i++) {
             Block block1;
             Block block2;
@@ -54,54 +47,19 @@ public class SpawnListeners extends PluginDependent implements Listener {
                 block3 = event.getBlock().getRelative(0, 1, 0);
             }
 
-            matches = SpawnTotem.matches(new SpawnTotem(block1.getType(), block2.getType(), block3.getType()));
-            if (matches) {
-                match.add(block1);
-                match.add(block2);
-                match.add(block3);
-                break;
+            SpawnTotem placedTotem = new SpawnTotem(block1.getType(), block2.getType(), block3.getType());
+
+            for (EcoBoss boss : EcoBosses.values()) {
+                if (boss.isSpawnTotemEnabled()) {
+                    if (boss.getSpawnTotem().equals(placedTotem)) {
+                        block1.setType(Material.AIR);
+                        block2.setType(Material.AIR);
+                        block3.setType(Material.AIR);
+
+                        boss.spawn(event.getBlock().getLocation());
+                    }
+                }
             }
         }
-
-        if (!matches) {
-            return;
-        }
-
-        match.forEach(block -> block.setType(Material.AIR));
-        IllusionerManager.OPTIONS.getSpawnSounds().forEach(optionedSound -> {
-            if (optionedSound.isBroadcast()) {
-                event.getBlock().getWorld().playSound(event.getBlock().getLocation(), optionedSound.getSound(), optionedSound.getVolume(), optionedSound.getPitch());
-            } else {
-                event.getPlayer().playSound(event.getBlock().getLocation(), optionedSound.getSound(), optionedSound.getVolume(), optionedSound.getPitch());
-            }
-        });
-
-        CustomIllusionerProxy illusioner = ProxyUtils.getProxy(IllusionerHelperProxy.class).spawn(event.getBlock().getLocation());
-        illusioner.createBossbar(this.getPlugin());
-    }
-
-    /**
-     * Called on vanilla illusioner spawn.
-     *
-     * @param event The event to listen for.
-     */
-    @EventHandler
-    public void onExternalSpawn(@NotNull final EntitySpawnEvent event) {
-        if (!(event.getEntity() instanceof Illusioner)) {
-            return;
-        }
-
-        if (!IllusionerManager.OPTIONS.isOverride()) {
-            return;
-        }
-
-        Illusioner illusioner = (Illusioner) event.getEntity();
-
-        CustomIllusionerProxy internalIllusioner = ProxyUtils.getProxy(IllusionerHelperProxy.class).adapt(illusioner);
-
-        if (internalIllusioner == null) {
-            return;
-        }
-        internalIllusioner.createBossbar(this.getPlugin());
     }
 }
