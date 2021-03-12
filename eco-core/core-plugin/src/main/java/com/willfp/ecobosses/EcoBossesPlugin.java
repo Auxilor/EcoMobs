@@ -11,6 +11,7 @@ import com.willfp.ecobosses.bosses.listeners.DeathListeners;
 import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
 import com.willfp.ecobosses.commands.CommandEbdrop;
 import com.willfp.ecobosses.commands.CommandEbreload;
+import com.willfp.ecobosses.commands.CommandEbspawn;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
@@ -94,7 +95,8 @@ public class EcoBossesPlugin extends AbstractEcoPlugin {
     public List<AbstractCommand> getCommands() {
         return Arrays.asList(
                 new CommandEbreload(this),
-                new CommandEbdrop(this)
+                new CommandEbdrop(this),
+                new CommandEbspawn(this)
         );
     }
 

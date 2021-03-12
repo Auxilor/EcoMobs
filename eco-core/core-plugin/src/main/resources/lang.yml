@@ -4,3 +4,6 @@ messages:
   not-player: "&cThis command must be run by a player"
   reloaded: "Reloaded!"
   sent-drop: "Check console for the drop!"
+  specify-boss: "&cYou must specify a valid boss!"
+  invalid-location: "&cInvalid location!"
+  spawned: "Spawned a boss!"

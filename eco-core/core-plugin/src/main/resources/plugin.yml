@@ -13,6 +13,9 @@ commands:
   ebdrop:
     description: Sends the held item to console to be added as a drop
     permission: ecobosses.ebdrop
+  ebspawn:
+    description: Spawns a boss
+    permission: ecobosses.ebspawn
 
 permissions:
   ecobosses.*:
@@ -21,6 +24,7 @@ permissions:
     children:
       ecobosses.reload: true
       ecobosses.ebdrop: true
+      ecobosses.ebspawn: true
 
   ecobosses.reload:
     description: Allows reloading the config
@@ -28,4 +32,8 @@ permissions:
 
   ecobosses.ebdrop:
     description: Allows the use of /ebdrop
+    default: op
+
+  ecobosses.ebspawn:
+    description: Allows the use of /ebspawn
     default: op
