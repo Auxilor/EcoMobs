@@ -211,7 +211,13 @@ public class EcoBoss extends PluginDependent {
         );
 
         // Immunities
-
+        this.immunityOptions = new ImmunityOptions(
+                this.getConfig().getBool("defence.immunities.fire"),
+                this.getConfig().getBool("defence.immunities.suffocation"),
+                this.getConfig().getBool("defence.immunities.drowning"),
+                this.getConfig().getBool("defence.immunities.projectiles"),
+                this.getConfig().getBool("defence.immunities.explosion")
+        );
 
 
         if (this.getConfig().getBool("enabled")) {
