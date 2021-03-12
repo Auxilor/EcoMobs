@@ -33,7 +33,7 @@ public class EcoBossesPlugin extends AbstractEcoPlugin {
      * Internal constructor called by bukkit on plugin load.
      */
     public EcoBossesPlugin() {
-        super("EcoBosses", 86576, 9596, "com.willfp.ecobosses.proxy", "&9");
+        super("EcoBosses", 86576, 10635, "com.willfp.ecobosses.proxy", "&9");
         instance = this;
     }
 

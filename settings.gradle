@@ -1,4 +1,4 @@
-rootProject.name = 'Illusioner'
+rootProject.name = 'EcoBosses'
 
 // Core
 include ':eco-core'

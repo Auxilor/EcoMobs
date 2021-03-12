@@ -1,20 +1,20 @@
 <h1 align="center">
   <br>
-  <img src="https://i.imgur.com/I74yjwu.png" alt="Illusioner logo" width="256">
+    <img src="https://i.imgur.com/I74yjwu.png" alt="EcoBosses logo" width="256">
   <br>
 </h1>
 
-<h4 align="center">Source code for Illusioner, a premium spigot plugin.</h4>
+<h4 align="center">Source code for EcoBosses, a premium spigot plugin.</h4>
 
 <p align="center">
-    <a href="https://www.spigotmc.org/resources/illusioner.79573/">
-        <img alt="spigot" src="https://img.shields.io/badge/spigot-illusioner-blue?style=for-the-badge"/>
+    <a href="https://www.spigotmc.org/resources/ecobosses.79573/">
+        <img alt="spigot" src="https://img.shields.io/badge/spigot-ecobosses-blue?style=for-the-badge"/>
     </a>
-    <a href="https://bstats.org/plugin/bukkit/Illusioner" alt="bstats servers">
-        <img src="https://img.shields.io/bstats/servers/9596?color=blue&style=for-the-badge"/>
+    <a href="https://bstats.org/plugin/bukkit/EcoBosses" alt="bstats servers">
+        <img src="https://img.shields.io/bstats/servers/10635?color=blue&style=for-the-badge"/>
     </a>
-    <a href="https://bstats.org/plugin/bukkit/Illusioner" alt="bstats players">
-        <img src="https://img.shields.io/bstats/players/9596?color=blue&style=for-the-badge"/>
+    <a href="https://bstats.org/plugin/bukkit/EcoBosses" alt="bstats players">
+        <img src="https://img.shields.io/bstats/players/10635?color=blue&style=for-the-badge"/>
     </a>
     <a href="https://illusioner.willfp.com/" alt="Docs (gitbook)">
         <img src="https://img.shields.io/badge/docs-gitbook-blue?style=for-the-badge&logo=appveyor"/>
@@ -25,13 +25,7 @@
 </p>
 
 
-[![Title](https://i.imgur.com/Ww5C2OS.png)]()
-[![Features](https://i.imgur.com/sqYmdNl.png)]()
-[![Docs](https://i.imgur.com/DYU1ooZ.png)](https://www.youtube.com/watch?v=AiRDwKc6LYQ)
-[![Compatibility](https://i.imgur.com/xn5ua3c.png)]()
+[![Title](https://i.imgur.com/BI4O6Xi.png)]()
 
 ## License
-*Click here to read [the entire license](https://github.com/Auxilor/Illusioner/blob/master/LICENSE.md).*
-
-Illusioner is not freeware. In order to use it you must purchase a license on [spigotmc.org](https://spigotmc.org).
-Distributing compiled versions of the plugin is not permitted.
+*Click here to read [the entire license](https://github.com/Auxilor/EcoBosses/blob/master/LICENSE.md).*
