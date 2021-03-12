@@ -3,11 +3,6 @@ enabled: true
 name: "Illusioner" # Display name
 base-mob: custom_illusioner # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
 
-spawn-egg:
-  egg-material: squid_spawn_egg
-  display-name: "Illusioner Spawn Egg"
-  lore: []
-
 bossbar:
   enabled: true
   color: BLUE # Choose from: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
@@ -20,7 +15,7 @@ spawn-totem:
   enabled: true
   top: carved_pumpkin
   middle: beacon
-  bottom: diamond
+  bottom: diamond_block
 
 rewards:
   xp:

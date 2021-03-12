@@ -2,7 +2,6 @@ package com.willfp.ecobosses.bosses;
 
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
 import com.willfp.eco.util.NumberUtils;
-import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
@@ -32,7 +31,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -146,12 +144,6 @@ public class EcoBoss extends PluginDependent {
      */
     @Getter
     private final boolean attackOnInjure;
-
-    /**
-     * The ItemStack for the spawn egg.
-     */
-    @Getter
-    private final ItemStack spawnEgg;
 
     /**
      * Sounds played on injure.
@@ -321,6 +313,7 @@ public class EcoBoss extends PluginDependent {
         }
 
         // Spawn egg
+        /*
         Material eggMaterial = Material.matchMaterial(this.getConfig().getString("spawn-egg.egg-material").toUpperCase());
         assert eggMaterial != null;
         this.spawnEgg = new ItemStack(eggMaterial);
@@ -334,6 +327,8 @@ public class EcoBoss extends PluginDependent {
         meta.setDisplayName(this.getConfig().getString("spawn-egg.display-name"));
         meta.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getName());
         this.spawnEgg.setItemMeta(meta);
+
+         */
 
         // Teleportation
         this.teleportationEnabled = this.getConfig().getBool("defence.teleport.enabled");
