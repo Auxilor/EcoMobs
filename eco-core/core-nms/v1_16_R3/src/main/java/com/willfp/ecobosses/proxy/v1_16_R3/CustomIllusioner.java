@@ -19,7 +19,6 @@ import net.minecraft.server.v1_16_R3.PathfinderGoalRandomStroll;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.util.CraftNamespacedKey;
-import org.bukkit.entity.Illusioner;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,12 +49,5 @@ public class CustomIllusioner extends EntityIllagerIllusioner implements CustomI
         this.targetSelector.a(2, (new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true)).a(300));
         this.targetSelector.a(3, (new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)).a(300));
         this.targetSelector.a(3, (new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, false)).a(300));
-    }
-
-    @Override
-    public Illusioner spawn(@NotNull final Location location) {
-        CustomIllusioner illusioner = new CustomIllusioner(location);
-        ((CraftWorld) location.getWorld()).getHandle().addEntity(illusioner);
-        return (Illusioner) illusioner.getBukkitEntity();
     }
 }

@@ -1,7 +1,6 @@
 package com.willfp.ecobosses.bosses.util.bosstype;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,14 +10,14 @@ class VanillaBossType extends BossType {
     /**
      * The entity type.
      */
-    private final Class<? extends Entity> entityClass;
+    private final Class<? extends LivingEntity> entityClass;
 
     /**
      * Create new vanilla boss type.
      *
      * @param entityClass The entity class.
      */
-    VanillaBossType(@NotNull final Class<? extends Entity> entityClass) {
+    VanillaBossType(@NotNull final Class<? extends LivingEntity> entityClass) {
         this.entityClass = entityClass;
     }
 
