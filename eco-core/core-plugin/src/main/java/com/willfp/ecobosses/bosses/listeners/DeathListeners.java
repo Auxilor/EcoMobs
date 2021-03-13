@@ -6,12 +6,15 @@ import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.events.entitydeathbyentity.EntityDeathByEntityEvent;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+import com.willfp.eco.util.tuples.Pair;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DeathListeners extends PluginDependent implements Listener {
     /**
@@ -105,12 +109,44 @@ public class DeathListeners extends PluginDependent implements Listener {
             );
         }
 
-        List<ItemStack> drops = new ArrayList<>();
-        boss.getDrops().forEach((aDouble, itemStack) -> {
-            if (NumberUtils.randFloat(0, 100) < aDouble) {
-                drops.add(itemStack);
+        for (int i = 1; i <= 3; i++) {
+            List<Pair<Double, String>> topDamagerCommands = boss.getTopDamagerCommands().get(i);
+            for (Pair<Double, String> pair : topDamagerCommands) {
+                if (top != null && i == 1) {
+                    if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", top.getPlayer().getName()));
+                    }
+                }
+                if (second != null && i == 2) {
+                    if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", second.getPlayer().getName()));
+                    }
+                }
+                if (third != null && i == 3) {
+                    if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", third.getPlayer().getName()));
+                    }
+                }
             }
-        });
+        }
+
+        List<ItemStack> drops = new ArrayList<>();
+        for (Map.Entry<ItemStack, Double> entry : boss.getDrops().entrySet()) {
+            if (NumberUtils.randFloat(0, 100) < entry.getValue()) {
+                drops.add(entry.getKey());
+            }
+        }
+
+        for (Entity nearby : entity.getNearbyEntities(boss.getNearbyRadius(), boss.getNearbyRadius(), boss.getNearbyRadius())) {
+            if (nearby instanceof Player) {
+                String playerName = nearby.getName();
+                for (Map.Entry<String, Double> entry : boss.getNearbyPlayersCommands().entrySet()) {
+                    if (NumberUtils.randFloat(0, 100) < entry.getValue()) {
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), entry.getKey().replace("%player%", playerName));
+                    }
+                }
+            }
+        }
 
         event.getDrops().addAll(drops);
         event.setDroppedExp(boss.getExperienceOptions().generateXp());

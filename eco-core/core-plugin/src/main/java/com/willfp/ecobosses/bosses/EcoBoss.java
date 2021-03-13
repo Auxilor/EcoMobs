@@ -5,6 +5,7 @@ import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+import com.willfp.eco.util.tuples.Pair;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
@@ -118,7 +119,7 @@ public class EcoBoss extends PluginDependent {
      * The drops.
      */
     @Getter
-    private final Map<Double, ItemStack> drops;
+    private final Map<ItemStack, Double> drops;
 
     /**
      * The exp to drop.
@@ -199,6 +200,24 @@ public class EcoBoss extends PluginDependent {
     private final List<String> deathMessages;
 
     /**
+     * Nearby players radius.
+     */
+    @Getter
+    private final double nearbyRadius;
+
+    /**
+     * Nearby players commands.
+     */
+    @Getter
+    private final Map<String, Double> nearbyPlayersCommands;
+
+    /**
+     * Top damager commands.
+     */
+    @Getter
+    private final Map<Integer, List<Pair<Double, String>>> topDamagerCommands;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -253,7 +272,7 @@ public class EcoBoss extends PluginDependent {
                 e.printStackTrace();
             }
             ItemStack itemStack = tempConfig.getItemStack("drop-key");
-            this.drops.put(chance, itemStack);
+            this.drops.put(itemStack, chance);
         }
         this.experienceOptions = new ExperienceOptions(
                 this.getConfig().getInt("rewards.xp.minimum"),
@@ -374,6 +393,35 @@ public class EcoBoss extends PluginDependent {
                 this.getConfig().getInt("defence.teleport.range"),
                 this.getConfig().getDouble("defence.teleport.chance")
         );
+
+        // Top Damager Commands
+        this.topDamagerCommands = new HashMap<>();
+        for (int i = 1; i <= 3; i++) {
+            for (String string : this.getConfig().getStrings("rewards.top-damager-commands." + i)) {
+                double chance = 100;
+                if (string.contains("::")) {
+                    String[] split = string.split("::");
+                    chance = Double.parseDouble(split[0]);
+                    string = split[1];
+                }
+                List<Pair<Double, String>> commands = this.topDamagerCommands.get(i) == null ? new ArrayList<>() : this.topDamagerCommands.get(i);
+                commands.add(new Pair<>(chance, string));
+                this.topDamagerCommands.put(i, commands);
+            }
+        }
+
+        // Nearby Rewards
+        this.nearbyRadius = this.getConfig().getDouble("rewards.nearby-player-commands.radius");
+        this.nearbyPlayersCommands = new HashMap<>();
+        for (String string : this.getConfig().getStrings("rewards.nearby-player-commands.commands")) {
+            double chance = 100;
+            if (string.contains("::")) {
+                String[] split = string.split("::");
+                chance = Double.parseDouble(split[0]);
+                string = split[1];
+            }
+            this.nearbyPlayersCommands.put(string, chance);
+        }
 
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);

@@ -22,18 +22,22 @@ rewards:
     minimum: 20000
     maximum: 25000
   top-damager-commands:
+    # To set a chance for a command, put <chance>::<command>
     1:
-      - "40::give %player% diamond_block"
+      - "give %player% diamond_block"
     2:
       - "25::give %player% emerald_block"
     3:
       - "10::give %player% iron_block"
   nearby-player-commands:
     radius: 10
+    # To set a chance for a command, put <chance>::<command>
+    # Use %player% as the placeholder for the player name
     commands: []
-  drops:
-    # Get items to add here by copying the console output for /ebdrop
-    # To set the chance for a drop, put <chance>::<base64>
+
+  # Get items to add here by copying the console output for /ebdrop
+  # To set the chance for a drop, put <chance>::<base64>
+  drops: []
 
 broadcast:
   spawn:
