@@ -51,12 +51,14 @@ public class SpawnListeners extends PluginDependent implements Listener {
 
             for (EcoBoss boss : EcoBosses.values()) {
                 if (boss.isSpawnTotemEnabled()) {
-                    if (boss.getSpawnTotem().equals(placedTotem)) {
-                        block1.setType(Material.AIR);
-                        block2.setType(Material.AIR);
-                        block3.setType(Material.AIR);
+                    if (!boss.getSpawnTotemDisabledWorldNames().contains(event.getBlock().getWorld().getName().toLowerCase())) {
+                        if (boss.getSpawnTotem().equals(placedTotem)) {
+                            block1.setType(Material.AIR);
+                            block2.setType(Material.AIR);
+                            block3.setType(Material.AIR);
 
-                        boss.spawn(event.getBlock().getLocation());
+                            boss.spawn(event.getBlock().getLocation());
+                        }
                     }
                 }
             }

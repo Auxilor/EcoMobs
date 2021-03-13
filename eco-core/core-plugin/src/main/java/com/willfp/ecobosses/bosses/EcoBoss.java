@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EcoBoss extends PluginDependent {
     /**
@@ -96,6 +97,12 @@ public class EcoBoss extends PluginDependent {
      */
     @Getter
     private final SpawnTotem spawnTotem;
+
+    /**
+     * Disabled world names for spawn totem.
+     */
+    @Getter
+    private final List<String> spawnTotemDisabledWorldNames;
 
     /**
      * The max health.
@@ -254,6 +261,7 @@ public class EcoBoss extends PluginDependent {
                 Material.getMaterial(this.getConfig().getString("spawn-totem.middle").toUpperCase()),
                 Material.getMaterial(this.getConfig().getString("spawn-totem.top").toUpperCase())
         );
+        this.spawnTotemDisabledWorldNames = this.getConfig().getStrings("spawn-totem.world-blacklist").stream().map(String::toLowerCase).collect(Collectors.toList());
 
         // Rewards
         this.drops = new HashMap<>();

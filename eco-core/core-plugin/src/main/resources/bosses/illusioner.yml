@@ -16,6 +16,7 @@ spawn-totem:
   top: carved_pumpkin
   middle: beacon
   bottom: diamond_block
+  world-blacklist: []
 
 rewards:
   xp:
@@ -49,9 +50,9 @@ broadcast:
     - ""
     - "&fThe &9&lIllusioner&r&f has been killed!"
     - "&fMost Damage:"
-    - "&f - &9%top%&f: &9%top_damage% &fDamage"
-    - "&f - &9%second%&f: &9%second_damage% &fDamage"
-    - "&f - &9%third%&f: &9%third_damage% &fDamage"
+    - "&f - &9%top%&f (%top_damage% Damage)"
+    - "&f - &9%second%&f (%second_damage% Damage)"
+    - "&f - &9%third%&f (%third_damage% Damage)"
     - ""
 
 
