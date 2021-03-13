@@ -3,7 +3,6 @@ package com.willfp.ecobosses.bosses.listeners;
 import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
-import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
@@ -22,16 +21,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.UUID;
 
 public class AttackListeners extends PluginDependent implements Listener {
     /**

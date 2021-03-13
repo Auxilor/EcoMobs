@@ -11,6 +11,6 @@ public class BaseBossConfig extends ExtendableConfig {
      * @param configName The name of the config.
      */
     public BaseBossConfig(@NotNull final String configName) {
-        super(configName, false, EcoBossesPlugin.getInstance(), EcoBossesPlugin.class, "bosses/");
+        super(configName, true, EcoBossesPlugin.getInstance(), EcoBossesPlugin.class, "bosses/");
     }
 }
