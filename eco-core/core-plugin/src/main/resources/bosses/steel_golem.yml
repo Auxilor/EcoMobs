@@ -110,7 +110,7 @@ sounds:
     - "entity_ender_dragon_growl:100:0.5"
 
   death: # On death
-    - "entity_ender_dragon_death:50:0.6"
+    - "entity_ender_dragon_death:50:1.8"
     - "entity_wither_death:50:1.2"
 
   summon: # On summon enemy
