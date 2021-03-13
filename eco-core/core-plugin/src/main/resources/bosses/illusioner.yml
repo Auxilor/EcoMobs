@@ -42,16 +42,16 @@ rewards:
 broadcast:
   spawn:
     - ""
-    - "&9The &9&lIllusioner&r&9 has been spawned!"
-    - "&9Come fight it at &b%x%&9, &b%y%&9, &b%z%&9!"
+    - "&fAn &9&lIllusioner&r&f has been spawned!"
+    - "&fCome fight it at &9%x%&f, &9%y%&f, &9%z%&f!"
     - ""
   death:
     - ""
-    - "&9The &9&lIllusioner&r&9 has been killed!"
-    - "&9Most Damage:"
-    - "&9 - &b%top%&9: &b%top_damage% &9Damage"
-    - "&9 - &b%second%&9: &b%second_damage% &9Damage"
-    - "&9 - &b%third%&9: &b%third_damage% &9Damage"
+    - "&fThe &9&lIllusioner&r&f has been killed!"
+    - "&fMost Damage:"
+    - "&f - &9%top%&f: &9%top_damage% &fDamage"
+    - "&f - &9%second%&f: &9%second_damage% &fDamage"
+    - "&f - &9%third%&f: &9%third_damage% &fDamage"
     - ""
 
 
