@@ -8,8 +8,9 @@ bossbar:
   color: RED # Choose from: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
   style: SOLID # Choose from: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
 
-max-health: 900
+max-health: 1200
 attack-damage: 80
+movement-speed: 0.8
 
 spawn-totem:
   enabled: true

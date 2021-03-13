@@ -117,6 +117,12 @@ public class EcoBoss extends PluginDependent {
     private final int attackDamage;
 
     /**
+     * The movement speed.
+     */
+    @Getter
+    private final int movementSpeed;
+
+    /**
      * The immunity options.
      */
     @Getter
@@ -253,6 +259,7 @@ public class EcoBoss extends PluginDependent {
         // Attributes
         this.attackDamage = this.getConfig().getInt("attack-damage");
         this.maxHealth = this.getConfig().getInt("max-health");
+        this.movementSpeed = this.getConfig().getInt("movement-speed");
 
         // Spawn Totem
         this.spawnTotemEnabled = this.getConfig().getBool("spawn-totem.enabled");
@@ -449,6 +456,10 @@ public class EcoBoss extends PluginDependent {
 
         entity.setCustomName(this.getDisplayName());
         entity.setCustomNameVisible(true);
+
+        AttributeInstance movementSpeed = entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        assert movementSpeed != null;
+        movementSpeed.setBaseValue(this.getMovementSpeed());
 
         AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         assert maxHealth != null;
