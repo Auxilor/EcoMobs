@@ -355,7 +355,7 @@ public class EcoBoss extends PluginDependent {
             String[] split = string.split(":");
             this.injureSounds.add(new OptionedSound(
                     Sound.valueOf(split[0].toUpperCase()),
-                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[1]) / 16,
                     Float.parseFloat(split[2])
             ));
         }
@@ -365,7 +365,7 @@ public class EcoBoss extends PluginDependent {
             String[] split = string.split(":");
             this.deathSounds.add(new OptionedSound(
                     Sound.valueOf(split[0].toUpperCase()),
-                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[1]) / 16,
                     Float.parseFloat(split[2])
             ));
         }
@@ -375,7 +375,7 @@ public class EcoBoss extends PluginDependent {
             String[] split = string.split(":");
             this.summonSounds.add(new OptionedSound(
                     Sound.valueOf(split[0].toUpperCase()),
-                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[1]) / 16,
                     Float.parseFloat(split[2])
             ));
         }
@@ -385,7 +385,7 @@ public class EcoBoss extends PluginDependent {
             String[] split = string.split(":");
             this.spawnSounds.add(new OptionedSound(
                     Sound.valueOf(split[0].toUpperCase()),
-                    Float.parseFloat(split[1]),
+                    Float.parseFloat(split[1]) / 16,
                     Float.parseFloat(split[2])
             ));
         }
