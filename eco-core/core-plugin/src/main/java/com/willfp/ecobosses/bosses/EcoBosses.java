@@ -30,7 +30,8 @@ public class EcoBosses {
      */
     private static final List<String> DEFAULT_BOSSES = Arrays.asList(
             "illusioner",
-            "tarantula"
+            "tarantula",
+            "steel_golem"
     );
 
     /**

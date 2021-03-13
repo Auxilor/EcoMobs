@@ -1,6 +1,6 @@
 enabled: true
 
-name: "Tarantula" # Display name
+name: "&4Tarantula" # Display name
 base-mob: cave_spider # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
 
 bossbar:
@@ -10,7 +10,7 @@ bossbar:
 
 max-health: 1200
 attack-damage: 80
-movement-speed: 0.8
+movement-speed: 0.9
 
 spawn-totem:
   enabled: true
@@ -110,7 +110,7 @@ sounds:
     - "entity_wither_death:50:0.5"
 
   summon: # On summon enemy
-    - "entity_spider_step:1:1.2"
+    - "entity_spider_step:10:1.2"
 
   injure: # On take damage
-    - "entity_spider_hurt:1:0.7"
+    - "entity_spider_hurt:10:0.7"
