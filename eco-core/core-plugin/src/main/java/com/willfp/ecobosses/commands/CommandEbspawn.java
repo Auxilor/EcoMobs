@@ -43,6 +43,11 @@ public class CommandEbspawn extends AbstractCommand {
 
         EcoBoss boss = EcoBosses.getByName(bossName.toLowerCase());
 
+        if (boss == null) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("specify-boss"));
+            return;
+        }
+
         Location location = null;
 
         if (sender instanceof Player) {
