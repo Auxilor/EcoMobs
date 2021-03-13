@@ -27,6 +27,8 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -36,7 +38,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -221,11 +225,16 @@ public class EcoBoss extends PluginDependent {
 
         // Rewards
         this.drops = new ArrayList<>();
-        ConfigurationSection dropsSection = this.getConfig().getSectionOrNull("rewards.drops");
-        if (dropsSection != null) {
-            dropsSection.getKeys(false).forEach(s -> {
-                this.drops.add(this.getConfig().getConfig().getItemStack("rewards.drops." + s));
-            });
+        for (String string : this.getConfig().getStrings("rewards.drops")) {
+            YamlConfiguration tempConfig = new YamlConfiguration();
+            String tempConfigString = new String(Base64.getDecoder().decode(string));
+            try {
+                tempConfig.load(tempConfigString);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+            ItemStack itemStack = tempConfig.getItemStack("drop-key");
+            this.drops.add(itemStack);
         }
         this.experienceOptions = new ExperienceOptions(
                 this.getConfig().getInt("rewards.xp.minimum"),
