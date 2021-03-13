@@ -405,6 +405,7 @@ public class EcoBoss extends PluginDependent {
         // Top Damager Commands
         this.topDamagerCommands = new HashMap<>();
         for (int i = 1; i <= 3; i++) {
+            this.topDamagerCommands.put(i, new ArrayList<>());
             for (String string : this.getConfig().getStrings("rewards.top-damager-commands." + i)) {
                 double chance = 100;
                 if (string.contains("::")) {
