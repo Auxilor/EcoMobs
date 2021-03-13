@@ -7,3 +7,5 @@ messages:
   specify-boss: "&cYou must specify a valid boss!"
   invalid-location: "&cInvalid location!"
   spawned: "Spawned a boss!"
+
+na: "N/A"

@@ -21,8 +21,35 @@ rewards:
   xp:
     minimum: 20000
     maximum: 25000
+  top-damager-commands:
+    1:
+      - "40::give %player% diamond_block"
+    2:
+      - "25::give %player% emerald_block"
+    3:
+      - "10::give %player% iron_block"
+  nearby-player-commands:
+    radius: 10
+    commands: []
   drops:
     # Get items to add here by copying the console output for /ebdrop
+    # To set the chance for a drop, put <chance>::<base64>
+
+broadcast:
+  spawn:
+    - ""
+    - "&9The &9&lIllusioner&r&9 has been spawned!"
+    - "&9Come fight it at &b%x%&9, &b%y%&9, &b%z%&9!"
+    - ""
+  death:
+    - ""
+    - "&9The &9&lIllusioner&r&9 has been killed!"
+    - "&9Most Damage:"
+    - "&9 - &b%top%&9: &b%top_damage% &9Damage"
+    - "&9 - &b%second%&9: &b%second_damage% &9Damage"
+    - "&9 - &b%third%&9: &b%third_damage% &9Damage"
+    - ""
+
 
 defence:
   immunities:

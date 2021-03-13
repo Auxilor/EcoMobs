@@ -119,8 +119,8 @@ public class EcoBossesPlugin extends AbstractEcoPlugin {
     @Override
     public List<Listener> getListeners() {
         return Arrays.asList(
-                new AttackListeners(),
-                new DeathListeners(),
+                new AttackListeners(this),
+                new DeathListeners(this),
                 new SpawnListeners(this)
         );
     }

@@ -1,8 +1,12 @@
 package com.willfp.ecobosses.bosses.listeners;
 
 import com.willfp.eco.util.NumberUtils;
+import com.willfp.eco.util.internal.PluginDependent;
+import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
+import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,17 +14,35 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.UUID;
 
-public class AttackListeners implements Listener {
+public class AttackListeners extends PluginDependent implements Listener {
+    /**
+     * Create new attack listeners.
+     *
+     * @param plugin Instance of EcoBosses.
+     */
+    public AttackListeners(@NotNull final AbstractEcoPlugin plugin) {
+        super(plugin);
+    }
+
     /**
      * Called when a player attacks a boss.
      *
@@ -28,17 +50,25 @@ public class AttackListeners implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onAttackBoss(@NotNull final EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
-            return;
-        }
-
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
 
         LivingEntity entity = (LivingEntity) event.getEntity();
 
-        Player player = (Player) event.getDamager();
+        Player player = null;
+
+        if (event.getDamager() instanceof Player) {
+            player = (Player) event.getDamager();
+        } else if (event.getDamager() instanceof Projectile) {
+            if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
+                player = (Player) ((Projectile) event.getDamager()).getShooter();
+            }
+        }
+
+        if (player == null) {
+            return;
+        }
 
         EcoBoss boss = BossUtils.getBoss(entity);
 
@@ -49,6 +79,56 @@ public class AttackListeners implements Listener {
         if (boss.isAttackOnInjure()) {
             boss.handleAttack(entity, player);
         }
+    }
+
+    /**
+     * Track top damage players.
+     *
+     * @param event The event to listen for.
+     */
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void topDamageTracker(@NotNull final EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
+
+        LivingEntity entity = (LivingEntity) event.getEntity();
+
+        Player temp = null;
+
+        if (event.getDamager() instanceof Player) {
+            temp = (Player) event.getDamager();
+        } else if (event.getDamager() instanceof Projectile) {
+            if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
+                temp = (Player) ((Projectile) event.getDamager()).getShooter();
+            }
+        }
+
+        if (temp == null) {
+            return;
+        }
+
+        Player player = temp;
+
+        EcoBoss boss = BossUtils.getBoss(entity);
+
+        if (boss == null) {
+            return;
+        }
+
+        List<DamagerProperty> topDamagers = BossUtils.getTopDamagers(entity);
+
+        double playerDamage;
+
+        Optional<DamagerProperty> damager = topDamagers.stream().filter(damagerProperty -> damagerProperty.getPlayer().equals(player)).findFirst();
+        playerDamage = damager.map(DamagerProperty::getDamage).orElse(0.0);
+
+        playerDamage += event.getFinalDamage();
+        topDamagers.removeIf(damagerProperty -> damagerProperty.getPlayer().equals(player));
+        topDamagers.add(new DamagerProperty(player, playerDamage));
+
+        entity.removeMetadata("ecobosses-top-damagers", this.getPlugin());
+        entity.setMetadata("ecobosses-top-damagers", this.getPlugin().getMetadataValueFactory().create(topDamagers));
     }
 
     /**

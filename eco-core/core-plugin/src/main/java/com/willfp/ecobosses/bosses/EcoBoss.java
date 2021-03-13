@@ -2,6 +2,7 @@ package com.willfp.ecobosses.bosses;
 
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
 import com.willfp.eco.util.NumberUtils;
+import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
@@ -36,14 +37,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -117,7 +121,7 @@ public class EcoBoss extends PluginDependent {
      * The drops.
      */
     @Getter
-    private final List<ItemStack> drops;
+    private final Map<Double, ItemStack> drops;
 
     /**
      * The exp to drop.
@@ -186,6 +190,18 @@ public class EcoBoss extends PluginDependent {
     private final TeleportOptions teleportOptions;
 
     /**
+     * Spawn messages.
+     */
+    @Getter
+    private final List<String> spawnMessages;
+
+    /**
+     * Death messages.
+     */
+    @Getter
+    private final List<String> deathMessages;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -224,9 +240,15 @@ public class EcoBoss extends PluginDependent {
         );
 
         // Rewards
-        this.drops = new ArrayList<>();
+        this.drops = new HashMap<>();
         for (String string : this.getConfig().getStrings("rewards.drops")) {
             YamlConfiguration tempConfig = new YamlConfiguration();
+            double chance = 100;
+            if (string.contains("::")) {
+                String[] split = string.split("::");
+                chance = Double.parseDouble(split[0]);
+                string = split[1];
+            }
             String tempConfigString = new String(Base64.getDecoder().decode(string));
             try {
                 tempConfig.load(tempConfigString);
@@ -234,7 +256,7 @@ public class EcoBoss extends PluginDependent {
                 e.printStackTrace();
             }
             ItemStack itemStack = tempConfig.getItemStack("drop-key");
-            this.drops.add(itemStack);
+            this.drops.put(chance, itemStack);
         }
         this.experienceOptions = new ExperienceOptions(
                 this.getConfig().getInt("rewards.xp.minimum"),
@@ -339,6 +361,16 @@ public class EcoBoss extends PluginDependent {
 
          */
 
+        // Messages
+        this.spawnMessages = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("broadcast.spawn")) {
+            this.spawnMessages.add(StringUtils.translate(string));
+        }
+        this.deathMessages = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("broadcast.death")) {
+            this.deathMessages.add(StringUtils.translate(string));
+        }
+
         // Teleportation
         this.teleportationEnabled = this.getConfig().getBool("defence.teleport.enabled");
         this.teleportOptions = new TeleportOptions(
@@ -361,6 +393,9 @@ public class EcoBoss extends PluginDependent {
         entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, name);
         entity.setPersistent(true);
 
+        entity.setCustomName(this.getDisplayName());
+        entity.setCustomNameVisible(true);
+
         AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         assert maxHealth != null;
         maxHealth.setBaseValue(this.getMaxHealth());
@@ -375,6 +410,14 @@ public class EcoBoss extends PluginDependent {
             location.getWorld().playSound(location, sound.getSound(), sound.getVolume(), sound.getPitch());
         }
 
+        for (String spawnMessage : this.getSpawnMessages()) {
+            Bukkit.broadcastMessage(spawnMessage
+                    .replace("%x%", StringUtils.internalToString(location.getBlockX()))
+                    .replace("%y%", StringUtils.internalToString(location.getBlockY()))
+                    .replace("%z%", StringUtils.internalToString(location.getBlockZ()))
+            );
+        }
+
         if (this.isBossbarEnabled()) {
             createBossBar(entity);
         }
@@ -382,7 +425,7 @@ public class EcoBoss extends PluginDependent {
 
     private void createBossBar(@NotNull final LivingEntity entity) {
         BossBar bossBar = Bukkit.getServer().createBossBar(
-                this.getDisplayName(),
+                entity.getCustomName(),
                 this.getBossbarProperties().getColor(),
                 this.getBossbarProperties().getStyle(),
                 (BarFlag) null
