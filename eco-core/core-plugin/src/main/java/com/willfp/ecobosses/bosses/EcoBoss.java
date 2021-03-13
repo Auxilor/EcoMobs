@@ -33,6 +33,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
@@ -231,6 +232,12 @@ public class EcoBoss extends PluginDependent {
     private final Map<Integer, List<Pair<Double, String>>> topDamagerCommands;
 
     /**
+     * Incoming damage multipliers.
+     */
+    @Getter
+    private final Map<EntityDamageEvent.DamageCause, Double> incomingMultipliers;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -302,6 +309,15 @@ public class EcoBoss extends PluginDependent {
                 this.getConfig().getBool("defence.immunities.projectiles"),
                 this.getConfig().getBool("defence.immunities.explosion")
         );
+
+        // Multipliers
+        this.incomingMultipliers = new HashMap<>();
+        double melee = this.getConfig().getDouble("defence.incoming-multipliers.melee");
+        this.incomingMultipliers.put(EntityDamageEvent.DamageCause.ENTITY_ATTACK, melee);
+        this.incomingMultipliers.put(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK, melee);
+
+        double projectile = this.getConfig().getDouble("defence.incoming-multipliers.projectile");
+        this.incomingMultipliers.put(EntityDamageEvent.DamageCause.PROJECTILE, projectile);
 
         // Effects
         this.effects = new HashSet<>();

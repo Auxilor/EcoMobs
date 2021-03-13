@@ -62,6 +62,10 @@ defence:
     projectiles: false
     suffocation: true
 
+  incoming-multipliers:
+    melee: 1
+    projectile: 0.6
+
   # If the boss should teleport when damaged
   teleport:
     enabled: true

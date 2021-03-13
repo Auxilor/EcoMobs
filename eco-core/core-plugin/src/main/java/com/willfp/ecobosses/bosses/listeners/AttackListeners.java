@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class AttackListeners extends PluginDependent implements Listener {
@@ -157,7 +158,7 @@ public class AttackListeners extends PluginDependent implements Listener {
      *
      * @param event The event to listen for.
      */
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void defenceListener(@NotNull final EntityDamageEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
@@ -176,21 +177,23 @@ public class AttackListeners extends PluginDependent implements Listener {
         if (immunities.isImmuneToFire() && (event.getCause() == EntityDamageEvent.DamageCause.FIRE || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)) {
             event.setCancelled(true);
         }
-
         if (immunities.isImmuneToSuffocation() && event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
             event.setCancelled(true);
         }
-
         if (immunities.isImmuneToDrowning() && event.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
             event.setCancelled(true);
         }
-
         if (immunities.isImmuneToExplosions() && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION || event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)) {
             event.setCancelled(true);
         }
-
         if (immunities.isImmuneToProjectiles() && (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE)) {
             event.setCancelled(true);
+        }
+
+        for (Map.Entry<EntityDamageEvent.DamageCause, Double> entry : boss.getIncomingMultipliers().entrySet()) {
+            if (event.getCause() == entry.getKey()) {
+                event.setDamage(event.getDamage() * entry.getValue());
+            }
         }
 
         if (boss.isTeleportationEnabled()) {

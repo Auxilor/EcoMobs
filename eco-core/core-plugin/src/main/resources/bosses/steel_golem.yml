@@ -56,11 +56,15 @@ broadcast:
 
 defence:
   immunities:
-    explosion: true
-    fire: true
+    explosion: false
+    fire: false
     drowning: true
     projectiles: true
     suffocation: true
+
+  incoming-multipliers:
+    melee: 0.8
+    projectile: 0.2
 
   # If the boss should teleport when damaged
   teleport:
