@@ -133,7 +133,7 @@ public class DeathListeners extends PluginDependent implements Listener {
         List<ItemStack> drops = new ArrayList<>();
         for (Map.Entry<ItemStack, Double> entry : boss.getDrops().entrySet()) {
             if (NumberUtils.randFloat(0, 100) < entry.getValue()) {
-                drops.add(entry.getKey());
+                drops.add(entry.getKey().clone());
             }
         }
 
