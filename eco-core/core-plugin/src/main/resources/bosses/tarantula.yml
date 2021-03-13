@@ -75,9 +75,10 @@ attacks:
   # effect:level:duration:chance
   # Duration is in ticks, chance is as a percentage
   potion-effects:
-    - "poison:5:200:10"
-    - "slow:2:100:20"
-    - "hunger:3:400:10"
+    - "poison:8:200:10"
+    - "slow:4:100:20"
+    - "hunger:5:400:10"
+    - "slow_digging:3:40:10"
 
   # Bonus enemies that spawn to fight you
   # entity:chance
