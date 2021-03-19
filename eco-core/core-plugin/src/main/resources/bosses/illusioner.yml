@@ -1,6 +1,6 @@
 enabled: true
 
-name: "&9Illusioner" # Display name
+name: "&9Illusioner &7| &c%health%♥" # Display name
 base-mob: custom_illusioner # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
 
 bossbar:

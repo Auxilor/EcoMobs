@@ -499,6 +499,16 @@ public class EcoBoss extends PluginDependent {
             );
         }
 
+        this.getPlugin().getRunnableFactory().create(runnable -> {
+            String name = entity.getCustomName();
+            assert name != null;
+
+            entity.setCustomName(name.replace("%health%", StringUtils.internalToString(entity.getHealth())));
+            if (entity.isDead()) {
+                runnable.cancel();
+            }
+        }).runTaskTimer(0, 1);
+
         if (this.isBossbarEnabled()) {
             createBossBar(entity);
         }
@@ -529,6 +539,7 @@ public class EcoBoss extends PluginDependent {
 
         this.getPlugin().getRunnableFactory().create(runnable -> {
             if (!entity.isDead()) {
+                bossBar.setTitle(entity.getCustomName());
                 bossBar.setProgress(entity.getHealth() / entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             } else {
                 bossBar.getPlayers().forEach(bossBar::removePlayer);
