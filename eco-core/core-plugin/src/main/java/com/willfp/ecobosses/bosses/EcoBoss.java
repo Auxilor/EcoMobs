@@ -508,6 +508,12 @@ public class EcoBoss extends PluginDependent {
             }
         }).runTaskTimer(0, 1);
 
+        for (Entity nearbyEntity : entity.getNearbyEntities(15, 15, 15)) {
+            if (nearbyEntity instanceof Player && entity instanceof Mob) {
+                ((Mob) entity).setTarget((LivingEntity) nearbyEntity);
+            }
+        }
+
         if (this.isBossbarEnabled()) {
             createBossBar(entity);
         }
