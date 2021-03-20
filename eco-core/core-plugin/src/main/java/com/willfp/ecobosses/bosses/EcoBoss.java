@@ -30,8 +30,10 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
@@ -589,7 +591,10 @@ public class EcoBoss extends PluginDependent {
             while (!loc.getBlock().getType().equals(Material.AIR)) {
                 loc.add(0, 1, 0);
             }
-            player.getWorld().spawnEntity(loc, summon.getType());
+            Entity summonedEntity = player.getWorld().spawnEntity(loc, summon.getType());
+            if (summonedEntity instanceof Mob) {
+                ((Mob) summonedEntity).setTarget(player);
+            }
 
             for (OptionedSound sound : this.getSummonSounds()) {
                 player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
