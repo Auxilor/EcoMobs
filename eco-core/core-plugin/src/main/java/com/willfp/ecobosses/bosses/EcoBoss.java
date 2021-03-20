@@ -500,10 +500,7 @@ public class EcoBoss extends PluginDependent {
         }
 
         this.getPlugin().getRunnableFactory().create(runnable -> {
-            String name = entity.getCustomName();
-            assert name != null;
-
-            entity.setCustomName(name.replace("%health%", StringUtils.internalToString(entity.getHealth())));
+            entity.setCustomName(this.getDisplayName().replace("%health%", StringUtils.internalToString(entity.getHealth())));
             if (entity.isDead()) {
                 runnable.cancel();
             }
