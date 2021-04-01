@@ -93,6 +93,11 @@ attacks:
   # Chance to shuffle your hotbar as a percentage - set to 0 to disable.
   shuffle-chance: 0
 
+  # How the boss decides who to attack
+  target:
+    distance: 15 # The distance to check for nearby players.
+    mode: random
+
 sounds:
   # Sounds are formatted like this:
   # sound:volume:pitch

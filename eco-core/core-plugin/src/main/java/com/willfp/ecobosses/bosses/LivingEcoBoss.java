@@ -71,7 +71,7 @@ public class LivingEcoBoss extends PluginDependent {
         // Tickers
         this.tickers = new HashSet<>();
         this.tickers.add(new HealthPlaceholderTicker());
-        this.tickers.add(new TargetTicker());
+        this.tickers.add(new TargetTicker(boss.getTargetMode(), boss.getTargetDistance()));
         if (boss.isBossbarEnabled()) {
             this.tickers.add(
                     new BossBarTicker(

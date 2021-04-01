@@ -228,6 +228,18 @@ public class EcoBoss extends PluginDependent {
     private final Map<String, List<String>> effectNames;
 
     /**
+     * The target distance.
+     */
+    @Getter
+    private final double targetDistance;
+
+    /**
+     * The targeting mode.
+     */
+    @Getter
+    private final TargetMode targetMode;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -443,6 +455,10 @@ public class EcoBoss extends PluginDependent {
                 Bukkit.getLogger().warning("Invalid effect specified in " + this.name);
             }
         });
+
+        // Targeting
+        this.targetDistance = this.getConfig().getDouble("attacks.target.range");
+        this.targetMode = TargetMode.getByName(this.getConfig().getString("attacks.target.mode"));
 
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);
