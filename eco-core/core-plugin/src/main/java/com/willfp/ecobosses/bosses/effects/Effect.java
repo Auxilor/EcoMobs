@@ -23,11 +23,21 @@ public abstract class Effect implements BossTicker {
         this.args = args;
     }
 
+    /**
+     * Show a config error.
+     *
+     * @param message The error message.
+     */
     public void showConfigError(@NotNull final String message) {
         Bukkit.getLogger().warning("An effect is configured incorrectly!");
         Bukkit.getLogger().warning(message);
         Bukkit.getLogger().warning("Usage: " + getUsage());
     }
 
+    /**
+     * Get effect usage.
+     *
+     * @return The usage.
+     */
     public abstract String getUsage();
 }

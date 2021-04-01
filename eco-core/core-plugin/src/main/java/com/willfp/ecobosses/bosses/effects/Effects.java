@@ -1,14 +1,24 @@
 package com.willfp.ecobosses.bosses.effects;
 
+import com.google.common.collect.ImmutableMap;
 import com.willfp.ecobosses.bosses.effects.effects.DamageNearbyPlayers;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 @UtilityClass
 public class Effects {
+    /**
+     * Registered effects.
+     */
+    private static final Map<String, Function<List<String>, Effect>> EFFECTS = new ImmutableMap.Builder<String, Function<List<String>, Effect>>()
+            .put("damage-nearby-players", DamageNearbyPlayers::new)
+            .build();
+
     /**
      * Get effect matching name.
      *
@@ -19,12 +29,7 @@ public class Effects {
     @Nullable
     public Effect getEffect(@NotNull final String name,
                             @NotNull final List<String> args) {
-        switch (name.toLowerCase()) {
-            case "damage-nearby-players":
-                return new DamageNearbyPlayers(args);
-
-            default:
-                return null;
-        }
+        Function<List<String>, Effect> found = EFFECTS.get(name.toLowerCase());
+        return found == null ? null : found.apply(args);
     }
 }
