@@ -8,49 +8,26 @@ import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.tuples.Pair;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
-import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
-import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
-import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
-import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
-import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
-import com.willfp.ecobosses.bosses.util.obj.TeleportOptions;
+import com.willfp.ecobosses.bosses.util.obj.*;
 import com.willfp.ecobosses.bosses.util.obj.attacks.EffectOption;
 import com.willfp.ecobosses.bosses.util.obj.attacks.SummonsOption;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EcoBoss extends PluginDependent {
@@ -240,6 +217,11 @@ public class EcoBoss extends PluginDependent {
     private final Map<EntityDamageEvent.DamageCause, Double> incomingMultipliers;
 
     /**
+     * The currently living bosses of this type.
+     */
+    private final Map<UUID, LivingEcoBoss> livingBosses;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -252,6 +234,7 @@ public class EcoBoss extends PluginDependent {
         super(plugin);
         this.config = config;
         this.name = name;
+        this.livingBosses = new HashMap<>();
 
         this.displayName = this.getConfig().getString("name");
 
@@ -469,89 +452,21 @@ public class EcoBoss extends PluginDependent {
      */
     public void spawn(@NotNull final Location location) {
         LivingEntity entity = bossType.spawnBossEntity(location);
-        entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, name);
-        entity.setPersistent(true);
-
-        entity.setCustomName(this.getDisplayName());
-        entity.setCustomNameVisible(true);
-
-        AttributeInstance movementSpeed = entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-        assert movementSpeed != null;
-        movementSpeed.setBaseValue(this.getMovementSpeed());
-
-        AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        assert maxHealth != null;
-        maxHealth.setBaseValue(this.getMaxHealth());
-
-        entity.setHealth(maxHealth.getValue());
-
-        AttributeInstance attackDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-        assert attackDamage != null;
-        attackDamage.setBaseValue(this.getAttackDamage());
-
-        for (OptionedSound sound : this.getSpawnSounds()) {
-            location.getWorld().playSound(location, sound.getSound(), sound.getVolume(), sound.getPitch());
-        }
-
-        for (String spawnMessage : this.getSpawnMessages()) {
-            Bukkit.broadcastMessage(spawnMessage
-                    .replace("%x%", StringUtils.internalToString(location.getBlockX()))
-                    .replace("%y%", StringUtils.internalToString(location.getBlockY()))
-                    .replace("%z%", StringUtils.internalToString(location.getBlockZ()))
-            );
-        }
-
-        this.getPlugin().getRunnableFactory().create(runnable -> {
-            entity.setCustomName(this.getDisplayName().replace("%health%", StringUtils.internalToString(entity.getHealth())));
-            if (entity.isDead()) {
-                runnable.cancel();
-            }
-        }).runTaskTimer(0, 1);
-
-        for (Entity nearbyEntity : entity.getNearbyEntities(15, 15, 15)) {
-            if (nearbyEntity instanceof Player && entity instanceof Mob) {
-                ((Mob) entity).setTarget((LivingEntity) nearbyEntity);
-            }
-        }
-
-        if (this.isBossbarEnabled()) {
-            createBossBar(entity);
-        }
+        this.livingBosses.put(entity.getUniqueId(), new LivingEcoBoss(
+                    this.getPlugin(),
+                    entity,
+                    this
+                )
+        );
     }
 
-    private void createBossBar(@NotNull final LivingEntity entity) {
-        BossBar bossBar = Bukkit.getServer().createBossBar(
-                entity.getCustomName(),
-                this.getBossbarProperties().getColor(),
-                this.getBossbarProperties().getStyle(),
-                (BarFlag) null
-        );
-
-        int radius = this.getPlugin().getConfigYml().getInt("bossbar-radius");
-
-        this.getPlugin().getRunnableFactory().create(runnable -> {
-            if (!entity.isDead()) {
-                bossBar.getPlayers().forEach(bossBar::removePlayer);
-                entity.getNearbyEntities(radius, radius, radius).forEach(entity1 -> {
-                    if (entity1 instanceof Player) {
-                        bossBar.addPlayer((Player) entity1);
-                    }
-                });
-            } else {
-                runnable.cancel();
-            }
-        }).runTaskTimer(0, 40);
-
-        this.getPlugin().getRunnableFactory().create(runnable -> {
-            if (!entity.isDead()) {
-                bossBar.setTitle(entity.getCustomName());
-                bossBar.setProgress(entity.getHealth() / entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-            } else {
-                bossBar.getPlayers().forEach(bossBar::removePlayer);
-                bossBar.setVisible(false);
-                runnable.cancel();
-            }
-        }).runTaskTimer(0, 1);
+    /**
+     * Remove living boss.
+     *
+     * @param uuid The entity UUID.
+     */
+    public void removeLivingBoss(@NotNull final UUID uuid) {
+        this.livingBosses.remove(uuid);
     }
 
     /**
