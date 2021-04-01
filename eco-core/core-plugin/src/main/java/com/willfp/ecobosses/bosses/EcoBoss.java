@@ -375,24 +375,6 @@ public class EcoBoss extends PluginDependent {
             ));
         }
 
-        // Spawn egg
-        /*
-        Material eggMaterial = Material.matchMaterial(this.getConfig().getString("spawn-egg.egg-material").toUpperCase());
-        assert eggMaterial != null;
-        this.spawnEgg = new ItemStack(eggMaterial);
-        SpawnEggMeta meta = (SpawnEggMeta) this.spawnEgg.getItemMeta();
-        assert meta != null;
-        List<String> lore = new ArrayList<>();
-        for (String string : this.getConfig().getStrings("spawn-egg.lore")) {
-            lore.add(StringUtils.translate(string));
-        }
-        meta.setLore(lore);
-        meta.setDisplayName(this.getConfig().getString("spawn-egg.display-name"));
-        meta.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getName());
-        this.spawnEgg.setItemMeta(meta);
-
-         */
-
         // Messages
         this.spawnMessages = new ArrayList<>();
         for (String string : this.getConfig().getStrings("broadcast.spawn")) {
@@ -453,11 +435,21 @@ public class EcoBoss extends PluginDependent {
     public void spawn(@NotNull final Location location) {
         LivingEntity entity = bossType.spawnBossEntity(location);
         this.livingBosses.put(entity.getUniqueId(), new LivingEcoBoss(
-                    this.getPlugin(),
-                    entity,
-                    this
+                        this.getPlugin(),
+                        entity,
+                        this
                 )
         );
+    }
+
+    /**
+     * Get {@link LivingEcoBoss} from an entity.
+     *
+     * @param entity The entity.
+     * @return The living boss, or null if not a boss.
+     */
+    public LivingEcoBoss getLivingBoss(@NotNull final LivingEntity entity) {
+        return this.livingBosses.get(entity.getUniqueId());
     }
 
     /**
@@ -467,60 +459,6 @@ public class EcoBoss extends PluginDependent {
      */
     public void removeLivingBoss(@NotNull final UUID uuid) {
         this.livingBosses.remove(uuid);
-    }
-
-    /**
-     * Handle an attack to the player.
-     *
-     * @param entity The entity.
-     * @param player The player.
-     */
-    public void handleAttack(@NotNull final LivingEntity entity,
-                             @NotNull final Player player) {
-        for (OptionedSound sound : this.getInjureSounds()) {
-            player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
-        }
-
-        for (EffectOption effect : this.getEffects()) {
-            if (NumberUtils.randFloat(0, 100) > effect.getChance()) {
-                continue;
-            }
-
-            player.addPotionEffect(new PotionEffect(effect.getEffectType(), effect.getDuration(), effect.getLevel()));
-        }
-
-        if (NumberUtils.randFloat(0, 100) < this.getShuffleChance()) {
-            List<ItemStack> hotbar = new ArrayList<>();
-            for (int i = 0; i < 9; i++) {
-                hotbar.add(player.getInventory().getItem(i));
-            }
-            Collections.shuffle(hotbar);
-            int i2 = 0;
-            for (ItemStack item : hotbar) {
-                player.getInventory().setItem(i2, item);
-                i2++;
-            }
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_PEARL_THROW, 1, 0.5f);
-        }
-
-        for (SummonsOption summon : this.getSummons()) {
-            if (NumberUtils.randFloat(0, 100) > summon.getChance()) {
-                continue;
-            }
-
-            Location loc = player.getLocation().add(NumberUtils.randInt(2, 6), 0, NumberUtils.randInt(2, 6));
-            while (!loc.getBlock().getType().equals(Material.AIR)) {
-                loc.add(0, 1, 0);
-            }
-            Entity summonedEntity = player.getWorld().spawnEntity(loc, summon.getType());
-            if (summonedEntity instanceof Mob) {
-                ((Mob) summonedEntity).setTarget(player);
-            }
-
-            for (OptionedSound sound : this.getSummonSounds()) {
-                player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
-            }
-        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.willfp.ecobosses.bosses;
 
+import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.bukkit.scheduling.EcoBukkitRunnable;
 import com.willfp.eco.util.internal.PluginDependent;
@@ -8,7 +9,12 @@ import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
+import com.willfp.ecobosses.bosses.util.obj.attacks.EffectOption;
+import com.willfp.ecobosses.bosses.util.obj.attacks.SummonsOption;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.boss.BarFlag;
@@ -16,10 +22,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -80,6 +91,58 @@ public class LivingEcoBoss extends PluginDependent {
         }).runTaskTimer(0, 1);
     }
 
+    /**
+     * Handle an attack to the player.
+     *
+     * @param player The player.
+     */
+    public void handleAttack(@NotNull final Player player) {
+        for (OptionedSound sound : boss.getInjureSounds()) {
+            player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+        }
+
+        for (EffectOption effect : boss.getEffects()) {
+            if (NumberUtils.randFloat(0, 100) > effect.getChance()) {
+                continue;
+            }
+
+            player.addPotionEffect(new PotionEffect(effect.getEffectType(), effect.getDuration(), effect.getLevel()));
+        }
+
+        if (NumberUtils.randFloat(0, 100) < boss.getShuffleChance()) {
+            List<ItemStack> hotbar = new ArrayList<>();
+            for (int i = 0; i < 9; i++) {
+                hotbar.add(player.getInventory().getItem(i));
+            }
+            Collections.shuffle(hotbar);
+            int i2 = 0;
+            for (ItemStack item : hotbar) {
+                player.getInventory().setItem(i2, item);
+                i2++;
+            }
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_PEARL_THROW, 1, 0.5f);
+        }
+
+        for (SummonsOption summon : boss.getSummons()) {
+            if (NumberUtils.randFloat(0, 100) > summon.getChance()) {
+                continue;
+            }
+
+            Location loc = player.getLocation().add(NumberUtils.randInt(2, 6), 0, NumberUtils.randInt(2, 6));
+            while (!loc.getBlock().getType().equals(Material.AIR)) {
+                loc.add(0, 1, 0);
+            }
+            Entity summonedEntity = player.getWorld().spawnEntity(loc, summon.getType());
+            if (summonedEntity instanceof Mob) {
+                ((Mob) summonedEntity).setTarget(player);
+            }
+
+            for (OptionedSound sound : boss.getSummonSounds()) {
+                player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            }
+        }
+    }
+
     private void onSpawn() {
         entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, boss.getName());
         entity.setPersistent(true);
@@ -130,6 +193,7 @@ public class LivingEcoBoss extends PluginDependent {
                 ticker.onDeath(boss, entity, tick);
             }
             runnable.cancel();
+            boss.removeLivingBoss(entity.getUniqueId());
         }
     }
 }

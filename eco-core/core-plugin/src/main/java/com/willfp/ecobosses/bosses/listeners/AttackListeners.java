@@ -4,6 +4,7 @@ import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
+import com.willfp.ecobosses.bosses.LivingEcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
@@ -70,8 +71,10 @@ public class AttackListeners extends PluginDependent implements Listener {
             return;
         }
 
+        LivingEcoBoss livingEcoBoss = boss.getLivingBoss(entity);
+
         if (boss.isAttackOnInjure()) {
-            boss.handleAttack(entity, player);
+            livingEcoBoss.handleAttack(player);
         }
     }
 
@@ -150,7 +153,9 @@ public class AttackListeners extends PluginDependent implements Listener {
             return;
         }
 
-        boss.handleAttack(entity, player);
+        LivingEcoBoss livingEcoBoss = boss.getLivingBoss(entity);
+
+        livingEcoBoss.handleAttack(player);
     }
 
     /**
