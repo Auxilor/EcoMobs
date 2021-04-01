@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -102,7 +103,7 @@ public class LivingEcoBoss extends PluginDependent {
 
         AttributeInstance movementSpeed = entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
         assert movementSpeed != null;
-        movementSpeed.setBaseValue(boss.getMovementSpeed());
+        movementSpeed.addModifier(new AttributeModifier(entity.getUniqueId(), "ecobosses-movement-multiplier", boss.getMovementSpeedMultiplier() - 1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
 
         AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         assert maxHealth != null;

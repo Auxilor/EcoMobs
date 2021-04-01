@@ -98,10 +98,10 @@ public class EcoBoss extends PluginDependent {
     private final int attackDamage;
 
     /**
-     * The movement speed.
+     * The movement speed multiplier.
      */
     @Getter
-    private final int movementSpeed;
+    private final double movementSpeedMultiplier;
 
     /**
      * The immunity options.
@@ -257,7 +257,7 @@ public class EcoBoss extends PluginDependent {
         // Attributes
         this.attackDamage = this.getConfig().getInt("attack-damage");
         this.maxHealth = this.getConfig().getInt("max-health");
-        this.movementSpeed = this.getConfig().getInt("movement-speed");
+        this.movementSpeedMultiplier = this.getConfig().getInt("movement-speed");
 
         // Spawn Totem
         this.spawnTotemEnabled = this.getConfig().getBool("spawn-totem.enabled");

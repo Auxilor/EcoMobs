@@ -10,7 +10,7 @@ bossbar:
 
 max-health: 1200
 attack-damage: 80
-movement-speed: 0.9
+movement-speed: 1.3
 
 spawn-totem:
   enabled: true
