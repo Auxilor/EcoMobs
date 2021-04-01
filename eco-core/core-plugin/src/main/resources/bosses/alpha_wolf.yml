@@ -53,6 +53,7 @@ broadcast:
     - "&f - %third%&f (%third_damage% Damage)"
     - ""
 
+effects: []
 
 defence:
   immunities:

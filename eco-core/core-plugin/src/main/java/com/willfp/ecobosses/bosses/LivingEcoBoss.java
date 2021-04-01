@@ -82,6 +82,7 @@ public class LivingEcoBoss extends PluginDependent {
                     )
             );
         }
+        this.tickers.addAll(boss.createEffectTickers());
 
 
         AtomicLong currentTick = new AtomicLong(0);

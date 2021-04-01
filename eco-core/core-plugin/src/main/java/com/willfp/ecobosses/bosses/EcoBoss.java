@@ -1,11 +1,12 @@
 package com.willfp.ecobosses.bosses;
 
 import com.willfp.eco.internal.config.AbstractUndefinedConfig;
-import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.tuples.Pair;
+import com.willfp.ecobosses.bosses.effects.Effect;
+import com.willfp.ecobosses.bosses.effects.Effects;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import com.willfp.ecobosses.bosses.util.obj.*;
@@ -13,6 +14,7 @@ import com.willfp.ecobosses.bosses.util.obj.attacks.EffectOption;
 import com.willfp.ecobosses.bosses.util.obj.attacks.SummonsOption;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -23,7 +25,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
@@ -220,6 +221,11 @@ public class EcoBoss extends PluginDependent {
      * The currently living bosses of this type.
      */
     private final Map<UUID, LivingEcoBoss> livingBosses;
+
+    /**
+     * The effect names and arguments.
+     */
+    private final Map<String, List<String>> effectNames;
 
     /**
      * Create a new Boss.
@@ -423,9 +429,38 @@ public class EcoBoss extends PluginDependent {
             this.nearbyPlayersCommands.put(string, chance);
         }
 
+        // Effects
+        this.effectNames = new HashMap<>();
+        for (String string : this.getConfig().getStrings("effects")) {
+            String effectName = string.split(":")[0];
+            List<String> args = Arrays.asList(string.replace(effectName + ":", "").split(":"));
+            this.effectNames.put(effectName, args);
+        }
+
+        new HashMap<>(this.effectNames).forEach((string, args) -> {
+            if (Effects.getEffect(string, args) == null) {
+                this.effectNames.remove(string);
+                Bukkit.getLogger().warning("Invalid effect specified in " + this.name);
+            }
+        });
+
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);
         }
+    }
+
+    /**
+     * Create effect tickers for Living Boss.
+     *
+     * @return The effects.
+     */
+    public Set<Effect> createEffectTickers() {
+        Set<Effect> effects = new HashSet<>();
+        this.effectNames.forEach((string, args) -> {
+            effects.add(Effects.getEffect(string, args));
+        });
+
+        return effects;
     }
 
     /**
