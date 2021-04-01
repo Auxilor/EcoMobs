@@ -8,6 +8,7 @@ import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
+import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.attacks.EffectOption;
 import com.willfp.ecobosses.bosses.util.obj.attacks.SummonsOption;
@@ -69,6 +70,7 @@ public class LivingEcoBoss extends PluginDependent {
         // Tickers
         this.tickers = new HashSet<>();
         this.tickers.add(new HealthPlaceholderTicker());
+        this.tickers.add(new TargetTicker());
         if (boss.isBossbarEnabled()) {
             this.tickers.add(
                     new BossBarTicker(
