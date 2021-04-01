@@ -66,7 +66,6 @@ public class LivingEcoBoss extends PluginDependent {
 
         this.onSpawn();
 
-
         // Tickers
         this.tickers = new HashSet<>();
         this.tickers.add(new HealthPlaceholderTicker());
@@ -89,58 +88,6 @@ public class LivingEcoBoss extends PluginDependent {
         this.getPlugin().getRunnableFactory().create(runnable -> {
             this.tick(currentTick.getAndAdd(1), runnable);
         }).runTaskTimer(0, 1);
-    }
-
-    /**
-     * Handle an attack to the player.
-     *
-     * @param player The player.
-     */
-    public void handleAttack(@NotNull final Player player) {
-        for (OptionedSound sound : boss.getInjureSounds()) {
-            player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
-        }
-
-        for (EffectOption effect : boss.getEffects()) {
-            if (NumberUtils.randFloat(0, 100) > effect.getChance()) {
-                continue;
-            }
-
-            player.addPotionEffect(new PotionEffect(effect.getEffectType(), effect.getDuration(), effect.getLevel()));
-        }
-
-        if (NumberUtils.randFloat(0, 100) < boss.getShuffleChance()) {
-            List<ItemStack> hotbar = new ArrayList<>();
-            for (int i = 0; i < 9; i++) {
-                hotbar.add(player.getInventory().getItem(i));
-            }
-            Collections.shuffle(hotbar);
-            int i2 = 0;
-            for (ItemStack item : hotbar) {
-                player.getInventory().setItem(i2, item);
-                i2++;
-            }
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_PEARL_THROW, 1, 0.5f);
-        }
-
-        for (SummonsOption summon : boss.getSummons()) {
-            if (NumberUtils.randFloat(0, 100) > summon.getChance()) {
-                continue;
-            }
-
-            Location loc = player.getLocation().add(NumberUtils.randInt(2, 6), 0, NumberUtils.randInt(2, 6));
-            while (!loc.getBlock().getType().equals(Material.AIR)) {
-                loc.add(0, 1, 0);
-            }
-            Entity summonedEntity = player.getWorld().spawnEntity(loc, summon.getType());
-            if (summonedEntity instanceof Mob) {
-                ((Mob) summonedEntity).setTarget(player);
-            }
-
-            for (OptionedSound sound : boss.getSummonSounds()) {
-                player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
-            }
-        }
     }
 
     private void onSpawn() {
@@ -194,6 +141,58 @@ public class LivingEcoBoss extends PluginDependent {
             }
             runnable.cancel();
             boss.removeLivingBoss(entity.getUniqueId());
+        }
+    }
+
+    /**
+     * Handle an attack to the player.
+     *
+     * @param player The player.
+     */
+    public void handleAttack(@NotNull final Player player) {
+        for (OptionedSound sound : boss.getInjureSounds()) {
+            player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+        }
+
+        for (EffectOption effect : boss.getEffects()) {
+            if (NumberUtils.randFloat(0, 100) > effect.getChance()) {
+                continue;
+            }
+
+            player.addPotionEffect(new PotionEffect(effect.getEffectType(), effect.getDuration(), effect.getLevel()));
+        }
+
+        if (NumberUtils.randFloat(0, 100) < boss.getShuffleChance()) {
+            List<ItemStack> hotbar = new ArrayList<>();
+            for (int i = 0; i < 9; i++) {
+                hotbar.add(player.getInventory().getItem(i));
+            }
+            Collections.shuffle(hotbar);
+            int i2 = 0;
+            for (ItemStack item : hotbar) {
+                player.getInventory().setItem(i2, item);
+                i2++;
+            }
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_PEARL_THROW, 1, 0.5f);
+        }
+
+        for (SummonsOption summon : boss.getSummons()) {
+            if (NumberUtils.randFloat(0, 100) > summon.getChance()) {
+                continue;
+            }
+
+            Location loc = player.getLocation().add(NumberUtils.randInt(2, 6), 0, NumberUtils.randInt(2, 6));
+            while (!loc.getBlock().getType().equals(Material.AIR)) {
+                loc.add(0, 1, 0);
+            }
+            Entity summonedEntity = player.getWorld().spawnEntity(loc, summon.getType());
+            if (summonedEntity instanceof Mob) {
+                ((Mob) summonedEntity).setTarget(player);
+            }
+
+            for (OptionedSound sound : boss.getSummonSounds()) {
+                player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            }
         }
     }
 }

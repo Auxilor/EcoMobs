@@ -281,6 +281,7 @@ public class EcoBoss extends PluginDependent {
             ItemStack itemStack = tempConfig.getItemStack("drop-key");
             this.drops.put(itemStack, chance);
         }
+
         this.experienceOptions = new ExperienceOptions(
                 this.getConfig().getInt("rewards.xp.minimum"),
                 this.getConfig().getInt("rewards.xp.maximum")
