@@ -125,12 +125,6 @@ public class LivingEcoBoss extends PluginDependent {
                     .replace("%z%", StringUtils.internalToString(entity.getLocation().getBlockZ()))
             );
         }
-
-        for (Entity nearbyEntity : entity.getNearbyEntities(15, 15, 15)) {
-            if (nearbyEntity instanceof Player && entity instanceof Mob) {
-                ((Mob) entity).setTarget((LivingEntity) nearbyEntity);
-            }
-        }
     }
 
     private void tick(final long tick,

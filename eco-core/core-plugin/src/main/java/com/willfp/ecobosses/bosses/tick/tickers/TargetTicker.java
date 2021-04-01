@@ -15,10 +15,8 @@ public class TargetTicker implements BossTicker {
                      final long tick) {
         if (tick % 10 == 0) {
             for (Entity nearbyEntity : entity.getNearbyEntities(10, 5, 10)) {
-                if (nearbyEntity instanceof Player) {
-                    if (entity instanceof Mob) {
-                        ((Mob) entity).setTarget((Player) nearbyEntity);
-                    }
+                if (nearbyEntity instanceof Player && entity instanceof Mob) {
+                    ((Mob) entity).setTarget((Player) nearbyEntity);
                 }
             }
         }
