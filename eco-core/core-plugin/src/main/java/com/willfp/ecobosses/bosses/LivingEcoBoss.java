@@ -95,6 +95,7 @@ public class LivingEcoBoss extends PluginDependent {
 
     private void onSpawn() {
         entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, boss.getName());
+        entity.setPersistent(true);
 
         entity.setCustomName(boss.getDisplayName());
         entity.setCustomNameVisible(true);
