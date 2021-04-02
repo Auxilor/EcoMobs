@@ -97,6 +97,13 @@ public class EcoBoss extends PluginDependent {
     @Getter
     private final int attackDamage;
 
+
+    /**
+     * The follow range.
+     */
+    @Getter
+    private final double followRange;
+
     /**
      * The movement speed multiplier.
      */
@@ -269,6 +276,7 @@ public class EcoBoss extends PluginDependent {
         // Attributes
         this.attackDamage = this.getConfig().getInt("attack-damage");
         this.maxHealth = this.getConfig().getInt("max-health");
+        this.followRange = this.getConfig().getInt("follow-range");
         this.movementSpeedMultiplier = this.getConfig().getInt("movement-speed");
 
         // Spawn Totem

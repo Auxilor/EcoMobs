@@ -111,6 +111,10 @@ public class LivingEcoBoss extends PluginDependent {
 
         entity.setHealth(maxHealth.getValue());
 
+        AttributeInstance followRange = entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
+        assert followRange != null;
+        followRange.setBaseValue(boss.getFollowRange());
+
         AttributeInstance attackDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
         assert attackDamage != null;
         attackDamage.setBaseValue(boss.getAttackDamage());

@@ -11,6 +11,7 @@ bossbar:
 max-health: 600
 attack-damage: 50
 movement-speed: 1.2
+follow-range: 20
 
 spawn-totem:
   enabled: true
