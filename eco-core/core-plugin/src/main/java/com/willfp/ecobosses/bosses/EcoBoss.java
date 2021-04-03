@@ -1,7 +1,7 @@
 package com.willfp.ecobosses.bosses;
 
-import com.willfp.eco.internal.config.AbstractUndefinedConfig;
 import com.willfp.eco.util.StringUtils;
+import com.willfp.eco.util.config.Config;
 import com.willfp.eco.util.internal.PluginDependent;
 import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.eco.util.tuples.Pair;
@@ -42,7 +42,7 @@ public class EcoBoss extends PluginDependent {
      * The config of the set.
      */
     @Getter(AccessLevel.PRIVATE)
-    private final AbstractUndefinedConfig config;
+    private final Config config;
 
     /**
      * The display name of the boss.
@@ -254,7 +254,7 @@ public class EcoBoss extends PluginDependent {
      * @param plugin Instance of EcoBosses.
      */
     public EcoBoss(@NotNull final String name,
-                   @NotNull final AbstractUndefinedConfig config,
+                   @NotNull final Config config,
                    @NotNull final AbstractEcoPlugin plugin) {
         super(plugin);
         this.config = config;

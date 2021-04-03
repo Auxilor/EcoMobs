@@ -14,6 +14,6 @@ public class CustomConfig extends StaticOptionalConfig {
      */
     public CustomConfig(@NotNull final String configName,
                         @NotNull final YamlConfiguration config) {
-        super(configName, EcoBossesPlugin.getInstance(), config);
+        super(configName, config);
     }
 }
