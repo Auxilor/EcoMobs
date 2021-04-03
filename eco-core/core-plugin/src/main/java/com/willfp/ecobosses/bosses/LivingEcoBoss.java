@@ -187,7 +187,8 @@ public class LivingEcoBoss extends PluginDependent {
             while (!loc.getBlock().getType().equals(Material.AIR)) {
                 loc.add(0, 1, 0);
             }
-            Entity summonedEntity = player.getWorld().spawnEntity(loc, summon.getType());
+
+            Entity summonedEntity = summon.getType().spawnBossEntity(loc);
             if (summonedEntity instanceof Mob) {
                 ((Mob) summonedEntity).setTarget(player);
             }

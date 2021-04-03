@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 @SuppressWarnings("unchecked")
@@ -17,7 +16,6 @@ public class BossEntityUtils {
      * @param id The name.
      * @return The boss type.
      */
-    @Nullable
     public static BossType getBossType(@NotNull final String id) {
         try {
             Class<? extends LivingEntity> type = (Class<? extends LivingEntity>) EntityType.valueOf(id.toUpperCase()).getEntityClass();

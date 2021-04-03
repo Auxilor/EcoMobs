@@ -1,7 +1,7 @@
 package com.willfp.ecobosses.bosses.util.obj;
 
+import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import lombok.Getter;
-import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 public class SummonsOption {
@@ -15,7 +15,7 @@ public class SummonsOption {
      * The type of entity to summon.
      */
     @Getter
-    private final EntityType type;
+    private final BossType type;
 
     /**
      * Create a new summons option.
@@ -24,7 +24,7 @@ public class SummonsOption {
      * @param type   The entity type.
      */
     public SummonsOption(final double chance,
-                         @NotNull final EntityType type) {
+                         @NotNull final BossType type) {
         this.chance = chance;
         this.type = type;
     }

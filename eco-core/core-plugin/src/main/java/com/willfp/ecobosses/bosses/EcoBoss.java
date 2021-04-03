@@ -351,7 +351,7 @@ public class EcoBoss extends PluginDependent {
             String[] split = string.split(":");
             this.summons.add(new SummonsOption(
                     Double.parseDouble(split[1]),
-                    EntityType.valueOf(split[0].toUpperCase())
+                    BossEntityUtils.getBossType(split[0].toUpperCase())
             ));
         }
 
