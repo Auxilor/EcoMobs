@@ -1,17 +1,23 @@
 package com.willfp.ecobosses.bosses;
 
+import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.PluginDependent;
+import com.willfp.eco.core.config.Config;
+import com.willfp.eco.core.tuples.Pair;
 import com.willfp.eco.util.StringUtils;
-import com.willfp.eco.util.config.Config;
-import com.willfp.eco.util.internal.PluginDependent;
-import com.willfp.eco.util.plugin.AbstractEcoPlugin;
-import com.willfp.eco.util.tuples.Pair;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.effects.Effects;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
-import com.willfp.ecobosses.bosses.util.obj.*;
+import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
 import com.willfp.ecobosses.bosses.util.obj.EffectOption;
+import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
+import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
+import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
+import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import com.willfp.ecobosses.bosses.util.obj.SummonsOption;
+import com.willfp.ecobosses.bosses.util.obj.TargetMode;
+import com.willfp.ecobosses.bosses.util.obj.TeleportOptions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -22,13 +28,22 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class EcoBoss extends PluginDependent {
@@ -255,7 +270,7 @@ public class EcoBoss extends PluginDependent {
      */
     public EcoBoss(@NotNull final String name,
                    @NotNull final Config config,
-                   @NotNull final AbstractEcoPlugin plugin) {
+                   @NotNull final EcoPlugin plugin) {
         super(plugin);
         this.config = config;
         this.name = name;

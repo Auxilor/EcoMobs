@@ -23,6 +23,6 @@ class VanillaBossType extends BossType {
 
     @Override
     public LivingEntity spawnBossEntity(@NotNull final Location location) {
-        return (LivingEntity) Objects.requireNonNull(location.getWorld()).spawn(location, entityClass);
+        return Objects.requireNonNull(location.getWorld()).spawn(location, entityClass);
     }
 }

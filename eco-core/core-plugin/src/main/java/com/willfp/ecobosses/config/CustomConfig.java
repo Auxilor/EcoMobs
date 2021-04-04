@@ -1,11 +1,17 @@
 package com.willfp.ecobosses.config;
 
-import com.willfp.eco.util.config.StaticOptionalConfig;
-import com.willfp.ecobosses.EcoBossesPlugin;
+import com.willfp.eco.core.config.YamlConfig;
+import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomConfig extends StaticOptionalConfig {
+public class CustomConfig extends YamlConfig {
+    /**
+     * The name of the config.
+     */
+    @Getter
+    private final String configName;
+
     /**
      * Create new custom config.
      *
@@ -14,6 +20,7 @@ public class CustomConfig extends StaticOptionalConfig {
      */
     public CustomConfig(@NotNull final String configName,
                         @NotNull final YamlConfiguration config) {
-        super(configName, config);
+        super(config);
+        this.configName = configName;
     }
 }

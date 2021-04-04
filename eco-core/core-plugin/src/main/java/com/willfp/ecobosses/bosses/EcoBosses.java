@@ -3,7 +3,7 @@ package com.willfp.ecobosses.bosses;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
-import com.willfp.eco.util.config.updating.annotations.ConfigUpdater;
+import com.willfp.eco.internal.config.updating.annotations.ConfigUpdater;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.config.BaseBossConfig;
 import com.willfp.ecobosses.config.CustomConfig;

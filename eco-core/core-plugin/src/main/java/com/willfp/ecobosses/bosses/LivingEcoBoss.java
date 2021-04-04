@@ -1,16 +1,16 @@
 package com.willfp.ecobosses.bosses;
 
+import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.PluginDependent;
+import com.willfp.eco.core.scheduling.RunnableTask;
 import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
-import com.willfp.eco.util.bukkit.scheduling.EcoBukkitRunnable;
-import com.willfp.eco.util.internal.PluginDependent;
-import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
-import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.EffectOption;
+import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.SummonsOption;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -59,7 +59,7 @@ public class LivingEcoBoss extends PluginDependent {
      * @param entity The entity.
      * @param boss   The boss.
      */
-    public LivingEcoBoss(@NotNull final AbstractEcoPlugin plugin,
+    public LivingEcoBoss(@NotNull final EcoPlugin plugin,
                          @NotNull final LivingEntity entity,
                          @NotNull final EcoBoss boss) {
         super(plugin);
@@ -133,7 +133,7 @@ public class LivingEcoBoss extends PluginDependent {
     }
 
     private void tick(final long tick,
-                      @NotNull final EcoBukkitRunnable runnable) {
+                      @NotNull final RunnableTask runnable) {
         for (BossTicker ticker : tickers) {
             ticker.tick(boss, entity, tick);
         }

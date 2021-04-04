@@ -1,12 +1,12 @@
 package com.willfp.ecobosses.bosses.listeners;
 
 
+import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.PluginDependent;
+import com.willfp.eco.core.events.EntityDeathByEntityEvent;
+import com.willfp.eco.core.tuples.Pair;
 import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
-import com.willfp.eco.util.events.entitydeathbyentity.EntityDeathByEntityEvent;
-import com.willfp.eco.util.internal.PluginDependent;
-import com.willfp.eco.util.plugin.AbstractEcoPlugin;
-import com.willfp.eco.util.tuples.Pair;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
@@ -32,7 +32,7 @@ public class DeathListeners extends PluginDependent implements Listener {
      *
      * @param plugin Instance of EcoBosses.
      */
-    public DeathListeners(@NotNull final AbstractEcoPlugin plugin) {
+    public DeathListeners(@NotNull final EcoPlugin plugin) {
         super(plugin);
     }
 

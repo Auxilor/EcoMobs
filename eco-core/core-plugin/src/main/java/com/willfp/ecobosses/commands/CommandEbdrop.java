@@ -1,6 +1,6 @@
 package com.willfp.ecobosses.commands;
 
-import com.willfp.eco.util.command.AbstractCommand;
+import com.willfp.eco.core.command.AbstractCommand;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

@@ -1,7 +1,7 @@
 package com.willfp.ecobosses.commands;
 
-import com.willfp.eco.util.command.AbstractTabCompleter;
-import com.willfp.eco.util.config.updating.annotations.ConfigUpdater;
+import com.willfp.eco.core.command.AbstractTabCompleter;
+import com.willfp.eco.internal.config.updating.annotations.ConfigUpdater;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import org.bukkit.Bukkit;

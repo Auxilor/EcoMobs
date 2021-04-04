@@ -1,7 +1,7 @@
 package com.willfp.ecobosses.commands;
 
-import com.willfp.eco.util.command.AbstractCommand;
-import com.willfp.eco.util.command.AbstractTabCompleter;
+import com.willfp.eco.core.command.AbstractCommand;
+import com.willfp.eco.core.command.AbstractTabCompleter;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;

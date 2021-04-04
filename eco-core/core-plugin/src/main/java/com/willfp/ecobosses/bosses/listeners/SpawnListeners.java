@@ -1,6 +1,7 @@
 package com.willfp.ecobosses.bosses.listeners;
-import com.willfp.eco.util.internal.PluginDependent;
-import com.willfp.eco.util.plugin.AbstractEcoPlugin;
+
+import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.PluginDependent;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
@@ -17,7 +18,7 @@ public class SpawnListeners extends PluginDependent implements Listener {
      *
      * @param plugin The plugin to link to.
      */
-    public SpawnListeners(@NotNull final AbstractEcoPlugin plugin) {
+    public SpawnListeners(@NotNull final EcoPlugin plugin) {
         super(plugin);
     }
 

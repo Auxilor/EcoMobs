@@ -1,6 +1,6 @@
 package com.willfp.ecobosses.util;
 
-import com.willfp.eco.util.proxy.AbstractProxy;
+import com.willfp.eco.core.proxy.AbstractProxy;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.proxy.util.ProxyFactory;
 import lombok.experimental.UtilityClass;

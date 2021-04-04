@@ -1,8 +1,8 @@
 package com.willfp.ecobosses.bosses.listeners;
 
+import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.util.NumberUtils;
-import com.willfp.eco.util.internal.PluginDependent;
-import com.willfp.eco.util.plugin.AbstractEcoPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.LivingEcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
@@ -34,7 +34,7 @@ public class AttackListeners extends PluginDependent implements Listener {
      *
      * @param plugin Instance of EcoBosses.
      */
-    public AttackListeners(@NotNull final AbstractEcoPlugin plugin) {
+    public AttackListeners(@NotNull final EcoPlugin plugin) {
         super(plugin);
     }
 

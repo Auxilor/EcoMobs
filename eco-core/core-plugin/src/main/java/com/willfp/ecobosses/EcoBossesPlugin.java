@@ -1,10 +1,9 @@
 package com.willfp.ecobosses;
 
-import com.willfp.eco.util.command.AbstractCommand;
-import com.willfp.eco.util.display.DisplayModule;
-import com.willfp.eco.util.integrations.IntegrationLoader;
-import com.willfp.eco.util.plugin.AbstractEcoPlugin;
-import com.willfp.eco.util.protocollib.AbstractPacketAdapter;
+import com.willfp.eco.core.AbstractPacketAdapter;
+import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.command.AbstractCommand;
+import com.willfp.eco.core.integrations.IntegrationLoader;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.listeners.AttackListeners;
 import com.willfp.ecobosses.bosses.listeners.DeathListeners;
@@ -15,14 +14,13 @@ import com.willfp.ecobosses.commands.CommandEbspawn;
 import com.willfp.ecobosses.commands.TabCompleterEbspawn;
 import lombok.Getter;
 import org.bukkit.event.Listener;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class EcoBossesPlugin extends AbstractEcoPlugin {
+public class EcoBossesPlugin extends EcoPlugin {
     /**
      * Instance of the plugin.
      */
@@ -131,11 +129,5 @@ public class EcoBossesPlugin extends AbstractEcoPlugin {
                 EcoBosses.class,
                 TabCompleterEbspawn.class
         );
-    }
-
-    @Override
-    @Nullable
-    protected DisplayModule createDisplayModule() {
-        return null;
     }
 }
