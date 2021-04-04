@@ -1,5 +1,6 @@
 package com.willfp.ecobosses.bosses;
 
+import com.google.common.collect.ImmutableMap;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.config.Config;
@@ -534,6 +535,15 @@ public class EcoBoss extends PluginDependent {
      */
     public void removeLivingBoss(@NotNull final UUID uuid) {
         this.livingBosses.remove(uuid);
+    }
+
+    /**
+     * Get all living bosses.
+     *
+     * @return The living bosses.
+     */
+    public Map<UUID, LivingEcoBoss> getLivingBosses() {
+        return ImmutableMap.copyOf(this.livingBosses);
     }
 
     @Override

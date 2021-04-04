@@ -18,6 +18,9 @@ commands:
   ebspawn:
     description: Spawns a boss
     permission: ecobosses.ebspawn
+  ebkillall:
+    description: Kill all bosses
+    permission: ecobosses.killall
 
 permissions:
   ecobosses.*:
@@ -27,6 +30,7 @@ permissions:
       ecobosses.reload: true
       ecobosses.ebdrop: true
       ecobosses.ebspawn: true
+      ecobosses.killall: true
 
   ecobosses.reload:
     description: Allows reloading the config
@@ -38,4 +42,8 @@ permissions:
 
   ecobosses.ebspawn:
     description: Allows the use of /ebspawn
+    default: op
+
+  ecobosses.killall:
+    description: Allows the use of /ebkillall
     default: op

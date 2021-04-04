@@ -9,6 +9,7 @@ import com.willfp.ecobosses.bosses.listeners.AttackListeners;
 import com.willfp.ecobosses.bosses.listeners.DeathListeners;
 import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
 import com.willfp.ecobosses.commands.CommandEbdrop;
+import com.willfp.ecobosses.commands.CommandEbkillall;
 import com.willfp.ecobosses.commands.CommandEbreload;
 import com.willfp.ecobosses.commands.CommandEbspawn;
 import com.willfp.ecobosses.commands.TabCompleterEbspawn;
@@ -95,7 +96,8 @@ public class EcoBossesPlugin extends EcoPlugin {
         return Arrays.asList(
                 new CommandEbreload(this),
                 new CommandEbdrop(this),
-                new CommandEbspawn(this)
+                new CommandEbspawn(this),
+                new CommandEbkillall(this)
         );
     }
 
