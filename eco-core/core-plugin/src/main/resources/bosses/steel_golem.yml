@@ -8,8 +8,8 @@ bossbar:
   color: WHITE # Choose from: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
   style: SOLID # Choose from: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
 
-max-health: 2400
-attack-damage: 120
+max-health: 1200
+attack-damage: 90
 movement-speed: 1.5
 follow-range: 16
 
@@ -58,8 +58,8 @@ effects: []
 
 defence:
   immunities:
-    explosion: false
-    fire: false
+    explosion: true
+    fire: true
     drowning: true
     projectiles: true
     suffocation: true

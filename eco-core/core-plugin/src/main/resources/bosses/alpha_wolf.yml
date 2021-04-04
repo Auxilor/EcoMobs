@@ -8,8 +8,8 @@ bossbar:
   color: WHITE # Choose from: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
   style: SOLID # Choose from: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
 
-max-health: 900
-attack-damage: 60
+max-health: 600
+attack-damage: 50
 movement-speed: 2
 follow-range: 15
 
