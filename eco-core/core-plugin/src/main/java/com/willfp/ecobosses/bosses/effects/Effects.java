@@ -2,6 +2,7 @@ package com.willfp.ecobosses.bosses.effects;
 
 import com.google.common.collect.ImmutableMap;
 import com.willfp.ecobosses.bosses.effects.effects.DamageNearbyPlayers;
+import com.willfp.ecobosses.bosses.effects.effects.LightningNearbyEntities;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,7 @@ public class Effects {
      */
     private static final Map<String, Function<List<String>, Effect>> EFFECTS = new ImmutableMap.Builder<String, Function<List<String>, Effect>>()
             .put("damage-nearby-players", DamageNearbyPlayers::new)
+            .put("lightning-nearby-entities", LightningNearbyEntities::new)
             .build();
 
     /**

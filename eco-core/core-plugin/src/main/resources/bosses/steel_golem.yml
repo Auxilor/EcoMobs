@@ -54,7 +54,8 @@ broadcast:
     - "&f - &8%third%&f (%third_damage% Damage)"
     - ""
 
-effects: []
+effects:
+  - "damage-nearby-players:15:2:3"
 
 defence:
   immunities:
