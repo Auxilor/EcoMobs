@@ -71,12 +71,6 @@ defence:
     melee: 1.1
     projectile: 0.3
 
-  # If the boss should teleport when damaged
-  teleport:
-    enabled: false
-    range: 7
-    chance: 15 # As a percentage
-
 attacks:
   # Chance is rolled when boss attacks player
   on-injure: true # If chance should be rolled when boss is attacked too

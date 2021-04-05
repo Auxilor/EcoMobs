@@ -16,7 +16,6 @@ import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import com.willfp.ecobosses.bosses.util.obj.TargetMode;
-import com.willfp.ecobosses.bosses.util.obj.TeleportOptions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -170,18 +169,6 @@ public class EcoBoss extends PluginDependent {
      */
     @Getter
     private final List<OptionedSound> summonSounds;
-
-    /**
-     * If the boss can teleport.
-     */
-    @Getter
-    private final boolean teleportationEnabled;
-
-    /**
-     * Teleport options.
-     */
-    @Getter
-    private final TeleportOptions teleportOptions;
 
     /**
      * Spawn messages.
@@ -379,13 +366,6 @@ public class EcoBoss extends PluginDependent {
         for (String string : this.getConfig().getStrings("broadcast.death")) {
             this.deathMessages.add(StringUtils.translate(string));
         }
-
-        // Teleportation
-        this.teleportationEnabled = this.getConfig().getBool("defence.teleport.enabled");
-        this.teleportOptions = new TeleportOptions(
-                this.getConfig().getInt("defence.teleport.range"),
-                this.getConfig().getDouble("defence.teleport.chance")
-        );
 
         // Top Damager Commands
         this.topDamagerCommands = new HashMap<>();

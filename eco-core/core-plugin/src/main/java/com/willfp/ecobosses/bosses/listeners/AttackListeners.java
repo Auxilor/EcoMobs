@@ -2,16 +2,11 @@ package com.willfp.ecobosses.bosses.listeners;
 
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
-import com.willfp.eco.util.NumberUtils;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.LivingEcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -22,8 +17,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -198,40 +191,6 @@ public class AttackListeners extends PluginDependent implements Listener {
         for (Map.Entry<EntityDamageEvent.DamageCause, Double> entry : boss.getIncomingMultipliers().entrySet()) {
             if (event.getCause() == entry.getKey()) {
                 event.setDamage(event.getDamage() * entry.getValue());
-            }
-        }
-
-        if (boss.isTeleportationEnabled()) {
-            if (NumberUtils.randFloat(0, 100) < boss.getTeleportOptions().getChance()) {
-                int range = boss.getTeleportOptions().getRange();
-                List<Location> valid = new ArrayList<>();
-                for (int x = -range; x <= range; x++) {
-                    for (int y = -range; y <= range; y++) {
-                        for (int z = -range; z <= range; z++) {
-                            Location location = event.getEntity().getLocation().clone();
-                            location.setX(location.getX() + x);
-                            location.setY(location.getY() + y);
-                            location.setZ(location.getZ() + z);
-
-                            Block block = location.getBlock();
-
-                            if (block.getType() == Material.AIR
-                                    && block.getRelative(BlockFace.UP).getType() == Material.AIR
-                                    && !(block.getRelative(BlockFace.DOWN).isLiquid() || block.getRelative(BlockFace.DOWN).getType() == Material.AIR)) {
-                                valid.add(location);
-                            }
-                        }
-                    }
-                }
-
-                if (valid.isEmpty()) {
-                    return;
-                }
-
-                Collections.shuffle(valid);
-                Location location = valid.get(0);
-
-                event.getEntity().teleport(location);
             }
         }
     }

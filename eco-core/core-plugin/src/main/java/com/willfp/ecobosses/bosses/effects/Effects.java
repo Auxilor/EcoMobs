@@ -6,6 +6,7 @@ import com.willfp.ecobosses.bosses.effects.effects.EffectGivePotionEffect;
 import com.willfp.ecobosses.bosses.effects.effects.EffectLightningNearbyEntities;
 import com.willfp.ecobosses.bosses.effects.effects.EffectShuffleHotbar;
 import com.willfp.ecobosses.bosses.effects.effects.EffectSummon;
+import com.willfp.ecobosses.bosses.effects.effects.EffectTeleport;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,7 @@ public class Effects {
             .put("summon", EffectSummon::new)
             .put("give-potion-effect", EffectGivePotionEffect::new)
             .put("shuffle-hotbar", EffectShuffleHotbar::new)
+            .put("teleport", EffectTeleport::new)
             .build();
 
     /**

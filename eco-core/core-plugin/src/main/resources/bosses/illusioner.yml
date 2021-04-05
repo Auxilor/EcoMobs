@@ -60,6 +60,7 @@ effects:
   - "shuffle-hotbar:10"
   - "give-potion-effect:confusion:10:200:10"
   - "give-potion-effect:blindness:1:40:20"
+  - "teleport:7:15"
 
 defence:
   immunities:
@@ -72,12 +73,6 @@ defence:
   incoming-multipliers:
     melee: 1
     projectile: 0.6
-
-  # If the boss should teleport when damaged
-  teleport:
-    enabled: true
-    range: 7
-    chance: 15 # As a percentage
 
 attacks:
   # Chance is rolled when boss attacks player
