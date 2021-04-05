@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class DamageNearbyPlayers extends Effect {
+public class EffectDamageNearbyPlayers extends Effect {
     private final int frequency;
     private final double damage;
     private final double radius;
 
-    public DamageNearbyPlayers(@NotNull final List<String> args) {
+    public EffectDamageNearbyPlayers(@NotNull final List<String> args) {
         super(args);
 
         if (args.size() < 3) {

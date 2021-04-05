@@ -54,7 +54,10 @@ broadcast:
     - "&f - %third%&f (%third_damage% Damage)"
     - ""
 
-effects: []
+effects:
+  - "summon:wolf:15"
+  - "give-potion-effect:wither:4:200:10"
+  - "give-potion-effect:hunger:10:600:10"
 
 defence:
   immunities:
@@ -77,22 +80,6 @@ defence:
 attacks:
   # Chance is rolled when boss attacks player
   on-injure: true # If chance should be rolled when boss is attacked too
-
-  # Potion effects are formatted like this:
-  # effect:level:duration:chance
-  # Duration is in ticks, chance is as a percentage
-  potion-effects:
-    - "wither:4:200:10"
-    - "hunger:10:600:10"
-
-  # Bonus enemies that spawn to fight you
-  # entity:chance
-  # Chance is as a percentage
-  summons:
-    - "wolf:15"
-
-  # Chance to shuffle your hotbar as a percentage - set to 0 to disable.
-  shuffle-chance: 0
 
   # How the boss decides who to attack
   target:

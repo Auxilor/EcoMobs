@@ -3,36 +3,24 @@ package com.willfp.ecobosses.bosses;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.scheduling.RunnableTask;
-import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
+import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
-import com.willfp.ecobosses.bosses.util.obj.EffectOption;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
-import com.willfp.ecobosses.bosses.util.obj.SummonsOption;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.BarFlag;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -51,6 +39,11 @@ public class LivingEcoBoss extends PluginDependent {
      * The boss tickers.
      */
     private final Set<BossTicker> tickers;
+
+    /**
+     * The effects.
+     */
+    private final Set<Effect> effects;
 
     /**
      * Create new living EcoBoss.
@@ -85,13 +78,13 @@ public class LivingEcoBoss extends PluginDependent {
                     )
             );
         }
-        this.tickers.addAll(boss.createEffectTickers());
 
+        // Effects
+        this.effects = new HashSet<>();
+        this.effects.addAll(boss.createEffects());
 
         AtomicLong currentTick = new AtomicLong(0);
-        this.getPlugin().getRunnableFactory().create(runnable -> {
-            this.tick(currentTick.getAndAdd(1), runnable);
-        }).runTaskTimer(0, 1);
+        this.getPlugin().getRunnableFactory().create(runnable -> this.tick(currentTick.getAndAdd(1), runnable)).runTaskTimer(0, 1);
     }
 
     private void onSpawn() {
@@ -137,9 +130,15 @@ public class LivingEcoBoss extends PluginDependent {
         for (BossTicker ticker : tickers) {
             ticker.tick(boss, entity, tick);
         }
+        for (Effect effect : effects) {
+            effect.tick(boss, entity, tick);
+        }
         if (entity.isDead()) {
             for (BossTicker ticker : tickers) {
                 ticker.onDeath(boss, entity, tick);
+            }
+            for (Effect effect : effects) {
+                effect.onDeath(boss, entity, tick);
             }
             runnable.cancel();
             boss.removeLivingBoss(entity.getUniqueId());
@@ -156,46 +155,8 @@ public class LivingEcoBoss extends PluginDependent {
             player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
         }
 
-        for (EffectOption effect : boss.getEffects()) {
-            if (NumberUtils.randFloat(0, 100) > effect.getChance()) {
-                continue;
-            }
-
-            player.addPotionEffect(new PotionEffect(effect.getEffectType(), effect.getDuration(), effect.getLevel()));
-        }
-
-        if (NumberUtils.randFloat(0, 100) < boss.getShuffleChance()) {
-            List<ItemStack> hotbar = new ArrayList<>();
-            for (int i = 0; i < 9; i++) {
-                hotbar.add(player.getInventory().getItem(i));
-            }
-            Collections.shuffle(hotbar);
-            int i2 = 0;
-            for (ItemStack item : hotbar) {
-                player.getInventory().setItem(i2, item);
-                i2++;
-            }
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_PEARL_THROW, 1, 0.5f);
-        }
-
-        for (SummonsOption summon : boss.getSummons()) {
-            if (NumberUtils.randFloat(0, 100) > summon.getChance()) {
-                continue;
-            }
-
-            Location loc = player.getLocation().add(NumberUtils.randInt(2, 6), 0, NumberUtils.randInt(2, 6));
-            while (!loc.getBlock().getType().equals(Material.AIR)) {
-                loc.add(0, 1, 0);
-            }
-
-            Entity summonedEntity = summon.getType().spawnBossEntity(loc);
-            if (summonedEntity instanceof Mob) {
-                ((Mob) summonedEntity).setTarget(player);
-            }
-
-            for (OptionedSound sound : boss.getSummonSounds()) {
-                player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
-            }
+        for (Effect effect : effects) {
+            effect.onAttack(boss, entity, player);
         }
     }
 }

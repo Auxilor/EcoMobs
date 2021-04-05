@@ -1,8 +1,11 @@
 package com.willfp.ecobosses.bosses.effects;
 
 import com.google.common.collect.ImmutableMap;
-import com.willfp.ecobosses.bosses.effects.effects.DamageNearbyPlayers;
-import com.willfp.ecobosses.bosses.effects.effects.LightningNearbyEntities;
+import com.willfp.ecobosses.bosses.effects.effects.EffectDamageNearbyPlayers;
+import com.willfp.ecobosses.bosses.effects.effects.EffectGivePotionEffect;
+import com.willfp.ecobosses.bosses.effects.effects.EffectLightningNearbyEntities;
+import com.willfp.ecobosses.bosses.effects.effects.EffectShuffleHotbar;
+import com.willfp.ecobosses.bosses.effects.effects.EffectSummon;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,8 +20,11 @@ public class Effects {
      * Registered effects.
      */
     private static final Map<String, Function<List<String>, Effect>> EFFECTS = new ImmutableMap.Builder<String, Function<List<String>, Effect>>()
-            .put("damage-nearby-players", DamageNearbyPlayers::new)
-            .put("lightning-nearby-entities", LightningNearbyEntities::new)
+            .put("damage-nearby-players", EffectDamageNearbyPlayers::new)
+            .put("lightning-nearby-entities", EffectLightningNearbyEntities::new)
+            .put("summon", EffectSummon::new)
+            .put("give-potion-effect", EffectGivePotionEffect::new)
+            .put("shuffle-hotbar", EffectShuffleHotbar::new)
             .build();
 
     /**

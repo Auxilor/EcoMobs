@@ -56,6 +56,12 @@ broadcast:
 
 effects:
   - "lightning-nearby-entities:100:15:2:3"
+  - "summon:spider:15"
+  - "summon:cave_spider:15"
+  - "give-potion-effect:poison:8:200:10"
+  - "give-potion-effect:slow:4:100:20"
+  - "give-potion-effect:hunger:5:400:10"
+  - "give-potion-effect:slow_digging:3:40:10"
 
 defence:
   immunities:
@@ -78,25 +84,6 @@ defence:
 attacks:
   # Chance is rolled when boss attacks player
   on-injure: true # If chance should be rolled when boss is attacked too
-
-  # Potion effects are formatted like this:
-  # effect:level:duration:chance
-  # Duration is in ticks, chance is as a percentage
-  potion-effects:
-    - "poison:8:200:10"
-    - "slow:4:100:20"
-    - "hunger:5:400:10"
-    - "slow_digging:3:40:10"
-
-  # Bonus enemies that spawn to fight you
-  # entity:chance
-  # Chance is as a percentage
-  summons:
-    - "spider:15"
-    - "cave_spider:15"
-
-  # Chance to shuffle your hotbar as a percentage - set to 0 to disable.
-  shuffle-chance: 0
 
   # How the boss decides who to attack
   target:

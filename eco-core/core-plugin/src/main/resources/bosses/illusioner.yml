@@ -54,7 +54,12 @@ broadcast:
     - "&f - &9%third%&f (%third_damage% Damage)"
     - ""
 
-effects: [ ]
+effects:
+  - "summon:evoker:10"
+  - "summon:vindicator:10"
+  - "shuffle-hotbar:10"
+  - "give-potion-effect:confusion:10:200:10"
+  - "give-potion-effect:blindness:1:40:20"
 
 defence:
   immunities:
@@ -77,23 +82,6 @@ defence:
 attacks:
   # Chance is rolled when boss attacks player
   on-injure: true # If chance should be rolled when boss is attacked too
-
-  # Potion effects are formatted like this:
-  # effect:level:duration:chance
-  # Duration is in ticks, chance is as a percentage
-  potion-effects:
-    - "confusion:10:200:10"
-    - "blindness:1:40:20"
-
-  # Bonus enemies that spawn to fight you
-  # entity:chance
-  # Chance is as a percentage
-  summons:
-    - "evoker:10"
-    - "vindicator:10"
-
-  # Chance to shuffle your hotbar as a percentage - set to 0 to disable.
-  shuffle-chance: 10
 
   # How the boss decides who to attack
   target:

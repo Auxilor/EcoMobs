@@ -10,13 +10,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class LightningNearbyEntities extends Effect {
+public class EffectLightningNearbyEntities extends Effect {
     private final int frequency;
     private final double chance;
     private final double damage;
     private final double radius;
 
-    public LightningNearbyEntities(@NotNull final List<String> args) {
+    public EffectLightningNearbyEntities(@NotNull final List<String> args) {
         super(args);
 
         if (args.size() < 4) {

@@ -1,8 +1,11 @@
 package com.willfp.ecobosses.bosses.effects;
 
+import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,4 +43,44 @@ public abstract class Effect implements BossTicker {
      * @return The usage.
      */
     public abstract String getUsage();
+
+    /**
+     * Handle the boss attacking a player.
+     *
+     * @param boss   The boss.
+     * @param entity The boss entity.
+     * @param player The player.
+     */
+    public void onAttack(@NotNull final EcoBoss boss,
+                         @NotNull final LivingEntity entity,
+                         @NotNull final Player player) {
+        // Override when needed.
+    }
+
+    /**
+     * Tick the effect.
+     *
+     * @param boss   The boss.
+     * @param entity The boss entity.
+     * @param tick   The current tick: counts up from zero.
+     */
+    public void tick(@NotNull final EcoBoss boss,
+                     @NotNull final LivingEntity entity,
+                     final long tick) {
+        // Override when needed.
+    }
+
+    /**
+     * On boss death.
+     *
+     * @param boss   The boss.
+     * @param entity The boss entity.
+     * @param tick   The current tick: counts up from zero.
+     */
+    @Override
+    public void onDeath(@NotNull final EcoBoss boss,
+                        @NotNull final LivingEntity entity,
+                        final long tick) {
+        // Override when needed.
+    }
 }

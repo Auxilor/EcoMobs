@@ -11,12 +11,10 @@ import com.willfp.ecobosses.bosses.effects.Effects;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
-import com.willfp.ecobosses.bosses.util.obj.EffectOption;
 import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
-import com.willfp.ecobosses.bosses.util.obj.SummonsOption;
 import com.willfp.ecobosses.bosses.util.obj.TargetMode;
 import com.willfp.ecobosses.bosses.util.obj.TeleportOptions;
 import lombok.AccessLevel;
@@ -32,7 +30,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -143,24 +140,6 @@ public class EcoBoss extends PluginDependent {
      */
     @Getter
     private final ExperienceOptions experienceOptions;
-
-    /**
-     * The effects.
-     */
-    @Getter
-    private final Set<EffectOption> effects;
-
-    /**
-     * The summons.
-     */
-    @Getter
-    private final Set<SummonsOption> summons;
-
-    /**
-     * The shuffle chance.
-     */
-    @Getter
-    private final double shuffleChance;
 
     /**
      * If attacks should be called on injury.
@@ -347,33 +326,6 @@ public class EcoBoss extends PluginDependent {
         double projectile = this.getConfig().getDouble("defence.incoming-multipliers.projectile");
         this.incomingMultipliers.put(EntityDamageEvent.DamageCause.PROJECTILE, projectile);
 
-        // Effects
-        this.effects = new HashSet<>();
-        for (String string : this.getConfig().getStrings("attacks.potion-effects")) {
-            String[] split = string.split(":");
-            PotionEffectType type = PotionEffectType.getByName(split[0].toUpperCase());
-            assert type != null;
-            this.effects.add(new EffectOption(
-                    Double.parseDouble(split[3]),
-                    Integer.parseInt(split[1]) - 1,
-                    Integer.parseInt(split[2]),
-                    type
-            ));
-        }
-
-        // Summons
-        this.summons = new HashSet<>();
-        for (String string : this.getConfig().getStrings("attacks.summons")) {
-            String[] split = string.split(":");
-            this.summons.add(new SummonsOption(
-                    Double.parseDouble(split[1]),
-                    BossEntityUtils.getBossType(split[0].toUpperCase())
-            ));
-        }
-
-        // Shuffle
-        this.shuffleChance = this.getConfig().getDouble("attacks.shuffle-chance");
-
         // Attack on injure
         this.attackOnInjure = this.getConfig().getBool("attacks.on-injure");
 
@@ -494,7 +446,7 @@ public class EcoBoss extends PluginDependent {
      *
      * @return The effects.
      */
-    public Set<Effect> createEffectTickers() {
+    public Set<Effect> createEffects() {
         Set<Effect> effects = new HashSet<>();
         this.effectNames.forEach((string, args) -> {
             effects.add(Effects.getEffect(string, args));
