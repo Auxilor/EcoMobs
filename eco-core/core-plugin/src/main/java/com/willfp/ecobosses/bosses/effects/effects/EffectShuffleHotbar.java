@@ -28,7 +28,7 @@ public class EffectShuffleHotbar extends Effect {
 
     @Override
     public String getUsage() {
-        return "shuffle-hotbar:<effect>:<chance>:<duration>:<strength>";
+        return "shuffle-hotbar:<chance>";
     }
 
     @Override
