@@ -54,6 +54,7 @@ broadcast:
     - "&f - &9%third%&f (%third_damage% Damage)"
     - ""
 
+# Effects can be found on the wiki! https://ecobosses.willfp.com/
 effects:
   - "summon:evoker:10"
   - "summon:vindicator:10"

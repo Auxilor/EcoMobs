@@ -54,6 +54,7 @@ broadcast:
     - "&f - &8%third%&f (%third_damage% Damage)"
     - ""
 
+# Effects can be found on the wiki! https://ecobosses.willfp.com/
 effects:
   - "damage-nearby-players:15:2:3"
   - "summon:iron_golem:10"

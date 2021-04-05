@@ -54,6 +54,7 @@ broadcast:
     - "&f - &4%third%&f (%third_damage% Damage)"
     - ""
 
+# Effects can be found on the wiki! https://ecobosses.willfp.com/
 effects:
   - "lightning-nearby-entities:100:15:2:3"
   - "summon:spider:15"

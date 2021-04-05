@@ -54,6 +54,7 @@ broadcast:
     - "&f - %third%&f (%third_damage% Damage)"
     - ""
 
+# Effects can be found on the wiki! https://ecobosses.willfp.com/
 effects:
   - "summon:wolf:15"
   - "give-potion-effect:wither:4:200:10"
