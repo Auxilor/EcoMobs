@@ -229,6 +229,12 @@ public class EcoBoss extends PluginDependent {
     private final TargetMode targetMode;
 
     /**
+     * If the boss shouldn't get into boats and minecarts.
+     */
+    @Getter
+    private final boolean disableBoats;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -415,6 +421,9 @@ public class EcoBoss extends PluginDependent {
         // Targeting
         this.targetDistance = this.getConfig().getDouble("attacks.target.range");
         this.targetMode = TargetMode.getByName(this.getConfig().getString("attacks.target.mode"));
+
+        // Boat + Minecarts
+        this.disableBoats = this.getConfig().getBool("defence.no-boats");
 
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);

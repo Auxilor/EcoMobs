@@ -72,6 +72,8 @@ defence:
     projectiles: true
     suffocation: true
 
+  no-boats: true
+
   incoming-multipliers:
     melee: 0.8
     projectile: 0.2

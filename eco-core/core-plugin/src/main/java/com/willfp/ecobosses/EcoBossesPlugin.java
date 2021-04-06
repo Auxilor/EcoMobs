@@ -7,6 +7,7 @@ import com.willfp.eco.core.integrations.IntegrationLoader;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.listeners.AttackListeners;
 import com.willfp.ecobosses.bosses.listeners.DeathListeners;
+import com.willfp.ecobosses.bosses.listeners.PassiveListeners;
 import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
 import com.willfp.ecobosses.commands.CommandEbdrop;
 import com.willfp.ecobosses.commands.CommandEbkillall;
@@ -121,7 +122,8 @@ public class EcoBossesPlugin extends EcoPlugin {
         return Arrays.asList(
                 new AttackListeners(this),
                 new DeathListeners(this),
-                new SpawnListeners(this)
+                new SpawnListeners(this),
+                new PassiveListeners(this)
         );
     }
 
