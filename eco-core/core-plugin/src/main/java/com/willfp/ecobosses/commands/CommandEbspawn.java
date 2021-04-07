@@ -100,17 +100,7 @@ public class CommandEbspawn extends AbstractCommand {
             } else {
                 try {
                     xPos = Double.parseDouble(xString);
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-location"));
-                    return;
-                }
-                try {
                     yPos = Double.parseDouble(yString);
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-location"));
-                    return;
-                }
-                try {
                     zPos = Double.parseDouble(zString);
                 } catch (NumberFormatException e) {
                     sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-location"));
