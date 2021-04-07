@@ -140,8 +140,8 @@ public class LivingEcoBoss extends PluginDependent {
             for (Effect effect : effects) {
                 effect.onDeath(boss, entity, tick);
             }
-            runnable.cancel();
             boss.removeLivingBoss(entity.getUniqueId());
+            runnable.cancel();
         }
     }
 
