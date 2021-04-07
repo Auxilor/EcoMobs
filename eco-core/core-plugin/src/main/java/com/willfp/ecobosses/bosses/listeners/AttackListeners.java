@@ -172,10 +172,13 @@ public class AttackListeners extends PluginDependent implements Listener {
 
         ImmunityOptions immunities = boss.getImmunityOptions();
 
-        if (immunities.isImmuneToFire() && (event.getCause() == EntityDamageEvent.DamageCause.FIRE || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK)) {
+        if (immunities.isImmuneToFire()
+                && (event.getCause() == EntityDamageEvent.DamageCause.FIRE
+                || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
+                || event.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR)) {
             event.setCancelled(true);
         }
-        if (immunities.isImmuneToSuffocation() && event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+        if (immunities.isImmuneToSuffocation()&& event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
             event.setCancelled(true);
         }
         if (immunities.isImmuneToDrowning() && event.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
