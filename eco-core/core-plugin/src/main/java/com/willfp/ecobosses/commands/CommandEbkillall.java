@@ -6,7 +6,7 @@ import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,12 +28,9 @@ public class CommandEbkillall extends AbstractCommand {
         int amount = 0;
         for (EcoBoss boss : EcoBosses.values()) {
             for (UUID uuid : boss.getLivingBosses().keySet()) {
-                Entity entity = Bukkit.getEntity(uuid);
-                boss.removeLivingBoss(uuid);
-                if (entity == null) {
-                    break;
-                }
-                entity.remove();
+                LivingEntity entity = (LivingEntity) Bukkit.getEntity(uuid);
+                assert entity != null;
+                entity.damage(10000000);
                 amount++;
             }
         }

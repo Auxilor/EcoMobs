@@ -3,6 +3,7 @@ package com.willfp.ecobosses.bosses;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.scheduling.RunnableTask;
+import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
@@ -69,6 +70,7 @@ public class LivingEcoBoss extends PluginDependent {
             this.tickers.add(
                     new BossBarTicker(
                             Bukkit.getServer().createBossBar(
+                                    plugin.getNamespacedKeyFactory().create("boss_" + NumberUtils.randInt(0, 1000000)),
                                     entity.getCustomName(),
                                     boss.getBossbarProperties().getColor(),
                                     boss.getBossbarProperties().getStyle(),
