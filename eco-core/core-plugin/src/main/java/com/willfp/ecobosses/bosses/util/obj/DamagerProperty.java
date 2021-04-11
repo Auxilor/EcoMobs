@@ -1,14 +1,15 @@
 package com.willfp.ecobosses.bosses.util.obj;
 
 import lombok.Data;
-import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 @Data
 public class DamagerProperty {
     /**
      * The player.
      */
-    private final Player player;
+    private final UUID playerUUID;
 
     /**
      * The damage.

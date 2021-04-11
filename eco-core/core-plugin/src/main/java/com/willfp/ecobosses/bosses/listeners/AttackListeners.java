@@ -110,12 +110,12 @@ public class AttackListeners extends PluginDependent implements Listener {
 
         double playerDamage;
 
-        Optional<DamagerProperty> damager = topDamagers.stream().filter(damagerProperty -> damagerProperty.getPlayer().equals(player)).findFirst();
+        Optional<DamagerProperty> damager = topDamagers.stream().filter(damagerProperty -> damagerProperty.getPlayerUUID().equals(player.getUniqueId())).findFirst();
         playerDamage = damager.map(DamagerProperty::getDamage).orElse(0.0);
 
         playerDamage += event.getFinalDamage();
-        topDamagers.removeIf(damagerProperty -> damagerProperty.getPlayer().equals(player));
-        topDamagers.add(new DamagerProperty(player, playerDamage));
+        topDamagers.removeIf(damagerProperty -> damagerProperty.getPlayerUUID().equals(player.getUniqueId()));
+        topDamagers.add(new DamagerProperty(player.getUniqueId(), playerDamage));
 
         entity.removeMetadata("ecobosses-top-damagers", this.getPlugin());
         entity.setMetadata("ecobosses-top-damagers", this.getPlugin().getMetadataValueFactory().create(topDamagers));

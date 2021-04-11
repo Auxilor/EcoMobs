@@ -89,13 +89,13 @@ public class DeathListeners extends PluginDependent implements Listener {
 
         String na = this.getPlugin().getLangYml().getString("na");
 
-        String topDamager = top == null ? na : top.getPlayer().getDisplayName();
+        String topDamager = top == null ? na : Bukkit.getPlayer(top.getPlayerUUID()).getDisplayName();
         String topDamage = top == null ? na : StringUtils.internalToString(top.getDamage());
 
-        String secondDamager = second == null ? na : second.getPlayer().getDisplayName();
+        String secondDamager = second == null ? na : Bukkit.getPlayer(second.getPlayerUUID()).getDisplayName();
         String secondDamage = second == null ? na : StringUtils.internalToString(second.getDamage());
 
-        String thirdDamager = third == null ? na : third.getPlayer().getDisplayName();
+        String thirdDamager = third == null ? na : Bukkit.getPlayer(third.getPlayerUUID()).getDisplayName();
         String thirdDamage = third == null ? na : StringUtils.internalToString(third.getDamage());
 
         for (String spawnMessage : boss.getDeathMessages()) {
@@ -114,17 +114,17 @@ public class DeathListeners extends PluginDependent implements Listener {
             for (Pair<Double, String> pair : topDamagerCommands) {
                 if (top != null && i == 1) {
                     if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
-                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", top.getPlayer().getName()));
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(top.getPlayerUUID()).getName()));
                     }
                 }
                 if (second != null && i == 2) {
                     if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
-                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", second.getPlayer().getName()));
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(second.getPlayerUUID()).getName()));
                     }
                 }
                 if (third != null && i == 3) {
                     if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
-                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", third.getPlayer().getName()));
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(third.getPlayerUUID()).getName()));
                     }
                 }
             }
