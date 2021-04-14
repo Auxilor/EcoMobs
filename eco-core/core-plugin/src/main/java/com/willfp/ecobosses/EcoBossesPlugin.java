@@ -6,10 +6,7 @@ import com.willfp.eco.core.command.AbstractCommand;
 import com.willfp.eco.core.integrations.IntegrationLoader;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
-import com.willfp.ecobosses.bosses.listeners.AttackListeners;
-import com.willfp.ecobosses.bosses.listeners.DeathListeners;
-import com.willfp.ecobosses.bosses.listeners.PassiveListeners;
-import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
+import com.willfp.ecobosses.bosses.listeners.*;
 import com.willfp.ecobosses.commands.CommandEbdrop;
 import com.willfp.ecobosses.commands.CommandEbkillall;
 import com.willfp.ecobosses.commands.CommandEbreload;
@@ -46,7 +43,7 @@ public class EcoBossesPlugin extends EcoPlugin {
      */
     @Override
     public void enable() {
-
+        this.getScheduler().runTimer(new AutoSpawnTimer(), 5, 1);
     }
 
     /**

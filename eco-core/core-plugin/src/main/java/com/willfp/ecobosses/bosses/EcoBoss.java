@@ -10,18 +10,10 @@ import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.effects.Effects;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
-import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
-import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
-import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
-import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
-import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
-import com.willfp.ecobosses.bosses.util.obj.TargetMode;
+import com.willfp.ecobosses.bosses.util.obj.*;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -31,16 +23,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EcoBoss extends PluginDependent {
@@ -235,6 +218,18 @@ public class EcoBoss extends PluginDependent {
     private final boolean disableBoats;
 
     /**
+     * The time between auto spawns.
+     */
+    @Getter
+    private final int autoSpawnInterval;
+
+    /**
+     * Locations that the boss can auto spawn at.
+     */
+    @Getter
+    private final List<Location> autoSpawnLocations;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -424,6 +419,18 @@ public class EcoBoss extends PluginDependent {
 
         // Boat + Minecarts
         this.disableBoats = this.getConfig().getBool("defence.no-boats");
+
+        // Auto Spawn
+        this.autoSpawnInterval = this.getConfig().getInt("auto-spawn-interval");
+        this.autoSpawnLocations = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("auto-spawn-locations")) {
+            String[] split = string.split(":");
+            World world = Bukkit.getWorld(split[0]);
+            double x = Double.parseDouble(split[1]);
+            double y = Double.parseDouble(split[2]);
+            double z = Double.parseDouble(split[3]);
+            autoSpawnLocations.add(new Location(world, x, y, z));
+        }
 
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);

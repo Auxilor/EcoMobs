@@ -13,6 +13,9 @@ attack-damage: 70
 movement-speed: 1.3
 follow-range: 15
 
+auto-spawn-interval: -1 # Time between auto spawns in ticks (20 ticks in a second) - Set to -1 to disable.
+auto-spawn-locations: [ ] # Formatted as world:x:y:z - for example world_nether:100:10:100
+
 spawn-totem:
   enabled: true
   top: netherite_block
