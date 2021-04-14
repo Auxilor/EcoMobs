@@ -43,6 +43,15 @@ public class EcoBossesPlugin extends EcoPlugin {
      */
     @Override
     public void enable() {
+        this.getExtensionLoader().loadExtensions();
+
+        if (this.getExtensionLoader().getLoadedExtensions().isEmpty()) {
+            this.getLogger().info("&cNo extensions found");
+        } else {
+            this.getLogger().info("Extensions Loaded:");
+            this.getExtensionLoader().getLoadedExtensions().forEach(extension -> this.getLogger().info("- " + extension.getName() + " v" + extension.getVersion()));
+        }
+
         this.getScheduler().runTimer(new AutoSpawnTimer(), 5, 1);
     }
 
@@ -51,6 +60,8 @@ public class EcoBossesPlugin extends EcoPlugin {
      */
     @Override
     public void disable() {
+        this.getExtensionLoader().unloadExtensions();
+
         for (EcoBoss boss : EcoBosses.values()) {
             for (UUID uuid : boss.getLivingBosses().keySet()) {
                 LivingEntity entity = (LivingEntity) Bukkit.getEntity(uuid);
