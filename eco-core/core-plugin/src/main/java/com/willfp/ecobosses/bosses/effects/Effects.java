@@ -1,16 +1,11 @@
 package com.willfp.ecobosses.bosses.effects;
 
-import com.google.common.collect.ImmutableMap;
-import com.willfp.ecobosses.bosses.effects.effects.EffectDamageNearbyPlayers;
-import com.willfp.ecobosses.bosses.effects.effects.EffectGivePotionEffect;
-import com.willfp.ecobosses.bosses.effects.effects.EffectLightningNearbyEntities;
-import com.willfp.ecobosses.bosses.effects.effects.EffectShuffleHotbar;
-import com.willfp.ecobosses.bosses.effects.effects.EffectSummon;
-import com.willfp.ecobosses.bosses.effects.effects.EffectTeleport;
+import com.willfp.ecobosses.bosses.effects.effects.*;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,14 +15,27 @@ public class Effects {
     /**
      * Registered effects.
      */
-    private static final Map<String, Function<List<String>, Effect>> EFFECTS = new ImmutableMap.Builder<String, Function<List<String>, Effect>>()
-            .put("damage-nearby-players", EffectDamageNearbyPlayers::new)
-            .put("lightning-nearby-entities", EffectLightningNearbyEntities::new)
-            .put("summon", EffectSummon::new)
-            .put("give-potion-effect", EffectGivePotionEffect::new)
-            .put("shuffle-hotbar", EffectShuffleHotbar::new)
-            .put("teleport", EffectTeleport::new)
-            .build();
+    private static final Map<String, Function<List<String>, Effect>> EFFECTS = new HashMap<>();
+
+    static {
+        register("damage-nearby-players", EffectDamageNearbyPlayers::new);
+        register("lightning-nearby-entities", EffectLightningNearbyEntities::new);
+        register("summon", EffectSummon::new);
+        register("give-potion-effect", EffectGivePotionEffect::new);
+        register("shuffle-hotbar", EffectShuffleHotbar::new);
+        register("teleport", EffectTeleport::new);
+    }
+
+    /**
+     * Register new effect.
+     *
+     * @param name    The effect name.
+     * @param creator Function to create an instance of the effect given args.
+     */
+    public void register(@NotNull final String name,
+                         @NotNull final Function<List<String>, Effect> creator) {
+        EFFECTS.put(name, creator);
+    }
 
     /**
      * Get effect matching name.
