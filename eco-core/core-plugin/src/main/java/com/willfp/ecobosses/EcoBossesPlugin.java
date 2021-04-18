@@ -4,23 +4,24 @@ import com.willfp.eco.core.AbstractPacketAdapter;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.command.AbstractCommand;
 import com.willfp.eco.core.integrations.IntegrationLoader;
-import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
-import com.willfp.ecobosses.bosses.listeners.*;
+import com.willfp.ecobosses.bosses.listeners.AttackListeners;
+import com.willfp.ecobosses.bosses.listeners.AutoSpawnTimer;
+import com.willfp.ecobosses.bosses.listeners.DeathListeners;
+import com.willfp.ecobosses.bosses.listeners.PassiveListeners;
+import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
+import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.commands.CommandEbdrop;
 import com.willfp.ecobosses.commands.CommandEbkillall;
 import com.willfp.ecobosses.commands.CommandEbreload;
 import com.willfp.ecobosses.commands.CommandEbspawn;
 import com.willfp.ecobosses.commands.TabCompleterEbspawn;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class EcoBossesPlugin extends EcoPlugin {
@@ -62,13 +63,7 @@ public class EcoBossesPlugin extends EcoPlugin {
     public void disable() {
         this.getExtensionLoader().unloadExtensions();
 
-        for (EcoBoss boss : EcoBosses.values()) {
-            for (UUID uuid : boss.getLivingBosses().keySet()) {
-                LivingEntity entity = (LivingEntity) Bukkit.getEntity(uuid);
-                assert entity != null;
-                entity.damage(10000000);
-            }
-        }
+        BossUtils.killAllBosses();
     }
 
     /**

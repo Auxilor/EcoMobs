@@ -5,6 +5,8 @@ import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
+import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @UtilityClass
 @SuppressWarnings("unchecked")
@@ -67,5 +70,32 @@ public class BossUtils {
         Collections.reverse(topDamagers);
 
         return topDamagers;
+    }
+
+    /**
+     * Kill all bosses.
+     *
+     * @return The amount of bosses killed.
+     */
+    public int killAllBosses() {
+        int amount = 0;
+        for (EcoBoss boss : EcoBosses.values()) {
+            for (UUID uuid : boss.getLivingBosses().keySet()) {
+                LivingEntity entity = (LivingEntity) Bukkit.getEntity(uuid);
+                assert entity != null;
+                entity.damage(10000000);
+                amount++;
+            }
+        }
+
+        List<KeyedBossBar> bars = new ArrayList<>();
+        Bukkit.getBossBars().forEachRemaining(bars::add);
+        for (KeyedBossBar bar : bars) {
+            if (bar.getKey().toString().startsWith("ecobosses:boss")) {
+                Bukkit.removeBossBar(bar.getKey());
+            }
+        }
+
+        return amount;
     }
 }
