@@ -135,7 +135,7 @@ public class LivingEcoBoss extends PluginDependent {
         for (Effect effect : effects) {
             effect.tick(boss, entity, tick);
         }
-        if (entity.isDead() || Bukkit.getEntity(entity.getUniqueId()) == null) {
+        if (entity.isDead() || Bukkit.getEntity(entity.getUniqueId()) == null || boss.getLivingBoss(entity) == null) {
             for (BossTicker ticker : tickers) {
                 ticker.onDeath(boss, entity, tick);
             }
