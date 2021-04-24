@@ -52,8 +52,6 @@ public class EcoBossesPlugin extends EcoPlugin {
             this.getLogger().info("Extensions Loaded:");
             this.getExtensionLoader().getLoadedExtensions().forEach(extension -> this.getLogger().info("- " + extension.getName() + " v" + extension.getVersion()));
         }
-
-        this.getScheduler().runTimer(new AutoSpawnTimer(), 5, 1);
     }
 
     /**
@@ -79,7 +77,7 @@ public class EcoBossesPlugin extends EcoPlugin {
      */
     @Override
     public void onReload() {
-
+        this.getScheduler().runTimer(new AutoSpawnTimer(), 5, 1);
     }
 
     /**
