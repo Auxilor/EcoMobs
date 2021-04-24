@@ -6,6 +6,7 @@ import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.persistence.PersistentDataType;
@@ -92,6 +93,10 @@ public class BossUtils {
         Bukkit.getBossBars().forEachRemaining(bars::add);
         for (KeyedBossBar bar : bars) {
             if (bar.getKey().toString().startsWith("ecobosses:boss")) {
+                BossBar bossBar = Bukkit.getBossBar(bar.getKey());
+                assert bossBar != null;
+                bossBar.removeAll();
+                bossBar.setVisible(false);
                 Bukkit.removeBossBar(bar.getKey());
             }
         }
