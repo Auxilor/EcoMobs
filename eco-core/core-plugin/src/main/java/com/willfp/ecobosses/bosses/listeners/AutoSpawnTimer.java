@@ -4,7 +4,16 @@ import com.willfp.eco.util.NumberUtils;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
+import com.willfp.ecobosses.bosses.LivingEcoBoss;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class AutoSpawnTimer implements Runnable {
     private int tick = 0;
@@ -26,8 +35,21 @@ public class AutoSpawnTimer implements Runnable {
                 continue;
             }
 
+            Set<World> worlds = new HashSet<>();
+
+            for (UUID uuid : boss.getLivingBosses().keySet()) {
+                worlds.add(Bukkit.getEntity(uuid).getWorld());
+            }
+
+            List<Location> locations = new ArrayList<>(boss.getAutoSpawnLocations());
+            locations.removeIf(location -> worlds.contains(location.getWorld()));
+
+            if (locations.isEmpty()) {
+                continue;
+            }
+
             if (tick % boss.getAutoSpawnInterval() == 0) {
-                Location location = boss.getAutoSpawnLocations().get(NumberUtils.randInt(0, boss.getAutoSpawnLocations().size() - 1));
+                Location location = locations.get(NumberUtils.randInt(0, locations.size() - 1));
                 boss.spawn(location);
             }
         }
