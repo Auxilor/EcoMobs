@@ -1,6 +1,7 @@
 package com.willfp.ecobosses.bosses.listeners;
 
 import com.willfp.eco.util.NumberUtils;
+import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import org.bukkit.Location;
@@ -18,6 +19,10 @@ public class AutoSpawnTimer implements Runnable {
             }
 
             if (boss.getAutoSpawnLocations().isEmpty()) {
+                continue;
+            }
+
+            if (!boss.getLivingBosses().isEmpty()) {
                 continue;
             }
 
