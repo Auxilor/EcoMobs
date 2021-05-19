@@ -21,7 +21,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -39,12 +41,12 @@ public class LivingEcoBoss extends PluginDependent {
     /**
      * The boss tickers.
      */
-    private final Set<BossTicker> tickers;
+    private final List<BossTicker> tickers;
 
     /**
      * The effects.
      */
-    private final Set<Effect> effects;
+    private final List<Effect> effects;
 
     /**
      * Create new living EcoBoss.
@@ -63,7 +65,7 @@ public class LivingEcoBoss extends PluginDependent {
         this.onSpawn();
 
         // Tickers
-        this.tickers = new HashSet<>();
+        this.tickers = new ArrayList<>();
         this.tickers.add(new HealthPlaceholderTicker());
         this.tickers.add(new TargetTicker(boss.getTargetMode(), boss.getTargetDistance()));
         if (boss.isBossbarEnabled()) {
@@ -82,7 +84,7 @@ public class LivingEcoBoss extends PluginDependent {
         }
 
         // Effects
-        this.effects = new HashSet<>();
+        this.effects = new ArrayList<>();
         this.effects.addAll(boss.createEffects());
 
         AtomicLong currentTick = new AtomicLong(0);
