@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Effect implements BossTicker {
     /**
@@ -82,5 +83,22 @@ public abstract class Effect implements BossTicker {
                         @NotNull final LivingEntity entity,
                         final long tick) {
         // Override when needed.
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Effect)) {
+            return false;
+        }
+        Effect effect = (Effect) o;
+        return Objects.equals(getArgs(), effect.getArgs());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getArgs());
     }
 }

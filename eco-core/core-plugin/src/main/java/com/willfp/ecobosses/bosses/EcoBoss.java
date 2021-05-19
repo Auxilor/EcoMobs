@@ -442,8 +442,8 @@ public class EcoBoss extends PluginDependent {
      *
      * @return The effects.
      */
-    public Set<Effect> createEffects() {
-        Set<Effect> effects = new HashSet<>();
+    public List<Effect> createEffects() {
+        List<Effect> effects = new ArrayList<>();
         this.effectNames.forEach((string, args) -> {
             effects.add(Effects.getEffect(string, args));
         });
