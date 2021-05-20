@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -80,7 +81,7 @@ public abstract class Effect implements BossTicker {
      */
     @Override
     public void onDeath(@NotNull final EcoBoss boss,
-                        @NotNull final LivingEntity entity,
+                        @Nullable final LivingEntity entity,
                         final long tick) {
         // Override when needed.
     }

@@ -3,6 +3,7 @@ package com.willfp.ecobosses.bosses.tick;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface BossTicker {
     /**
@@ -24,7 +25,7 @@ public interface BossTicker {
      * @param tick   The current tick: counts up from zero.
      */
     default void onDeath(@NotNull EcoBoss boss,
-                         @NotNull LivingEntity entity,
+                         @Nullable LivingEntity entity,
                          long tick) {
         // Can be overridden when needed.
     }

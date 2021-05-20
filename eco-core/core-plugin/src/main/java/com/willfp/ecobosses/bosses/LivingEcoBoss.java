@@ -11,6 +11,7 @@ import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -25,13 +26,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LivingEcoBoss extends PluginDependent {
     /**
      * The entity.
      */
-    private final LivingEntity entity;
+    @Getter
+    private LivingEntity entity;
+
+    /**
+     * The entity UUID.
+     */
+    private final UUID uuid;
 
     /**
      * The boss.
@@ -60,6 +68,7 @@ public class LivingEcoBoss extends PluginDependent {
                          @NotNull final EcoBoss boss) {
         super(plugin);
         this.entity = entity;
+        this.uuid = entity.getUniqueId();
         this.boss = boss;
 
         this.onSpawn();
@@ -132,13 +141,9 @@ public class LivingEcoBoss extends PluginDependent {
 
     private void tick(final long tick,
                       @NotNull final RunnableTask runnable) {
-        for (BossTicker ticker : tickers) {
-            ticker.tick(boss, entity, tick);
-        }
-        for (Effect effect : effects) {
-            effect.tick(boss, entity, tick);
-        }
-        if (entity.isDead() || Bukkit.getEntity(entity.getUniqueId()) == null || boss.getLivingBoss(entity) == null) {
+        this.entity = (LivingEntity) Bukkit.getEntity(uuid);
+
+        if (entity == null || entity.isDead() || boss.getLivingBoss(entity) == null) {
             for (BossTicker ticker : tickers) {
                 ticker.onDeath(boss, entity, tick);
             }
@@ -147,6 +152,13 @@ public class LivingEcoBoss extends PluginDependent {
             }
             boss.removeLivingBoss(entity.getUniqueId());
             runnable.cancel();
+        }
+
+        for (BossTicker ticker : tickers) {
+            ticker.tick(boss, entity, tick);
+        }
+        for (Effect effect : effects) {
+            effect.tick(boss, entity, tick);
         }
     }
 

@@ -9,6 +9,7 @@ import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BossBarTicker implements BossTicker {
     /**
@@ -51,7 +52,7 @@ public class BossBarTicker implements BossTicker {
 
     @Override
     public void onDeath(@NotNull final EcoBoss boss,
-                        @NotNull final LivingEntity entity,
+                        @Nullable final LivingEntity entity,
                         final long tick) {
         bossBar.removeAll();
         bossBar.setVisible(false);
