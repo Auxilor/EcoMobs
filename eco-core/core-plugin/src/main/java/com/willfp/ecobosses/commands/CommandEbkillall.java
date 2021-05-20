@@ -21,6 +21,11 @@ public class CommandEbkillall extends AbstractCommand {
     @Override
     public void onExecute(@NotNull final CommandSender sender,
                           @NotNull final List<String> args) {
-        sender.sendMessage(this.getPlugin().getLangYml().getMessage("killall").replace("%amount%", String.valueOf(BossUtils.killAllBosses())));
+        boolean force = false;
+        if (args.size() == 1) {
+            force = args.get(0).equalsIgnoreCase("force");
+        }
+
+        sender.sendMessage(this.getPlugin().getLangYml().getMessage("killall").replace("%amount%", String.valueOf(BossUtils.killAllBosses(force))));
     }
 }

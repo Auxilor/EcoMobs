@@ -31,10 +31,6 @@ public class AutoSpawnTimer implements Runnable {
                 continue;
             }
 
-            if (!boss.getLivingBosses().isEmpty()) {
-                continue;
-            }
-
             Set<World> worlds = new HashSet<>();
 
             for (UUID uuid : boss.getLivingBosses().keySet()) {

@@ -6,8 +6,10 @@ import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -79,6 +81,16 @@ public class BossUtils {
      * @return The amount of bosses killed.
      */
     public int killAllBosses() {
+        return killAllBosses(false);
+    }
+
+    /**
+     * Kill all bosses.
+     *
+     * @param force If all entities should be checked for being bosses.
+     * @return The amount of bosses killed.
+     */
+    public int killAllBosses(final boolean force) {
         int amount = 0;
         for (EcoBoss boss : EcoBosses.values()) {
             for (UUID uuid : boss.getLivingBosses().keySet()) {
@@ -86,6 +98,22 @@ public class BossUtils {
                 assert entity != null;
                 entity.damage(10000000);
                 amount++;
+            }
+        }
+
+        if (force) {
+            for (World world : Bukkit.getWorlds()) {
+                for (Entity entity : world.getEntities()) {
+                    if (!(entity instanceof LivingEntity)) {
+                        continue;
+                    }
+
+                    if (BossUtils.getBoss((LivingEntity) entity) == null) {
+                        continue;
+                    }
+
+                    entity.remove();
+                }
             }
         }
 
