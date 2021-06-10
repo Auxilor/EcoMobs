@@ -148,6 +148,10 @@ public class AttackListeners extends PluginDependent implements Listener {
 
         LivingEcoBoss livingEcoBoss = boss.getLivingBoss(entity);
 
+        if (livingEcoBoss == null) {
+            return;
+        }
+
         livingEcoBoss.handleAttack(player);
     }
 
