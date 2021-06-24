@@ -59,7 +59,7 @@ public class EffectSummon extends Effect {
         }
 
         for (OptionedSound sound : boss.getSummonSounds()) {
-            player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            player.getWorld().playSound(entity.getLocation(), sound.sound(), sound.volume(), sound.pitch());
         }
     }
 }
