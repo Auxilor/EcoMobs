@@ -38,21 +38,11 @@ public class AttackListeners extends PluginDependent implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onAttackBoss(@NotNull final EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
 
-        LivingEntity entity = (LivingEntity) event.getEntity();
-
-        Player player = null;
-
-        if (event.getDamager() instanceof Player) {
-            player = (Player) event.getDamager();
-        } else if (event.getDamager() instanceof Projectile) {
-            if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
-                player = (Player) ((Projectile) event.getDamager()).getShooter();
-            }
-        }
+        Player player = BossUtils.getPlayerFromEntity(event.getDamager());
 
         if (player == null) {
             return;
@@ -66,6 +56,8 @@ public class AttackListeners extends PluginDependent implements Listener {
 
         LivingEcoBoss livingEcoBoss = boss.getLivingBoss(entity);
 
+        BossUtils.warnIfNull(livingEcoBoss);
+
         if (boss.isAttackOnInjure()) {
             livingEcoBoss.handleAttack(player);
         }
@@ -78,27 +70,15 @@ public class AttackListeners extends PluginDependent implements Listener {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void topDamageTracker(@NotNull final EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
 
-        LivingEntity entity = (LivingEntity) event.getEntity();
+        Player player = BossUtils.getPlayerFromEntity(event.getDamager());
 
-        Player temp = null;
-
-        if (event.getDamager() instanceof Player) {
-            temp = (Player) event.getDamager();
-        } else if (event.getDamager() instanceof Projectile) {
-            if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
-                temp = (Player) ((Projectile) event.getDamager()).getShooter();
-            }
-        }
-
-        if (temp == null) {
+        if (player == null) {
             return;
         }
-
-        Player player = temp;
 
         EcoBoss boss = BossUtils.getBoss(entity);
 
@@ -110,11 +90,11 @@ public class AttackListeners extends PluginDependent implements Listener {
 
         double playerDamage;
 
-        Optional<DamagerProperty> damager = topDamagers.stream().filter(damagerProperty -> damagerProperty.getPlayerUUID().equals(player.getUniqueId())).findFirst();
-        playerDamage = damager.map(DamagerProperty::getDamage).orElse(0.0);
+        Optional<DamagerProperty> damager = topDamagers.stream().filter(damagerProperty -> damagerProperty.playerUUID().equals(player.getUniqueId())).findFirst();
+        playerDamage = damager.map(DamagerProperty::damage).orElse(0.0);
 
         playerDamage += event.getFinalDamage();
-        topDamagers.removeIf(damagerProperty -> damagerProperty.getPlayerUUID().equals(player.getUniqueId()));
+        topDamagers.removeIf(damagerProperty -> damagerProperty.playerUUID().equals(player.getUniqueId()));
         topDamagers.add(new DamagerProperty(player.getUniqueId(), playerDamage));
 
         entity.removeMetadata("ecobosses-top-damagers", this.getPlugin());
@@ -128,17 +108,13 @@ public class AttackListeners extends PluginDependent implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onAttackPlayer(@NotNull final EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
-        if (!(event.getDamager() instanceof LivingEntity)) {
+        if (!(event.getDamager() instanceof LivingEntity entity)) {
             return;
         }
-
-        LivingEntity entity = (LivingEntity) event.getDamager();
-
-        Player player = (Player) event.getEntity();
 
         EcoBoss boss = BossUtils.getBoss(entity);
 
@@ -148,9 +124,7 @@ public class AttackListeners extends PluginDependent implements Listener {
 
         LivingEcoBoss livingEcoBoss = boss.getLivingBoss(entity);
 
-        if (livingEcoBoss == null) {
-            return;
-        }
+        BossUtils.warnIfNull(livingEcoBoss);
 
         livingEcoBoss.handleAttack(player);
     }
@@ -162,11 +136,9 @@ public class AttackListeners extends PluginDependent implements Listener {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void defenceListener(@NotNull final EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
-
-        LivingEntity entity = (LivingEntity) event.getEntity();
 
         EcoBoss boss = BossUtils.getBoss(entity);
 
@@ -176,22 +148,22 @@ public class AttackListeners extends PluginDependent implements Listener {
 
         ImmunityOptions immunities = boss.getImmunityOptions();
 
-        if (immunities.isImmuneToFire()
+        if (immunities.immuneToFire()
                 && (event.getCause() == EntityDamageEvent.DamageCause.FIRE
                 || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
                 || event.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR)) {
             event.setCancelled(true);
         }
-        if (immunities.isImmuneToSuffocation()&& event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+        if (immunities.immuneToSuffocation()&& event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
             event.setCancelled(true);
         }
-        if (immunities.isImmuneToDrowning() && event.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
+        if (immunities.immuneToDrowning() && event.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
             event.setCancelled(true);
         }
-        if (immunities.isImmuneToExplosions() && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION || event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)) {
+        if (immunities.immuneToExplosions() && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION || event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)) {
             event.setCancelled(true);
         }
-        if (immunities.isImmuneToProjectiles() && (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE)) {
+        if (immunities.immuneToProjectiles() && (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE)) {
             event.setCancelled(true);
         }
 

@@ -3,6 +3,7 @@ package com.willfp.ecobosses.bosses.util;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
+import com.willfp.ecobosses.bosses.LivingEcoBoss;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
@@ -11,6 +12,8 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,7 +72,7 @@ public class BossUtils {
         }
         assert topDamagers != null;
 
-        topDamagers.sort(Comparator.comparingDouble(DamagerProperty::getDamage));
+        topDamagers.sort(Comparator.comparingDouble(DamagerProperty::damage));
         Collections.reverse(topDamagers);
 
         return topDamagers;
@@ -130,5 +133,40 @@ public class BossUtils {
         }
 
         return amount;
+    }
+
+    /**
+     * Get player from entity if player or projectile.
+     *
+     * @param entity The entity.
+     * @return The player, or null if not a player.
+     */
+    @Nullable
+    public Player getPlayerFromEntity(@NotNull final Entity entity) {
+        Player player = null;
+
+        if (entity instanceof Player) {
+            player = (Player) entity;
+        } else if (entity instanceof Projectile) {
+            if (((Projectile) entity).getShooter() instanceof Player) {
+                player = (Player) ((Projectile) entity).getShooter();
+            }
+        }
+
+        return player;
+    }
+
+    /**
+     * Warn if a boss is null.
+     *
+     * @param boss The boss.
+     */
+    public void warnIfNull(@Nullable final LivingEcoBoss boss) {
+        if (boss != null) {
+            return;
+        }
+
+        PLUGIN.getLogger().severe("Not-Null boss is null! Generating stacktrace.");
+        throw new NullPointerException("Not-Null boss is null!");
     }
 }

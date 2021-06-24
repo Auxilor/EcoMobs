@@ -52,7 +52,7 @@ public class DeathListeners extends PluginDependent implements Listener {
         }
 
         for (OptionedSound sound : boss.getDeathSounds()) {
-            entity.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            entity.getWorld().playSound(entity.getLocation(), sound.sound(), sound.volume(), sound.pitch());
         }
     }
 
@@ -89,14 +89,14 @@ public class DeathListeners extends PluginDependent implements Listener {
 
         String na = this.getPlugin().getLangYml().getString("na");
 
-        String topDamager = top == null ? na : Bukkit.getPlayer(top.getPlayerUUID()).getDisplayName();
-        String topDamage = top == null ? na : StringUtils.internalToString(top.getDamage());
+        String topDamager = top == null ? na : Bukkit.getPlayer(top.playerUUID()).getDisplayName();
+        String topDamage = top == null ? na : StringUtils.internalToString(top.damage());
 
-        String secondDamager = second == null ? na : Bukkit.getPlayer(second.getPlayerUUID()).getDisplayName();
-        String secondDamage = second == null ? na : StringUtils.internalToString(second.getDamage());
+        String secondDamager = second == null ? na : Bukkit.getPlayer(second.playerUUID()).getDisplayName();
+        String secondDamage = second == null ? na : StringUtils.internalToString(second.damage());
 
-        String thirdDamager = third == null ? na : Bukkit.getPlayer(third.getPlayerUUID()).getDisplayName();
-        String thirdDamage = third == null ? na : StringUtils.internalToString(third.getDamage());
+        String thirdDamager = third == null ? na : Bukkit.getPlayer(third.playerUUID()).getDisplayName();
+        String thirdDamage = third == null ? na : StringUtils.internalToString(third.damage());
 
         for (String spawnMessage : boss.getDeathMessages()) {
             Bukkit.broadcastMessage(spawnMessage
@@ -114,17 +114,17 @@ public class DeathListeners extends PluginDependent implements Listener {
             for (Pair<Double, String> pair : topDamagerCommands) {
                 if (top != null && i == 1) {
                     if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
-                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(top.getPlayerUUID()).getName()));
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(top.playerUUID()).getName()));
                     }
                 }
                 if (second != null && i == 2) {
                     if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
-                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(second.getPlayerUUID()).getName()));
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(second.playerUUID()).getName()));
                     }
                 }
                 if (third != null && i == 3) {
                     if (NumberUtils.randFloat(0, 100) < pair.getFirst()) {
-                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(third.getPlayerUUID()).getName()));
+                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), pair.getSecond().replace("%player%", Bukkit.getOfflinePlayer(third.playerUUID()).getName()));
                     }
                 }
             }

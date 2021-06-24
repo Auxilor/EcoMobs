@@ -500,11 +500,10 @@ public class EcoBoss extends PluginDependent {
             return true;
         }
 
-        if (!(o instanceof EcoBoss)) {
+        if (!(o instanceof EcoBoss boss)) {
             return false;
         }
 
-        EcoBoss boss = (EcoBoss) o;
         return this.getName().equals(boss.getName());
     }
 

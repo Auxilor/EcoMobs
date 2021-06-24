@@ -29,15 +29,13 @@ public class PassiveListeners extends PluginDependent implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onAttackBoss(@NotNull final EntityMountEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
 
         if (!(event.getMount() instanceof Boat || event.getMount() instanceof Minecart)) {
             return;
         }
-
-        LivingEntity entity = (LivingEntity) event.getEntity();
 
         EcoBoss boss = BossUtils.getBoss(entity);
 

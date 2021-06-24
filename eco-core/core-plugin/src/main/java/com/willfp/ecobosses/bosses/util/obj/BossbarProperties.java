@@ -4,15 +4,6 @@ import lombok.Data;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 
-@Data
-public class BossbarProperties {
-    /**
-     * The BossBar color.
-     */
-    private final BarColor color;
+public record BossbarProperties(BarColor color, BarStyle style) {
 
-    /**
-     * The BossBar style.
-     */
-    private final BarStyle style;
 }

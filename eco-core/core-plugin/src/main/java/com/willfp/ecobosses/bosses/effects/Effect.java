@@ -91,10 +91,9 @@ public abstract class Effect implements BossTicker {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Effect)) {
+        if (!(o instanceof Effect effect)) {
             return false;
         }
-        Effect effect = (Effect) o;
         return Objects.equals(getArgs(), effect.getArgs());
     }
 

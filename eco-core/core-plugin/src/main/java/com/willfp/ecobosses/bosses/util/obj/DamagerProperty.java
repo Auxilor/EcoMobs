@@ -4,15 +4,6 @@ import lombok.Data;
 
 import java.util.UUID;
 
-@Data
-public class DamagerProperty {
-    /**
-     * The player.
-     */
-    private final UUID playerUUID;
+public record DamagerProperty(UUID playerUUID, double damage) {
 
-    /**
-     * The damage.
-     */
-    private final double damage;
 }

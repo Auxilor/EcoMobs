@@ -83,8 +83,8 @@ public class LivingEcoBoss extends PluginDependent {
                             Bukkit.getServer().createBossBar(
                                     plugin.getNamespacedKeyFactory().create("boss_" + NumberUtils.randInt(0, 1000000)),
                                     entity.getCustomName(),
-                                    boss.getBossbarProperties().getColor(),
-                                    boss.getBossbarProperties().getStyle(),
+                                    boss.getBossbarProperties().color(),
+                                    boss.getBossbarProperties().style(),
                                     (BarFlag) null
                             ),
                             this.getPlugin().getConfigYml().getInt("bossbar-radius")
@@ -127,7 +127,7 @@ public class LivingEcoBoss extends PluginDependent {
         attackDamage.setBaseValue(boss.getAttackDamage());
 
         for (OptionedSound sound : boss.getSpawnSounds()) {
-            entity.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            entity.getWorld().playSound(entity.getLocation(), sound.sound(), sound.volume(), sound.pitch());
         }
 
         for (String spawnMessage : boss.getSpawnMessages()) {
@@ -170,7 +170,7 @@ public class LivingEcoBoss extends PluginDependent {
      */
     public void handleAttack(@NotNull final Player player) {
         for (OptionedSound sound : boss.getInjureSounds()) {
-            player.getWorld().playSound(entity.getLocation(), sound.getSound(), sound.getVolume(), sound.getPitch());
+            player.getWorld().playSound(entity.getLocation(), sound.sound(), sound.volume(), sound.pitch());
         }
 
         for (Effect effect : effects) {
