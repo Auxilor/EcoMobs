@@ -457,6 +457,8 @@ public class EcoBoss extends PluginDependent {
      * @param location The location.
      */
     public void spawn(@NotNull final Location location) {
+        location.getChunk().load();
+
         LivingEntity entity = bossType.spawnBossEntity(location);
         this.livingBosses.put(entity.getUniqueId(), new LivingEcoBoss(
                         this.getPlugin(),

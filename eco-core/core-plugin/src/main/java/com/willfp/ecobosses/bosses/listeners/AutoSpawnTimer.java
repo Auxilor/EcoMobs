@@ -1,10 +1,8 @@
 package com.willfp.ecobosses.bosses.listeners;
 
 import com.willfp.eco.util.NumberUtils;
-import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
-import com.willfp.ecobosses.bosses.LivingEcoBoss;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -37,12 +35,9 @@ public class AutoSpawnTimer implements Runnable {
             for (UUID uuid : boss.getLivingBosses().keySet()) {
                 Entity entity = Bukkit.getEntity(uuid);
 
-                if (entity == null) {
-                    boss.removeLivingBoss(uuid);
-                    continue;
+                if (entity != null) {
+                    worlds.add(entity.getWorld());
                 }
-
-                worlds.add(entity.getWorld());
             }
 
             List<Location> locations = new ArrayList<>(boss.getAutoSpawnLocations());
