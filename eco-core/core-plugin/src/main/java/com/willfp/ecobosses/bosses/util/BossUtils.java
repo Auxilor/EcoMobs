@@ -166,7 +166,21 @@ public class BossUtils {
             return;
         }
 
-        PLUGIN.getLogger().severe("Not-Null boss is null! Generating stacktrace.");
-        throw new NullPointerException("Not-Null boss is null!");
+        PLUGIN.getLogger().severe("Boss is null! Report this to Auxilor (https://discord.gg/ZcwpSsE)");
+        PLUGIN.getLogger().severe("Send this stack-trace in the relevant channel.");
+        throw new NullPointerException("Boss is null!");
+    }
+
+    /**
+     * Warn if an entity is null.
+     */
+    public void warnIfNull(@Nullable final Entity entity) {
+        if (entity != null) {
+            return;
+        }
+
+        PLUGIN.getLogger().severe("Entity is null! Report this to Auxilor (https://discord.gg/ZcwpSsE)");
+        PLUGIN.getLogger().severe("Send this stack-trace in the relevant channel.");
+        throw new NullPointerException("Entity is null!");
     }
 }

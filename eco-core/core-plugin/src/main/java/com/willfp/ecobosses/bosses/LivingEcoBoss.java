@@ -8,6 +8,7 @@ import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
+import com.willfp.ecobosses.bosses.tick.tickers.ChunkLoadTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
@@ -23,9 +24,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -77,6 +76,7 @@ public class LivingEcoBoss extends PluginDependent {
         this.tickers = new ArrayList<>();
         this.tickers.add(new HealthPlaceholderTicker());
         this.tickers.add(new TargetTicker(boss.getTargetMode(), boss.getTargetDistance()));
+        this.tickers.add(new ChunkLoadTicker());
         if (boss.isBossbarEnabled()) {
             this.tickers.add(
                     new BossBarTicker(
