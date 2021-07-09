@@ -3,6 +3,7 @@ package com.willfp.ecobosses;
 import com.willfp.eco.core.AbstractPacketAdapter;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.command.AbstractCommand;
+import com.willfp.eco.core.command.impl.PluginCommand;
 import com.willfp.eco.core.integrations.IntegrationLoader;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.listeners.AttackListeners;
@@ -35,7 +36,7 @@ public class EcoBossesPlugin extends EcoPlugin {
      * Internal constructor called by bukkit on plugin load.
      */
     public EcoBossesPlugin() {
-        super("EcoBosses", 86576, 10635, "com.willfp.ecobosses.proxy", "&9");
+        super(86576, 10635, "com.willfp.ecobosses.proxy", "&9");
         instance = this;
     }
 
@@ -98,13 +99,8 @@ public class EcoBossesPlugin extends EcoPlugin {
         return new ArrayList<>();
     }
 
-    /**
-     * EcoEnchants-specific commands.
-     *
-     * @return A list of all commands.
-     */
     @Override
-    public List<AbstractCommand> getCommands() {
+    public List<PluginCommand> getPluginCommands() {
         return Arrays.asList(
                 new CommandEbreload(this),
                 new CommandEbdrop(this),
@@ -144,5 +140,10 @@ public class EcoBossesPlugin extends EcoPlugin {
                 EcoBosses.class,
                 TabCompleterEbspawn.class
         );
+    }
+
+    @Override
+    protected String getMinimumEcoVersion() {
+        return "5.7.1";
     }
 }

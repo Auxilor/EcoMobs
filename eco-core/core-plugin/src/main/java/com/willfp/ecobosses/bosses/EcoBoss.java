@@ -372,7 +372,7 @@ public class EcoBoss extends PluginDependent {
         this.topDamagerCommands = new HashMap<>();
         for (int i = 1; i <= 3; i++) {
             this.topDamagerCommands.put(i, new ArrayList<>());
-            for (String string : this.getConfig().getStrings("rewards.top-damager-commands." + i)) {
+            for (String string : this.getConfig().getStrings("rewards.top-damager-commands." + i, false)) {
                 double chance = 100;
                 if (string.contains("::")) {
                     String[] split = string.split("::");
@@ -388,7 +388,7 @@ public class EcoBoss extends PluginDependent {
         // Nearby Rewards
         this.nearbyRadius = this.getConfig().getDouble("rewards.nearby-player-commands.radius");
         this.nearbyPlayersCommands = new HashMap<>();
-        for (String string : this.getConfig().getStrings("rewards.nearby-player-commands.commands")) {
+        for (String string : this.getConfig().getStrings("rewards.nearby-player-commands.commands", false)) {
             double chance = 100;
             if (string.contains("::")) {
                 String[] split = string.split("::");
