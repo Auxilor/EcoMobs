@@ -3,7 +3,6 @@ package com.willfp.ecobosses;
 import com.willfp.eco.core.AbstractPacketAdapter;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.command.AbstractCommand;
-import com.willfp.eco.core.command.impl.PluginCommand;
 import com.willfp.eco.core.integrations.IntegrationLoader;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.listeners.AttackListeners;
@@ -99,8 +98,13 @@ public class EcoBossesPlugin extends EcoPlugin {
         return new ArrayList<>();
     }
 
+    /**
+     * EcoEnchants-specific commands.
+     *
+     * @return A list of all commands.
+     */
     @Override
-    public List<PluginCommand> getPluginCommands() {
+    public List<AbstractCommand> getCommands() {
         return Arrays.asList(
                 new CommandEbreload(this),
                 new CommandEbdrop(this),
