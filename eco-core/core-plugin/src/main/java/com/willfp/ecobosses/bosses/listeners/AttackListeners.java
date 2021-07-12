@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class AttackListeners extends PluginDependent implements Listener {
+public class AttackListeners extends PluginDependent<EcoPlugin> implements Listener {
     /**
      * Create new attack listeners.
      *

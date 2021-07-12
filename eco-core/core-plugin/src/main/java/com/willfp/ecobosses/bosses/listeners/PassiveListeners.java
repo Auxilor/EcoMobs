@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.entity.EntityMountEvent;
 
-public class PassiveListeners extends PluginDependent implements Listener {
+public class PassiveListeners extends PluginDependent<EcoPlugin> implements Listener {
     /**
      * Create new attack listeners.
      *

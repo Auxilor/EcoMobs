@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class SpawnListeners extends PluginDependent implements Listener {
+public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listener {
     /**
      * Create new spawn listeners and link them to a plugin.
      *

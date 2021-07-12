@@ -42,7 +42,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class EcoBoss extends PluginDependent {
+public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The name of the boss.
      */

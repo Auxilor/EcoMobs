@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class LivingEcoBoss extends PluginDependent {
+public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The entity.
      */

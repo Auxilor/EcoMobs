@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DeathListeners extends PluginDependent implements Listener {
+public class DeathListeners extends PluginDependent<EcoPlugin> implements Listener {
     /**
      * Create new death listeners.
      *
