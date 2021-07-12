@@ -2,7 +2,7 @@ package com.willfp.ecobosses;
 
 import com.willfp.eco.core.AbstractPacketAdapter;
 import com.willfp.eco.core.EcoPlugin;
-import com.willfp.eco.core.command.AbstractCommand;
+import com.willfp.eco.core.command.impl.PluginCommand;
 import com.willfp.eco.core.integrations.IntegrationLoader;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.listeners.AttackListeners;
@@ -11,11 +11,8 @@ import com.willfp.ecobosses.bosses.listeners.DeathListeners;
 import com.willfp.ecobosses.bosses.listeners.PassiveListeners;
 import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
 import com.willfp.ecobosses.bosses.util.BossUtils;
-import com.willfp.ecobosses.commands.CommandEbdrop;
-import com.willfp.ecobosses.commands.CommandEbkillall;
-import com.willfp.ecobosses.commands.CommandEbreload;
-import com.willfp.ecobosses.commands.CommandEbspawn;
-import com.willfp.ecobosses.commands.TabCompleterEbspawn;
+import com.willfp.ecobosses.commands.CommandEcobosses;
+import com.willfp.ecobosses.commands.CommandSpawn;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 
@@ -98,18 +95,10 @@ public class EcoBossesPlugin extends EcoPlugin {
         return new ArrayList<>();
     }
 
-    /**
-     * EcoEnchants-specific commands.
-     *
-     * @return A list of all commands.
-     */
     @Override
-    public List<AbstractCommand> getCommands() {
+    public List<PluginCommand> getPluginCommands() {
         return Arrays.asList(
-                new CommandEbreload(this),
-                new CommandEbdrop(this),
-                new CommandEbspawn(this),
-                new CommandEbkillall(this)
+                new CommandEcobosses(this)
         );
     }
 
@@ -142,7 +131,7 @@ public class EcoBossesPlugin extends EcoPlugin {
     public List<Class<?>> getUpdatableClasses() {
         return Arrays.asList(
                 EcoBosses.class,
-                TabCompleterEbspawn.class
+                CommandSpawn.class
         );
     }
 

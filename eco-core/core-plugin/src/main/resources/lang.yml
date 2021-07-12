@@ -1,6 +1,7 @@
 messages:
   prefix: "&9&lEcoBosses &f» "
   no-permission: "&cYou don't have permission to do this!"
+  invalid-command: "&cUnknown subcommand!"
   not-player: "&cThis command must be run by a player"
   reloaded: "Reloaded!"
   sent-drop: "Check console for the drop!"

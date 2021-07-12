@@ -10,10 +10,19 @@ import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.effects.Effects;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
-import com.willfp.ecobosses.bosses.util.obj.*;
+import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
+import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
+import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
+import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
+import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
+import com.willfp.ecobosses.bosses.util.obj.TargetMode;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -23,7 +32,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class EcoBoss extends PluginDependent {

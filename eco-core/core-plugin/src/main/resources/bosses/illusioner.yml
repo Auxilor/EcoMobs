@@ -38,7 +38,7 @@ rewards:
     # Use %player% as the placeholder for the player name
     commands: []
 
-  # Get items to add here by copying the console output for /ebdrop
+  # Get items to add here by copying the console output for /ecobosses base64
   # To set the chance for a drop, put <chance>::<base64>
   drops: []
 
