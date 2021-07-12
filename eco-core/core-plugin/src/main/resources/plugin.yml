@@ -9,41 +9,41 @@ depend:
   - eco
 
 commands:
-  ebreload:
-    description: Reloads config
-    permission: ecobosses.reload
-  ebdrop:
-    description: Sends the held item to console to be added as a drop
-    permission: ecobosses.ebdrop
-  ebspawn:
-    description: Spawns a boss
-    permission: ecobosses.ebspawn
-  ebkillall:
-    description: Kill all bosses
-    permission: ecobosses.killall
+  ecobosses:
+    description: Base command
+    permission: ecobosses.command.ecobosses
 
 permissions:
   ecobosses.*:
     description: All ecobosses permissions
     default: op
     children:
-      ecobosses.reload: true
-      ecobosses.ebdrop: true
-      ecobosses.ebspawn: true
-      ecobosses.killall: true
+      ecobosses.command.*: true
+  ecobosses.command.*:
+    description: All ecobosses commands
+    default: op
+    children:
+      ecobosses.command.ecobosses: true
+      ecobosses.command.reload: true
+      ecobosses.command.spawn: true
+      ecobosses.command.base64: true
 
-  ecobosses.reload:
-    description: Allows reloading the config
+  ecobosses.command.ecobosses:
+    description: Allows the use of /ecobosses
+    default: true
+
+  ecobosses.command.base64:
+    description: Allows the use of /ecobosses base64
     default: op
 
-  ecobosses.ebdrop:
-    description: Allows the use of /ebdrop
+  ecobosses.command.spawn:
+    description: Allows the use of /ecobosses spawn
     default: op
 
-  ecobosses.ebspawn:
-    description: Allows the use of /ebspawn
+  ecobosses.command.killall:
+    description: Allows the use of /ecobosses killall
     default: op
 
-  ecobosses.killall:
-    description: Allows the use of /ebkillall
+  ecobosses.command.reload:
+    description: Allows the use of /ecobosses reload
     default: op
