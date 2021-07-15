@@ -12,7 +12,7 @@ public class CommandEcobosses extends PluginCommand {
      * @param plugin The plugin to manage the execution for.
      */
     public CommandEcobosses(@NotNull final EcoBossesPlugin plugin) {
-        super(plugin, "ecobosses", "ecobosses.command.ecobosses", true);
+        super(plugin, "ecobosses", "ecobosses.command.ecobosses", false);
         this.addSubcommand(new CommandReload(plugin))
                 .addSubcommand(new CommandKillall(plugin))
                 .addSubcommand(new CommandSpawn(plugin))
