@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 @UtilityClass
 @SuppressWarnings("unchecked")
@@ -96,8 +95,7 @@ public class BossUtils {
     public int killAllBosses(final boolean force) {
         int amount = 0;
         for (EcoBoss boss : EcoBosses.values()) {
-            for (UUID uuid : boss.getLivingBosses().keySet()) {
-                LivingEntity entity = (LivingEntity) Bukkit.getEntity(uuid);
+            for (LivingEntity entity : boss.getLivingBosses().keySet()) {
                 assert entity != null;
                 entity.damage(10000000);
                 amount++;

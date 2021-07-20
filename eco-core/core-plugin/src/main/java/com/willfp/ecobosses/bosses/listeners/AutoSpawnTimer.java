@@ -3,6 +3,7 @@ package com.willfp.ecobosses.bosses.listeners;
 import com.willfp.eco.util.NumberUtils;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
+import com.willfp.ecobosses.bosses.LivingEcoBoss;
 import com.willfp.ecobosses.bosses.util.BossUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class AutoSpawnTimer implements Runnable {
     private int tick = 0;
@@ -33,9 +34,9 @@ public class AutoSpawnTimer implements Runnable {
 
             Set<World> worlds = new HashSet<>();
 
-            for (UUID uuid : boss.getLivingBosses().keySet()) {
-                Entity entity = Bukkit.getEntity(uuid);
+            Bukkit.getLogger().info(boss.getLivingBosses().toString());
 
+            for (Entity entity : boss.getLivingBosses().values().stream().map(LivingEcoBoss::getEntity).collect(Collectors.toList())) {
                 BossUtils.warnIfNull(entity);
                 assert entity != null;
 

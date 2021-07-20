@@ -8,7 +8,6 @@ import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
-import com.willfp.ecobosses.bosses.tick.tickers.ChunkLoadTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
@@ -25,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
@@ -34,11 +32,6 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
      */
     @Getter
     private LivingEntity entity;
-
-    /**
-     * The entity UUID.
-     */
-    private final UUID uuid;
 
     /**
      * The boss.
@@ -67,7 +60,6 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
                          @NotNull final EcoBoss boss) {
         super(plugin);
         this.entity = entity;
-        this.uuid = entity.getUniqueId();
         this.boss = boss;
 
         this.onSpawn();
@@ -76,7 +68,6 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
         this.tickers = new ArrayList<>();
         this.tickers.add(new HealthPlaceholderTicker());
         this.tickers.add(new TargetTicker(boss.getTargetMode(), boss.getTargetDistance()));
-        this.tickers.add(new ChunkLoadTicker());
         if (boss.isBossbarEnabled()) {
             this.tickers.add(
                     new BossBarTicker(
@@ -141,16 +132,14 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
 
     private void tick(final long tick,
                       @NotNull final RunnableTask runnable) {
-        this.entity = (LivingEntity) Bukkit.getEntity(uuid);
-
-        if (entity == null || entity.isDead() || boss.getLivingBoss(entity) == null) {
+        if (entity == null || entity.isDead()) {
             for (BossTicker ticker : tickers) {
                 ticker.onDeath(boss, entity, tick);
             }
             for (Effect effect : effects) {
                 effect.onDeath(boss, entity, tick);
             }
-            boss.removeLivingBoss(uuid);
+            boss.removeLivingBoss(entity);
             runnable.cancel();
             return;
         }

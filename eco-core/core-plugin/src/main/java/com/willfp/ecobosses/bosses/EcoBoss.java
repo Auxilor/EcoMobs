@@ -31,6 +31,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class EcoBoss extends PluginDependent<EcoPlugin> {
@@ -208,7 +208,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The currently living bosses of this type.
      */
-    private final Map<UUID, LivingEcoBoss> livingBosses;
+    private final Map<LivingEntity, LivingEcoBoss> livingBosses;
 
     /**
      * The effect names and arguments.
@@ -476,7 +476,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         location.getChunk().load();
 
         LivingEntity entity = bossType.spawnBossEntity(location);
-        this.livingBosses.put(entity.getUniqueId(), new LivingEcoBoss(
+        this.livingBosses.put(entity, new LivingEcoBoss(
                         this.getPlugin(),
                         entity,
                         this
@@ -491,16 +491,16 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      * @return The living boss, or null if not a boss.
      */
     public LivingEcoBoss getLivingBoss(@NotNull final LivingEntity entity) {
-        return this.livingBosses.get(entity.getUniqueId());
+        return this.livingBosses.get(entity);
     }
 
     /**
      * Remove living boss.
      *
-     * @param uuid The entity UUID.
+     * @param entity The entity.
      */
-    public void removeLivingBoss(@NotNull final UUID uuid) {
-        this.livingBosses.remove(uuid);
+    public void removeLivingBoss(@Nullable final LivingEntity entity) {
+        this.livingBosses.remove(entity);
     }
 
     /**
@@ -508,7 +508,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      *
      * @return The living bosses.
      */
-    public Map<UUID, LivingEcoBoss> getLivingBosses() {
+    public Map<LivingEntity, LivingEcoBoss> getLivingBosses() {
         return ImmutableMap.copyOf(this.livingBosses);
     }
 
