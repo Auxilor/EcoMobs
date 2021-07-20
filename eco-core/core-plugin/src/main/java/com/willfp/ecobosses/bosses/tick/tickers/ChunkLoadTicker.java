@@ -17,11 +17,9 @@ public class ChunkLoadTicker implements BossTicker {
     public void tick(@NotNull final EcoBoss boss,
                      @NotNull final LivingEntity entity,
                      final long tick) {
-        if (tick % 10 == 0) {
-            Chunk chunk = entity.getLocation().getChunk();
-            if (!chunk.isLoaded()) {
-                chunk.load();
-            }
+        Chunk chunk = entity.getLocation().getChunk();
+        if (!chunk.isLoaded()) {
+            chunk.load();
         }
     }
 }
