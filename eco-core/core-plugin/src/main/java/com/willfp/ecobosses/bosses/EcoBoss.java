@@ -3,7 +3,7 @@ package com.willfp.ecobosses.bosses;
 import com.google.common.collect.ImmutableMap;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
-import com.willfp.eco.core.config.Config;
+import com.willfp.eco.core.config.interfaces.Config;
 import com.willfp.eco.core.tuples.Pair;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
@@ -377,11 +377,11 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         // Messages
         this.spawnMessages = new ArrayList<>();
         for (String string : this.getConfig().getStrings("broadcast.spawn")) {
-            this.spawnMessages.add(StringUtils.translate(string));
+            this.spawnMessages.add(StringUtils.format(string));
         }
         this.deathMessages = new ArrayList<>();
         for (String string : this.getConfig().getStrings("broadcast.death")) {
-            this.deathMessages.add(StringUtils.translate(string));
+            this.deathMessages.add(StringUtils.format(string));
         }
 
         // Top Damager Commands

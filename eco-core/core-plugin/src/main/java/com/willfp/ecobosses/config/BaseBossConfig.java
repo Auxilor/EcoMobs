@@ -1,10 +1,10 @@
 package com.willfp.ecobosses.config;
 
-import com.willfp.eco.core.config.ExtendableConfig;
+import com.willfp.eco.core.config.yaml.YamlExtendableConfig;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public class BaseBossConfig extends ExtendableConfig {
+public class BaseBossConfig extends YamlExtendableConfig {
     /**
      * Create new EcoBoss config.
      *
