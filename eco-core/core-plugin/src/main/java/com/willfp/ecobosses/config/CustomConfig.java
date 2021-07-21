@@ -1,11 +1,11 @@
 package com.willfp.ecobosses.config;
 
-import com.willfp.eco.core.config.yaml.YamlConfig;
+import com.willfp.eco.core.config.yaml.YamlTransientConfig;
 import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomConfig extends YamlConfig {
+public class CustomConfig extends YamlTransientConfig {
     /**
      * The name of the config.
      */
