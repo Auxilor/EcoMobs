@@ -9,7 +9,6 @@ import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -56,7 +55,9 @@ public class AttackListeners extends PluginDependent<EcoPlugin> implements Liste
 
         LivingEcoBoss livingEcoBoss = boss.getLivingBoss(entity);
 
-        BossUtils.warnIfNull(livingEcoBoss);
+        if (livingEcoBoss == null) {
+            return;
+        }
 
         if (boss.isAttackOnInjure()) {
             livingEcoBoss.handleAttack(player);
@@ -124,7 +125,9 @@ public class AttackListeners extends PluginDependent<EcoPlugin> implements Liste
 
         LivingEcoBoss livingEcoBoss = boss.getLivingBoss(entity);
 
-        BossUtils.warnIfNull(livingEcoBoss);
+        if (livingEcoBoss == null) {
+            return;
+        }
 
         livingEcoBoss.handleAttack(player);
     }

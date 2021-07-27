@@ -3,7 +3,6 @@ package com.willfp.ecobosses.bosses.util;
 import com.willfp.ecobosses.EcoBossesPlugin;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
-import com.willfp.ecobosses.bosses.LivingEcoBoss;
 import com.willfp.ecobosses.bosses.util.obj.DamagerProperty;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
@@ -152,33 +151,5 @@ public class BossUtils {
         }
 
         return player;
-    }
-
-    /**
-     * Warn if a boss is null.
-     *
-     * @param boss The boss.
-     */
-    public void warnIfNull(@Nullable final LivingEcoBoss boss) {
-        if (boss != null) {
-            return;
-        }
-
-        PLUGIN.getLogger().severe("Boss is null! Report this to Auxilor (https://discord.gg/ZcwpSsE)");
-        PLUGIN.getLogger().severe("Send this stack-trace in the relevant channel.");
-        throw new NullPointerException("Boss is null!");
-    }
-
-    /**
-     * Warn if an entity is null.
-     */
-    public void warnIfNull(@Nullable final Entity entity) {
-        if (entity != null) {
-            return;
-        }
-
-        PLUGIN.getLogger().severe("Entity is null! Report this to Auxilor (https://discord.gg/ZcwpSsE)");
-        PLUGIN.getLogger().severe("Send this stack-trace in the relevant channel.");
-        throw new NullPointerException("Entity is null!");
     }
 }
