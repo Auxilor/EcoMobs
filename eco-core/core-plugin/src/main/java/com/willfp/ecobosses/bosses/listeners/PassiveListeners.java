@@ -9,6 +9,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.entity.EntityMountEvent;
 
@@ -28,7 +29,7 @@ public class PassiveListeners extends PluginDependent<EcoPlugin> implements List
      * @param event The event to listen for.
      */
     @EventHandler(ignoreCancelled = true)
-    public void onAttackBoss(@NotNull final EntityMountEvent event) {
+    public void onMount(@NotNull final EntityMountEvent event) {
         if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
@@ -46,5 +47,16 @@ public class PassiveListeners extends PluginDependent<EcoPlugin> implements List
         if (boss.isDisableBoats()) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onPickup(@NotNull final EntityPickupItemEvent event) {
+        EcoBoss boss = BossUtils.getBoss(event.getEntity());
+
+        if (boss == null) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 }
