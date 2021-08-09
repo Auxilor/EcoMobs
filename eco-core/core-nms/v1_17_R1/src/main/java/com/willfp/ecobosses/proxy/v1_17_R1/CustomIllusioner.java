@@ -1,51 +1,48 @@
 package com.willfp.ecobosses.proxy.v1_17_R1;
 
 import com.willfp.ecobosses.proxy.proxies.CustomIllusionerProxy;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBowShoot;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStroll;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.world.entity.animal.EntityIronGolem;
-import net.minecraft.world.entity.monster.EntityIllagerIllusioner;
-import net.minecraft.world.entity.monster.EntityIllagerWizard;
-import net.minecraft.world.entity.npc.EntityVillagerAbstract;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.raid.EntityRaider;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.Illusioner;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomIllusioner extends EntityIllagerIllusioner implements CustomIllusionerProxy {
+public class CustomIllusioner extends net.minecraft.world.entity.monster.Illusioner implements CustomIllusionerProxy {
     /**
      * Instantiate a new custom illusioner entity.
      *
      * @param location The location to spawn it at.
      */
     public CustomIllusioner(@NotNull final Location location) {
-        super(EntityTypes.O, ((CraftWorld) location.getWorld()).getHandle());
+        super(EntityType.ILLUSIONER, ((CraftWorld) location.getWorld()).getHandle());
 
-        this.setPosition(location.getX(), location.getY(), location.getZ());
+        this.setPos(location.getX(), location.getY(), location.getZ());
 
-        this.bO.a(0, new PathfinderGoalFloat(this));
-        this.bO.a(1, new EntityIllagerWizard.b());
-        this.bO.a(2, new PathfinderGoalMeleeAttack(this, 1.0D, false));
-        this.bO.a(2, new PathfinderGoalBowShoot<>(this, 1.0D, 20, 15.0F));
-        this.bO.a(8, new PathfinderGoalRandomStroll(this, 0.6D));
-        this.bO.a(0, new PathfinderGoalFloat(this));
-        this.bO.a(6, new PathfinderGoalBowShoot<>(this, 0.5D, 20, 15.0F));
-        this.bO.a(8, new PathfinderGoalRandomStroll(this, 0.6D));
-        this.bO.a(9, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 3.0F, 1.0F));
-        this.bO.a(10, new PathfinderGoalLookAtPlayer(this, EntityInsentient.class, 8.0F));
-        this.bP.a(1, (new PathfinderGoalHurtByTarget(this, new Class[]{EntityRaider.class})).a(new Class[0]));
-        this.bP.a(2, (new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true)).a(300));
-        this.bP.a(3, (new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)).a(300));
-        this.bP.a(3, (new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, false)).a(300));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new Raider.HoldGroundAttackGoal(this, 25));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F));
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6D));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(6, new RangedBowAttackGoal<>(this, 0.5D, 20, 15.0F));
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6D));
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, Player.class, true)).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false)).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, IronGolem.class, false)).setUnseenMemoryTicks(300));
     }
 
     /**
@@ -56,7 +53,7 @@ public class CustomIllusioner extends EntityIllagerIllusioner implements CustomI
      */
     public static Illusioner spawn(@NotNull final Location location) {
         CustomIllusioner illusioner = new CustomIllusioner(location);
-        ((CraftWorld) location.getWorld()).getHandle().addEntity(illusioner);
+        ((CraftWorld) location.getWorld()).getHandle().addEntity(illusioner, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return (Illusioner) illusioner.getBukkitEntity();
     }
 }
