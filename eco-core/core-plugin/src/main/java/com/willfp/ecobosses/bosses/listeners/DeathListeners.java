@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.SlimeSplitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -150,5 +151,18 @@ public class DeathListeners extends PluginDependent<EcoPlugin> implements Listen
 
         event.getDrops().addAll(drops);
         event.setDroppedExp(boss.getExperienceOptions().generateXp());
+    }
+
+    @EventHandler
+    public void preventSplit(@NotNull final SlimeSplitEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        EcoBoss boss = BossUtils.getBoss(entity);
+
+        if (boss == null) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 }
