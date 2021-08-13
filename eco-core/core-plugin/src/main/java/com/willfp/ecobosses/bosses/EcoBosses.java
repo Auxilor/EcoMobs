@@ -29,7 +29,7 @@ public class EcoBosses {
      * Sets that exist by default.
      */
     private static final List<String> DEFAULT_BOSSES = Arrays.asList(
-            "illusioner",
+            "dark_guardian",
             "tarantula",
             "steel_golem",
             "alpha_wolf"

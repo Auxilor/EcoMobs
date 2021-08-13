@@ -1,7 +1,7 @@
 enabled: true
 
 name: "&8Steel Golem &7| &c%health%♥ &7| &e%time%" # Display name
-base-mob: iron_golem # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
+base-mob: iron_golem
 
 bossbar:
   enabled: true
