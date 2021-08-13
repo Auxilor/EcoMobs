@@ -240,6 +240,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     private final int autoSpawnInterval;
 
     /**
+     * The time to live.
+     */
+    @Getter
+    private final int timeToLive;
+
+    /**
      * Locations that the boss can auto spawn at.
      */
     @Getter
@@ -277,6 +283,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.maxHealth = this.getConfig().getInt("max-health");
         this.followRange = this.getConfig().getInt("follow-range");
         this.movementSpeedMultiplier = this.getConfig().getInt("movement-speed");
+        this.timeToLive = this.getConfig().getInt("time-to-live", -1);
 
         // Spawn Totem
         this.spawnTotemEnabled = this.getConfig().getBool("spawn-totem.enabled");

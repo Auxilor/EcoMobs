@@ -8,7 +8,8 @@ import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
-import com.willfp.ecobosses.bosses.tick.tickers.HealthPlaceholderTicker;
+import com.willfp.ecobosses.bosses.tick.tickers.DeathTimeTicker;
+import com.willfp.ecobosses.bosses.tick.tickers.NamePlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import lombok.Getter;
@@ -66,7 +67,8 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
 
         // Tickers
         this.tickers = new ArrayList<>();
-        this.tickers.add(new HealthPlaceholderTicker());
+        this.tickers.add(new NamePlaceholderTicker());
+        this.tickers.add(new DeathTimeTicker());
         this.tickers.add(new TargetTicker(boss.getTargetMode(), boss.getTargetDistance()));
         if (boss.isBossbarEnabled()) {
             this.tickers.add(
@@ -95,6 +97,10 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
         entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, boss.getName());
         entity.setPersistent(true);
         entity.setRemoveWhenFarAway(false);
+
+        if (boss.getTimeToLive() > 0) {
+            entity.setMetadata("death-time", this.getPlugin().getMetadataValueFactory().create(System.currentTimeMillis() + (boss.getTimeToLive() * 1000L)));
+        }
 
         entity.setCustomName(boss.getDisplayName());
         entity.setCustomNameVisible(true);
