@@ -1,6 +1,6 @@
 enabled: true
 
-name: "&fAlpha Wolf &7| &c%health%♥" # Display name
+name: "&fAlpha Wolf &7| &c%health%♥ &7| &e%time%" # Display name
 base-mob: wolf # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
 
 bossbar:
@@ -12,6 +12,7 @@ max-health: 600
 attack-damage: 50
 movement-speed: 2
 follow-range: 15
+time-to-live: 120 # Time to live before auto despawn, in seconds. Set to -1 to disable.
 
 auto-spawn-interval: -1 # Time between auto spawns in ticks (20 ticks in a second) - Set to -1 to disable.
 auto-spawn-locations: [ ] # Formatted as world:x:y:z - for example world_nether:100:10:100
@@ -55,6 +56,10 @@ broadcast:
     - "&f - %top%&f (%top_damage% Damage)"
     - "&f - %second%&f (%second_damage% Damage)"
     - "&f - %third%&f (%third_damage% Damage)"
+    - ""
+  despawn:
+    - ""
+    - "&fYou ran out of time to kill the &lAlpha Wolf&r&f!"
     - ""
 
 # Effects can be found on the wiki! https://ecobosses.willfp.com/
@@ -103,6 +108,10 @@ sounds:
   death: # On death
     - "entity_wolf_death:50:0.7"
     - "entity_wolf_growl:50:0.8"
+
+  despawn:
+    - "entity_ender_dragon_ambient:50:0.5"
+    - "entity_enderman_death:50:0.5"
 
   summon: # On summon enemy
     - "entity_wolf_pant:10:0.8"

@@ -2,6 +2,8 @@ package com.willfp.ecobosses.bosses.tick.tickers;
 
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
+import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +22,14 @@ public class DeathTimeTicker implements BossTicker {
         if (timeLeft <= 0) {
             entity.remove();
             boss.removeLivingBoss(entity);
+
+            for (String despawnMessage : boss.getDespawnMessages()) {
+                Bukkit.broadcastMessage(despawnMessage);
+            }
+
+            for (OptionedSound sound : boss.getDespawnSounds()) {
+                entity.getWorld().playSound(entity.getLocation(), sound.sound(), sound.volume(), sound.pitch());
+            }
         }
     }
 }

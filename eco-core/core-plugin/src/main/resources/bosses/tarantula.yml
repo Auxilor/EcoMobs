@@ -1,6 +1,6 @@
 enabled: true
 
-name: "&4Tarantula &7| &c%health%♥" # Display name
+name: "&4Tarantula &7| &c%health%♥ &7| &e%time%" # Display name
 base-mob: cave_spider # Any existing mob - custom_illusioner is also accepted (like in the old Illusioner plugin)
 
 bossbar:
@@ -12,6 +12,7 @@ max-health: 900
 attack-damage: 70
 movement-speed: 1.3
 follow-range: 15
+time-to-live: 120 # Time to live before auto despawn, in seconds. Set to -1 to disable.
 
 auto-spawn-interval: -1 # Time between auto spawns in ticks (20 ticks in a second) - Set to -1 to disable.
 auto-spawn-locations: [ ] # Formatted as world:x:y:z - for example world_nether:100:10:100
@@ -55,6 +56,10 @@ broadcast:
     - "&f - &4%top%&f (%top_damage% Damage)"
     - "&f - &4%second%&f (%second_damage% Damage)"
     - "&f - &4%third%&f (%third_damage% Damage)"
+    - ""
+  despawn:
+    - ""
+    - "&fYou ran out of time to kill the &4&lTarantula&r&f!"
     - ""
 
 # Effects can be found on the wiki! https://ecobosses.willfp.com/
@@ -107,6 +112,10 @@ sounds:
   death: # On death
     - "entity_spider_death:50:0.7"
     - "entity_wither_death:50:0.5"
+
+  despawn:
+    - "entity_ender_dragon_ambient:50:0.5"
+    - "entity_enderman_death:50:0.5"
 
   summon: # On summon enemy
     - "entity_spider_step:10:1.2"

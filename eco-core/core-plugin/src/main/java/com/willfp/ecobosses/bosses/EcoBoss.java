@@ -170,6 +170,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     private final List<OptionedSound> summonSounds;
 
     /**
+     * Despawn sounds.
+     */
+    @Getter
+    private final List<OptionedSound> despawnSounds;
+
+    /**
      * Spawn messages.
      */
     @Getter
@@ -180,6 +186,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      */
     @Getter
     private final List<String> deathMessages;
+
+    /**
+     * Despawn messages.
+     */
+    @Getter
+    private final List<String> despawnMessages;
 
     /**
      * Nearby players radius.
@@ -381,6 +393,16 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             ));
         }
 
+        this.despawnSounds = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("sounds.despawn")) {
+            String[] split = string.split(":");
+            this.despawnSounds.add(new OptionedSound(
+                    Sound.valueOf(split[0].toUpperCase()),
+                    Float.parseFloat(split[1]) / 16,
+                    Float.parseFloat(split[2])
+            ));
+        }
+
         // Messages
         this.spawnMessages = new ArrayList<>();
         for (String string : this.getConfig().getStrings("broadcast.spawn")) {
@@ -389,6 +411,10 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.deathMessages = new ArrayList<>();
         for (String string : this.getConfig().getStrings("broadcast.death")) {
             this.deathMessages.add(StringUtils.format(string));
+        }
+        this.despawnMessages = new ArrayList<>();
+        for (String string : this.getConfig().getStrings("broadcast.despawn")) {
+            this.despawnMessages.add(StringUtils.format(string));
         }
 
         // Top Damager Commands
