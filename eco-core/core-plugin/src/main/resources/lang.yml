@@ -13,6 +13,6 @@ messages:
   invalid-player: "&cInvalid player!"
   needs-stone: "&cYou must specify a boss"
   invalid-stone: "&cInvalid boss!"
-  give-success: "Gave &a%boss%&r reforge stone to &a%recipient%"
+  give-success: "Gave &a%boss%&r spawn egg to &a%recipient%"
 
 na: "N/A"
