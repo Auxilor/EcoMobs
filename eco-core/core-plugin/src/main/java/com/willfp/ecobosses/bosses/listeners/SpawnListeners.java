@@ -7,11 +7,13 @@ import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -101,14 +103,22 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
         event.setCancelled(true);
         EcoBoss boss = EcoBosses.getByName(id);
 
-        item.setType(Material.AIR);
-        item.setAmount(0);
+        item.setAmount(item.getAmount() - 1);
+        event.setUseItemInHand(Event.Result.DENY);
+
+        if (event.getHand() == EquipmentSlot.HAND) {
+            ItemStack hand = event.getPlayer().getInventory().getItemInMainHand();
+            hand.setAmount(hand.getAmount() - 1);
+        } else {
+            ItemStack hand = event.getPlayer().getInventory().getItemInOffHand();
+            hand.setAmount(hand.getAmount() - 1);
+        }
 
         Block block = event.getClickedBlock();
         if (block == null) {
             return;
         }
 
-        boss.spawn(block.getLocation());
+        boss.spawn(block.getLocation().add(0, 1.5, 0));
     }
 }
