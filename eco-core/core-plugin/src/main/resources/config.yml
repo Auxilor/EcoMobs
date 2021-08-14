@@ -4,5 +4,6 @@
 #
 
 bossbar-radius: 50 # How far away players should be able to see the boss bar for bosses.
+discover-recipes: true
 
 # Read the wiki! https://ecobosses.willfp.com/

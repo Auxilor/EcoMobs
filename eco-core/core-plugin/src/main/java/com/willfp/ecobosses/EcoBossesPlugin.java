@@ -9,6 +9,7 @@ import com.willfp.ecobosses.bosses.listeners.PassiveListeners;
 import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
 import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.commands.CommandEcobosses;
+import com.willfp.ecobosses.util.DiscoverRecipeListener;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 
@@ -54,6 +55,7 @@ public class EcoBossesPlugin extends EcoPlugin {
                 new AttackListeners(this),
                 new DeathListeners(this),
                 new SpawnListeners(this),
+                new DiscoverRecipeListener(this),
                 new PassiveListeners(this)
         );
     }
