@@ -16,7 +16,8 @@ public class CommandEcobosses extends PluginCommand {
         this.addSubcommand(new CommandReload(plugin))
                 .addSubcommand(new CommandKillall(plugin))
                 .addSubcommand(new CommandSpawn(plugin))
-                .addSubcommand(new CommandBase64(plugin));
+                .addSubcommand(new CommandBase64(plugin))
+                .addSubcommand(new CommandGive(plugin));
     }
 
     @Override

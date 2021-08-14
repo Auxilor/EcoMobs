@@ -9,5 +9,10 @@ messages:
   invalid-location: "&cInvalid location!"
   spawned: "Spawned a boss!"
   killall: "Killed &a%amount%&f bosses!"
+  needs-player: "&cYou must specify a player"
+  invalid-player: "&cInvalid player!"
+  needs-stone: "&cYou must specify a boss"
+  invalid-stone: "&cInvalid boss!"
+  give-success: "Gave &a%boss%&r reforge stone to &a%recipient%"
 
 na: "N/A"
