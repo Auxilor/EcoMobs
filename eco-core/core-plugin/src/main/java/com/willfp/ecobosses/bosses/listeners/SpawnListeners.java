@@ -9,7 +9,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listener {
@@ -64,5 +70,45 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void spawnEgg(@NotNull final PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
+        ItemStack item = event.getItem();
+        if (item == null) {
+            return;
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if (!container.has(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING)) {
+            return;
+        }
+
+        String id = container.get(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING);
+        if (id == null) {
+            return;
+        }
+
+        event.setCancelled(true);
+        EcoBoss boss = EcoBosses.getByName(id);
+
+        item.setType(Material.AIR);
+        item.setAmount(0);
+
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+
+        boss.spawn(block.getLocation());
     }
 }

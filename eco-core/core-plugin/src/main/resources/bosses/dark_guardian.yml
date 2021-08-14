@@ -1,7 +1,7 @@
 enabled: true
 
 name: "&9Dark Guardian &7| &c%health%♥ &7| &e%time%" # Display name
-base-mob: enderman
+base-mob: ravager
 
 bossbar:
   enabled: true
@@ -17,8 +17,29 @@ time-to-live: 120 # Time to live before auto despawn, in seconds. Set to -1 to d
 auto-spawn-interval: -1 # Time between auto spawns in ticks (20 ticks in a second) - Set to -1 to disable.
 auto-spawn-locations: [ ] # Formatted as world:x:y:z - for example world_nether:100:10:100
 
-spawn-totem:
+spawn-egg:
   enabled: true
+  material: ravager_spawn_egg
+  name: "&9Dark Guardian&f Spawn Egg"
+  lore:
+    - ""
+    - "&8&oPlace on the ground to"
+    - "&8&osummon a &9Dark Guardian"
+  glow: true
+  craftable: true
+  recipe:
+    - emerald
+    - netherite_block
+    - emerald
+    - air
+    - ecoitems:boss_core ? nether_star
+    - air
+    - emerald
+    - netherite_block
+    - emerald
+
+spawn-totem:
+  enabled: false
   top: carved_pumpkin
   middle: beacon
   bottom: diamond_block

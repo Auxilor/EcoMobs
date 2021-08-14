@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.config.interfaces.Config;
+import com.willfp.eco.core.items.builder.ItemBuilder;
+import com.willfp.eco.core.items.builder.ItemStackBuilder;
+import com.willfp.eco.core.recipe.Recipes;
 import com.willfp.eco.core.tuples.Pair;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
@@ -27,9 +30,12 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -264,6 +270,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     private final List<Location> autoSpawnLocations;
 
     /**
+     * The boss spawn egg.
+     */
+    @Getter
+    private final ItemStack spawnEgg;
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -479,6 +491,34 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             double y = Double.parseDouble(split[2]);
             double z = Double.parseDouble(split[3]);
             autoSpawnLocations.add(new Location(world, x, y, z));
+        }
+
+        // Spawn egg
+        if (this.getConfig().getBool("spawn-egg.enabled")) {
+            Material material = Material.getMaterial(this.getConfig().getString("spawn-egg.material").toUpperCase());
+            assert material != null;
+            ItemBuilder builder = new ItemStackBuilder(material)
+                    .setDisplayName(this.getConfig().getString("spawn-egg.name"))
+                    .addLoreLines(this.getConfig().getStrings("spawn-egg.lore"))
+                    .writeMetaKey(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getName());
+
+            if (this.getConfig().getBool("spawn-egg.glow")) {
+                builder.addEnchantment(Enchantment.DURABILITY, 1)
+                        .addItemFlag(ItemFlag.HIDE_ENCHANTS);
+            }
+
+            this.spawnEgg = builder.build();
+
+            if (this.getConfig().getBool("spawn-egg.craftable")) {
+                Recipes.createAndRegisterRecipe(
+                        this.getPlugin(),
+                        "spawn_egg_" + this.getName(),
+                        this.getSpawnEgg(),
+                        this.getConfig().getStrings("spawn-egg.recipe", false)
+                );
+            }
+        } else {
+            this.spawnEgg = null;
         }
 
         if (this.getConfig().getBool("enabled")) {
