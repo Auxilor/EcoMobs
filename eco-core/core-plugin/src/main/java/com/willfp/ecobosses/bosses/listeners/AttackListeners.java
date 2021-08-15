@@ -154,6 +154,7 @@ public class AttackListeners extends PluginDependent<EcoPlugin> implements Liste
         if (immunities.immuneToFire()
                 && (event.getCause() == EntityDamageEvent.DamageCause.FIRE
                 || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
+                || event.getCause() == EntityDamageEvent.DamageCause.LAVA
                 || event.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR)) {
             event.setCancelled(true);
         }
