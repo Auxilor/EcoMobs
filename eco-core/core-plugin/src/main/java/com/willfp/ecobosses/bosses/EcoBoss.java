@@ -13,6 +13,7 @@ import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.effects.Effects;
 import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
+import com.willfp.ecobosses.bosses.util.obj.ArgumentedEffectName;
 import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
 import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
@@ -231,7 +232,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The effect names and arguments.
      */
-    private final Map<String, List<String>> effectNames;
+    private final List<ArgumentedEffectName> effectNames;
 
     /**
      * The target distance.
@@ -460,19 +461,19 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         }
 
         // Effects
-        this.effectNames = new HashMap<>();
+        this.effectNames = new ArrayList<>();
         for (String string : this.getConfig().getStrings("effects")) {
             String effectName = string.split(":")[0];
             List<String> args = Arrays.asList(string.replace(effectName + ":", "").split(":"));
-            this.effectNames.put(effectName, args);
+            this.effectNames.add(new ArgumentedEffectName(effectName, args));
         }
 
-        new HashMap<>(this.effectNames).forEach((string, args) -> {
-            if (Effects.getEffect(string, args) == null) {
-                this.effectNames.remove(string);
-                Bukkit.getLogger().warning("Invalid effect specified in " + this.name);
+        for (ArgumentedEffectName effectName : new ArrayList<>(this.effectNames)) {
+            if (Effects.getEffect(effectName.name(), effectName.args()) == null) {
+                this.effectNames.remove(effectName);
+                Bukkit.getLogger().warning("Invalid effect " + effectName.name() + " specified in " + this.name);
             }
-        });
+        }
 
         // Targeting
         this.targetDistance = this.getConfig().getDouble("attacks.target.range");
@@ -533,9 +534,9 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      */
     public List<Effect> createEffects() {
         List<Effect> effects = new ArrayList<>();
-        this.effectNames.forEach((string, args) -> {
-            effects.add(Effects.getEffect(string, args));
-        });
+        for (ArgumentedEffectName effectName : this.effectNames) {
+            effects.add(Effects.getEffect(effectName.name(), effectName.args()));
+        }
 
         return effects;
     }
