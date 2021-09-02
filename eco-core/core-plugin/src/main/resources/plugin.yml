@@ -26,16 +26,11 @@ permissions:
       ecobosses.command.ecobosses: true
       ecobosses.command.reload: true
       ecobosses.command.spawn: true
-      ecobosses.command.base64: true
       ecobosses.command.give: true
 
   ecobosses.command.ecobosses:
     description: Allows the use of /ecobosses
     default: true
-
-  ecobosses.command.base64:
-    description: Allows the use of /ecobosses base64
-    default: op
 
   ecobosses.command.give:
     description: Allows the use of /ecobosses give

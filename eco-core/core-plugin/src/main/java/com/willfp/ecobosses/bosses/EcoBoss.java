@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.config.interfaces.Config;
+import com.willfp.eco.core.items.Items;
 import com.willfp.eco.core.items.builder.ItemBuilder;
 import com.willfp.eco.core.items.builder.ItemStackBuilder;
 import com.willfp.eco.core.recipe.Recipes;
@@ -329,13 +330,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
                 chance = Double.parseDouble(split[0]);
                 string = split[1];
             }
-            String tempConfigString = new String(Base64.getDecoder().decode(string));
-            try {
-                tempConfig.loadFromString(tempConfigString);
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
+
+            ItemStack itemStack = Items.lookup(string).getItem();
+            if (itemStack.getType() == Material.AIR) {
+                Bukkit.getLogger().warning(this.getName() + " has an invalid drop configured! (" + string + ")");
+                continue;
             }
-            ItemStack itemStack = tempConfig.getItemStack("drop-key");
             this.drops.put(itemStack, chance);
         }
 
