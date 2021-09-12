@@ -110,15 +110,15 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
             return;
         }
 
+        event.setCancelled(true);
+        event.setUseItemInHand(Event.Result.DENY);
+
         if (!boss.areRequirementsMet(event.getPlayer())) {
             event.getPlayer().sendMessage(this.getPlugin().getLangYml().getMessage("requirements-not-met"));
             return;
         }
 
-        event.setCancelled(true);
-
         item.setAmount(item.getAmount() - 1);
-        event.setUseItemInHand(Event.Result.DENY);
 
         if (event.getHand() == EquipmentSlot.HAND) {
             ItemStack hand = event.getPlayer().getInventory().getItemInMainHand();
