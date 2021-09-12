@@ -21,6 +21,8 @@ import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import com.willfp.ecobosses.bosses.util.obj.TargetMode;
+import com.willfp.ecobosses.bosses.util.requirement.SpawnRequirement;
+import com.willfp.ecobosses.bosses.util.requirement.SpawnRequirements;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -34,6 +36,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -48,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class EcoBoss extends PluginDependent<EcoPlugin> {
@@ -278,6 +282,16 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     private final ItemStack spawnEgg;
 
     /**
+     * All the requirements needed in order to use the enchantment.
+     */
+    private final Map<SpawnRequirement, List<String>> requirements = new HashMap<>();
+
+    /**
+     * Cached players to see if they meet requirements.
+     */
+    private final Map<UUID, Boolean> cachedRequirements = new HashMap<>();
+
+    /**
      * Create a new Boss.
      *
      * @param name   The name of the set.
@@ -494,6 +508,24 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             autoSpawnLocations.add(new Location(world, x, y, z));
         }
 
+
+        for (String req : config.getStrings("spawn-requirements", false)) {
+            List<String> split = Arrays.asList(req.split(":"));
+            if (split.size() < 2) {
+                continue;
+            }
+
+            SpawnRequirement requirement = SpawnRequirements.getByID(split.get(0).toLowerCase());
+
+            if (requirement == null) {
+                continue;
+            }
+
+            this.requirements.put(requirement, split.subList(1, split.size()));
+        }
+
+        this.clearCachedRequirements();
+
         // Spawn egg
         if (this.getConfig().getBool("spawn-egg.enabled")) {
             Material material = Material.getMaterial(this.getConfig().getString("spawn-egg.material").toUpperCase());
@@ -525,6 +557,35 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);
         }
+    }
+
+    /**
+     * Clear requirements cache.
+     */
+    public void clearCachedRequirements() {
+        this.cachedRequirements.clear();
+    }
+
+    /**
+     * Does the player meet the requirements to use this enchantment.
+     *
+     * @param player The player.
+     * @return If the requirements are met.
+     */
+    public boolean areRequirementsMet(@NotNull final Player player) {
+        if (cachedRequirements.containsKey(player.getUniqueId())) {
+            return cachedRequirements.get(player.getUniqueId());
+        }
+
+        for (Map.Entry<SpawnRequirement, List<String>> entry : requirements.entrySet()) {
+            if (!entry.getKey().doesPlayerMeet(player, entry.getValue())) {
+                cachedRequirements.put(player.getUniqueId(), false);
+                return false;
+            }
+        }
+
+        cachedRequirements.put(player.getUniqueId(), true);
+        return true;
     }
 
     /**

@@ -14,5 +14,6 @@ messages:
   needs-stone: "&cYou must specify a boss"
   invalid-stone: "&cInvalid boss!"
   give-success: "Gave &a%boss%&r spawn egg to &a%recipient%"
+  requirements-not-met: "&cYou can't spawn this boss!"
 
 na: "N/A"

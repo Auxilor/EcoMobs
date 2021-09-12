@@ -62,6 +62,11 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
                 if (boss.isSpawnTotemEnabled()) {
                     if (!boss.getSpawnTotemDisabledWorldNames().contains(event.getBlock().getWorld().getName().toLowerCase())) {
                         if (boss.getSpawnTotem().equals(placedTotem)) {
+                            if (!boss.areRequirementsMet(event.getPlayer())) {
+                                event.getPlayer().sendMessage(this.getPlugin().getLangYml().getMessage("requirements-not-met"));
+                                return;
+                            }
+
                             block1.setType(Material.AIR);
                             block2.setType(Material.AIR);
                             block3.setType(Material.AIR);
@@ -100,8 +105,17 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
             return;
         }
 
-        event.setCancelled(true);
         EcoBoss boss = EcoBosses.getByName(id);
+        if (boss == null) {
+            return;
+        }
+
+        if (!boss.areRequirementsMet(event.getPlayer())) {
+            event.getPlayer().sendMessage(this.getPlugin().getLangYml().getMessage("requirements-not-met"));
+            return;
+        }
+
+        event.setCancelled(true);
 
         item.setAmount(item.getAmount() - 1);
         event.setUseItemInHand(Event.Result.DENY);
