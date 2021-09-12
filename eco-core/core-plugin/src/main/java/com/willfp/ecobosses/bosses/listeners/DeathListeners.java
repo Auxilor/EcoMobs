@@ -131,12 +131,7 @@ public class DeathListeners extends PluginDependent<EcoPlugin> implements Listen
             }
         }
 
-        List<ItemStack> drops = new ArrayList<>();
-        for (Map.Entry<ItemStack, Double> entry : boss.getDrops().entrySet()) {
-            if (NumberUtils.randFloat(0, 100) < entry.getValue()) {
-                drops.add(entry.getKey().clone());
-            }
-        }
+        List<ItemStack> drops = boss.generateDrops();
 
         for (Entity nearby : entity.getNearbyEntities(boss.getNearbyRadius(), boss.getNearbyRadius(), boss.getNearbyRadius())) {
             if (nearby instanceof Player) {

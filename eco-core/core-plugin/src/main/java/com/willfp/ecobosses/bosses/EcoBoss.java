@@ -9,6 +9,7 @@ import com.willfp.eco.core.items.builder.ItemBuilder;
 import com.willfp.eco.core.items.builder.ItemStackBuilder;
 import com.willfp.eco.core.recipe.Recipes;
 import com.willfp.eco.core.tuples.Pair;
+import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.effects.Effects;
@@ -142,8 +143,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The drops.
      */
-    @Getter
-    private final Map<ItemStack, Double> drops;
+    private final List<String> drops;
 
     /**
      * The exp to drop.
@@ -335,23 +335,8 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.spawnTotemDisabledWorldNames = this.getConfig().getStrings("spawn-totem.world-blacklist").stream().map(String::toLowerCase).collect(Collectors.toList());
 
         // Rewards
-        this.drops = new HashMap<>();
-        for (String string : this.getConfig().getStrings("rewards.drops")) {
-            YamlConfiguration tempConfig = new YamlConfiguration();
-            double chance = 100;
-            if (string.contains("::")) {
-                String[] split = string.split("::");
-                chance = Double.parseDouble(split[0]);
-                string = split[1];
-            }
-
-            ItemStack itemStack = Items.lookup(string).getItem();
-            if (itemStack.getType() == Material.AIR) {
-                Bukkit.getLogger().warning(this.getName() + " has an invalid drop configured! (" + string + ")");
-                continue;
-            }
-            this.drops.put(itemStack, chance);
-        }
+        this.drops = new ArrayList<>();
+        drops.addAll(this.getConfig().getStrings("rewards.drops", false));
 
         this.experienceOptions = new ExperienceOptions(
                 this.getConfig().getInt("rewards.xp.minimum"),
@@ -586,6 +571,31 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
         cachedRequirements.put(player.getUniqueId(), true);
         return true;
+    }
+
+    public List<ItemStack> generateDrops() {
+        List<ItemStack> drops = new ArrayList<>();
+
+        for (String dropName : this.drops) {
+            double chance = 100;
+            if (dropName.contains("::")) {
+                String[] split = dropName.split("::");
+                chance = Double.parseDouble(split[0]);
+                dropName = split[1];
+            }
+
+            ItemStack itemStack = Items.lookup(dropName).getItem();
+            if (itemStack.getType() == Material.AIR) {
+                Bukkit.getLogger().warning(this.getName() + " has an invalid drop configured! (" + dropName + ")");
+                continue;
+            }
+
+            if (NumberUtils.randFloat(0, 100) <= chance) {
+                drops.add(itemStack);
+            }
+        }
+
+        return drops;
     }
 
     /**
