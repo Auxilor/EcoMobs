@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.config.interfaces.Config;
+import com.willfp.eco.core.integrations.placeholder.PlaceholderEntry;
 import com.willfp.eco.core.items.Items;
 import com.willfp.eco.core.items.builder.ItemBuilder;
 import com.willfp.eco.core.items.builder.ItemStackBuilder;
@@ -26,6 +27,7 @@ import com.willfp.ecobosses.bosses.util.requirement.SpawnRequirement;
 import com.willfp.ecobosses.bosses.util.requirement.SpawnRequirements;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -45,6 +47,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -262,6 +266,10 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      */
     @Getter
     private final int autoSpawnInterval;
+
+    @Getter
+    @Setter
+    private int timeUntilSpawn;
 
     /**
      * The time to live.
@@ -483,6 +491,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
         // Auto Spawn
         this.autoSpawnInterval = this.getConfig().getInt("auto-spawn-interval");
+        this.timeUntilSpawn = this.autoSpawnInterval;
         this.autoSpawnLocations = new ArrayList<>();
         for (String string : this.getConfig().getStrings("auto-spawn-locations")) {
             String[] split = string.split(":");
@@ -493,6 +502,11 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             autoSpawnLocations.add(new Location(world, x, y, z));
         }
 
+        new PlaceholderEntry(
+                "timeuntilspawn_"+this.name,
+                (player) -> new BigDecimal(this.timeUntilSpawn/20).setScale(1, RoundingMode.HALF_UP).toString(),
+                false
+        ).register();
 
         for (String req : config.getStrings("spawn-requirements", false)) {
             List<String> split = Arrays.asList(req.split(":"));
