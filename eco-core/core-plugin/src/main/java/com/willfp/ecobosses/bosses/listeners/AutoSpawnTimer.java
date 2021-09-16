@@ -45,9 +45,12 @@ public class AutoSpawnTimer implements Runnable {
                 continue;
             }
 
+            boss.setTimeUntilSpawn(boss.getTimeUntilSpawn()-1);
+
             if (tick % boss.getAutoSpawnInterval() == 0) {
                 Location location = locations.get(NumberUtils.randInt(0, locations.size() - 1));
                 boss.spawn(location);
+                boss.setTimeUntilSpawn(boss.getAutoSpawnInterval());
             }
         }
     }
