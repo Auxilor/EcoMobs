@@ -9,6 +9,8 @@ import com.willfp.eco.core.items.Items;
 import com.willfp.eco.core.items.builder.ItemBuilder;
 import com.willfp.eco.core.items.builder.ItemStackBuilder;
 import com.willfp.eco.core.recipe.Recipes;
+import com.willfp.eco.core.requirement.Requirement;
+import com.willfp.eco.core.requirement.Requirements;
 import com.willfp.eco.core.tuples.Pair;
 import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
@@ -23,8 +25,6 @@ import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import com.willfp.ecobosses.bosses.util.obj.TargetMode;
-import com.willfp.ecobosses.bosses.util.requirement.SpawnRequirement;
-import com.willfp.ecobosses.bosses.util.requirement.SpawnRequirements;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,8 +35,6 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -51,7 +49,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -298,7 +295,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * All the requirements needed in order to use the enchantment.
      */
-    private final Map<SpawnRequirement, List<String>> requirements = new HashMap<>();
+    private final Map<Requirement, List<String>> requirements = new HashMap<>();
 
     /**
      * Cached players to see if they meet requirements.
@@ -521,11 +518,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
                 continue;
             }
 
-            SpawnRequirement requirement = SpawnRequirements.getByID(split.get(0).toLowerCase());
-
-            if (requirement == null) {
-                continue;
-            }
+            Requirement requirement = Requirements.getByID(split.get(0).toLowerCase());
 
             this.requirements.put(requirement, split.subList(1, split.size()));
         }
@@ -583,7 +576,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             return cachedRequirements.get(player.getUniqueId());
         }
 
-        for (Map.Entry<SpawnRequirement, List<String>> entry : requirements.entrySet()) {
+        for (Map.Entry<Requirement, List<String>> entry : requirements.entrySet()) {
             if (!entry.getKey().doesPlayerMeet(player, entry.getValue())) {
                 cachedRequirements.put(player.getUniqueId(), false);
                 return false;
