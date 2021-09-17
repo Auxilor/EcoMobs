@@ -13,6 +13,7 @@ attack-damage: 70
 movement-speed: 1.3
 follow-range: 15
 time-to-live: 120 # Time to live before auto despawn, in seconds. Set to -1 to disable.
+glowing: false # Should this boss have glowing effect
 
 auto-spawn-interval: -1 # Time between auto spawns in ticks (20 ticks in a second) - Set to -1 to disable.
 auto-spawn-locations: [ ] # Formatted as world:x:y:z - for example world_nether:100:10:100

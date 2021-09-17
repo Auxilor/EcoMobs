@@ -234,6 +234,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     private final Map<EntityDamageEvent.DamageCause, Double> incomingMultipliers;
 
     /**
+     * Boss glowing effect.
+     */
+    @Getter
+    private final boolean isGlowing;
+
+    /**
      * The currently living bosses of this type.
      */
     private final Map<LivingEntity, LivingEcoBoss> livingBosses;
@@ -313,6 +319,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.config = config;
         this.name = name;
         this.livingBosses = new HashMap<>();
+        this.isGlowing = this.getConfig().getBool("glowing");
 
         this.displayName = this.getConfig().getString("name");
 
