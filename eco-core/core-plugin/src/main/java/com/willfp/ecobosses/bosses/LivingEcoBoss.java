@@ -21,6 +21,8 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -97,6 +99,8 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
         entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, boss.getName());
         entity.setPersistent(true);
         entity.setRemoveWhenFarAway(false);
+
+        if (boss.isGlowing()) entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 1, false, false, false));
 
         if (boss.getTimeToLive() > 0) {
             entity.setMetadata("death-time", this.getPlugin().getMetadataValueFactory().create(System.currentTimeMillis() + (boss.getTimeToLive() * 1000L)));
