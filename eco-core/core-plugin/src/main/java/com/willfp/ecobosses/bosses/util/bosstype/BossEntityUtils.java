@@ -27,22 +27,24 @@ public class BossEntityUtils {
      */
     public static BossType getBossType(@NotNull String id) {
 
-        if (mythicMobs && id.startsWith("mythicmobs_")) {
-            int level;
+        if (id.startsWith("mythicmobs_")) {
+            if (mythicMobs) {
+                int level;
 
-            try {
-                level = Integer.parseInt(Arrays.stream(id.split("_")).toList().get(id.split("_").length-1));
-            } catch (NumberFormatException exception) {
-                level = 1;
-            }
+                try {
+                    level = Integer.parseInt(Arrays.stream(id.split("_")).toList().get(id.split("_").length-1));
+                } catch (NumberFormatException exception) {
+                    level = 1;
+                }
 
-            MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(id.replace("mythicmobs_", "").replace("_"+level, ""));
+                MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(id.replace("mythicmobs_", "").replace("_"+level, ""));
 
-            if (mob != null) {
-                return new MythicMobsBossType(mob, level);
-            }
+                if (mob != null) {
+                    return new MythicMobsBossType(mob, level);
+                }
+                else id = "zombie";
+            } else id = "zombie";
 
-            else id = "zombie";
         }
 
         try {
