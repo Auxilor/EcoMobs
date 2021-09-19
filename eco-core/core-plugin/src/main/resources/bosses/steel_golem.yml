@@ -95,6 +95,23 @@ effects:
   - "give-potion-effect:slow:5:100:20"
   - "give-potion-effect:levitation:3:50:10"
 
+gear:
+  helmet:
+    item: ""
+    chance: 100
+  chestplate:
+    item: ""
+    chance: 100
+  leggings:
+    item: ""
+    chance: 100
+  boots:
+    item: ""
+    chance: 100
+  hand:
+    item: ""
+    chance: 100
+
 defence:
   immunities:
     explosion: true

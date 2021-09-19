@@ -11,6 +11,7 @@ import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.DeathTimeTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.NamePlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
+import com.willfp.ecobosses.bosses.util.obj.EquipmentPiece;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -20,6 +21,8 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -108,6 +111,35 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
 
         entity.setCustomName(boss.getDisplayName());
         entity.setCustomNameVisible(true);
+
+        EntityEquipment equipment = entity.getEquipment();
+        if (equipment != null) {
+            EquipmentPiece head = boss.getEquipment().get(EquipmentSlot.HEAD);
+            EquipmentPiece chest = boss.getEquipment().get(EquipmentSlot.CHEST);
+            EquipmentPiece legs = boss.getEquipment().get(EquipmentSlot.LEGS);
+            EquipmentPiece boots = boss.getEquipment().get(EquipmentSlot.FEET);
+            EquipmentPiece hand = boss.getEquipment().get(EquipmentSlot.HAND);
+            if (head != null) {
+                equipment.setHelmet(head.itemStack(), true);
+                equipment.setHelmetDropChance((float) head.chance());
+            }
+            if (chest != null) {
+                equipment.setChestplate(chest.itemStack(), true);
+                equipment.setChestplateDropChance((float) chest.chance());
+            }
+            if (legs != null) {
+                equipment.setLeggings(legs.itemStack(), true);
+                equipment.setLeggingsDropChance((float) legs.chance());
+            }
+            if (boots != null) {
+                equipment.setBoots(boots.itemStack(), true);
+                equipment.setBootsDropChance((float) boots.chance());
+            }
+            if (hand != null) {
+                equipment.setItemInMainHand(hand.itemStack(), true);
+                equipment.setItemInMainHandDropChance((float) hand.chance());
+            }
+        }
 
         AttributeInstance movementSpeed = entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
         assert movementSpeed != null;

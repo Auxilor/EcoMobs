@@ -95,6 +95,23 @@ effects:
   - "give-potion-effect:hunger:5:400:10"
   - "give-potion-effect:slow_digging:3:40:10"
 
+gear:
+  helmet:
+    item: ""
+    chance: 100
+  chestplate:
+    item: ""
+    chance: 100
+  leggings:
+    item: ""
+    chance: 100
+  boots:
+    item: ""
+    chance: 100
+  hand:
+    item: ""
+    chance: 100
+
 defence:
   immunities:
     explosion: false

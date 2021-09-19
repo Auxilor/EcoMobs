@@ -20,6 +20,7 @@ import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import com.willfp.ecobosses.bosses.util.obj.ArgumentedEffectName;
 import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
+import com.willfp.ecobosses.bosses.util.obj.EquipmentPiece;
 import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
@@ -39,6 +40,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -293,7 +295,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     private final ItemStack spawnEgg;
 
     /**
-     * All the requirements needed in order to use the enchantment.
+     * All the requirements needed in order to spawn the boss.
      */
     private final Map<Requirement, List<String>> requirements = new HashMap<>();
 
@@ -301,6 +303,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      * Cached players to see if they meet requirements.
      */
     private final Map<UUID, Boolean> cachedRequirements = new HashMap<>();
+
+    /**
+     * The equipment for the boss.
+     */
+    @Getter
+    private final Map<EquipmentSlot, EquipmentPiece> equipment = new HashMap<>();
 
     /**
      * Create a new Boss.
@@ -336,6 +344,60 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.followRange = this.getConfig().getInt("follow-range");
         this.movementSpeedMultiplier = this.getConfig().getInt("movement-speed");
         this.timeToLive = this.getConfig().getInt("time-to-live", -1);
+
+        // Equipment
+        ItemStack helmet = Items.lookup(this.getConfig().getString("gear.helmet.item")).getItem();
+        ItemStack chestplate = Items.lookup(this.getConfig().getString("gear.chestplate.item")).getItem();
+        ItemStack leggings = Items.lookup(this.getConfig().getString("gear.leggings.item")).getItem();
+        ItemStack boots = Items.lookup(this.getConfig().getString("gear.boots.item")).getItem();
+        ItemStack hand = Items.lookup(this.getConfig().getString("gear.hand.item")).getItem();
+
+        if (helmet.getType() != Material.AIR) {
+            this.equipment.put(
+                    EquipmentSlot.HEAD,
+                    new EquipmentPiece(
+                            helmet,
+                            this.getConfig().getDouble("gear.helmet.chance")
+                    )
+            );
+        }
+        if (chestplate.getType() != Material.AIR) {
+            this.equipment.put(
+                    EquipmentSlot.CHEST,
+                    new EquipmentPiece(
+                            chestplate,
+                            this.getConfig().getDouble("gear.chestplate.chance")
+                    )
+            );
+        }
+        if (leggings.getType() != Material.AIR) {
+            this.equipment.put(
+                    EquipmentSlot.LEGS,
+                    new EquipmentPiece(
+                            leggings,
+                            this.getConfig().getDouble("gear.leggings.chance")
+                    )
+            );
+        }
+        if (boots.getType() != Material.AIR) {
+            this.equipment.put(
+                    EquipmentSlot.FEET,
+                    new EquipmentPiece(
+                            boots,
+                            this.getConfig().getDouble("gear.boots.chance")
+                    )
+            );
+        }
+        if (hand.getType() != Material.AIR) {
+            this.equipment.put(
+                    EquipmentSlot.HAND,
+                    new EquipmentPiece(
+                            hand,
+                            this.getConfig().getDouble("gear.hand.chance")
+                    )
+            );
+        }
+
 
         // Spawn Totem
         this.spawnTotemEnabled = this.getConfig().getBool("spawn-totem.enabled");
