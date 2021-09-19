@@ -7,8 +7,8 @@
 <h4 align="center">Source code for EcoBosses, a premium spigot plugin.</h4>
 
 <p align="center">
-    <a href="https://www.spigotmc.org/resources/ecobosses.79573/">
-        <img alt="spigot" src="https://img.shields.io/badge/spigot-ecobosses-blue?style=for-the-badge"/>
+    <a href="https://polymart.org/resource/1-16-1-17-ecobosses.525">
+        <img alt="spigot" src="https://img.shields.io/badge/polymart-ecobosses-blue?style=for-the-badge"/>
     </a>
     <a href="https://bstats.org/plugin/bukkit/EcoBosses" alt="bstats servers">
         <img src="https://img.shields.io/bstats/servers/10635?color=blue&style=for-the-badge"/>
