@@ -5,6 +5,7 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Zombie;
@@ -38,6 +39,10 @@ public class BossEntityUtils {
             if (mob != null) {
                 return new MythicMobsBossType(mob, level);
             }
+        }
+
+        if (id.equalsIgnoreCase("charged_creeper")) {
+            return new VanillaBossType(Creeper.class, true);
         }
 
         try {

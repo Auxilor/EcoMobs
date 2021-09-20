@@ -1,6 +1,7 @@
 package com.willfp.ecobosses.bosses.util.bosstype;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,16 +14,35 @@ class VanillaBossType extends BossType {
     private final Class<? extends LivingEntity> entityClass;
 
     /**
+     * If the entity is Creeper and should or should not be charged.
+     */
+    private final boolean creeperCharged;
+
+    /**
      * Create new vanilla boss type.
      *
      * @param entityClass The entity class.
      */
     VanillaBossType(@NotNull final Class<? extends LivingEntity> entityClass) {
         this.entityClass = entityClass;
+        this.creeperCharged = false;
+    }
+
+    /**
+     * Create new vanilla boss type.
+     *
+     * @param entityClass The entity class.
+     * @param creeperCharged The creeper power state.
+     */
+    VanillaBossType(@NotNull final Class<? extends LivingEntity> entityClass, boolean creeperCharged) {
+        this.entityClass = entityClass;
+        this.creeperCharged = creeperCharged;
     }
 
     @Override
     public LivingEntity spawnBossEntity(@NotNull final Location location) {
-        return Objects.requireNonNull(location.getWorld()).spawn(location, entityClass);
+        LivingEntity result = Objects.requireNonNull(location.getWorld()).spawn(location, entityClass);
+        if (result instanceof Creeper creeper && creeperCharged) creeper.setPowered(true);
+        return result;
     }
 }
