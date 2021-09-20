@@ -2,6 +2,7 @@ enabled: true
 
 name: "&9Dark Guardian &7| &c%health%♥ &7| &e%time%" # Display name
 base-mob: ravager
+baby: false # If set to true: will make the boss mob baby (if possible)
 
 bossbar:
   enabled: true

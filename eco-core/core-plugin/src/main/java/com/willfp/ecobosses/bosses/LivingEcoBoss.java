@@ -21,6 +21,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarFlag;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
@@ -106,6 +107,11 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
         entity.setRemoveWhenFarAway(false);
 
         if (boss.isGlowing()) entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 1, false, false, false));
+
+        if (entity instanceof Ageable ageable) {
+            if (boss.isBaby()) ageable.setBaby();
+            else ageable.setAdult();
+        }
 
         if (boss.getTimeToLive() > 0) {
             entity.setMetadata("death-time", this.getPlugin().getMetadataValueFactory().create(System.currentTimeMillis() + (boss.getTimeToLive() * 1000L)));
