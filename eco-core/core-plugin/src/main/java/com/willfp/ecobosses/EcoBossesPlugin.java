@@ -51,8 +51,7 @@ public class EcoBossesPlugin extends EcoPlugin {
     @Override
     protected List<IntegrationLoader> loadIntegrationLoaders() {
         return Arrays.asList(
-                new IntegrationLoader("LevelledMobs", () -> this.getEventManager().registerListener(new LevelledMobsListener())),
-                new IntegrationLoader("MythicMobs", () -> BossEntityUtils.mythicMobs = true)
+                new IntegrationLoader("LevelledMobs", () -> this.getEventManager().registerListener(new LevelledMobsListener()))
         );
     }
 

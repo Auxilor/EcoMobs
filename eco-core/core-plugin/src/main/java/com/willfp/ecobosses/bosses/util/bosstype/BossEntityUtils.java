@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Zombie;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -14,11 +15,6 @@ import java.util.Arrays;
 @UtilityClass
 @SuppressWarnings("unchecked")
 public class BossEntityUtils {
-
-    @Getter
-    @Setter
-    public static boolean mythicMobs = false;
-
     /**
      * Get boss type.
      *
@@ -27,32 +23,30 @@ public class BossEntityUtils {
      */
     public static BossType getBossType(@NotNull String id) {
 
-        if (id.startsWith("mythicmobs_")) {
-            if (mythicMobs) {
-                int level;
+        if (id.startsWith("mythicmobs:")) {
+            int level;
 
-                try {
-                    level = Integer.parseInt(Arrays.stream(id.split("_")).toList().get(id.split("_").length-1));
-                } catch (NumberFormatException exception) {
-                    level = 1;
-                }
+            try {
+                level = Integer.parseInt(Arrays.stream(id.split("_")).toList().get(id.split("_").length - 1));
+            } catch (NumberFormatException exception) {
+                level = 1;
+            }
 
-                MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(id.replace("mythicmobs_", "").replace("_"+level, ""));
+            MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(id.replace("mythicmobs:", "")
+                    .replace("_" + level, ""));
 
-                if (mob != null) {
-                    return new MythicMobsBossType(mob, level);
-                }
-                else id = "zombie";
-            } else id = "zombie";
-
+            if (mob != null) {
+                return new MythicMobsBossType(mob, level);
+            }
         }
 
         try {
             Class<? extends LivingEntity> type = (Class<? extends LivingEntity>) EntityType.valueOf(id.toUpperCase()).getEntityClass();
             assert type != null;
             return new VanillaBossType(type);
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
 
-        return null;
+        return new VanillaBossType(Zombie.class);
     }
 }
