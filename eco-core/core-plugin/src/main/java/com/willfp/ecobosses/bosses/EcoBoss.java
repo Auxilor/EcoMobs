@@ -124,6 +124,11 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     @Getter
     private final int attackDamage;
 
+    /**
+     * Age state.
+     */
+    @Getter
+    private final boolean baby;
 
     /**
      * The follow range.
@@ -325,6 +330,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.name = name;
         this.livingBosses = new HashMap<>();
         this.isGlowing = this.getConfig().getBool("glowing");
+        this.baby = this.getConfig().getBool("baby");
 
         this.displayName = this.getConfig().getString("name");
 

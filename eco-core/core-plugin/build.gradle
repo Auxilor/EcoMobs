@@ -6,4 +6,5 @@ dependencies {
     compileOnly 'commons-io:commons-io:2.8.0'
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.3-R0.1-SNAPSHOT'
     compileOnly 'com.github.lokka30:LevelledMobs:3.1.4'
+    compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
 }

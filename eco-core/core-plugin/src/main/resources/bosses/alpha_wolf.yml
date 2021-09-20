@@ -2,6 +2,7 @@ enabled: true
 
 name: "&fAlpha Wolf &7| &c%health%♥ &7| &e%time%" # Display name
 base-mob: wolf
+baby: false # If set to true: will make the boss mob baby (if possible)
 
 bossbar:
   enabled: true
