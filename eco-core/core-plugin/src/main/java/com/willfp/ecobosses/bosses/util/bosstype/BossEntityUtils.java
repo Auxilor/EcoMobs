@@ -42,7 +42,7 @@ public class BossEntityUtils {
         }
 
         if (id.equalsIgnoreCase("charged_creeper")) {
-            return new VanillaBossType(Creeper.class, true);
+            return new ChargedCreeperBossType();
         }
 
         try {
