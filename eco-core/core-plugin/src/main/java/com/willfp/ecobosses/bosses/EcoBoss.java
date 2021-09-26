@@ -543,7 +543,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.effectNames = new ArrayList<>();
         for (String string : this.getConfig().getStrings("effects")) {
             String effectName = string.split(":")[0];
-            List<String> args = Arrays.asList(string.replace(effectName + ":", "").split(":"));
+            List<String> args = new ArrayList<>(Arrays.asList(string.replace(effectName + ":", "").split(":")));
+            if (args.contains("mythicmobs")) {
+                String newArg = "mythicmobs:" + args.get(args.indexOf("mythicmobs")+1);
+                args.set(args.indexOf("mythicmobs"), newArg);
+                args.remove(args.get(args.indexOf(newArg)+1));
+            }
             this.effectNames.add(new ArgumentedEffectName(effectName, args));
         }
 
