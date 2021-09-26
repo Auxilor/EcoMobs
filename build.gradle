@@ -39,6 +39,7 @@ allprojects {
         maven { url 'https://maven.sk89q.com/repo/' }
         maven { url 'https://github.com/factions-site/repo/raw/public/' }
         maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+        maven { url 'https://mvn.lumine.io/repository/maven-public/' }
     }
 
     jar {
@@ -46,7 +47,7 @@ allprojects {
     }
 
     dependencies {
-        compileOnly 'com.willfp:eco:6.8.0'
+        compileOnly 'com.willfp:eco:6.8.1'
 
         compileOnly 'org.jetbrains:annotations:19.0.0'
 
@@ -85,7 +86,15 @@ shadowJar {
 }
 
 jar {
-    archiveFileName = findProperty("plugin-name") + " v" + findProperty("version") + " " + "unshaded" + ".jar"
+    archiveFileName = findProperty("plugin-name") + " v" + findProperty("version") + ".jar"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
 
 group = 'com.willfp'

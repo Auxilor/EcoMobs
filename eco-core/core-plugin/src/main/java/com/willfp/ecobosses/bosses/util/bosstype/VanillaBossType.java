@@ -1,6 +1,7 @@
 package com.willfp.ecobosses.bosses.util.bosstype;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +24,7 @@ class VanillaBossType extends BossType {
 
     @Override
     public LivingEntity spawnBossEntity(@NotNull final Location location) {
-        return Objects.requireNonNull(location.getWorld()).spawn(location, entityClass);
+        LivingEntity result = Objects.requireNonNull(location.getWorld()).spawn(location, entityClass);
+        return result;
     }
 }

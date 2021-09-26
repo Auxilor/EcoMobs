@@ -3,12 +3,9 @@ package com.willfp.ecobosses;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.command.impl.PluginCommand;
 import com.willfp.eco.core.integrations.IntegrationLoader;
-import com.willfp.ecobosses.bosses.listeners.AttackListeners;
-import com.willfp.ecobosses.bosses.listeners.AutoSpawnTimer;
-import com.willfp.ecobosses.bosses.listeners.DeathListeners;
-import com.willfp.ecobosses.bosses.listeners.PassiveListeners;
-import com.willfp.ecobosses.bosses.listeners.SpawnListeners;
+import com.willfp.ecobosses.bosses.listeners.*;
 import com.willfp.ecobosses.bosses.util.BossUtils;
+import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
 import com.willfp.ecobosses.commands.CommandEcobosses;
 import com.willfp.ecobosses.integrations.levelledmobs.LevelledMobsListener;
 import com.willfp.ecobosses.util.DiscoverRecipeListener;
@@ -30,7 +27,7 @@ public class EcoBossesPlugin extends EcoPlugin {
      * Internal constructor called by bukkit on plugin load.
      */
     public EcoBossesPlugin() {
-        super(86576, 10635, "com.willfp.ecobosses.proxy", "&9");
+        super(525, 10635, "com.willfp.ecobosses.proxy", "&9");
         instance = this;
     }
 
@@ -46,7 +43,7 @@ public class EcoBossesPlugin extends EcoPlugin {
 
     @Override
     protected List<PluginCommand> loadPluginCommands() {
-        return Arrays.asList(
+        return List.of(
                 new CommandEcobosses(this)
         );
     }

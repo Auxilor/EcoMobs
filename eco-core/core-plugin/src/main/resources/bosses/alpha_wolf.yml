@@ -2,6 +2,7 @@ enabled: true
 
 name: "&fAlpha Wolf &7| &c%health%♥ &7| &e%time%" # Display name
 base-mob: wolf
+baby: false # If set to true: will make the boss mob baby (if possible)
 
 bossbar:
   enabled: true
@@ -90,6 +91,23 @@ effects:
   - "summon:wolf:15"
   - "give-potion-effect:wither:4:200:10"
   - "give-potion-effect:hunger:10:600:10"
+
+gear:
+  helmet:
+    item: ""
+    chance: 100
+  chestplate:
+    item: ""
+    chance: 100
+  leggings:
+    item: ""
+    chance: 100
+  boots:
+    item: ""
+    chance: 100
+  hand:
+    item: ""
+    chance: 100
 
 defence:
   immunities:
