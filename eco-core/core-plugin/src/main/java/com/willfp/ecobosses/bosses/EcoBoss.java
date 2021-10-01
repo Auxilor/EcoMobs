@@ -29,6 +29,7 @@ import com.willfp.ecobosses.bosses.util.obj.TargetMode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -340,8 +341,8 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         // Boss Bar
         this.bossbarEnabled = this.getConfig().getBool("bossbar.enabled");
         this.bossbarProperties = new BossbarProperties(
-                BarColor.valueOf(this.getConfig().getString("bossbar.color").toUpperCase()),
-                BarStyle.valueOf(this.getConfig().getString("bossbar.style").toUpperCase())
+                BossBar.Color.valueOf(this.getConfig().getString("bossbar.color").toUpperCase()),
+                BossBar.Overlay.valueOf(this.getConfig().getString("bossbar.style").toUpperCase())
         );
 
         // Attributes

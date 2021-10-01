@@ -3,7 +3,6 @@ package com.willfp.ecobosses.bosses;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.scheduling.RunnableTask;
-import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.tick.BossTicker;
@@ -13,14 +12,12 @@ import com.willfp.ecobosses.bosses.tick.tickers.NamePlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
 import com.willfp.ecobosses.bosses.util.obj.EquipmentPiece;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import lombok.Getter;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.block.Block;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -81,12 +78,11 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
         if (boss.isBossbarEnabled()) {
             this.tickers.add(
                     new BossBarTicker(
-                            Bukkit.getServer().createBossBar(
-                                    plugin.getNamespacedKeyFactory().create("boss_" + NumberUtils.randInt(0, 1000000)),
-                                    entity.getCustomName(),
+                            BossBar.bossBar(
+                                    StringUtils.toComponent(entity.getCustomName()),
+                                    1,
                                     boss.getBossbarProperties().color(),
-                                    boss.getBossbarProperties().style(),
-                                    (BarFlag) null
+                                    boss.getBossbarProperties().style()
                             ),
                             this.getPlugin().getConfigYml().getInt("bossbar-radius")
                     )

@@ -1,9 +1,7 @@
 package com.willfp.ecobosses.bosses.util.obj;
 
-import lombok.Data;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
+import net.kyori.adventure.bossbar.BossBar;
 
-public record BossbarProperties(BarColor color, BarStyle style) {
+public record BossbarProperties(BossBar.Color color, BossBar.Overlay style) {
 
 }
