@@ -35,8 +35,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -340,9 +338,13 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
         // Boss Bar
         this.bossbarEnabled = this.getConfig().getBool("bossbar.enabled");
+        String barStyle = this.getConfig().getString("bossbar.style").toUpperCase();
+        if (barStyle.equalsIgnoreCase("solid")) {
+            barStyle = "OVERLAY";
+        }
         this.bossbarProperties = new BossbarProperties(
                 BossBar.Color.valueOf(this.getConfig().getString("bossbar.color").toUpperCase()),
-                BossBar.Overlay.valueOf(this.getConfig().getString("bossbar.style").toUpperCase())
+                BossBar.Overlay.valueOf(barStyle)
         );
 
         // Attributes
