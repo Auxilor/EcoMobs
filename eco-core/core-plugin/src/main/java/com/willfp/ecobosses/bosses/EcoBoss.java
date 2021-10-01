@@ -340,7 +340,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.bossbarEnabled = this.getConfig().getBool("bossbar.enabled");
         String barStyle = this.getConfig().getString("bossbar.style").toUpperCase();
         if (barStyle.equalsIgnoreCase("solid")) {
-            barStyle = "OVERLAY";
+            barStyle = "PROGRESS";
         }
         this.bossbarProperties = new BossbarProperties(
                 BossBar.Color.valueOf(this.getConfig().getString("bossbar.color").toUpperCase()),
