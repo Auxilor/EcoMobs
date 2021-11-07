@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EcoBossSpawnEggEvent extends EcoBossSpawnEvent {
-
     /**
      * The egg item.
      */
@@ -57,5 +56,4 @@ public class EcoBossSpawnEggEvent extends EcoBossSpawnEvent {
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
-
 }

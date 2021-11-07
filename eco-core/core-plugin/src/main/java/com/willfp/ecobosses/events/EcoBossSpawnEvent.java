@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
  * This class represents all boss spawn events fired by EcoBosses.
  */
 public class EcoBossSpawnEvent extends Event implements Cancellable {
-
     /**
      * Event cancellation state.
      */
@@ -139,5 +138,4 @@ public class EcoBossSpawnEvent extends Event implements Cancellable {
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
-
 }

@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EcoBossSpawnTotemEvent extends EcoBossSpawnEvent {
-
     /**
      * The totem.
      */
@@ -57,5 +56,4 @@ public class EcoBossSpawnTotemEvent extends EcoBossSpawnEvent {
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
-
 }
