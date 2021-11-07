@@ -3,6 +3,8 @@ package com.willfp.ecobosses.bosses.listeners;
 import com.willfp.eco.util.NumberUtils;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
+import com.willfp.ecobosses.events.EcoBossSpawnTimerEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -49,8 +51,12 @@ public class AutoSpawnTimer implements Runnable {
 
             if (tick % boss.getAutoSpawnInterval() == 0) {
                 Location location = locations.get(NumberUtils.randInt(0, locations.size() - 1));
-                boss.spawn(location);
-                boss.setTimeUntilSpawn(boss.getAutoSpawnInterval());
+                EcoBossSpawnTimerEvent event = new EcoBossSpawnTimerEvent(boss, location);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+                if (!event.isCancelled()) {
+                    boss.spawn(location);
+                    boss.setTimeUntilSpawn(boss.getAutoSpawnInterval());
+                }
             }
         }
     }
