@@ -5,6 +5,8 @@ import com.willfp.eco.core.PluginDependent;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
+import com.willfp.ecobosses.events.EcoBossSpawnEggEvent;
+import com.willfp.ecobosses.events.EcoBossSpawnTotemEvent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -62,16 +64,22 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
                 if (boss.isSpawnTotemEnabled()) {
                     if (!boss.getSpawnTotemDisabledWorldNames().contains(event.getBlock().getWorld().getName().toLowerCase())) {
                         if (boss.getSpawnTotem().equals(placedTotem)) {
+
                             if (!boss.areRequirementsMet(event.getPlayer())) {
                                 event.getPlayer().sendMessage(this.getPlugin().getLangYml().getMessage("requirements-not-met"));
                                 return;
                             }
 
-                            block1.setType(Material.AIR);
-                            block2.setType(Material.AIR);
-                            block3.setType(Material.AIR);
+                            EcoBossSpawnTotemEvent eggEvent = new EcoBossSpawnTotemEvent(boss, event.getPlayer(), event.getBlock().getLocation(), placedTotem);
 
-                            boss.spawn(event.getBlock().getLocation());
+                            this.getPlugin().getServer().getPluginManager().callEvent(eggEvent);
+
+                            if (!eggEvent.isCancelled()) {
+                                block1.setType(Material.AIR);
+                                block2.setType(Material.AIR);
+                                block3.setType(Material.AIR);
+                                boss.spawn(event.getBlock().getLocation());
+                            }
                         }
                     }
                 }
@@ -115,6 +123,14 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
 
         if (!boss.areRequirementsMet(event.getPlayer())) {
             event.getPlayer().sendMessage(this.getPlugin().getLangYml().getMessage("requirements-not-met"));
+            return;
+        }
+
+        EcoBossSpawnEggEvent eggEvent = new EcoBossSpawnEggEvent(boss, event.getPlayer(), event.getClickedBlock().getLocation(), item);
+
+        this.getPlugin().getServer().getPluginManager().callEvent(eggEvent);
+
+        if (eggEvent.isCancelled()) {
             return;
         }
 
