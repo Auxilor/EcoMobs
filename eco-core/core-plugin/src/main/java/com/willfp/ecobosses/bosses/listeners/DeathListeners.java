@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class DeathListeners extends PluginDependent<EcoPlugin> implements Listener {
     /**
@@ -90,13 +91,13 @@ public class DeathListeners extends PluginDependent<EcoPlugin> implements Listen
 
         String na = this.getPlugin().getLangYml().getString("na");
 
-        String topDamager = top == null ? na : Bukkit.getPlayer(top.playerUUID()).getDisplayName();
+        String topDamager = top == null ? na : Objects.requireNonNull(Bukkit.getPlayer(top.playerUUID()).getDisplayName(), na);
         String topDamage = top == null ? na : StringUtils.internalToString(top.damage());
 
-        String secondDamager = second == null ? na : Bukkit.getPlayer(second.playerUUID()).getDisplayName();
+        String secondDamager = second == null ? na : Objects.requireNonNull(Bukkit.getPlayer(second.playerUUID()).getDisplayName(), na);
         String secondDamage = second == null ? na : StringUtils.internalToString(second.damage());
 
-        String thirdDamager = third == null ? na : Bukkit.getPlayer(third.playerUUID()).getDisplayName();
+        String thirdDamager = third == null ? na : Objects.requireNonNull(Bukkit.getPlayer(third.playerUUID()).getDisplayName(), na);
         String thirdDamage = third == null ? na : StringUtils.internalToString(third.damage());
 
         for (String spawnMessage : boss.getDeathMessages()) {
