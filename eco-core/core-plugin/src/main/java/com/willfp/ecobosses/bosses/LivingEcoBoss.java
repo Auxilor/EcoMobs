@@ -150,18 +150,23 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
         movementSpeed.addModifier(new AttributeModifier(entity.getUniqueId(), "ecobosses-movement-multiplier", boss.getMovementSpeedMultiplier() - 1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
 
         AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        assert maxHealth != null;
-        maxHealth.setBaseValue(boss.getMaxHealth());
-
-        entity.setHealth(maxHealth.getValue());
+        if (maxHealth != null) {
+            maxHealth.getModifiers().clear();
+            maxHealth.setBaseValue(boss.getMaxHealth());
+            entity.setHealth(maxHealth.getValue());
+        }
 
         AttributeInstance followRange = entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
-        assert followRange != null;
-        followRange.setBaseValue(boss.getFollowRange());
+        if (followRange != null) {
+            followRange.getModifiers().clear();
+            followRange.setBaseValue(boss.getFollowRange());
+        }
 
         AttributeInstance attackDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-        assert attackDamage != null;
-        attackDamage.setBaseValue(boss.getAttackDamage());
+        if (attackDamage != null) {
+            attackDamage.getModifiers().clear();
+            attackDamage.setBaseValue(boss.getAttackDamage());
+        }
 
         for (OptionedSound sound : boss.getSpawnSounds()) {
             entity.getWorld().playSound(entity.getLocation(), sound.sound(), sound.volume(), sound.pitch());
