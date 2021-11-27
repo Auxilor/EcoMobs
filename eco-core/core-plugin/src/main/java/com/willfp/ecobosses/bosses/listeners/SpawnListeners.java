@@ -134,8 +134,6 @@ public class SpawnListeners extends PluginDependent<EcoPlugin> implements Listen
             return;
         }
 
-        item.setAmount(item.getAmount() - 1);
-
         if (event.getHand() == EquipmentSlot.HAND) {
             ItemStack hand = event.getPlayer().getInventory().getItemInMainHand();
             hand.setAmount(hand.getAmount() - 1);
