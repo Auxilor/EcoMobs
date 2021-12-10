@@ -91,13 +91,13 @@ public class DeathListeners extends PluginDependent<EcoPlugin> implements Listen
 
         String na = this.getPlugin().getLangYml().getString("na");
 
-        String topDamager = top == null ? na : Objects.requireNonNull(Bukkit.getPlayer(top.playerUUID()).getDisplayName(), na);
+        String topDamager = top == null ? na : Bukkit.getPlayer(top.playerUUID()) != null ? Bukkit.getPlayer(top.playerUUID()).getDisplayName() : na;
         String topDamage = top == null ? na : StringUtils.internalToString(top.damage());
 
-        String secondDamager = second == null ? na : Objects.requireNonNull(Bukkit.getPlayer(second.playerUUID()).getDisplayName(), na);
+        String secondDamager = second == null ? na : Bukkit.getPlayer(second.playerUUID()) != null ? Bukkit.getPlayer(second.playerUUID()).getDisplayName() : na;
         String secondDamage = second == null ? na : StringUtils.internalToString(second.damage());
 
-        String thirdDamager = third == null ? na : Objects.requireNonNull(Bukkit.getPlayer(third.playerUUID()).getDisplayName(), na);
+        String thirdDamager = third == null ? na : Bukkit.getPlayer(third.playerUUID()) != null ? Bukkit.getPlayer(third.playerUUID()).getDisplayName() : na;
         String thirdDamage = third == null ? na : StringUtils.internalToString(third.damage());
 
         for (String spawnMessage : boss.getDeathMessages()) {
