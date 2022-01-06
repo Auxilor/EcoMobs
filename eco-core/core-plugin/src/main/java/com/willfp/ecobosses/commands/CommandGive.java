@@ -2,13 +2,12 @@ package com.willfp.ecobosses.commands;
 
 
 import com.willfp.eco.core.EcoPlugin;
-import com.willfp.eco.core.command.CommandHandler;
-import com.willfp.eco.core.command.TabCompleteHandler;
 import com.willfp.eco.core.command.impl.Subcommand;
 import com.willfp.eco.core.config.updating.ConfigUpdater;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
@@ -62,90 +61,88 @@ public class CommandGive extends Subcommand {
     }
 
     @Override
-    public CommandHandler getHandler() {
-        return (sender, args) -> {
-            if (args.isEmpty()) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("needs-player"));
-                return;
+    public void onExecute(@NotNull final CommandSender sender,
+                          @NotNull final List<String> args) {
+        if (args.isEmpty()) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("needs-player"));
+            return;
+        }
+
+        if (args.size() == 1) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("needs-boss"));
+            return;
+        }
+
+        int amount = 1;
+
+        if (args.size() > 2) {
+            try {
+                amount = Integer.parseInt(args.get(2));
+            } catch (NumberFormatException ignored) {
+                // do nothing
             }
+        }
 
-            if (args.size() == 1) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("needs-boss"));
-                return;
-            }
+        String recieverName = args.get(0);
+        Player reciever = Bukkit.getPlayer(recieverName);
 
-            int amount = 1;
+        if (reciever == null) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-player"));
+            return;
+        }
 
-            if (args.size() > 2) {
-                try {
-                    amount = Integer.parseInt(args.get(2));
-                } catch (NumberFormatException ignored) {
-                    // do nothing
-                }
-            }
+        String key = args.get(1);
 
-            String recieverName = args.get(0);
-            Player reciever = Bukkit.getPlayer(recieverName);
+        EcoBoss boss = EcoBosses.getByName(key);
 
-            if (reciever == null) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-player"));
-                return;
-            }
+        if (boss == null || boss.getSpawnEgg() == null) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-boss"));
+            return;
+        }
 
-            String key = args.get(1);
+        String message = this.getPlugin().getLangYml().getMessage("give-success");
+        message = message.replace("%boss%", boss.getName()).replace("%recipient%", reciever.getName());
+        sender.sendMessage(message);
 
-            EcoBoss boss = EcoBosses.getByName(key);
-
-            if (boss == null || boss.getSpawnEgg() == null) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-boss"));
-                return;
-            }
-
-            String message = this.getPlugin().getLangYml().getMessage("give-success");
-            message = message.replace("%boss%", boss.getName()).replace("%recipient%", reciever.getName());
-            sender.sendMessage(message);
-
-            ItemStack itemStack = boss.getSpawnEgg();
-            itemStack.setAmount(amount);
-            reciever.getInventory().addItem(itemStack);
-        };
+        ItemStack itemStack = boss.getSpawnEgg();
+        itemStack.setAmount(amount);
+        reciever.getInventory().addItem(itemStack);
     }
 
     @Override
-    public TabCompleteHandler getTabCompleter() {
-        return (sender, args) -> {
-            List<String> completions = new ArrayList<>();
+    public List<String> tabComplete(@NotNull final CommandSender sender,
+                                    @NotNull final List<String> args) {
+        List<String> completions = new ArrayList<>();
 
-            if (args.isEmpty()) {
-                // Currently, this case is not ever reached
-                return BOSS_NAMES;
-            }
+        if (args.isEmpty()) {
+            // Currently, this case is not ever reached
+            return BOSS_NAMES;
+        }
 
-            if (args.size() == 1) {
-                StringUtil.copyPartialMatches(args.get(0), Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()), completions);
-                return completions;
-            }
+        if (args.size() == 1) {
+            StringUtil.copyPartialMatches(args.get(0), Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()), completions);
+            return completions;
+        }
 
-            if (args.size() == 2) {
-                StringUtil.copyPartialMatches(args.get(1), BOSS_NAMES, completions);
+        if (args.size() == 2) {
+            StringUtil.copyPartialMatches(args.get(1), BOSS_NAMES, completions);
 
-                Collections.sort(completions);
-                return completions;
-            }
+            Collections.sort(completions);
+            return completions;
+        }
 
-            if (args.size() == 3) {
-                StringUtil.copyPartialMatches(args.get(2), NUMBERS, completions);
+        if (args.size() == 3) {
+            StringUtil.copyPartialMatches(args.get(2), NUMBERS, completions);
 
-                completions.sort((s1, s2) -> {
-                    int t1 = Integer.parseInt(s1);
-                    int t2 = Integer.parseInt(s2);
-                    return t1 - t2;
-                });
+            completions.sort((s1, s2) -> {
+                int t1 = Integer.parseInt(s1);
+                int t2 = Integer.parseInt(s2);
+                return t1 - t2;
+            });
 
-                return completions;
-            }
+            return completions;
+        }
 
-            return new ArrayList<>(0);
-        };
+        return new ArrayList<>(0);
     }
 }

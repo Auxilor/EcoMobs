@@ -1,9 +1,11 @@
 package com.willfp.ecobosses.commands;
 
-import com.willfp.eco.core.command.CommandHandler;
 import com.willfp.eco.core.command.impl.Subcommand;
 import com.willfp.ecobosses.EcoBossesPlugin;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class CommandReload extends Subcommand {
     /**
@@ -16,11 +18,10 @@ public class CommandReload extends Subcommand {
     }
 
     @Override
-    public CommandHandler getHandler() {
-        return (sender, args) -> {
-            this.getPlugin().reload();
-            this.getPlugin().reload();
-            sender.sendMessage(this.getPlugin().getLangYml().getMessage("reloaded"));
-        };
+    public void onExecute(@NotNull final CommandSender sender,
+                          @NotNull final List<String> args) {
+        this.getPlugin().reload();
+        this.getPlugin().reload();
+        sender.sendMessage(this.getPlugin().getLangYml().getMessage("reloaded"));
     }
 }

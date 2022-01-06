@@ -500,15 +500,15 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
         // Messages
         this.spawnMessages = new ArrayList<>();
-        for (String string : this.getConfig().getStrings("broadcast.spawn")) {
+        for (String string : this.getConfig().getFormattedStrings("broadcast.spawn")) {
             this.spawnMessages.add(StringUtils.format(string));
         }
         this.deathMessages = new ArrayList<>();
-        for (String string : this.getConfig().getStrings("broadcast.death")) {
+        for (String string : this.getConfig().getFormattedStrings("broadcast.death")) {
             this.deathMessages.add(StringUtils.format(string));
         }
         this.despawnMessages = new ArrayList<>();
-        for (String string : this.getConfig().getStrings("broadcast.despawn")) {
+        for (String string : this.getConfig().getFormattedStrings("broadcast.despawn")) {
             this.despawnMessages.add(StringUtils.format(string));
         }
 

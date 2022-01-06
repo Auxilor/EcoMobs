@@ -1,7 +1,5 @@
 package com.willfp.ecobosses.commands;
 
-import com.willfp.eco.core.command.CommandHandler;
-import com.willfp.eco.core.command.TabCompleteHandler;
 import com.willfp.eco.core.command.impl.Subcommand;
 import com.willfp.eco.core.config.updating.ConfigUpdater;
 import com.willfp.ecobosses.EcoBossesPlugin;
@@ -10,6 +8,7 @@ import com.willfp.ecobosses.bosses.EcoBosses;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -53,158 +52,155 @@ public class CommandSpawn extends Subcommand {
     }
 
     @Override
-    public CommandHandler getHandler() {
-        return (sender, args) -> {
-            if (args.isEmpty()) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("specify-boss"));
-                return;
-            }
+    public void onExecute(@NotNull final CommandSender sender,
+                          @NotNull final List<String> args) {
+        if (args.isEmpty()) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("specify-boss"));
+            return;
+        }
 
-            String bossName = args.get(0);
+        String bossName = args.get(0);
 
-            EcoBoss boss = EcoBosses.getByName(bossName.toLowerCase());
+        EcoBoss boss = EcoBosses.getByName(bossName.toLowerCase());
 
-            if (boss == null) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("specify-boss"));
-                return;
-            }
+        if (boss == null) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("specify-boss"));
+            return;
+        }
 
-            Location location = null;
+        Location location = null;
 
-            if (sender instanceof Player) {
-                location = ((Player) sender).getLocation();
-            }
+        if (sender instanceof Player) {
+            location = ((Player) sender).getLocation();
+        }
 
-            if (args.size() >= 4) {
-                String xString = args.get(1);
-                String yString = args.get(2);
-                String zString = args.get(3);
+        if (args.size() >= 4) {
+            String xString = args.get(1);
+            String yString = args.get(2);
+            String zString = args.get(3);
 
-                double xPos;
-                double yPos;
-                double zPos;
+            double xPos;
+            double yPos;
+            double zPos;
 
-                if (xString.startsWith("~") && sender instanceof Player) {
-                    String xDiff = xString.replace("~", "");
-                    String yDiff = yString.replace("~", "");
-                    String zDiff = zString.replace("~", "");
+            if (xString.startsWith("~") && sender instanceof Player) {
+                String xDiff = xString.replace("~", "");
+                String yDiff = yString.replace("~", "");
+                String zDiff = zString.replace("~", "");
 
-                    if (xDiff.isEmpty()) {
-                        xPos = ((Player) sender).getLocation().getX();
-                    } else {
-                        try {
-                            xPos = ((Player) sender).getLocation().getX() + Double.parseDouble(xDiff);
-                        } catch (NumberFormatException e) {
-                            xPos = ((Player) sender).getLocation().getX();
-                        }
-                    }
-
-                    if (yDiff.isEmpty()) {
-                        yPos = ((Player) sender).getLocation().getY();
-                    } else {
-                        try {
-                            yPos = ((Player) sender).getLocation().getY() + Double.parseDouble(yDiff);
-                        } catch (NumberFormatException e) {
-                            yPos = ((Player) sender).getLocation().getY();
-                        }
-                    }
-
-                    if (zDiff.isEmpty()) {
-                        zPos = ((Player) sender).getLocation().getZ();
-                    } else {
-                        try {
-                            zPos = ((Player) sender).getLocation().getZ() + Double.parseDouble(yDiff);
-                        } catch (NumberFormatException e) {
-                            zPos = ((Player) sender).getLocation().getZ();
-                        }
-                    }
+                if (xDiff.isEmpty()) {
+                    xPos = ((Player) sender).getLocation().getX();
                 } else {
                     try {
-                        xPos = Double.parseDouble(xString);
-                        yPos = Double.parseDouble(yString);
-                        zPos = Double.parseDouble(zString);
+                        xPos = ((Player) sender).getLocation().getX() + Double.parseDouble(xDiff);
                     } catch (NumberFormatException e) {
-                        sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-location"));
-                        return;
+                        xPos = ((Player) sender).getLocation().getX();
                     }
                 }
 
-                location = new Location(null, xPos, yPos, zPos);
+                if (yDiff.isEmpty()) {
+                    yPos = ((Player) sender).getLocation().getY();
+                } else {
+                    try {
+                        yPos = ((Player) sender).getLocation().getY() + Double.parseDouble(yDiff);
+                    } catch (NumberFormatException e) {
+                        yPos = ((Player) sender).getLocation().getY();
+                    }
+                }
+
+                if (zDiff.isEmpty()) {
+                    zPos = ((Player) sender).getLocation().getZ();
+                } else {
+                    try {
+                        zPos = ((Player) sender).getLocation().getZ() + Double.parseDouble(yDiff);
+                    } catch (NumberFormatException e) {
+                        zPos = ((Player) sender).getLocation().getZ();
+                    }
+                }
+            } else {
+                try {
+                    xPos = Double.parseDouble(xString);
+                    yPos = Double.parseDouble(yString);
+                    zPos = Double.parseDouble(zString);
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-location"));
+                    return;
+                }
             }
 
-            World world = null;
-            if (sender instanceof Player) {
-                world = ((Player) sender).getWorld();
-            }
+            location = new Location(null, xPos, yPos, zPos);
+        }
 
-            if (args.size() >= 5) {
-                world = Bukkit.getWorld(args.get(4));
-            }
+        World world = null;
+        if (sender instanceof Player) {
+            world = ((Player) sender).getWorld();
+        }
 
-            if (location == null) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-location"));
-                return;
-            }
+        if (args.size() >= 5) {
+            world = Bukkit.getWorld(args.get(4));
+        }
 
-            location.setWorld(world);
+        if (location == null) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-location"));
+            return;
+        }
 
-            if (world == null) {
-                sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-world"));
-                return;
-            }
+        location.setWorld(world);
 
-            boss.spawn(location);
-            sender.sendMessage(this.getPlugin().getLangYml().getMessage("spawned"));
-        };
+        if (world == null) {
+            sender.sendMessage(this.getPlugin().getLangYml().getMessage("invalid-world"));
+            return;
+        }
+
+        boss.spawn(location);
+        sender.sendMessage(this.getPlugin().getLangYml().getMessage("spawned"));
     }
 
     @Override
-    public TabCompleteHandler getTabCompleter() {
-        return (sender, args) -> {
+    public List<String> tabComplete(@NotNull final CommandSender sender,
+                                    @NotNull final List<String> args) {
+        List<String> completions = new ArrayList<>();
 
-            List<String> completions = new ArrayList<>();
+        if (args.isEmpty()) {
+            // Currently, this case is not ever reached
+            return new ArrayList<>();
+        }
 
-            if (args.isEmpty()) {
-                // Currently, this case is not ever reached
-                return new ArrayList<>();
-            }
+        if (args.size() == 1) {
+            StringUtil.copyPartialMatches(args.get(0), BOSS_NAMES, completions);
 
-            if (args.size() == 1) {
-                StringUtil.copyPartialMatches(args.get(0), BOSS_NAMES, completions);
+            Collections.sort(completions);
+            return completions;
+        }
 
-                Collections.sort(completions);
-                return completions;
-            }
+        if (args.size() == 2) {
+            StringUtil.copyPartialMatches(args.get(1), TILDE, completions);
 
-            if (args.size() == 2) {
-                StringUtil.copyPartialMatches(args.get(1), TILDE, completions);
+            Collections.sort(completions);
+            return completions;
+        }
 
-                Collections.sort(completions);
-                return completions;
-            }
+        if (args.size() == 3) {
+            StringUtil.copyPartialMatches(args.get(2), TILDE, completions);
 
-            if (args.size() == 3) {
-                StringUtil.copyPartialMatches(args.get(2), TILDE, completions);
+            Collections.sort(completions);
+            return completions;
+        }
 
-                Collections.sort(completions);
-                return completions;
-            }
+        if (args.size() == 4) {
+            StringUtil.copyPartialMatches(args.get(3), TILDE, completions);
 
-            if (args.size() == 4) {
-                StringUtil.copyPartialMatches(args.get(3), TILDE, completions);
+            Collections.sort(completions);
+            return completions;
+        }
 
-                Collections.sort(completions);
-                return completions;
-            }
+        if (args.size() == 5) {
+            StringUtil.copyPartialMatches(args.get(4), Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toList()), completions);
 
-            if (args.size() == 5) {
-                StringUtil.copyPartialMatches(args.get(4), Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toList()), completions);
+            Collections.sort(completions);
+            return completions;
+        }
 
-                Collections.sort(completions);
-                return completions;
-            }
-
-            return new ArrayList<>(0);
-        };
+        return new ArrayList<>(0);
     }
 }
