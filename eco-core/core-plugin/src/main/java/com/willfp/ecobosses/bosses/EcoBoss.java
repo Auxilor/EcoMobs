@@ -336,7 +336,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.displayName = this.getConfig().getFormattedString("name");
 
         // Boss Type
-        this.bossType = Entities.lookup("base-mob");
+        this.bossType = Entities.lookup(this.getConfig().getString("base-mob"));
 
         // Boss Bar
         this.bossbarEnabled = this.getConfig().getBool("bossbar.enabled");
