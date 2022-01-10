@@ -89,8 +89,8 @@ public class EcoBosses {
      * @param set The {@link EcoBoss} to add.
      */
     public static void addBoss(@NotNull final EcoBoss set) {
-        BY_NAME.remove(set.getName());
-        BY_NAME.put(set.getName(), set);
+        BY_NAME.remove(set.getId());
+        BY_NAME.put(set.getId(), set);
     }
 
     /**
@@ -99,6 +99,6 @@ public class EcoBosses {
      * @param set The {@link EcoBoss} to remove.
      */
     public static void removeBoss(@NotNull final EcoBoss set) {
-        BY_NAME.remove(set.getName());
+        BY_NAME.remove(set.getId());
     }
 }

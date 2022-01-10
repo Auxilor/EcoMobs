@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.config.interfaces.Config;
+import com.willfp.eco.core.entities.CustomEntity;
+import com.willfp.eco.core.entities.Entities;
+import com.willfp.eco.core.entities.TestableEntity;
 import com.willfp.eco.core.integrations.placeholder.PlaceholderEntry;
 import com.willfp.eco.core.items.Items;
 import com.willfp.eco.core.items.builder.ItemBuilder;
@@ -16,8 +19,7 @@ import com.willfp.eco.util.NumberUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
 import com.willfp.ecobosses.bosses.effects.Effects;
-import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
-import com.willfp.ecobosses.bosses.util.bosstype.BossType;
+import com.willfp.ecobosses.bosses.util.BossUtils;
 import com.willfp.ecobosses.bosses.util.obj.ArgumentedEffectName;
 import com.willfp.ecobosses.bosses.util.obj.BossbarProperties;
 import com.willfp.ecobosses.bosses.util.obj.EquipmentPiece;
@@ -62,7 +64,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      * The name of the boss.
      */
     @Getter
-    private final String name;
+    private final String id;
 
     /**
      * The config of the set.
@@ -79,7 +81,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The base entity spawner.
      */
-    private final BossType bossType;
+    private final TestableEntity bossType;
 
     /**
      * If the boss bar is enabled.
@@ -317,16 +319,16 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * Create a new Boss.
      *
-     * @param name   The name of the set.
+     * @param id     The name of the set.
      * @param config The set's config.
      * @param plugin Instance of EcoBosses.
      */
-    public EcoBoss(@NotNull final String name,
+    public EcoBoss(@NotNull final String id,
                    @NotNull final Config config,
                    @NotNull final EcoPlugin plugin) {
         super(plugin);
         this.config = config;
-        this.name = name;
+        this.id = id;
         this.livingBosses = new HashMap<>();
         this.isGlowing = this.getConfig().getBool("glowing");
         this.baby = this.getConfig().getBool("baby");
@@ -334,7 +336,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.displayName = this.getConfig().getFormattedString("name");
 
         // Boss Type
-        this.bossType = BossEntityUtils.getBossType(this.getConfig().getString("base-mob"));
+        this.bossType = Entities.lookup("base-mob");
 
         // Boss Bar
         this.bossbarEnabled = this.getConfig().getBool("bossbar.enabled");
@@ -419,7 +421,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
         // Rewards
         this.drops = new ArrayList<>();
-        drops.addAll(this.getConfig().getStrings("rewards.drops", false));
+        drops.addAll(this.getConfig().getStrings("rewards.drops"));
 
         this.experienceOptions = new ExperienceOptions(
                 this.getConfig().getInt("rewards.xp.minimum"),
@@ -516,7 +518,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         this.topDamagerCommands = new HashMap<>();
         for (int i = 1; i <= 3; i++) {
             this.topDamagerCommands.put(i, new ArrayList<>());
-            for (String string : this.getConfig().getStrings("rewards.top-damager-commands." + i, false)) {
+            for (String string : this.getConfig().getStrings("rewards.top-damager-commands." + i)) {
                 double chance = 100;
                 if (string.contains("::")) {
                     String[] split = string.split("::");
@@ -532,7 +534,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         // Nearby Rewards
         this.nearbyRadius = this.getConfig().getDouble("rewards.nearby-player-commands.radius");
         this.nearbyPlayersCommands = new HashMap<>();
-        for (String string : this.getConfig().getStrings("rewards.nearby-player-commands.commands", false)) {
+        for (String string : this.getConfig().getStrings("rewards.nearby-player-commands.commands")) {
             double chance = 100;
             if (string.contains("::")) {
                 String[] split = string.split("::");
@@ -547,18 +549,13 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         for (String string : this.getConfig().getStrings("effects")) {
             String effectName = string.split(":")[0];
             List<String> args = new ArrayList<>(Arrays.asList(string.replace(effectName + ":", "").split(":")));
-            if (args.contains("mythicmobs")) {
-                String newArg = "mythicmobs:" + args.get(args.indexOf("mythicmobs")+1);
-                args.set(args.indexOf("mythicmobs"), newArg);
-                args.remove(args.get(args.indexOf(newArg)+1));
-            }
             this.effectNames.add(new ArgumentedEffectName(effectName, args));
         }
 
         for (ArgumentedEffectName effectName : new ArrayList<>(this.effectNames)) {
             if (Effects.getEffect(effectName.name(), effectName.args()) == null) {
                 this.effectNames.remove(effectName);
-                Bukkit.getLogger().warning("Invalid effect " + effectName.name() + " specified in " + this.name);
+                Bukkit.getLogger().warning("Invalid effect " + effectName.name() + " specified in " + this.id);
             }
         }
 
@@ -583,12 +580,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         }
 
         new PlaceholderEntry(
-                "timeuntilspawn_"+this.name,
-                (player) -> new BigDecimal(this.timeUntilSpawn/20).setScale(1, RoundingMode.HALF_UP).toString(),
+                "timeuntilspawn_" + this.id,
+                (player) -> new BigDecimal(this.timeUntilSpawn / 20).setScale(1, RoundingMode.HALF_UP).toString(),
                 false
         ).register();
 
-        for (String req : config.getStrings("spawn-requirements", false)) {
+        for (String req : config.getStrings("spawn-requirements")) {
             List<String> split = Arrays.asList(req.split(":"));
             if (split.size() < 2) {
                 continue;
@@ -608,7 +605,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             ItemBuilder builder = new ItemStackBuilder(material)
                     .setDisplayName(this.getConfig().getString("spawn-egg.name"))
                     .addLoreLines(this.getConfig().getStrings("spawn-egg.lore"))
-                    .writeMetaKey(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getName());
+                    .writeMetaKey(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getId());
 
             if (this.getConfig().getBool("spawn-egg.glow")) {
                 builder.addEnchantment(Enchantment.DURABILITY, 1)
@@ -620,9 +617,9 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             if (this.getConfig().getBool("spawn-egg.craftable")) {
                 Recipes.createAndRegisterRecipe(
                         this.getPlugin(),
-                        "spawn_egg_" + this.getName(),
+                        "spawn_egg_" + this.getId(),
                         this.getSpawnEgg(),
-                        this.getConfig().getStrings("spawn-egg.recipe", false)
+                        this.getConfig().getStrings("spawn-egg.recipe")
                 );
             }
         } else {
@@ -631,6 +628,17 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
         if (this.getConfig().getBool("enabled")) {
             EcoBosses.addBoss(this);
+
+            new CustomEntity(
+                    this.getPlugin().getNamespacedKeyFactory().create(this.id),
+                    test -> {
+                        if (!(test instanceof LivingEntity living)) {
+                            return false;
+                        }
+                        return Objects.equals(this, BossUtils.getBoss(living));
+                    },
+                    this::spawn
+            ).register();
         }
     }
 
@@ -676,7 +684,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
             ItemStack itemStack = Items.lookup(dropName).getItem();
             if (itemStack.getType() == Material.AIR) {
-                Bukkit.getLogger().warning(this.getName() + " has an invalid drop configured! (" + dropName + ")");
+                Bukkit.getLogger().warning(this.getId() + " has an invalid drop configured! (" + dropName + ")");
                 continue;
             }
 
@@ -707,16 +715,17 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
      *
      * @param location The location.
      */
-    public void spawn(@NotNull final Location location) {
+    public LivingEntity spawn(@NotNull final Location location) {
         location.getChunk().load();
 
-        LivingEntity entity = bossType.spawnBossEntity(location);
+        LivingEntity entity = (LivingEntity) bossType.spawn(location);
         this.livingBosses.put(entity, new LivingEcoBoss(
                         this.getPlugin(),
                         entity,
                         this
                 )
         );
+        return entity;
     }
 
     /**
@@ -757,18 +766,18 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             return false;
         }
 
-        return this.getName().equals(boss.getName());
+        return this.getId().equals(boss.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getName());
+        return Objects.hash(this.getId());
     }
 
     @Override
     public String toString() {
         return "EcoBoss{"
-                + this.getName()
+                + this.getId()
                 + "}";
     }
 }

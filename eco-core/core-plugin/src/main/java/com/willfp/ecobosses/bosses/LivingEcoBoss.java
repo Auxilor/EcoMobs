@@ -98,7 +98,7 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
     }
 
     private void onSpawn() {
-        entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, boss.getName());
+        entity.getPersistentDataContainer().set(this.getPlugin().getNamespacedKeyFactory().create("boss"), PersistentDataType.STRING, boss.getId());
         entity.setPersistent(true);
         entity.setRemoveWhenFarAway(false);
 

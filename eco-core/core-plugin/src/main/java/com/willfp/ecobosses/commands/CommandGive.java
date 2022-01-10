@@ -56,7 +56,7 @@ public class CommandGive extends Subcommand {
         BOSS_NAMES.clear();
         BOSS_NAMES.addAll(EcoBosses.values().stream()
                 .filter(boss -> boss.getSpawnEgg() != null)
-                .map(EcoBoss::getName)
+                .map(EcoBoss::getId)
                 .collect(Collectors.toList()));
     }
 
@@ -101,7 +101,7 @@ public class CommandGive extends Subcommand {
         }
 
         String message = this.getPlugin().getLangYml().getMessage("give-success");
-        message = message.replace("%boss%", boss.getName()).replace("%recipient%", reciever.getName());
+        message = message.replace("%boss%", boss.getId()).replace("%recipient%", reciever.getName());
         sender.sendMessage(message);
 
         ItemStack itemStack = boss.getSpawnEgg();

@@ -48,7 +48,7 @@ public class CommandSpawn extends Subcommand {
     @ConfigUpdater
     public static void reload() {
         BOSS_NAMES.clear();
-        BOSS_NAMES.addAll(EcoBosses.values().stream().map(EcoBoss::getName).collect(Collectors.toList()));
+        BOSS_NAMES.addAll(EcoBosses.values().stream().map(EcoBoss::getId).collect(Collectors.toList()));
     }
 
     @Override

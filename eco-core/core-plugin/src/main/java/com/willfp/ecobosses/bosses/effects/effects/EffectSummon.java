@@ -1,10 +1,10 @@
 package com.willfp.ecobosses.bosses.effects.effects;
 
+import com.willfp.eco.core.entities.Entities;
+import com.willfp.eco.core.entities.TestableEntity;
 import com.willfp.eco.util.NumberUtils;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.effects.Effect;
-import com.willfp.ecobosses.bosses.util.bosstype.BossEntityUtils;
-import com.willfp.ecobosses.bosses.util.bosstype.BossType;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class EffectSummon extends Effect {
-    private final BossType type;
+    private final TestableEntity type;
     private final double chance;
 
     public EffectSummon(@NotNull final List<String> args) {
@@ -27,7 +27,7 @@ public class EffectSummon extends Effect {
             showConfigError("Incorrect amount of arguments!");
         }
 
-        type = BossEntityUtils.getBossType(args.get(0));
+        type = Entities.lookup(args.get(0));
         chance = Double.parseDouble(args.get(1));
     }
 
@@ -53,7 +53,7 @@ public class EffectSummon extends Effect {
             loc.add(0, 1, 0);
         }
 
-        Entity summonedEntity = type.spawnBossEntity(loc);
+        Entity summonedEntity = type.spawn(loc);
         if (summonedEntity instanceof Mob) {
             ((Mob) summonedEntity).setTarget(player);
         }
