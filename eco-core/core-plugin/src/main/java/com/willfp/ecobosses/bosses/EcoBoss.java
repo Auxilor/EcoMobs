@@ -600,9 +600,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
         // Spawn egg
         if (this.getConfig().getBool("spawn-egg.enabled")) {
-            Material material = Material.getMaterial(this.getConfig().getString("spawn-egg.material").toUpperCase());
-            assert material != null;
-            ItemBuilder builder = new ItemStackBuilder(material)
+            ItemBuilder builder = new ItemStackBuilder(Items.lookup(this.getConfig().getString("spawn-egg.material")).getItem())
                     .setDisplayName(this.getConfig().getString("spawn-egg.name"))
                     .addLoreLines(this.getConfig().getStrings("spawn-egg.lore"))
                     .writeMetaKey(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING, this.getId());
@@ -613,6 +611,9 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             }
 
             this.spawnEgg = builder.build();
+
+            Items.registerCustomItem(this.getPlugin().getNamespacedKeyFactory().create(this.getId()+"_spawn_egg"),
+                    Items.lookup(this.getConfig().getString("spawn-egg.material")));
 
             if (this.getConfig().getBool("spawn-egg.craftable")) {
                 Recipes.createAndRegisterRecipe(
@@ -688,7 +689,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
                 continue;
             }
 
-            if (NumberUtils.randFloat(0, 100) <= chance) {
+            if (NumberUtils.randFloat(0, 100) < chance) {
                 drops.add(itemStack);
             }
         }
