@@ -8,6 +8,7 @@ import com.willfp.eco.core.entities.CustomEntity;
 import com.willfp.eco.core.entities.Entities;
 import com.willfp.eco.core.entities.TestableEntity;
 import com.willfp.eco.core.integrations.placeholder.PlaceholderEntry;
+import com.willfp.eco.core.items.CustomItem;
 import com.willfp.eco.core.items.Items;
 import com.willfp.eco.core.items.builder.ItemBuilder;
 import com.willfp.eco.core.items.builder.ItemStackBuilder;
@@ -44,6 +45,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -612,8 +615,28 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
 
             this.spawnEgg = builder.build();
 
-            Items.registerCustomItem(this.getPlugin().getNamespacedKeyFactory().create(this.getId()+"_spawn_egg"),
-                    Items.lookup(this.getConfig().getString("spawn-egg.material")));
+            new CustomItem(
+                    this.getPlugin().getNamespacedKeyFactory().create(this.getId() + "_spawn_egg"),
+                    test -> {
+                        ItemMeta meta = test.getItemMeta();
+                        if (meta == null) {
+                            return false;
+                        }
+
+                        PersistentDataContainer container = meta.getPersistentDataContainer();
+                        if (!container.has(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING)) {
+                            return false;
+                        }
+
+                        String spawnEggID = container.get(this.getPlugin().getNamespacedKeyFactory().create("spawn_egg"), PersistentDataType.STRING);
+                        if (spawnEggID == null) {
+                            return false;
+                        }
+
+                        return spawnEggID.equalsIgnoreCase(this.getId());
+                    },
+                    this.getSpawnEgg()
+            ).register();
 
             if (this.getConfig().getBool("spawn-egg.craftable")) {
                 Recipes.createAndRegisterRecipe(
