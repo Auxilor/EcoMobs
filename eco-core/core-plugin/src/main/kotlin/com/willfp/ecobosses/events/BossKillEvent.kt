@@ -2,10 +2,12 @@ package com.willfp.ecobosses.events
 
 import com.willfp.ecobosses.bosses.LivingEcoBoss
 import com.willfp.ecobosses.lifecycle.BossLifecycle
+import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 
 class BossKillEvent(
     boss: LivingEcoBoss,
+    killer: Player?
 ) : BossDeathEvent(boss) {
     override fun getHandlers(): HandlerList {
         return HANDLERS

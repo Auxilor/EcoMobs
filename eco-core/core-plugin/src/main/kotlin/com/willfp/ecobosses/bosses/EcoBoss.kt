@@ -27,6 +27,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityDeathEvent
 import java.util.Objects
 import java.util.UUID
 
@@ -217,12 +218,12 @@ class EcoBoss(
         messages[lifecycle]?.forEach { it.broadcast(location) }
     }
 
-    fun processRewards(player: Player, location: Location, entity: LivingEntity) {
+    fun processRewards(player: Player?, location: Location, entity: LivingEntity, event: EntityDeathEvent) {
         for (drop in drops) {
             drop.drop(location, player)
         }
 
-        xp.drop(location, player)
+        xp.modify(event)
 
         for ((index, damager) in entity.topDamagers.withIndex()) {
             val rewards = commandRewards[index] ?: continue

@@ -5,18 +5,25 @@ import com.willfp.eco.util.NumberUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 
 data class BossDrop(
     val chance: Double,
     val drops: Collection<ItemStack>
 ) {
-    fun drop(location: Location, player: Player) {
+    fun drop(location: Location, player: Player?) {
         if (NumberUtils.randFloat(0.0, 100.0) < chance) {
-            DropQueue(player)
-                .setLocation(location)
-                .addItems(drops)
-                .push()
+            if (player != null) {
+                DropQueue(player)
+                    .setLocation(location)
+                    .addItems(drops)
+                    .push()
+            } else {
+                for (drop in drops) {
+                    location.world?.dropItemNaturally(location, drop)
+                }
+            }
         }
     }
 }
@@ -41,10 +48,7 @@ data class XpReward(
     val minimum: Int,
     val maximum: Int
 ) {
-    fun drop(location: Location, player: Player) {
-        DropQueue(player)
-            .setLocation(location)
-            .addXP(NumberUtils.randInt(minimum, maximum))
-            .push()
+    fun modify(event: EntityDeathEvent) {
+        event.droppedExp = NumberUtils.randInt(minimum, maximum)
     }
 }

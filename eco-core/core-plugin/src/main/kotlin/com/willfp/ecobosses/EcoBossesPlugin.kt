@@ -7,7 +7,9 @@ import com.willfp.ecobosses.bosses.bossHolders
 import com.willfp.ecobosses.commands.CommandEcobosses
 import com.willfp.ecobosses.config.EcoBossesYml
 import com.willfp.ecobosses.defence.DamageMultiplierHandler
+import com.willfp.ecobosses.defence.ImmunitiesHandler
 import com.willfp.ecobosses.defence.MountHandler
+import com.willfp.ecobosses.defence.PickupHandler
 import com.willfp.ecobosses.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecobosses.lifecycle.LifecycleHandlers
 import com.willfp.ecobosses.spawn.SpawnEggHandler
@@ -42,7 +44,9 @@ class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
             LifecycleHandlers(),
             SpawnEggHandler(),
             DamageMultiplierHandler(),
-            MountHandler()
+            MountHandler(),
+            PickupHandler(),
+            ImmunitiesHandler()
         )
     }
 
