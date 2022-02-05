@@ -1,16 +1,16 @@
 package com.willfp.ecobosses.util
 
 import com.willfp.eco.core.config.interfaces.Config
+import org.bukkit.Location
 import org.bukkit.Sound
-import org.bukkit.entity.Player
 
 data class ConfiguredSound(
     private val sound: Sound,
     private val pitch: Double,
     private val volume: Double
 ) {
-    fun play(player: Player) {
-        player.playSound(player.location, sound, volume.toFloat(), pitch.toFloat())
+    fun play(location: Location) {
+        location.world?.playSound(location, sound, volume.toFloat(), pitch.toFloat())
     }
 
     companion object {
@@ -27,9 +27,9 @@ data class ConfiguredSound(
 data class PlayableSound(
     val sounds: Iterable<ConfiguredSound>
 ) {
-    fun play(player: Player) {
+    fun play(location: Location) {
         for (sound in sounds) {
-            sound.play(player)
+            sound.play(location)
         }
     }
 }

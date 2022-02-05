@@ -23,3 +23,77 @@ bosses:
     mob: iron_golem
     displayName: "&8Steel Golem &7| &c%health%♥ &7| &e%time%"
     effects: [ ]
+    rewards:
+      xp:
+        minimum: 30000
+        maximum: 60000
+      topDamagerCommands:
+        1: []
+        2: []
+        3: []
+      nearbyPlayerCommands:
+        radius: 10
+        commands: []
+      drops: []
+    target:
+      mode: highest_health
+      range: 40
+    bossBar:
+      enabled: true
+      color: white
+      style: solid
+      radius: 120
+    messages:
+      spawn:
+        - message:
+            - ""
+            - "&fA &8&lSteel Golem&r&f has been spawned!"
+            - "&fCome fight it at &8%x%&f, &8%y%&f, &8%z%&f!"
+            - ""
+          radius: -1
+      kill:
+        - message:
+            - ""
+            - "&fThe &8&lSteel Golem&r&f has been killed!"
+            - "&fMost Damage:"
+            - "&f - &8%damage_1_player%&f (%damage_1% Damage)"
+            - "&f - &8%damage_2_player%&f (%damage_2% Damage)"
+            - "&f - &8%damage_3_player%&f (%damage_3% Damage)"
+            - ""
+          radius: -1
+      despawn:
+        - message:
+            - ""
+            - "&fYou ran out of time to kill the &8&lSteel Golem&r&f!"
+            - ""
+          radius: -1
+      injure: [ ]
+    sounds:
+      spawn:
+        - sound: entity_iron_golem_death
+          pitch: 0.8
+          volume: 100
+        - sound: entity_iron_golem_hurt
+          pitch: 0.5
+          volume: 100
+        - sound: entity_ender_dragon_growl
+          pitch: 0.5
+          volume: 100
+      kill:
+        - sound: entity_ender_dragon_death
+          pitch: 1.8
+          volume: 100
+        - sound: entity_wither_death
+          pitch: 1.2
+          volume: 100
+      despawn:
+        - sound: entity_ender_dragon_ambient
+          pitch: 0.5
+          volume: 50
+        - sound: entity_enderman_death
+          pitch: 0.5
+          volume: 50
+      injure:
+        - sound: entity_iron_golem_damage
+          pitch: 0.7
+          volume: 10
