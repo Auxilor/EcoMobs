@@ -5,13 +5,13 @@ import com.willfp.eco.core.PluginDependent;
 import com.willfp.eco.core.scheduling.RunnableTask;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.effects.Effect;
-import com.willfp.ecobosses.bosses.tick.BossTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.BossBarTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.DeathTimeTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.NamePlaceholderTicker;
 import com.willfp.ecobosses.bosses.tick.tickers.TargetTicker;
 import com.willfp.ecobosses.bosses.util.obj.EquipmentPiece;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
+import com.willfp.ecobosses.tick.BossTicker;
 import lombok.Getter;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
@@ -42,7 +42,7 @@ public class LivingEcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The boss.
      */
-    private final EcoBoss boss;
+    private final com.willfp.ecobosses.bosses.EcoBoss boss;
 
     /**
      * The boss tickers.

@@ -3,7 +3,7 @@ package com.willfp.ecobosses.bosses.tick.tickers;
 import com.willfp.eco.util.PlayerUtils;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecobosses.bosses.EcoBoss;
-import com.willfp.ecobosses.bosses.tick.BossTicker;
+import com.willfp.ecobosses.tick.BossTicker;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;

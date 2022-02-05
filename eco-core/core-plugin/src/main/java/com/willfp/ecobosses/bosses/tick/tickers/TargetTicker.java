@@ -1,8 +1,7 @@
 package com.willfp.ecobosses.bosses.tick.tickers;
 
 import com.willfp.ecobosses.bosses.EcoBoss;
-import com.willfp.ecobosses.bosses.tick.BossTicker;
-import com.willfp.ecobosses.bosses.util.obj.TargetMode;
+import com.willfp.ecobosses.tick.BossTicker;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;

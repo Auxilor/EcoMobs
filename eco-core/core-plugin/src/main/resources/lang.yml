@@ -15,5 +15,8 @@ messages:
   invalid-stone: "&cInvalid boss!"
   give-success: "Gave &a%boss%&r spawn egg to &a%recipient%"
   requirements-not-met: "&cYou can't spawn this boss!"
+  on-cooldown: "&cThis effect is on cooldown! &fTime left: &a%seconds% seconds"
+  cannot-afford: "&cYou can't afford to do this! &fCost: &a$$%cost%"
+  cannot-afford-type: "&cYou can't afford to do this! &fCost: &a%cost% %type%"
 
 na: "N/A"

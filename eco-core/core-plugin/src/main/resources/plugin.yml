@@ -5,10 +5,15 @@ api-version: 1.16
 authors: [Auxilor]
 website: willfp.com
 load: STARTUP
-softdepend:
-  - LevelledMobs
 depend:
   - eco
+softdepend:
+  - LevelledMobs
+  - EcoSkills
+  - AureliumSkills
+  - Jobs
+  - mcMMO
+  - Vault
 
 commands:
   ecobosses:

@@ -23,7 +23,7 @@ public class EcoBosses {
     /**
      * Registered armor sets.
      */
-    private static final BiMap<String, EcoBoss> BY_NAME = HashBiMap.create();
+    private static final BiMap<String, com.willfp.ecobosses.bosses.EcoBoss> BY_NAME = HashBiMap.create();
 
     /**
      * Sets that exist by default.
@@ -36,35 +36,35 @@ public class EcoBosses {
     );
 
     /**
-     * Get all registered {@link EcoBoss}es.
+     * Get all registered {@link com.willfp.ecobosses.bosses.EcoBoss}es.
      *
-     * @return A list of all {@link EcoBoss}es.
+     * @return A list of all {@link com.willfp.ecobosses.bosses.EcoBoss}es.
      */
-    public static List<EcoBoss> values() {
+    public static List<com.willfp.ecobosses.bosses.EcoBoss> values() {
         return ImmutableList.copyOf(BY_NAME.values());
     }
 
     /**
-     * Get {@link EcoBoss} matching name.
+     * Get {@link com.willfp.ecobosses.bosses.EcoBoss} matching name.
      *
      * @param name The name to search for.
-     * @return The matching {@link EcoBoss}, or null if not found.
+     * @return The matching {@link com.willfp.ecobosses.bosses.EcoBoss}, or null if not found.
      */
-    public static EcoBoss getByName(@NotNull final String name) {
+    public static com.willfp.ecobosses.bosses.EcoBoss getByName(@NotNull final String name) {
         return BY_NAME.get(name);
     }
 
     /**
-     * Update all {@link EcoBoss}s.
+     * Update all {@link com.willfp.ecobosses.bosses.EcoBoss}s.
      */
     @ConfigUpdater
     public static void update() {
-        for (EcoBoss boss : values()) {
+        for (com.willfp.ecobosses.bosses.EcoBoss boss : values()) {
             removeBoss(boss);
         }
 
         for (String defaultSetName : DEFAULT_BOSSES) {
-            new EcoBoss(defaultSetName, new BaseBossConfig(defaultSetName), EcoBossesPlugin.getInstance());
+            new com.willfp.ecobosses.bosses.EcoBoss(defaultSetName, new BaseBossConfig(defaultSetName), EcoBossesPlugin.getInstance());
         }
 
         try {
@@ -72,7 +72,7 @@ public class EcoBosses {
                     .filter(Files::isRegularFile)
                     .forEach(path -> {
                         String name = path.getFileName().toString().replace(".yml", "");
-                        new EcoBoss(
+                        new com.willfp.ecobosses.bosses.EcoBoss(
                                 name,
                                 new CustomConfig(name, YamlConfiguration.loadConfiguration(path.toFile())),
                                 EcoBossesPlugin.getInstance()
@@ -84,19 +84,19 @@ public class EcoBosses {
     }
 
     /**
-     * Add new {@link EcoBoss} to EcoBosses.
+     * Add new {@link com.willfp.ecobosses.bosses.EcoBoss} to EcoBosses.
      *
-     * @param set The {@link EcoBoss} to add.
+     * @param set The {@link com.willfp.ecobosses.bosses.EcoBoss} to add.
      */
-    public static void addBoss(@NotNull final EcoBoss set) {
+    public static void addBoss(@NotNull final com.willfp.ecobosses.bosses.EcoBoss set) {
         BY_NAME.remove(set.getId());
         BY_NAME.put(set.getId(), set);
     }
 
     /**
-     * Remove {@link EcoBoss} from EcoBosses.
+     * Remove {@link com.willfp.ecobosses.bosses.EcoBoss} from EcoBosses.
      *
-     * @param set The {@link EcoBoss} to remove.
+     * @param set The {@link com.willfp.ecobosses.bosses.EcoBoss} to remove.
      */
     public static void removeBoss(@NotNull final EcoBoss set) {
         BY_NAME.remove(set.getId());

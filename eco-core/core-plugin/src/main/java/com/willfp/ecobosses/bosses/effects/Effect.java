@@ -1,7 +1,6 @@
 package com.willfp.ecobosses.bosses.effects;
 
 import com.willfp.ecobosses.bosses.EcoBoss;
-import com.willfp.ecobosses.bosses.tick.BossTicker;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;

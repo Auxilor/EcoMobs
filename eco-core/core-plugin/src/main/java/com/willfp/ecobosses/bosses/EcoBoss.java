@@ -28,7 +28,6 @@ import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
 import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
-import com.willfp.ecobosses.bosses.util.obj.TargetMode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -250,7 +249,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     /**
      * The currently living bosses of this type.
      */
-    private final Map<LivingEntity, LivingEcoBoss> livingBosses;
+    private final Map<LivingEntity, com.willfp.ecobosses.bosses.LivingEcoBoss> livingBosses;
 
     /**
      * The effect names and arguments.
@@ -743,7 +742,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
         location.getChunk().load();
 
         LivingEntity entity = (LivingEntity) bossType.spawn(location);
-        this.livingBosses.put(entity, new LivingEcoBoss(
+        this.livingBosses.put(entity, new com.willfp.ecobosses.bosses.LivingEcoBoss(
                         this.getPlugin(),
                         entity,
                         this
@@ -753,12 +752,12 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
     }
 
     /**
-     * Get {@link LivingEcoBoss} from an entity.
+     * Get {@link com.willfp.ecobosses.bosses.LivingEcoBoss} from an entity.
      *
      * @param entity The entity.
      * @return The living boss, or null if not a boss.
      */
-    public LivingEcoBoss getLivingBoss(@NotNull final LivingEntity entity) {
+    public com.willfp.ecobosses.bosses.LivingEcoBoss getLivingBoss(@NotNull final LivingEntity entity) {
         return this.livingBosses.get(entity);
     }
 
@@ -786,7 +785,7 @@ public class EcoBoss extends PluginDependent<EcoPlugin> {
             return true;
         }
 
-        if (!(o instanceof EcoBoss boss)) {
+        if (!(o instanceof com.willfp.ecobosses.bosses.EcoBoss boss)) {
             return false;
         }
 
