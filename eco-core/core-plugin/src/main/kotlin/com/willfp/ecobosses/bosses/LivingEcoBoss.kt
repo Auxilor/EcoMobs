@@ -1,9 +1,9 @@
 package com.willfp.ecobosses.bosses
 
 import com.willfp.eco.core.EcoPlugin
+import com.willfp.ecobosses.lifecycle.BossLifecycle
 import com.willfp.ecobosses.tick.BossTicker
 import org.bukkit.Bukkit
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mob
 import java.util.UUID
 

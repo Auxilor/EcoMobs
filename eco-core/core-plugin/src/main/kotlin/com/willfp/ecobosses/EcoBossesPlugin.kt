@@ -1,11 +1,18 @@
 package com.willfp.ecobosses
 
 import com.willfp.eco.core.command.impl.PluginCommand
+import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.ecobosses.bosses.EcoBosses
 import com.willfp.ecobosses.bosses.bossHolders
 import com.willfp.ecobosses.commands.CommandEcobosses
 import com.willfp.ecobosses.config.EcoBossesYml
+import com.willfp.ecobosses.defence.DamageMultiplierHandler
+import com.willfp.ecobosses.defence.MountHandler
+import com.willfp.ecobosses.integrations.levelledmobs.IntegrationLevelledMobs
+import com.willfp.ecobosses.lifecycle.LifecycleHandlers
+import com.willfp.ecobosses.spawn.SpawnEggHandler
 import com.willfp.ecobosses.util.DiscoverRecipeListener
+import com.willfp.ecobosses.util.TopDamagerListener
 import com.willfp.libreforge.LibReforgePlugin
 import org.bukkit.event.Listener
 
@@ -30,7 +37,18 @@ class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
 
     override fun loadListeners(): List<Listener> {
         return listOf(
-            DiscoverRecipeListener(this)
+            DiscoverRecipeListener(this),
+            TopDamagerListener(),
+            LifecycleHandlers(),
+            SpawnEggHandler(),
+            DamageMultiplierHandler(),
+            MountHandler()
+        )
+    }
+
+    override fun loadAdditionalIntegrations(): List<IntegrationLoader> {
+        return listOf(
+            IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs()) }
         )
     }
 

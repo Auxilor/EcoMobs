@@ -57,7 +57,7 @@ allprojects {
     }
 
     shadowJar {
-        relocate('com.willfp.libreforge', 'com.willfp.ecoarmor.libreforge')
+        relocate('com.willfp.libreforge', 'com.willfp.ecobosses.libreforge')
     }
 
     dependencies {

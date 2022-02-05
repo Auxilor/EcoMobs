@@ -23,6 +23,15 @@ bosses:
     mob: iron_golem
     displayName: "&8Steel Golem &7| &c%health%♥ &7| &e%time%"
     effects: [ ]
+    defence:
+      preventMounts: true
+      explosionImmune: true
+      fireImmune: true
+      drowningImmune: true
+      suffocationImmune: true
+
+      meleeDamageMultiplier: 0.8
+      projectileDamageMultiplier: 0.2
     rewards:
       xp:
         minimum: 30000

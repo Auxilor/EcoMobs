@@ -1,4 +1,4 @@
-package com.willfp.ecobosses.bosses
+package com.willfp.ecobosses.lifecycle
 
 enum class BossLifecycle {
     SPAWN,

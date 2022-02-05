@@ -6,6 +6,7 @@ import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.entities.TestableEntity
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.util.toComponent
+import com.willfp.ecobosses.lifecycle.BossLifecycle
 import com.willfp.ecobosses.tick.BossBarTicker
 import com.willfp.ecobosses.tick.BossTicker
 import com.willfp.ecobosses.tick.DisplayNameTicker
@@ -17,10 +18,12 @@ import com.willfp.ecobosses.util.ConfiguredSound
 import com.willfp.ecobosses.util.LocalBroadcast
 import com.willfp.ecobosses.util.PlayableSound
 import com.willfp.ecobosses.util.XpReward
+import com.willfp.ecobosses.util.topDamagers
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.conditions.ConfiguredCondition
 import com.willfp.libreforge.effects.Effects
 import net.kyori.adventure.bossbar.BossBar
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -46,6 +49,20 @@ class EcoBoss(
     val isBossBarEnabled = config.getBool("bossBar.enabled")
 
     val bossBarRadius = config.getDouble("bossBar.radius")
+
+    val isPreventingMounts = config.getBool("defence.preventMounts")
+
+    val isImmuneToExplosions = config.getBool("defence.explosionImmune")
+
+    val isImmuneToFire = config.getBool("defence.fireImmune")
+
+    val isImmuneToDrowning = config.getBool("defence.drowningImmune")
+
+    val isImmuneToSuffocation = config.getBool("defence.suffocationImmune")
+
+    val meleeDamageMultiplier = config.getDouble("defence.meleeDamageMultiplier")
+
+    val projectileDamageMultiplier = config.getDouble("defence.projectileDamageMultiplier")
 
     private val bossBarColor = BossBar.Color.valueOf(config.getString("bossBar.color").uppercase())
 
@@ -200,12 +217,30 @@ class EcoBoss(
         messages[lifecycle]?.forEach { it.broadcast(location) }
     }
 
-    fun processRewards(player: Player, location: Location) {
+    fun processRewards(player: Player, location: Location, entity: LivingEntity) {
         for (drop in drops) {
             drop.drop(location, player)
         }
 
         xp.drop(location, player)
+
+        for ((index, damager) in entity.topDamagers.withIndex()) {
+            val rewards = commandRewards[index] ?: continue
+            val player = Bukkit.getPlayer(damager.uuid) ?: continue
+            for (reward in rewards) {
+                reward.reward(player)
+            }
+        }
+
+        for (nearbyPlayer in entity.getNearbyEntities(
+            nearbyCommandRewardRadius,
+            nearbyCommandRewardRadius,
+            nearbyCommandRewardRadius
+        ).filterIsInstance<Player>()) {
+            for (command in nearbyCommands) {
+                command.reward(nearbyPlayer)
+            }
+        }
     }
 
     override fun equals(other: Any?): Boolean {

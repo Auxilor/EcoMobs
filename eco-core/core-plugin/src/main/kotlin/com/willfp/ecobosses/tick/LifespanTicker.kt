@@ -1,6 +1,6 @@
 package com.willfp.ecobosses.tick
 
-import com.willfp.ecobosses.bosses.BossLifecycle
+import com.willfp.ecobosses.lifecycle.BossLifecycle
 import com.willfp.ecobosses.bosses.LivingEcoBoss
 
 class LifespanTicker : BossTicker {
