@@ -20,7 +20,7 @@ object AutospawnHandler {
                 val location = boss.autoSpawnLocations.randomOrNull() ?: continue
                 val world = location.world ?: continue
 
-                if (Bosses.getAllAlive().mapNotNull { it.entity }.map { it.world } == world) {
+                if (Bosses.getAllAlive().mapNotNull { it.entity }.any { it.world == world }) {
                     continue
                 }
 
