@@ -10,7 +10,7 @@ class LivingEcoBoss(
     plugin: EcoPlugin,
     private val uuid: UUID,
     val boss: EcoBoss,
-    val tickers: Set<BossTicker>
+    private val tickers: Set<BossTicker>
 ) {
     private val ticker = plugin.runnableFactory.create {
         if (tick()) {
