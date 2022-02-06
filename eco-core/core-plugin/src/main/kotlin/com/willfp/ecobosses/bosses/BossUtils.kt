@@ -12,12 +12,14 @@ val Player.bossHolders: Iterable<Holder>
         val holders = mutableListOf<Holder>()
 
         for (boss in Bosses.values()) {
-            for (entity in boss.getAllAlive()) {
+            for (livingBoss in boss.getAllAlive()) {
+                val entity = livingBoss.entity ?: continue
+
                 if (entity.world != this.world) {
                     continue
                 }
 
-                if (entity.location.distanceSquared(this.location) <= boss.influenceRadius.pow(2)) {
+                if (entity.location.distanceSquared(this.location) <= boss.influence.pow(2)) {
                     holders.add(boss)
                 }
             }

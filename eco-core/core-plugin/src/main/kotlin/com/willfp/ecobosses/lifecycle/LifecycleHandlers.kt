@@ -18,7 +18,7 @@ class LifecycleHandlers : Listener {
         val entity = event.entity as? LivingEntity ?: return
         val boss = Bosses[entity] ?: return
 
-        boss.boss.handleLifecycle(BossLifecycle.INJURE, entity.location)
+        boss.boss.handleLifecycle(BossLifecycle.INJURE, entity.location, entity)
     }
 
     @EventHandler(
@@ -26,7 +26,9 @@ class LifecycleHandlers : Listener {
         priority = EventPriority.MONITOR
     )
     fun onInjure(event: BossDeathEvent) {
-        event.boss.boss.handleLifecycle(event.lifecycle, event.boss.entity?.location ?: return)
+        val entity = event.boss.entity ?: return
+
+        event.boss.boss.handleLifecycle(event.lifecycle, entity.location, entity)
     }
 
     @EventHandler(
@@ -34,6 +36,6 @@ class LifecycleHandlers : Listener {
         priority = EventPriority.MONITOR
     )
     fun onInjure(event: BossSpawnEvent) {
-        event.boss.handleLifecycle(BossLifecycle.SPAWN, event.location)
+        event.boss.handleLifecycle(BossLifecycle.SPAWN, event.location, null)
     }
 }

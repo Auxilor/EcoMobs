@@ -1,7 +1,6 @@
 package com.willfp.ecobosses.bosses
 
 import com.willfp.eco.core.EcoPlugin
-import com.willfp.ecobosses.lifecycle.BossLifecycle
 import com.willfp.ecobosses.tick.BossTicker
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
@@ -13,13 +12,11 @@ class LivingEcoBoss(
     val boss: EcoBoss,
     val tickers: Set<BossTicker>
 ) {
-    init {
-        plugin.runnableFactory.create {
-            if (tick()) {
-                it.cancel()
-            }
+    private val ticker = plugin.runnableFactory.create {
+        if (tick()) {
+            it.cancel()
         }
-    }
+    }.apply { runTaskTimer(1, 1) }
 
     val entity: Mob?
         get() = Bukkit.getEntity(uuid) as? Mob
@@ -30,10 +27,7 @@ class LivingEcoBoss(
 
     private fun tick(): Boolean {
         if (entity == null || entity?.isDead == true) {
-            for (ticker in tickers) {
-                ticker.onDeath(this, currentTick)
-            }
-            boss.markDead(uuid)
+            remove()
             return true
         }
 
@@ -44,12 +38,11 @@ class LivingEcoBoss(
         return false
     }
 
-    fun kill(reason: BossLifecycle) {
-        if (reason == BossLifecycle.SPAWN) {
-            throw IllegalArgumentException("Spawn is not a death lifecycle!")
-        }
-
+    fun remove() {
+        ticker.cancel()
         entity?.remove()
+        tickers.forEach { it.onDeath(this, currentTick) }
+
         boss.markDead(uuid)
     }
 }

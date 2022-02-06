@@ -18,10 +18,18 @@ class DamageMultiplierHandler : Listener {
 
         if (event.damager is Player) {
             event.damage *= boss.meleeDamageMultiplier
+
+            if (boss.meleeDamageMultiplier == 0.0) {
+                event.isCancelled = true
+            }
         }
 
         if (event.damager is Projectile) {
             event.damage *= boss.projectileDamageMultiplier
+
+            if (boss.projectileDamageMultiplier == 0.0) {
+                event.isCancelled = true
+            }
         }
     }
 }

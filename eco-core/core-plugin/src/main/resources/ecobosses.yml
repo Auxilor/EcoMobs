@@ -20,8 +20,9 @@ chains:
 
 bosses:
   - id: steel_golem
-    mob: iron_golem
+    mob: iron_golem attack-damage:90 movement-speed:1.5 follow-range:16 health:1200
     displayName: "&8Steel Golem &7| &c%health%♥ &7| &e%time%"
+    influence: 40
     effects: [ ]
     defence:
       preventMounts: true
@@ -32,18 +33,23 @@ bosses:
 
       meleeDamageMultiplier: 0.8
       projectileDamageMultiplier: 0.2
+
+      teleportation:
+        enabled: true
+        interval: 100
+        range: 20
     rewards:
       xp:
         minimum: 30000
         maximum: 60000
       topDamagerCommands:
-        1: []
-        2: []
-        3: []
+        1: [ ]
+        2: [ ]
+        3: [ ]
       nearbyPlayerCommands:
         radius: 10
-        commands: []
-      drops: []
+        commands: [ ]
+      drops: [ ]
     target:
       mode: highest_health
       range: 40
@@ -52,6 +58,38 @@ bosses:
       color: white
       style: solid
       radius: 120
+    spawn:
+      autospawn:
+        interval: -1
+        locations:
+          - world: world
+            x: 100
+            y: 100
+            z: 100
+      totem:
+        enabled: false
+        top: netherite_block
+        middle: iron_block
+        bottom: magma_block
+        notInWorlds: [ ]
+      egg:
+        enabled: true
+        item: evoker_spawn_egg unbreaking:1 hide_enchants name:"&8Steel Golem&f Spawn Egg"
+        lore:
+          - ""
+          - "&8&oPlace on the ground to"
+          - "&8&osummon a &8Steel Golem"
+        craftable: true
+        recipe:
+          - iron_block
+          - netherite_block
+          - iron_block
+          - air
+          - ecoitems:boss_core ? nether_star
+          - air
+          - iron_block
+          - netherite_block
+          - iron_block
     messages:
       spawn:
         - message:

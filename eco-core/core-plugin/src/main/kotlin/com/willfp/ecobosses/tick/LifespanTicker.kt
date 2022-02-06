@@ -8,7 +8,7 @@ class LifespanTicker : BossTicker {
         val timeLeft = (boss.deathTime - System.currentTimeMillis()) / 1000.0
 
         if (timeLeft <= 0) {
-            boss.kill(BossLifecycle.DESPAWN)
+            boss.remove(BossLifecycle.DESPAWN)
         }
     }
 }

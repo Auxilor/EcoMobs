@@ -4,9 +4,10 @@ import com.willfp.ecobosses.bosses.LivingEcoBoss
 import com.willfp.ecobosses.lifecycle.BossLifecycle
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
+import org.bukkit.event.entity.EntityDeathEvent
 
 abstract class BossDeathEvent(
-    val boss: LivingEcoBoss,
+    val boss: LivingEcoBoss
 ) : Event() {
     override fun getHandlers(): HandlerList {
         return HANDLERS

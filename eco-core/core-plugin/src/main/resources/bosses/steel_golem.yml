@@ -1,7 +1,7 @@
 enabled: true
 
 name: "&8Steel Golem &7| &c%health%♥ &7| &e%time%" # Display name
-base-mob: iron_golem
+base-mob: iron_golem attack-damage:90 movement-speed:1.5 follow-range:16 health:1200
 baby: false # If set to true: will make the boss mob baby (if possible)
 
 bossbar:

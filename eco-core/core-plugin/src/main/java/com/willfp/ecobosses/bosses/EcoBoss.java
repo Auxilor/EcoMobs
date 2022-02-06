@@ -27,7 +27,6 @@ import com.willfp.ecobosses.bosses.util.obj.EquipmentPiece;
 import com.willfp.ecobosses.bosses.util.obj.ExperienceOptions;
 import com.willfp.ecobosses.bosses.util.obj.ImmunityOptions;
 import com.willfp.ecobosses.bosses.util.obj.OptionedSound;
-import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

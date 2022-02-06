@@ -9,16 +9,16 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 
-class DeathListeners: Listener {
+class DeathListeners : Listener {
     @EventHandler(
         ignoreCancelled = true
     )
     fun handle(event: EntityDeathByEntityEvent) {
         val boss = Bosses[event.victim] ?: return
 
-        boss.kill(BossLifecycle.KILL)
+        boss.remove(BossLifecycle.KILL)
 
-        val deathEvent = BossKillEvent(boss, event.killer.tryAsPlayer())
+        val deathEvent = BossKillEvent(boss, event.killer.tryAsPlayer(), event.deathEvent)
         Bukkit.getPluginManager().callEvent(deathEvent)
     }
 
@@ -28,9 +28,16 @@ class DeathListeners: Listener {
     fun handle(event: EntityDeathEvent) {
         val boss = Bosses[event.entity] ?: return
 
-        boss.kill(BossLifecycle.KILL)
+        boss.remove(BossLifecycle.KILL)
 
-        val deathEvent = BossKillEvent(boss, null)
+        val deathEvent = BossKillEvent(boss, null, event)
         Bukkit.getPluginManager().callEvent(deathEvent)
+    }
+
+    @EventHandler(
+        ignoreCancelled = true
+    )
+    fun handle(event: BossKillEvent) {
+        event.boss.boss.processRewards(event)
     }
 }

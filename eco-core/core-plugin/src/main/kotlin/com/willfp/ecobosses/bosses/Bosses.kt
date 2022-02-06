@@ -84,8 +84,8 @@ object Bosses {
      * @return All living bosses.
      */
     @JvmStatic
-    fun getAllAlive(): Set<LivingEntity> {
-        val entities = mutableSetOf<LivingEntity>()
+    fun getAllAlive(): Set<LivingEcoBoss> {
+        val entities = mutableSetOf<LivingEcoBoss>()
 
         for (boss in values()) {
             entities.addAll(boss.getAllAlive())

@@ -1,7 +1,6 @@
 package com.willfp.ecobosses.events;
 
 import com.willfp.ecobosses.bosses.EcoBoss;
-import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;

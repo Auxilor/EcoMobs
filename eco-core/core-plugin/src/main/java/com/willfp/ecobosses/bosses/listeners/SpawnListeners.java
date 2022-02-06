@@ -4,7 +4,6 @@ import com.willfp.eco.core.EcoPlugin;
 import com.willfp.eco.core.PluginDependent;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import com.willfp.ecobosses.bosses.EcoBosses;
-import com.willfp.ecobosses.bosses.util.obj.SpawnTotem;
 import com.willfp.ecobosses.events.EcoBossSpawnEggEvent;
 import com.willfp.ecobosses.events.EcoBossSpawnTotemEvent;
 import org.bukkit.Material;

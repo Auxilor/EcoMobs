@@ -4,19 +4,25 @@ import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.entities.TestableEntity
+import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
+import com.willfp.eco.core.recipe.Recipes
+import com.willfp.eco.core.recipe.recipes.CraftingRecipe
 import com.willfp.eco.util.toComponent
+import com.willfp.ecobosses.events.BossKillEvent
 import com.willfp.ecobosses.lifecycle.BossLifecycle
 import com.willfp.ecobosses.tick.BossBarTicker
 import com.willfp.ecobosses.tick.BossTicker
 import com.willfp.ecobosses.tick.DisplayNameTicker
 import com.willfp.ecobosses.tick.LifespanTicker
 import com.willfp.ecobosses.tick.TargetTicker
+import com.willfp.ecobosses.tick.TeleportHandler
 import com.willfp.ecobosses.util.BossDrop
 import com.willfp.ecobosses.util.CommandReward
 import com.willfp.ecobosses.util.ConfiguredSound
 import com.willfp.ecobosses.util.LocalBroadcast
 import com.willfp.ecobosses.util.PlayableSound
+import com.willfp.ecobosses.util.SpawnTotem
 import com.willfp.ecobosses.util.XpReward
 import com.willfp.ecobosses.util.topDamagers
 import com.willfp.libreforge.Holder
@@ -25,9 +31,10 @@ import com.willfp.libreforge.effects.Effects
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.inventory.ItemStack
 import java.util.Objects
 import java.util.UUID
 
@@ -41,7 +48,7 @@ class EcoBoss(
 
     val lifespan = config.getInt("lifespan")
 
-    val influenceRadius = config.getDouble("influenceRadius")
+    val influence = config.getDouble("influence")
 
     val targetRange = config.getDouble("target.range")
 
@@ -64,6 +71,74 @@ class EcoBoss(
     val meleeDamageMultiplier = config.getDouble("defence.meleeDamageMultiplier")
 
     val projectileDamageMultiplier = config.getDouble("defence.projectileDamageMultiplier")
+
+    val canTeleport = config.getBool("defence.teleportation.enabled")
+
+    val teleportRange = config.getInt("defence.teleportation.range")
+
+    val teleportInterval = config.getInt("defence.teleportation.interval")
+
+    private val spawnEggBacker: ItemStack? = run {
+        val enabled = config.getBool("spawn.egg.enabled")
+        if (!enabled) {
+            return@run null
+        }
+
+        val item = Items.lookup("spawn.egg.item").item.apply {
+            bossEgg = this@EcoBoss
+        }
+
+        val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
+
+        Items.registerCustomItem(
+            key,
+            CustomItem(
+                key,
+                { it.bossEgg == this },
+                item
+            )
+        )
+
+        item
+    }
+
+    val spawnEgg: ItemStack?
+        get() = this.spawnEggBacker?.clone()
+
+    val recipe: CraftingRecipe? = run {
+        if (spawnEggBacker == null || !config.getBool("spawn.egg.craftable")) {
+            return@run null
+        }
+
+        val recipe = Recipes.createAndRegisterRecipe(
+            this@EcoBoss.plugin,
+            "${this.id}_spawn_egg",
+            spawnEggBacker,
+            config.getStrings("spawn.egg.recipe")
+        )
+
+        recipe
+    }
+
+    val totem: SpawnTotem? = run {
+        if (!config.getBool("spawn.totem.enabled")) {
+            return@run null
+        }
+
+        SpawnTotem(
+            Material.getMaterial(config.getString("config.totem.top")) ?: return@run null,
+            Material.getMaterial(config.getString("config.totem.middle")) ?: return@run null,
+            Material.getMaterial(config.getString("config.totem.bottom")) ?: return@run null
+        )
+    }
+
+    val disabledTotemWorlds: List<String> = config.getStrings("config.totem.notInWorlds")
+
+    val autoSpawnInterval = config.getInt("spawn.autospawn.interval")
+
+    val autoSpawnLocations: List<Location> = run {
+
+    }
 
     private val bossBarColor = BossBar.Color.valueOf(config.getString("bossBar.color").uppercase())
 
@@ -176,8 +251,8 @@ class EcoBoss(
         return currentlyAlive[entity.uniqueId]
     }
 
-    fun getAllAlive(): Set<LivingEntity> {
-        return currentlyAlive.values.mapNotNull { it.entity }.toSet()
+    fun getAllAlive(): Set<LivingEcoBoss> {
+        return currentlyAlive.values.toSet()
     }
 
     fun spawn(location: Location) {
@@ -186,15 +261,16 @@ class EcoBoss(
             plugin,
             mob.uniqueId,
             this,
-            createTickersFor(mob)
+            createTickers()
         )
     }
 
-    private fun createTickersFor(entity: LivingEntity): Set<BossTicker> {
+    private fun createTickers(): Set<BossTicker> {
         val tickers = mutableSetOf(
             LifespanTicker(),
             DisplayNameTicker(),
-            TargetTicker()
+            TargetTicker(),
+            TeleportHandler()
         )
 
         if (isBossBarEnabled) {
@@ -213,17 +289,21 @@ class EcoBoss(
         return tickers
     }
 
-    fun handleLifecycle(lifecycle: BossLifecycle, location: Location) {
+    fun handleLifecycle(lifecycle: BossLifecycle, location: Location, entity: LivingEntity?) {
         sounds[lifecycle]?.play(location)
-        messages[lifecycle]?.forEach { it.broadcast(location) }
+        messages[lifecycle]?.forEach { it.broadcast(location, entity?.topDamagers ?: emptyList()) }
     }
 
-    fun processRewards(player: Player?, location: Location, entity: LivingEntity, event: EntityDeathEvent) {
+    fun processRewards(event: BossKillEvent) {
+        val entity = event.boss.entity ?: return
+        val location = entity.location
+        val player = event.killer
+
         for (drop in drops) {
             drop.drop(location, player)
         }
 
-        xp.modify(event)
+        xp.modify(event.event)
 
         for ((index, damager) in entity.topDamagers.withIndex()) {
             val rewards = commandRewards[index] ?: continue

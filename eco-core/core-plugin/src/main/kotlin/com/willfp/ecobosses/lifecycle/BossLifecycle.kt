@@ -1,8 +1,10 @@
 package com.willfp.ecobosses.lifecycle
 
-enum class BossLifecycle {
-    SPAWN,
-    KILL,
-    DESPAWN,
-    INJURE
+enum class BossLifecycle(
+    val isDeath: Boolean
+) {
+    SPAWN(false),
+    KILL(true),
+    DESPAWN(true),
+    INJURE(false)
 }
