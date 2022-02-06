@@ -12,7 +12,7 @@ class PickupHandler : Listener {
     )
     fun handle(event: EntityPickupItemEvent) {
         val entity = event.entity as? LivingEntity ?: return
-        val boss = Bosses[entity]?.boss ?: return
+        Bosses[entity]?.boss ?: return
 
         event.isCancelled = true
     }

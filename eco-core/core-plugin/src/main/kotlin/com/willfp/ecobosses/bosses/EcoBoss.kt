@@ -327,9 +327,9 @@ class EcoBoss(
 
         for ((index, damager) in entity.topDamagers.withIndex()) {
             val rewards = commandRewards[index] ?: continue
-            val player = Bukkit.getPlayer(damager.uuid) ?: continue
+            val damagerPlayer = Bukkit.getPlayer(damager.uuid) ?: continue
             for (reward in rewards) {
-                reward.reward(player)
+                reward.reward(damagerPlayer)
             }
         }
 
