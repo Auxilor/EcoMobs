@@ -23,7 +23,7 @@ class LivingEcoBoss(
 
     val deathTime = System.currentTimeMillis() + (boss.lifespan * 1000)
 
-    private var currentTick = 0
+    private var currentTick = 1 // Start at 1 as 0 is divisible by everything
 
     private fun tick(): Boolean {
         if (entity == null || entity?.isDead == true) {

@@ -20,6 +20,10 @@ data class LocalBroadcast(
                     .replace("%damage_${index + 1}_player%", Bukkit.getOfflinePlayer(damager.uuid).savedDisplayName)
             }
 
+            message = message.replace("%x%", location.blockX.toString())
+                .replace("%y%", location.blockY.toString())
+                .replace("%z%", location.blockZ.toString())
+
             message.formatEco()
         }
 
