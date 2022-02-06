@@ -6,6 +6,7 @@ import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.entities.TestableEntity
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
+import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.eco.core.recipe.recipes.CraftingRecipe
@@ -91,9 +92,9 @@ class EcoBoss(
             return@run null
         }
 
-        val item = lookup.item.apply {
-            bossEgg = this@EcoBoss
-        }
+        val item = ItemStackBuilder(lookup)
+            .addLoreLines(config.getFormattedStrings("spawn.egg.lore"))
+            .build().apply { bossEgg = this@EcoBoss }
 
         val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
 
