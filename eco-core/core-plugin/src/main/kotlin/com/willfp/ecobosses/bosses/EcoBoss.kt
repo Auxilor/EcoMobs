@@ -2,6 +2,7 @@ package com.willfp.ecobosses.bosses
 
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.entities.CustomEntity
 import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.entities.TestableEntity
 import com.willfp.eco.core.items.CustomItem
@@ -283,14 +284,16 @@ class EcoBoss(
         return currentlyAlive.values.toSet()
     }
 
-    fun spawn(location: Location) {
+    fun spawn(location: Location): LivingEcoBoss {
         val mob = mob.spawn(location) as LivingEntity
-        currentlyAlive[mob.uniqueId] = LivingEcoBoss(
+        val boss = LivingEcoBoss(
             plugin,
             mob.uniqueId,
             this,
             createTickers()
         )
+        currentlyAlive[mob.uniqueId] = boss
+        return boss
     }
 
     private fun createTickers(): Set<BossTicker> {
@@ -351,6 +354,26 @@ class EcoBoss(
             }
         }
     }
+
+    init {
+        Entities.registerCustomEntity(
+            plugin.namespacedKeyFactory.create(id),
+            CustomEntity(
+                plugin.namespacedKeyFactory.create(id),
+                {
+                    if (it !is LivingEntity) {
+                        return@CustomEntity false
+                    }
+
+                    return@CustomEntity Bosses[it]?.boss == this
+                },
+                {
+                    this.spawn(it).entity
+                }
+            )
+        )
+    }
+
 
     override fun equals(other: Any?): Boolean {
         if (other !is EcoBoss) {
