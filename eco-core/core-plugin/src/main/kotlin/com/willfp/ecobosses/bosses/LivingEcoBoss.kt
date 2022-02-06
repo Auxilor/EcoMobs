@@ -45,4 +45,8 @@ class LivingEcoBoss(
 
         boss.markDead(uuid)
     }
+
+    override fun toString(): String {
+        return "LivingEcoBoss{boss=${boss}, uuid=${uuid}}"
+    }
 }

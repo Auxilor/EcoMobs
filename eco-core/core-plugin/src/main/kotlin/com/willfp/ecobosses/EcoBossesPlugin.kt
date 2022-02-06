@@ -12,6 +12,7 @@ import com.willfp.ecobosses.defence.MountHandler
 import com.willfp.ecobosses.defence.PickupHandler
 import com.willfp.ecobosses.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecobosses.lifecycle.CompatibilityListeners
+import com.willfp.ecobosses.lifecycle.DeathListeners
 import com.willfp.ecobosses.lifecycle.LifecycleHandlers
 import com.willfp.ecobosses.spawn.AutospawnHandler
 import com.willfp.ecobosses.spawn.SpawnEggHandler
@@ -53,7 +54,8 @@ class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
             PickupHandler(),
             ImmunitiesHandler(),
             CompatibilityListeners(),
-            SpawnTotemHandler()
+            SpawnTotemHandler(),
+            DeathListeners()
         )
     }
 
