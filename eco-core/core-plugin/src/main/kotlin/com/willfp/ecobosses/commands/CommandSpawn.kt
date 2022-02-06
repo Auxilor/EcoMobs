@@ -3,7 +3,6 @@ package com.willfp.ecobosses.commands
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecobosses.EcoBossesPlugin
 import com.willfp.ecobosses.bosses.Bosses
-import com.willfp.ecobosses.bosses.EcoBosses
 import com.willfp.ecobosses.events.BossSpawnEvent
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -28,7 +27,7 @@ class CommandSpawn(plugin: EcoBossesPlugin) : Subcommand(
         }
 
         val bossName = args[0]
-        val boss = EcoBosses.getByName(bossName.lowercase())
+        val boss = Bosses.getByID(bossName.lowercase())
         if (boss == null) {
             sender.sendMessage(plugin.langYml.getMessage("specify-boss"))
             return

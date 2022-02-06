@@ -16,7 +16,7 @@ class DeathListeners : Listener {
     fun handle(event: EntityDeathByEntityEvent) {
         val boss = Bosses[event.victim] ?: return
 
-        boss.remove(BossLifecycle.KILL)
+        boss.remove()
 
         val deathEvent = BossKillEvent(boss, event.killer.tryAsPlayer(), event.deathEvent)
         Bukkit.getPluginManager().callEvent(deathEvent)
@@ -28,7 +28,7 @@ class DeathListeners : Listener {
     fun handle(event: EntityDeathEvent) {
         val boss = Bosses[event.entity] ?: return
 
-        boss.remove(BossLifecycle.KILL)
+        boss.remove()
 
         val deathEvent = BossKillEvent(boss, null, event)
         Bukkit.getPluginManager().callEvent(deathEvent)

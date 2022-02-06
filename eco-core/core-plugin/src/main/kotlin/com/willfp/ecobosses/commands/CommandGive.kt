@@ -3,7 +3,6 @@ package com.willfp.ecobosses.commands
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecobosses.bosses.Bosses
-import com.willfp.ecobosses.bosses.EcoBosses
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -40,7 +39,7 @@ class CommandGive(plugin: EcoPlugin) : Subcommand(
             return
         }
         val key = args[1]
-        val boss = EcoBosses.getByName(key)
+        val boss = Bosses.getByID(key)
 
         if (boss?.spawnEgg == null) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-boss"))

@@ -2,7 +2,7 @@ package com.willfp.ecobosses
 
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.integrations.IntegrationLoader
-import com.willfp.ecobosses.bosses.EcoBosses
+import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.bosses.bossHolders
 import com.willfp.ecobosses.commands.CommandEcobosses
 import com.willfp.ecobosses.config.EcoBossesYml
@@ -31,7 +31,7 @@ class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
     }
 
     override fun handleReloadAdditional() {
-        logger.info(EcoBosses.values().size.toString() + " Bosses Loaded")
+        logger.info(Bosses.values().size.toString() + " Bosses Loaded")
 
         AutospawnHandler.startSpawning(this)
     }
