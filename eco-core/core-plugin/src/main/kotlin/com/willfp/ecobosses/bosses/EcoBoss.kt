@@ -85,7 +85,7 @@ class EcoBoss(
             return@run null
         }
 
-        val lookup = Items.lookup("spawn.egg.item")
+        val lookup = Items.lookup(config.getString("spawn.egg.item"))
 
         if (lookup is EmptyTestableItem) {
             return@run null
