@@ -13,6 +13,7 @@ import com.willfp.ecobosses.defence.PickupHandler
 import com.willfp.ecobosses.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecobosses.lifecycle.CompatibilityListeners
 import com.willfp.ecobosses.lifecycle.LifecycleHandlers
+import com.willfp.ecobosses.spawn.AutospawnHandler
 import com.willfp.ecobosses.spawn.SpawnEggHandler
 import com.willfp.ecobosses.spawn.SpawnTotemHandler
 import com.willfp.ecobosses.util.DiscoverRecipeListener
@@ -31,6 +32,8 @@ class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
 
     override fun handleReloadAdditional() {
         logger.info(EcoBosses.values().size.toString() + " Bosses Loaded")
+
+        AutospawnHandler.startSpawning(this)
     }
 
     override fun loadPluginCommands(): List<PluginCommand> {

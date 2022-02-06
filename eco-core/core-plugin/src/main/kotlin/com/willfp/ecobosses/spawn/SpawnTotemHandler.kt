@@ -1,7 +1,7 @@
 package com.willfp.ecobosses.spawn
 
 import com.willfp.eco.util.containsIgnoreCase
-import com.willfp.ecobosses.bosses.EcoBosses
+import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.events.BossSpawnEvent
 import com.willfp.ecobosses.util.SpawnTotem
 import org.bukkit.Material
@@ -40,13 +40,19 @@ class SpawnTotemHandler : Listener {
             }
 
             val placedTotem = SpawnTotem(block1.type, block2.type, block3.type)
-            for (boss in EcoBosses.values()) {
+            for (boss in Bosses.values()) {
                 if (boss.totem == null || boss.disabledTotemWorlds.containsIgnoreCase(event.block.world.name)) {
                     continue
                 }
 
                 if (boss.totem != placedTotem) {
                     continue
+                }
+
+                val player = event.player
+
+                if (!boss.spawnConditions.all { it.condition.isConditionMet(player, it.config) }) {
+                    return
                 }
 
                 val spawnEvent = BossSpawnEvent(boss, event.block.location, BossSpawnEvent.SpawnReason.TOTEM)

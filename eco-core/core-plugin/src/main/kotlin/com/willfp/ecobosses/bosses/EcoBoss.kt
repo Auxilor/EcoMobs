@@ -26,7 +26,7 @@ import com.willfp.ecobosses.util.SpawnTotem
 import com.willfp.ecobosses.util.XpReward
 import com.willfp.ecobosses.util.topDamagers
 import com.willfp.libreforge.Holder
-import com.willfp.libreforge.conditions.ConfiguredCondition
+import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.Bukkit
@@ -126,18 +126,36 @@ class EcoBoss(
         }
 
         SpawnTotem(
-            Material.getMaterial(config.getString("config.totem.top")) ?: return@run null,
-            Material.getMaterial(config.getString("config.totem.middle")) ?: return@run null,
-            Material.getMaterial(config.getString("config.totem.bottom")) ?: return@run null
+            Material.getMaterial(config.getString("spawn.totem.top")) ?: return@run null,
+            Material.getMaterial(config.getString("spawn.totem.middle")) ?: return@run null,
+            Material.getMaterial(config.getString("spawn.totem.bottom")) ?: return@run null
         )
     }
 
-    val disabledTotemWorlds: List<String> = config.getStrings("config.totem.notInWorlds")
+    val disabledTotemWorlds: List<String> = config.getStrings("spawn.totem.notInWorlds")
 
     val autoSpawnInterval = config.getInt("spawn.autospawn.interval")
 
     val autoSpawnLocations: List<Location> = run {
+        val locations = mutableListOf<Location>()
 
+        for (config in config.getSubsections("spawn.autospawn.locations")) {
+            val world = Bukkit.getWorld(config.getString("world")) ?: continue
+            val x = config.getDouble("x")
+            val y = config.getDouble("y")
+            val z = config.getDouble("z")
+            locations.add(
+                Location(
+                    world, x, y, z
+                )
+            )
+        }
+
+        locations
+    }
+
+    val spawnConditions = config.getSubsections("spawn.conditions").mapNotNull {
+        Conditions.compile(it, "$id Spawn Conditions")
     }
 
     private val bossBarColor = BossBar.Color.valueOf(config.getString("bossBar.color").uppercase())
@@ -233,7 +251,9 @@ class EcoBoss(
 
     private val currentlyAlive = mutableMapOf<UUID, LivingEcoBoss>()
 
-    override val conditions = emptySet<ConfiguredCondition>()
+    override val conditions = config.getSubsections("conditions").mapNotNull {
+        Conditions.compile(it, "Boss ID $id")
+    }.toSet()
 
     override val effects = config.getSubsections("effects").mapNotNull {
         Effects.compile(it, "Boss ID $id")

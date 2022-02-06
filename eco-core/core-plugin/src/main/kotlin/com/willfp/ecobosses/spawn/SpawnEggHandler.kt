@@ -27,6 +27,12 @@ class SpawnEggHandler : Listener {
 
         val location = event.clickedBlock?.location?.add(0.0, 1.5, 0.0) ?: return
 
+        val player = event.player
+
+        if (!boss.spawnConditions.all { it.condition.isConditionMet(player, it.config) }) {
+            return
+        }
+
         val spawnEvent = BossSpawnEvent(boss, location, BossSpawnEvent.SpawnReason.EGG)
 
         Bukkit.getPluginManager().callEvent(spawnEvent)

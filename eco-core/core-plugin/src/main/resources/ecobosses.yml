@@ -24,6 +24,8 @@ bosses:
     displayName: "&8Steel Golem &7| &c%health%♥ &7| &e%time%"
     influence: 40
     effects: [ ]
+    conditions: [ ]
+    lifespan: 120
     defence:
       preventMounts: true
       explosionImmune: true
@@ -59,6 +61,7 @@ bosses:
       style: solid
       radius: 120
     spawn:
+      conditions: [ ]
       autospawn:
         interval: -1
         locations:
