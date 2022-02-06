@@ -7,6 +7,7 @@ import com.willfp.eco.core.entities.TestableEntity
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.recipe.Recipes
+import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.eco.core.recipe.recipes.CraftingRecipe
 import com.willfp.eco.util.toComponent
 import com.willfp.ecobosses.events.BossKillEvent
@@ -84,7 +85,13 @@ class EcoBoss(
             return@run null
         }
 
-        val item = Items.lookup("spawn.egg.item").item.apply {
+        val lookup = Items.lookup("spawn.egg.item")
+
+        if (lookup is EmptyTestableItem) {
+            return@run null
+        }
+
+        val item = lookup.item.apply {
             bossEgg = this@EcoBoss
         }
 
