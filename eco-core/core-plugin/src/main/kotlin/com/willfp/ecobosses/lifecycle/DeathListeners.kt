@@ -21,6 +21,7 @@ class DeathListeners : Listener {
 
         boss.remove()
 
+        event.drops.clear()
     }
 
     @EventHandler(
@@ -33,6 +34,8 @@ class DeathListeners : Listener {
         Bukkit.getPluginManager().callEvent(deathEvent)
 
         boss.remove()
+
+        event.drops.clear()
     }
 
     @EventHandler(
