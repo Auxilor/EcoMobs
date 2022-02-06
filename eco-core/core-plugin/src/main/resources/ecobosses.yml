@@ -1,5 +1,5 @@
 chains:
-  - id: example_chain
+  - id: blind
     effects:
       - id: teleport
       - id: potion_effect
@@ -10,7 +10,7 @@ chains:
           apply_to_player: true
       - id: send_message
         args:
-          message: "&fYou have been teleported!"
+          message: "&cYou have been blinded!"
           action_bar: true
       - id: play_sound
         args:
@@ -26,7 +26,14 @@ bosses:
     # Supported placeholders: %health%, %time% (formats as minutes:seconds, eg 1:56)
     displayName: "&8Steel Golem &7| &c%health%♥ &7| &e%time%"
     influence: 40 # The distance at which effects will be applied to players
-    effects: [ ] # Effects are done from the player's perspective: to treat the player as the victim, use the self_as_victim option in args
+    effects: # Effects are done from the player's perspective: to treat the player as the victim, use the self_as_victim option in args
+      - id: run_chain
+        args:
+          chain: blind
+          self_as_victim: true
+          chance: 20
+        triggers:
+          - static_20
     conditions: [ ] # Conditions to apply effects to players; useful if you don't want to affect low-level players
     lifespan: 120 # The lifespan of the boss before it despawns, in seconds. Set to a massive number to disable.
     defence:
