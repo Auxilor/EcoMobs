@@ -13,8 +13,6 @@ abstract class BossDeathEvent(
         return HANDLERS
     }
 
-    abstract val lifecycle: BossLifecycle
-
     companion object {
         private val HANDLERS = HandlerList()
 

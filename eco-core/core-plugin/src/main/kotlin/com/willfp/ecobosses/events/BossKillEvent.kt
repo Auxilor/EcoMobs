@@ -15,8 +15,6 @@ class BossKillEvent(
         return HANDLERS
     }
 
-    override val lifecycle: BossLifecycle = BossLifecycle.KILL
-
     companion object {
         private val HANDLERS = HandlerList()
 

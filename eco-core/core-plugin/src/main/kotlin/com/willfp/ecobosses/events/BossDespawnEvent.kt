@@ -11,8 +11,6 @@ class BossDespawnEvent(
         return HANDLERS
     }
 
-    override val lifecycle: BossLifecycle = BossLifecycle.DESPAWN
-
     companion object {
         private val HANDLERS = HandlerList()
 

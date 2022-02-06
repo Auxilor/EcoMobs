@@ -2,6 +2,8 @@ package com.willfp.ecobosses.lifecycle
 
 import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.events.BossDeathEvent
+import com.willfp.ecobosses.events.BossDespawnEvent
+import com.willfp.ecobosses.events.BossKillEvent
 import com.willfp.ecobosses.events.BossSpawnEvent
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -14,7 +16,7 @@ class LifecycleHandlers : Listener {
         ignoreCancelled = true,
         priority = EventPriority.MONITOR
     )
-    fun onInjure(event: EntityDamageEvent) {
+    fun handle(event: EntityDamageEvent) {
         val entity = event.entity as? LivingEntity ?: return
         val boss = Bosses[entity] ?: return
 
@@ -25,17 +27,27 @@ class LifecycleHandlers : Listener {
         ignoreCancelled = true,
         priority = EventPriority.MONITOR
     )
-    fun onInjure(event: BossDeathEvent) {
+    fun handle(event: BossKillEvent) {
         val entity = event.boss.entity ?: return
 
-        event.boss.boss.handleLifecycle(event.lifecycle, entity.location, entity)
+        event.boss.boss.handleLifecycle(BossLifecycle.KILL, entity.location, entity)
     }
 
     @EventHandler(
         ignoreCancelled = true,
         priority = EventPriority.MONITOR
     )
-    fun onInjure(event: BossSpawnEvent) {
+    fun handle(event: BossDespawnEvent) {
+        val entity = event.boss.entity ?: return
+
+        event.boss.boss.handleLifecycle(BossLifecycle.DESPAWN, entity.location, entity)
+    }
+
+    @EventHandler(
+        ignoreCancelled = true,
+        priority = EventPriority.MONITOR
+    )
+    fun handle(event: BossSpawnEvent) {
         event.boss.handleLifecycle(BossLifecycle.SPAWN, event.location, null)
     }
 }
