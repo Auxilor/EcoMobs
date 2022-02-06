@@ -32,9 +32,15 @@ class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
     }
 
     override fun handleReloadAdditional() {
+        Bosses.getAllAlive().forEach { it.remove() }
+
         logger.info(Bosses.values().size.toString() + " Bosses Loaded")
 
         AutospawnHandler.startSpawning(this)
+    }
+
+    override fun handleDisableAdditional() {
+        Bosses.getAllAlive().forEach { it.remove() }
     }
 
     override fun loadPluginCommands(): List<PluginCommand> {
