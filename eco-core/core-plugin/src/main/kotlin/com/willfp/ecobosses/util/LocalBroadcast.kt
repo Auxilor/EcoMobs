@@ -1,8 +1,10 @@
 package com.willfp.ecobosses.util
 
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.savedDisplayName
+import com.willfp.ecobosses.EcoBossesPlugin
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -15,9 +17,16 @@ data class LocalBroadcast(
         val toBroadcast = messages.toMutableList()
         toBroadcast.replaceAll {
             var message = it
-            for ((index, damager) in topDamagers.withIndex()) {
-                message = message.replace("%damage_${index + 1}%", damager.damage.toString())
-                    .replace("%damage_${index + 1}_player%", Bukkit.getOfflinePlayer(damager.uuid).savedDisplayName)
+
+            for (i in 1..20) {
+                val damager = topDamagers.getOrNull(i - 1)
+                val damage = if (damager?.damage != null) NumberUtils.format(damager.damage) else
+                    EcoBossesPlugin.instance.langYml.getFormattedString("na")
+                val player = if (damager?.uuid != null) Bukkit.getOfflinePlayer(damager.uuid).savedDisplayName else
+                    EcoBossesPlugin.instance.langYml.getFormattedString("na")
+
+                message = message.replace("%damage_${i}%", damage)
+                    .replace("%damage_${i}_player%", player)
             }
 
             message = message.replace("%x%", location.blockX.toString())

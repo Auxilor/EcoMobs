@@ -18,7 +18,7 @@ private const val metaKey = "TOP_DAMAGERS"
 
 @Suppress("UNCHECKED_CAST")
 var LivingEntity.topDamagers: List<Damager>
-    get() = (this.getMetadata(metaKey).getOrNull(0) as? List<Damager>) ?: emptyList()
+    get() = (this.getMetadata(metaKey).getOrNull(0)?.value() as? List<Damager>) ?: emptyList()
     private set(value) {
         this.removeMetadata(metaKey, EcoBossesPlugin.instance)
         this.setMetadata(metaKey, EcoBossesPlugin.instance.metadataValueFactory.create(value))
