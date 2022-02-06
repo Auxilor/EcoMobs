@@ -53,7 +53,7 @@ object Bosses {
         }
 
         for (bossConfig in plugin.ecoBossesYml.getSubsections("bosses")) {
-            EcoBoss(bossConfig, plugin)
+            addNewBoss(EcoBoss(bossConfig, plugin))
         }
     }
 

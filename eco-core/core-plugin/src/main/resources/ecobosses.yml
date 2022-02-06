@@ -58,7 +58,7 @@ bosses:
     bossBar:
       enabled: true
       color: white
-      style: solid
+      style: progress
       radius: 120
     spawn:
       conditions: [ ]
