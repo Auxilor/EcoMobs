@@ -135,9 +135,9 @@ class EcoBoss(
         }
 
         SpawnTotem(
-            Material.getMaterial(config.getString("spawn.totem.top")) ?: return@run null,
-            Material.getMaterial(config.getString("spawn.totem.middle")) ?: return@run null,
-            Material.getMaterial(config.getString("spawn.totem.bottom")) ?: return@run null
+            Material.getMaterial(config.getString("spawn.totem.top").uppercase()) ?: return@run null,
+            Material.getMaterial(config.getString("spawn.totem.middle").uppercase()) ?: return@run null,
+            Material.getMaterial(config.getString("spawn.totem.bottom").uppercase()) ?: return@run null
         )
     }
 
