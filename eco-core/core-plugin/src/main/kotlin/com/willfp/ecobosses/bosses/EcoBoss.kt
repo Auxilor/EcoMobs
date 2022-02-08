@@ -242,6 +242,7 @@ class EcoBoss(
                     config.getDouble("chance"),
                     config.getStrings("items")
                         .map { Items.lookup(it) }
+                        .filter { it !is EmptyTestableItem }
                         .map { it.item }
                 )
             )
