@@ -14,20 +14,8 @@ import com.willfp.eco.core.recipe.recipes.CraftingRecipe
 import com.willfp.eco.util.toComponent
 import com.willfp.ecobosses.events.BossKillEvent
 import com.willfp.ecobosses.lifecycle.BossLifecycle
-import com.willfp.ecobosses.tick.BossBarTicker
-import com.willfp.ecobosses.tick.BossTicker
-import com.willfp.ecobosses.tick.DisplayNameTicker
-import com.willfp.ecobosses.tick.LifespanTicker
-import com.willfp.ecobosses.tick.TargetTicker
-import com.willfp.ecobosses.tick.TeleportHandler
-import com.willfp.ecobosses.util.BossDrop
-import com.willfp.ecobosses.util.CommandReward
-import com.willfp.ecobosses.util.ConfiguredSound
-import com.willfp.ecobosses.util.LocalBroadcast
-import com.willfp.ecobosses.util.PlayableSound
-import com.willfp.ecobosses.util.SpawnTotem
-import com.willfp.ecobosses.util.XpReward
-import com.willfp.ecobosses.util.topDamagers
+import com.willfp.ecobosses.tick.*
+import com.willfp.ecobosses.util.*
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
@@ -38,8 +26,7 @@ import org.bukkit.Material
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.util.Objects
-import java.util.UUID
+import java.util.*
 
 class EcoBoss(
     val config: Config,
@@ -93,8 +80,15 @@ class EcoBoss(
             return@run null
         }
 
+        val name = config.getFormattedStringOrNull("spawn.egg.name")
+
         val item = ItemStackBuilder(lookup)
             .addLoreLines(config.getFormattedStrings("spawn.egg.lore"))
+            .apply {
+                if (name != null) {
+                    setDisplayName(name)
+                }
+            }
             .build().apply { bossEgg = this@EcoBoss }
 
         val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")

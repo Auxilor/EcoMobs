@@ -106,7 +106,8 @@ bosses:
         notInWorlds: [ ] # If spawn totems should be disallowed in certain worlds, specify them here
       egg:
         enabled: true # If the boss should have a spawn egg
-        item: evoker_spawn_egg unbreaking:1 hide_enchants name:"&8Steel Golem&f Spawn Egg"
+        item: evoker_spawn_egg unbreaking:1 hide_enchants
+        name: "&8Steel Golem&f Spawn Egg"
         lore:
           - ""
           - "&8&oPlace on the ground to"
