@@ -280,6 +280,10 @@ class EcoBoss(
 
     fun spawn(location: Location): LivingEcoBoss {
         val mob = mob.spawn(location) as LivingEntity
+        mob.isPersistent = true
+        mob.isCustomNameVisible = true
+        mob.removeWhenFarAway = false
+
         val boss = LivingEcoBoss(
             plugin,
             mob.uniqueId,
