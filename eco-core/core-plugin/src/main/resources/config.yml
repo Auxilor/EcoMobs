@@ -4,6 +4,7 @@
 #
 
 discover-recipes: true
+log-spawn-kill: true
 
 cooldown:
   in-actionbar: true
