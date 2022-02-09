@@ -20,7 +20,9 @@ class ConsoleLoggers(
             return
         }
 
-        plugin.logger.info("${event.boss.id} was spawned by ${event.spawner} at ${event.location}")
+        val location = "${event.location.world}: ${event.location.x}, ${event.location.y}, ${event.location.z}"
+
+        plugin.logger.info("&a${event.boss.id}&r was spawned by &a${event.spawner?.name}&r at &a$location")
     }
 
     @EventHandler(
@@ -32,7 +34,10 @@ class ConsoleLoggers(
             return
         }
 
-        plugin.logger.info("${event.boss.boss.id} was killed by ${event.killer} at ${event.boss.entity?.location}")
+        val loc = event.boss.entity?.location
+        val location = "${loc?.world}: ${loc?.x}, ${loc?.y}, ${loc?.z}"
+
+        plugin.logger.info("&a${event.boss.boss.id}&r was killed by &a${event.killer?.name}&r at &a$location")
     }
 
     @EventHandler(
@@ -43,7 +48,9 @@ class ConsoleLoggers(
         if (!plugin.configYml.getBool("log-spawn-kill")) {
             return
         }
+        val loc = event.boss.entity?.location
+        val location = "${loc?.world}: ${loc?.x}, ${loc?.y}, ${loc?.z}"
 
-        plugin.logger.info("${event.boss.boss.id} despawned at ${event.boss.entity?.location}")
+        plugin.logger.info("&a${event.boss.boss.id}&r despawned at &a$location")
     }
 }
