@@ -55,7 +55,7 @@ class SpawnTotemHandler : Listener {
                     return
                 }
 
-                val spawnEvent = BossSpawnEvent(boss, event.block.location, BossSpawnEvent.SpawnReason.TOTEM)
+                val spawnEvent = BossSpawnEvent(boss, event.block.location, BossSpawnEvent.SpawnReason.TOTEM, player)
 
                 if (!spawnEvent.isCancelled) {
                     block1.type = Material.AIR

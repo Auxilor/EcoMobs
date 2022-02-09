@@ -2,6 +2,7 @@ package com.willfp.ecobosses.events
 
 import com.willfp.ecobosses.bosses.EcoBoss
 import org.bukkit.Location
+import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
@@ -9,7 +10,8 @@ import org.bukkit.event.HandlerList
 class BossSpawnEvent(
     val boss: EcoBoss,
     val location: Location,
-    val reason: SpawnReason
+    val reason: SpawnReason,
+    val spawner: Player?
 ) : Event(), Cancellable {
     private var isCancelled: Boolean = false
 

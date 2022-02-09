@@ -110,7 +110,8 @@ class CommandSpawn(plugin: EcoBossesPlugin) : Subcommand(
         val event = BossSpawnEvent(
             boss,
             location,
-            BossSpawnEvent.SpawnReason.COMMAND
+            BossSpawnEvent.SpawnReason.COMMAND,
+            null
         )
 
         Bukkit.getPluginManager().callEvent(event)

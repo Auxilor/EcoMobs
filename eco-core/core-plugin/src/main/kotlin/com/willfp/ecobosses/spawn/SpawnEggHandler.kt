@@ -33,7 +33,7 @@ class SpawnEggHandler : Listener {
             return
         }
 
-        val spawnEvent = BossSpawnEvent(boss, location, BossSpawnEvent.SpawnReason.EGG)
+        val spawnEvent = BossSpawnEvent(boss, location, BossSpawnEvent.SpawnReason.EGG, player)
 
         Bukkit.getPluginManager().callEvent(spawnEvent)
 
