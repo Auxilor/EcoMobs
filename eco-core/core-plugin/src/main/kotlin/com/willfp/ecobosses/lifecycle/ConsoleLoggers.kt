@@ -20,7 +20,7 @@ class ConsoleLoggers(
             return
         }
 
-        val location = "${event.location.world}: ${event.location.x}, ${event.location.y}, ${event.location.z}"
+        val location = "${event.location.world?.name}: ${event.location.x}, ${event.location.y}, ${event.location.z}"
 
         plugin.logger.info("&a${event.boss.id}&r was spawned by &a${event.spawner?.name}&r at &a$location")
     }
@@ -35,7 +35,7 @@ class ConsoleLoggers(
         }
 
         val loc = event.boss.entity?.location
-        val location = "${loc?.world}: ${loc?.x}, ${loc?.y}, ${loc?.z}"
+        val location = "${loc?.world?.name}: ${loc?.x}, ${loc?.y}, ${loc?.z}"
 
         plugin.logger.info("&a${event.boss.boss.id}&r was killed by &a${event.killer?.name}&r at &a$location")
     }
@@ -49,7 +49,7 @@ class ConsoleLoggers(
             return
         }
         val loc = event.boss.entity?.location
-        val location = "${loc?.world}: ${loc?.x}, ${loc?.y}, ${loc?.z}"
+        val location = "${loc?.world?.name}: ${loc?.x}, ${loc?.y}, ${loc?.z}"
 
         plugin.logger.info("&a${event.boss.boss.id}&r despawned at &a$location")
     }
