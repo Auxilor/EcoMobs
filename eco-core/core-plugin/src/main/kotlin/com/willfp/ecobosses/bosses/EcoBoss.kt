@@ -330,7 +330,7 @@ class EcoBoss(
         val player = event.killer
 
         for (drop in drops) {
-            drop.drop(location, player)
+            drop.drop(this, location, player)
         }
 
         xp.modify(event.event)
