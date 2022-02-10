@@ -57,6 +57,8 @@ class SpawnTotemHandler : Listener {
 
                 val spawnEvent = BossSpawnEvent(boss, event.block.location, BossSpawnEvent.SpawnReason.TOTEM, player)
 
+                Bukkit.getPluginManager().callEvent(spawnEvent)
+				
                 if (!spawnEvent.isCancelled) {
                     block1.type = Material.AIR
                     block2.type = Material.AIR
