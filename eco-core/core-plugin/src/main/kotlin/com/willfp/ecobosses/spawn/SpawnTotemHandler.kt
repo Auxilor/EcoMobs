@@ -4,6 +4,7 @@ import com.willfp.eco.util.containsIgnoreCase
 import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.events.BossSpawnEvent
 import com.willfp.ecobosses.util.SpawnTotem
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
