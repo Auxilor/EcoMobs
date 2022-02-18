@@ -26,6 +26,7 @@ import org.bukkit.Material
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 class EcoBoss(
@@ -284,6 +285,7 @@ class EcoBoss(
         mob.isPersistent = true
         mob.isCustomNameVisible = true
         mob.removeWhenFarAway = false
+        mob.persistentDataContainer.set(plugin.namespacedKeyFactory.create("boss"), PersistentDataType.STRING, "backwards_compat")
 
         val boss = LivingEcoBoss(
             plugin,
