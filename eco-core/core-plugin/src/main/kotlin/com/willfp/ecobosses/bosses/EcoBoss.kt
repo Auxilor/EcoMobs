@@ -190,6 +190,18 @@ class EcoBoss(
         map
     }
 
+    private val commands: Map<BossLifecycle, Iterable<LocalCommands>> = run {
+        val map = mutableMapOf<BossLifecycle, Iterable<LocalCommands>>()
+
+        for (value in BossLifecycle.values()) {
+            map[value] = config.getSubsections("messages.${value.name.lowercase()}").map {
+                LocalCommands.fromConfig(it)
+            }
+        }
+
+        map
+    }
+
     private val commandRewards: Map<Int, Iterable<CommandReward>> = run {
         val map = mutableMapOf<Int, Iterable<CommandReward>>()
 
@@ -324,6 +336,8 @@ class EcoBoss(
     fun handleLifecycle(lifecycle: BossLifecycle, location: Location, entity: LivingEntity?) {
         sounds[lifecycle]?.play(location)
         messages[lifecycle]?.forEach { it.broadcast(location, entity?.topDamagers ?: emptyList()) }
+        commands[lifecycle]?.forEach { it.dispatch(location, entity?.topDamagers ?: emptyList()) }
+
     }
 
     fun processRewards(event: BossKillEvent) {
