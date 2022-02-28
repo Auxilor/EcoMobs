@@ -45,7 +45,7 @@ class SpawnTotemHandler : Listener {
                     continue
                 }
 
-                if (boss.totem != placedTotem) {
+                if (!boss.totem.matches(placedTotem)) {
                     continue
                 }
 
