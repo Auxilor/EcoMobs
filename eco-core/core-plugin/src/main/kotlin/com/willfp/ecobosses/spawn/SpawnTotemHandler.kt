@@ -16,30 +16,30 @@ class SpawnTotemHandler : Listener {
     )
     fun handle(event: BlockPlaceEvent) {
         for (i in 0..2) {
-            lateinit var block1: Block
-            lateinit var block2: Block
-            lateinit var block3: Block
+            lateinit var top: Block
+            lateinit var middle: Block
+            lateinit var bottom: Block
 
             // I know this code sucks ass, but I can't be arsed to write it nicely
             when (i) {
                 0 -> {
-                    block3 = event.block
-                    block2 = event.block.getRelative(0, -1, 0)
-                    block1 = event.block.getRelative(0, -2, 0)
+                    top = event.block
+                    middle = event.block.getRelative(0, -1, 0)
+                    bottom = event.block.getRelative(0, -2, 0)
                 }
                 1 -> {
-                    block1 = event.block
-                    block2 = event.block.getRelative(0, 1, 0)
-                    block3 = event.block.getRelative(0, 2, 0)
+                    top = event.block.getRelative(0, 2, 0)
+                    middle = event.block.getRelative(0, 1, 0)
+                    bottom = event.block
                 }
                 2 -> {
-                    block2 = event.block
-                    block1 = event.block.getRelative(0, -1, 0)
-                    block3 = event.block.getRelative(0, 1, 0)
+                    top = event.block.getRelative(0, 1, 0)
+                    middle = event.block
+                    bottom = event.block.getRelative(0, -1, 0)
                 }
             }
 
-            val placedTotem = SpawnTotem(block1.type, block2.type, block3.type)
+            val placedTotem = SpawnTotem(top.type, middle.type, bottom.type)
             for (boss in Bosses.values()) {
                 if (boss.totem == null || boss.disabledTotemWorlds.containsIgnoreCase(event.block.world.name)) {
                     continue
@@ -58,9 +58,9 @@ class SpawnTotemHandler : Listener {
                 val spawnEvent = BossSpawnEvent(boss, event.block.location, BossSpawnEvent.SpawnReason.TOTEM, player)
 
                 if (!spawnEvent.isCancelled) {
-                    block1.type = Material.AIR
-                    block2.type = Material.AIR
-                    block3.type = Material.AIR
+                    top.type = Material.AIR
+                    middle.type = Material.AIR
+                    bottom.type = Material.AIR
 
                     boss.spawn(event.block.location.add(0.0, 1.5, 0.0))
                 }
