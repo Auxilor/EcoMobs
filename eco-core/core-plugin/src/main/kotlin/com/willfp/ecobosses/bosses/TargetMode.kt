@@ -3,6 +3,7 @@ package com.willfp.ecobosses.bosses
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
+import org.bukkit.GameMode
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -23,7 +24,9 @@ class TargetMode(
                 boss.boss.targetRange,
                 boss.boss.targetRange,
                 boss.boss.targetRange
-            ).filterIsInstance<Player>(),
+            ).filterIsInstance<Player>()
+                .filter { listOf(GameMode.SURVIVAL, GameMode.ADVENTURE).contains(it.gameMode) }
+                .ifEmpty { return null },
             entity
         )
     }
