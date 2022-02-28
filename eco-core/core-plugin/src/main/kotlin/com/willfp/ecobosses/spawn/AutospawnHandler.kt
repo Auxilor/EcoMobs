@@ -2,6 +2,8 @@ package com.willfp.ecobosses.spawn
 
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecobosses.bosses.Bosses
+import com.willfp.ecobosses.events.BossSpawnEvent
+import org.bukkit.Bukkit
 
 object AutospawnHandler {
     private var tick = 1
@@ -24,7 +26,13 @@ object AutospawnHandler {
                     continue
                 }
 
-                boss.spawn(location)
+                val spawnEvent = BossSpawnEvent(boss, location, BossSpawnEvent.SpawnReason.AUTOSPAWN, null)
+
+                Bukkit.getPluginManager().callEvent(spawnEvent)
+
+                if (!spawnEvent.isCancelled) {
+                    boss.spawn(location)
+                }
             }
 
             tick++

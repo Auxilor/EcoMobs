@@ -31,6 +31,7 @@ class BossSpawnEvent(
         TOTEM,
         EGG,
         COMMAND,
+        AUTOSPAWN,
         UNKNOWN
     }
 
