@@ -2,7 +2,6 @@ package com.willfp.ecobosses.util
 
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.util.NumberUtils
-import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecobosses.EcoBossesPlugin
 import org.bukkit.Bukkit
@@ -27,24 +26,13 @@ data class LocalCommands(
                     .replace("%damage_${i}_player%", player)
             }
 
-            command = command.replace("%x%", location.blockX.toString())
+            command.replace("%x%", location.blockX.toString())
                 .replace("%y%", location.blockY.toString())
                 .replace("%z%", location.blockZ.toString())
-
-            command.formatEco()
         }
 
         for (s in toDispatch) {
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), s);
-        }
-
-    }
-
-    companion object {
-        fun fromConfig(config: Config): LocalCommands {
-            return LocalCommands(
-                config.getStrings("commands"),
-            )
         }
     }
 }

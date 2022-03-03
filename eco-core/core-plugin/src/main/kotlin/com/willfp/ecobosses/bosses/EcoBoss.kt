@@ -14,8 +14,21 @@ import com.willfp.eco.core.recipe.recipes.CraftingRecipe
 import com.willfp.eco.util.toComponent
 import com.willfp.ecobosses.events.BossKillEvent
 import com.willfp.ecobosses.lifecycle.BossLifecycle
-import com.willfp.ecobosses.tick.*
-import com.willfp.ecobosses.util.*
+import com.willfp.ecobosses.tick.BossBarTicker
+import com.willfp.ecobosses.tick.BossTicker
+import com.willfp.ecobosses.tick.DisplayNameTicker
+import com.willfp.ecobosses.tick.LifespanTicker
+import com.willfp.ecobosses.tick.TargetTicker
+import com.willfp.ecobosses.tick.TeleportHandler
+import com.willfp.ecobosses.util.BossDrop
+import com.willfp.ecobosses.util.CommandReward
+import com.willfp.ecobosses.util.ConfiguredSound
+import com.willfp.ecobosses.util.LocalBroadcast
+import com.willfp.ecobosses.util.LocalCommands
+import com.willfp.ecobosses.util.PlayableSound
+import com.willfp.ecobosses.util.SpawnTotem
+import com.willfp.ecobosses.util.XpReward
+import com.willfp.ecobosses.util.topDamagers
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
@@ -27,7 +40,8 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import java.util.*
+import java.util.Objects
+import java.util.UUID
 
 class EcoBoss(
     val config: Config,
@@ -190,13 +204,11 @@ class EcoBoss(
         map
     }
 
-    private val commands: Map<BossLifecycle, Iterable<LocalCommands>> = run {
-        val map = mutableMapOf<BossLifecycle, Iterable<LocalCommands>>()
+    private val commands: Map<BossLifecycle, LocalCommands> = run {
+        val map = mutableMapOf<BossLifecycle, LocalCommands>()
 
         for (value in BossLifecycle.values()) {
-            map[value] = config.getSubsections("messages.${value.name.lowercase()}").map {
-                LocalCommands.fromConfig(it)
-            }
+            map[value] = LocalCommands(config.getStrings("commands.${value.name.lowercase()}"))
         }
 
         map
@@ -297,7 +309,11 @@ class EcoBoss(
         mob.isPersistent = true
         mob.isCustomNameVisible = true
         mob.removeWhenFarAway = false
-        mob.persistentDataContainer.set(plugin.namespacedKeyFactory.create("boss"), PersistentDataType.STRING, "backwards_compat")
+        mob.persistentDataContainer.set(
+            plugin.namespacedKeyFactory.create("boss"),
+            PersistentDataType.STRING,
+            "backwards_compat"
+        )
 
         val boss = LivingEcoBoss(
             plugin,
@@ -336,8 +352,7 @@ class EcoBoss(
     fun handleLifecycle(lifecycle: BossLifecycle, location: Location, entity: LivingEntity?) {
         sounds[lifecycle]?.play(location)
         messages[lifecycle]?.forEach { it.broadcast(location, entity?.topDamagers ?: emptyList()) }
-        commands[lifecycle]?.forEach { it.dispatch(location, entity?.topDamagers ?: emptyList()) }
-
+        commands[lifecycle]?.dispatch(location, entity?.topDamagers ?: emptyList())
     }
 
     fun processRewards(event: BossKillEvent) {
