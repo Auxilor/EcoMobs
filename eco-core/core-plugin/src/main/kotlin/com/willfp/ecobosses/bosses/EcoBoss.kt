@@ -312,7 +312,7 @@ class EcoBoss(
         mob.persistentDataContainer.set(
             plugin.namespacedKeyFactory.create("boss"),
             PersistentDataType.STRING,
-            "backwards_compat"
+            this.id
         )
 
         val boss = LivingEcoBoss(
