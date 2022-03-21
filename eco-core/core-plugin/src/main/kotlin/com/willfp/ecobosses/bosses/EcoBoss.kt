@@ -5,12 +5,18 @@ import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.CustomEntity
 import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.entities.TestableEntity
+import com.willfp.eco.core.entities.ai.EntityController
+import com.willfp.eco.core.entities.ai.EntityGoal
+import com.willfp.eco.core.entities.ai.EntityGoals
+import com.willfp.eco.core.entities.ai.TargetGoal
+import com.willfp.eco.core.entities.ai.TargetGoals
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.eco.core.recipe.recipes.CraftingRecipe
+import com.willfp.eco.util.NamespacedKeyUtils
 import com.willfp.eco.util.toComponent
 import com.willfp.ecobosses.events.BossKillEvent
 import com.willfp.ecobosses.lifecycle.BossLifecycle
@@ -37,6 +43,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
@@ -172,6 +179,22 @@ class EcoBoss(
         locations
     }
 
+    val hasCustomAI = config.getBool("customai.enabled")
+
+    val targetGoals = config.getSubsections("customai.target-goals").mapNotNull {
+        val key = NamespacedKeyUtils.fromStringOrNull(it.getString("key")) ?: return@mapNotNull null
+        val deserializer = TargetGoals.getByKey(key) ?: return@mapNotNull null
+        val goal = deserializer.deserialize(config.getSubsection("args")) ?: return@mapNotNull null
+        ConfiguredGoal(config.getInt("priority"), goal)
+    }
+
+    val entityGoals = config.getSubsections("customai.ai-goals").mapNotNull {
+        val key = NamespacedKeyUtils.fromStringOrNull(it.getString("key")) ?: return@mapNotNull null
+        val deserializer = EntityGoals.getByKey(key) ?: return@mapNotNull null
+        val goal = deserializer.deserialize(config.getSubsection("args")) ?: return@mapNotNull null
+        ConfiguredGoal(config.getInt("priority"), goal)
+    }
+
     val spawnConditions = config.getSubsections("spawn.conditions").mapNotNull {
         Conditions.compile(it, "$id Spawn Conditions")
     }
@@ -305,7 +328,7 @@ class EcoBoss(
     }
 
     fun spawn(location: Location): LivingEcoBoss {
-        val mob = mob.spawn(location) as LivingEntity
+        val mob = mob.spawn(location) as Mob
         mob.isPersistent = true
         mob.isCustomNameVisible = true
         mob.removeWhenFarAway = false
@@ -314,6 +337,16 @@ class EcoBoss(
             PersistentDataType.STRING,
             this.id
         )
+
+        if (hasCustomAI) {
+            val controller = EntityController.getFor(mob)
+                .clearAllGoals()
+
+            @Suppress("UNCHECKED_CAST") // What could go wrong?
+            targetGoals.forEach { controller.addTargetGoal(it.priority, it.goal as TargetGoal<in Mob>) }
+            @Suppress("UNCHECKED_CAST")
+            entityGoals.forEach { controller.addEntityGoal(it.priority, it.goal as EntityGoal<in Mob>) }
+        }
 
         val boss = LivingEcoBoss(
             plugin,
