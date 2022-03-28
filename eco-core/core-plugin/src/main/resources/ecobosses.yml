@@ -26,6 +26,10 @@ bosses:
     # Supported placeholders: %health%, %time% (formats as minutes:seconds, eg 1:56)
     displayName: "&8Steel Golem &7| &c%health%♥ &7| &e%time%"
     influence: 40 # The distance at which effects will be applied to players
+    customai: # Custom mob AI using the entity goal system.
+      enabled: false # If custom AI should be enabled, this will override the vanilla mob behaviour.
+      target-goals: [ ] # How the boss decides who to attack, if the target mode isn't being used.
+      ai-goals: [ ] # How the boss should behave.
     effects: # Effects are done from the player's perspective: to treat the player as the victim, use the self_as_victim option in args
       - id: run_chain
         args:
