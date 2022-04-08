@@ -22,8 +22,10 @@ object AutospawnHandler {
                 val location = boss.autoSpawnLocations.randomOrNull() ?: continue
                 val world = location.world ?: continue
 
-                if (Bosses.getAllAlive().mapNotNull { it.entity }.any { it.world == world }) {
-                    continue
+                if (plugin.configYml.getBool("autospawn.one-boss-per-world")) {
+                    if (Bosses.getAllAlive().mapNotNull { it.entity }.any { it.world == world }) {
+                        continue
+                    }
                 }
 
                 val spawnEvent = BossSpawnEvent(boss, location, BossSpawnEvent.SpawnReason.AUTOSPAWN, null)

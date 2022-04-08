@@ -6,6 +6,9 @@
 discover-recipes: true
 log-spawn-kill: true
 
+autospawn:
+  one-boss-per-world: true # If only one boss can auto-spawn per world at once.
+
 cooldown:
   in-actionbar: true
   sound:
