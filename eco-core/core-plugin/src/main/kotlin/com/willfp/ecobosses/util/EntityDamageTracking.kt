@@ -1,13 +1,13 @@
 package com.willfp.ecobosses.util
 
+import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecobosses.EcoBossesPlugin
-import com.willfp.libreforge.tryAsPlayer
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import java.util.UUID
+import java.util.*
 
 data class Damager(
     val uuid: UUID,

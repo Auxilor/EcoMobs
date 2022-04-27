@@ -1,9 +1,9 @@
 package com.willfp.ecobosses.lifecycle
 
 import com.willfp.eco.core.events.EntityDeathByEntityEvent
+import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.events.BossKillEvent
-import com.willfp.libreforge.tryAsPlayer
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
