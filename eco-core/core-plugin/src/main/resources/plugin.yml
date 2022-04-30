@@ -1,7 +1,7 @@
 name: EcoBosses
 version: ${projectVersion}
 main: com.willfp.ecobosses.EcoBossesPlugin
-api-version: 1.16
+api-version: 1.17
 authors: [Auxilor]
 website: willfp.com
 load: STARTUP
@@ -14,8 +14,7 @@ softdepend:
   - Jobs
   - mcMMO
   - Vault
-  - ShopGUIPlus
-  - DeluxeSellwands
+  - EcoArmor
 
 commands:
   ecobosses:

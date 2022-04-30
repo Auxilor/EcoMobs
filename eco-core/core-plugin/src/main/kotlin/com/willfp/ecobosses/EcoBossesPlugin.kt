@@ -74,7 +74,7 @@ class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
     }
 
     override fun getMinimumEcoVersion(): String {
-        return "6.24.0"
+        return "6.35.1"
     }
 
     companion object {
