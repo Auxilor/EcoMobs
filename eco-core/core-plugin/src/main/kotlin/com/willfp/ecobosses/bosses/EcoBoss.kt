@@ -36,7 +36,7 @@ class EcoBoss(
     val config: Config,
     private val plugin: EcoPlugin
 ) : Holder {
-    val id: String = config.getString("id")
+    override val id: String = config.getString("id")
 
     val displayName: String = config.getString("displayName")
 
