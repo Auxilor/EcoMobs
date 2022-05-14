@@ -23,7 +23,7 @@ import com.willfp.ecobosses.util.TopDamagerListener
 import com.willfp.libreforge.LibReforgePlugin
 import org.bukkit.event.Listener
 
-class EcoBossesPlugin : LibReforgePlugin(525, 10635, "&9") {
+class EcoBossesPlugin : LibReforgePlugin() {
     val ecoBossesYml: EcoBossesYml
 
     init {
