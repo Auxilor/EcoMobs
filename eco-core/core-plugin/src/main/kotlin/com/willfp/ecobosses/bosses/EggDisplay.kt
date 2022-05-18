@@ -25,7 +25,10 @@ class EggDisplay(
 
         val egg = itemStack.bossEgg ?: return
 
-        val lines = egg.getNotMetLines(player).map { Display.PREFIX + it }
+        val lines = egg.spawnConditions
+            .filterNot { it.isMet(player) }
+            .map { it.notMetLines }
+            .map { Display.PREFIX + it }
 
         if (lines.isNotEmpty()) {
             lore.add(Display.PREFIX)
