@@ -1,8 +1,10 @@
 package com.willfp.ecobosses
 
 import com.willfp.eco.core.command.impl.PluginCommand
+import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.ecobosses.bosses.Bosses
+import com.willfp.ecobosses.bosses.EggDisplay
 import com.willfp.ecobosses.bosses.bossHolders
 import com.willfp.ecobosses.commands.CommandEcobosses
 import com.willfp.ecobosses.config.EcoBossesYml
@@ -42,6 +44,10 @@ class EcoBossesPlugin : LibReforgePlugin() {
 
     override fun handleDisableAdditional() {
         Bosses.getAllAlive().forEach { it.remove() }
+    }
+
+    override fun createDisplayModule(): DisplayModule {
+        return EggDisplay(this)
     }
 
     override fun loadPluginCommands(): List<PluginCommand> {

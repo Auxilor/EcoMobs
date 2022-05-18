@@ -1,5 +1,6 @@
 package com.willfp.ecobosses.bosses
 
+import com.willfp.eco.core.fast.fast
 import com.willfp.ecobosses.EcoBossesPlugin
 import com.willfp.libreforge.Holder
 import org.bukkit.entity.Player
@@ -42,8 +43,7 @@ var ItemStack.bossEgg: EcoBoss?
         this.itemMeta = meta
     }
     get() {
-        val meta = this.itemMeta ?: return null
-        val pdc = meta.persistentDataContainer
+        val pdc = this.fast().persistentDataContainer
         val id = pdc.get(spawnEggKey, PersistentDataType.STRING) ?: return null
         return Bosses.getByID(id)
     }
