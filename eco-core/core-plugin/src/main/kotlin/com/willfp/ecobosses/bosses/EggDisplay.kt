@@ -27,8 +27,9 @@ class EggDisplay(
 
         val lines = egg.spawnConditions
             .filterNot { it.isMet(player) }
-            .map { it.notMetLines }
-            .map { Display.PREFIX + it }
+            .mapNotNull { it.notMetLines?.map { line -> Display.PREFIX + line } }
+            .flatten()
+
 
         if (lines.isNotEmpty()) {
             lore.add(Display.PREFIX)
