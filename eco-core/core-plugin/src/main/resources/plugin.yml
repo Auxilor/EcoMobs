@@ -9,13 +9,17 @@ depend:
   - eco
 softdepend:
   - LevelledMobs
-  - EcoSkills
   - AureliumSkills
   - Jobs
   - mcMMO
   - Vault
-  - EcoArmor
   - TMMobcoins
+  - EcoEnchants
+  - Talismans
+  - EcoArmor
+  - EcoItems
+  - EcoSkills
+  - Boosters
 
 commands:
   ecobosses:
