@@ -72,6 +72,10 @@ class EcoBoss(
 
     val teleportInterval = config.getInt("defence.teleportation.interval")
 
+    val isUsingNewRewardsSystem = config.getBool("rewards.topDamagerRewards.enabled")
+
+    val getOnlyOneReward = config.getBool("rewards.topDamagerRewards.getOnlyOneReward")
+
     private val spawnEggBacker: ItemStack? = run {
         val enabled = config.getBool("spawn.egg.enabled")
         if (!enabled) {
@@ -240,6 +244,37 @@ class EcoBoss(
         map
     }
 
+    private val topDamagerRewards: Map<Int, Iterable<MultipleRewards>> = run {
+        val map = mutableMapOf<Int, Iterable<MultipleRewards>>()
+
+        if (isUsingNewRewardsSystem) {
+            for (rank in config.getSubsection("rewards.topDamagerRewards.rewards").getKeys(false)){
+                val rewards = mutableListOf<MultipleRewards>()
+
+                for (config in config.getSubsections("rewards.topDamagerRewards.rewards.$rank")) {
+                    rewards.add(
+                        MultipleRewards(
+                            config.getDouble("chance"),
+                            config.getString("message"),
+                            config.getDouble("radius"),
+                            config.getStrings("commands"),
+                            config.getStrings("items")
+                                .map { Items.lookup(it) }
+                                .filter { it !is EmptyTestableItem }
+                                .map { it.item },
+                            config.getInt("xp.minimum"),
+                            config.getInt("xp.maximum")
+                        )
+                    )
+                }
+
+                map[rank.toInt()] = rewards
+            }
+        }
+
+        map
+    }
+
     private val nearbyCommandRewardRadius = config.getDouble("rewards.nearbyPlayerCommands.radius")
 
     private val nearbyCommands: Iterable<CommandReward> = run {
@@ -375,19 +410,32 @@ class EcoBoss(
         val location = entity.location
         val player = event.killer
 
-        for (drop in drops) {
-            drop.drop(this, location, player)
-        }
-
-        xp.modify(event.event)
-
-        for ((index, damager) in entity.topDamagers.withIndex()) {
-            val rewards = commandRewards[index + 1] ?: continue
-            val damagerPlayer = Bukkit.getPlayer(damager.uuid) ?: continue
-            for (reward in rewards) {
-                reward.reward(damagerPlayer)
+            for (drop in drops) {
+                drop.drop(this, location, player)
             }
-        }
+
+            xp.modify(event.event)
+
+            for ((index, damager) in entity.topDamagers.withIndex()) {
+                val damagerPlayer = Bukkit.getPlayer(damager.uuid) ?: continue
+
+                if (!isUsingNewRewardsSystem) {
+                    val rewards = commandRewards[index + 1] ?: continue
+                    for (reward in rewards) {
+                        reward.reward(damagerPlayer)
+                    }
+                } else {
+                    val rewards = topDamagerRewards[index + 1] ?: continue
+
+                    var gotReward = false
+                    for(reward in rewards) {
+                        gotReward = reward.reward(damagerPlayer)
+                        if (gotReward && getOnlyOneReward) {
+                            break
+                        }
+                    }
+                }
+            }
 
         for (nearbyPlayer in entity.getNearbyEntities(
             nearbyCommandRewardRadius,

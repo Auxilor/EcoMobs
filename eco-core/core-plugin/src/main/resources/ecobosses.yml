@@ -77,6 +77,41 @@ bosses:
         - chance: 100
           items:
             - diamond_sword unbreaking:1 name:"Example Sword"
+      topDamagerRewards:
+        # If enabled this rewards will be given to top damager players
+        # and it disables "topDamagerCommands"
+        enabled: false
+        # If enabled, only one reward will be given to a player
+        # Disabled = player can get all rewards if lucky
+        getOnlyOneReward: true
+        # You can specify as many ranks as you want (adding 4, 5, etc)
+        # You can use %player% as a placeholder for the player name
+        rewards:
+          1:
+            # You can specify as many rewards as you want
+            # Keep lower chances at the top, for better results
+            - chance: 1
+              message: "&a%player% got Super rare Sword!" # Display message for players in radius if this reward is won
+              radius: 10 # Radius of message, set 0 to disable
+              commands: # You can use %player% as a placeholder for the player name
+                - eco give %player% 5000
+              items:
+                - diamond_sword sharpness:5 name:"Super rare Sword"
+              experience:
+                minimum: 20000
+                maximum: 30000
+            - chance: 100
+              message: "&c%player% got normal drop."
+              radius: 20
+              commands:
+                - eco give %player% 1000
+              items:
+                - diamond_shovel unbreaking:1 name:"Example Shovel"
+              xp:
+                minimum: 500
+                maximum: 1000
+          2: [ ]
+          3: [ ]
     target:
       # How the boss should choose which player to attack, choices are:
       # highest_health, lowest_health, closest, random
