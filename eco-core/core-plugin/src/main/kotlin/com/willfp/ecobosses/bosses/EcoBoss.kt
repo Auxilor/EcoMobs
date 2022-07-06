@@ -332,7 +332,7 @@ class EcoBoss(
 
         val boss = LivingEcoBoss(
             plugin,
-            mob.uniqueId,
+            mob,
             this,
             createTickers()
         )
@@ -345,7 +345,8 @@ class EcoBoss(
             LifespanTicker(),
             DisplayNameTicker(),
             TargetTicker(),
-            TeleportHandler()
+            TeleportHandler(),
+            ChunkTicker()
         )
 
         if (isBossBarEnabled) {
@@ -371,7 +372,7 @@ class EcoBoss(
     }
 
     fun processRewards(event: BossKillEvent) {
-        val entity = event.boss.entity ?: return
+        val entity = event.boss.entity
         val location = entity.location
         val player = event.killer
 

@@ -14,7 +14,7 @@ val Player.bossHolders: Iterable<Holder>
 
         for (boss in Bosses.values()) {
             for (livingBoss in boss.getAllAlive()) {
-                val entity = livingBoss.entity ?: continue
+                val entity = livingBoss.entity
 
                 if (entity.world != this.world) {
                     continue

@@ -17,7 +17,7 @@ class TargetMode(
     }
 
     fun getTarget(boss: LivingEcoBoss): LivingEntity? {
-        val entity = boss.entity ?: return null
+        val entity = boss.entity
 
         return function(
             entity.getNearbyEntities(

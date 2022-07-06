@@ -12,7 +12,7 @@ class BossBarTicker(
     private val bar: BossBar
 ) : BossTicker {
     override fun tick(boss: LivingEcoBoss, tick: Int) {
-        val entity = boss.entity ?: return
+        val entity = boss.entity
 
         bar.name(entity.customName!!.toComponent())
         bar.progress((entity.health / entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value).toFloat())

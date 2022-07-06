@@ -7,7 +7,7 @@ import org.bukkit.block.BlockFace
 
 class TeleportHandler : BossTicker {
     override fun tick(boss: LivingEcoBoss, tick: Int) {
-        val entity = boss.entity ?: return
+        val entity = boss.entity
         if (!boss.boss.canTeleport) {
             return
         }

@@ -28,7 +28,7 @@ class LifecycleHandlers : Listener {
         priority = EventPriority.MONITOR
     )
     fun handle(event: BossKillEvent) {
-        val entity = event.boss.entity ?: return
+        val entity = event.boss.entity
 
         event.boss.boss.handleLifecycle(BossLifecycle.KILL, entity.location, entity)
     }
@@ -38,7 +38,7 @@ class LifecycleHandlers : Listener {
         priority = EventPriority.MONITOR
     )
     fun handle(event: BossDespawnEvent) {
-        val entity = event.boss.entity ?: return
+        val entity = event.boss.entity
 
         event.boss.boss.handleLifecycle(BossLifecycle.DESPAWN, entity.location, entity)
     }
