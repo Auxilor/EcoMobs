@@ -16,7 +16,7 @@ class LifespanTicker : BossTicker {
             boss.remove()
             boss.boss.handleLifecycle(
                 BossLifecycle.DESPAWN,
-                boss.entity?.location ?: return,
+                boss.entity.location,
                 boss.entity
             )
         }

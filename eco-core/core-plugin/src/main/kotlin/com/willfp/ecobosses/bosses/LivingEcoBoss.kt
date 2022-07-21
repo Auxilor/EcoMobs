@@ -2,13 +2,12 @@ package com.willfp.ecobosses.bosses
 
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecobosses.tick.BossTicker
-import org.bukkit.Bukkit
+import org.bukkit.Chunk
 import org.bukkit.entity.Mob
-import java.util.UUID
 
 class LivingEcoBoss(
     plugin: EcoPlugin,
-    private val uuid: UUID,
+    private val mob: Mob,
     val boss: EcoBoss,
     private val tickers: Set<BossTicker>
 ) {
@@ -18,15 +17,20 @@ class LivingEcoBoss(
         }
     }.apply { runTaskTimer(1, 1) }
 
-    val entity: Mob?
-        get() = Bukkit.getEntity(uuid) as? Mob
+    val entity: Mob
+        get() = mob
+
+    val chunk: Chunk
+        get() = entity.location.chunk
+
+    val forceLoadedChunks = mutableListOf<Chunk>()
 
     val deathTime = System.currentTimeMillis() + (boss.lifespan * 1000)
 
     private var currentTick = 1 // Start at 1 as 0 is divisible by everything
 
     private fun tick(): Boolean {
-        if (entity == null || entity?.isDead == true) {
+        if (entity.isDead) {
             remove()
             return true
         }
@@ -40,13 +44,15 @@ class LivingEcoBoss(
 
     fun remove() {
         ticker.cancel()
-        entity?.remove()
+        entity.remove()
         tickers.forEach { it.onDeath(this, currentTick) }
+        forceLoadedChunks.forEach { it.isForceLoaded = false }
+        forceLoadedChunks.clear()
 
-        boss.markDead(uuid)
+        boss.markDead(mob.uniqueId)
     }
 
     override fun toString(): String {
-        return "LivingEcoBoss{boss=${boss}, uuid=${uuid}}"
+        return "LivingEcoBoss{boss=${boss}, uuid=${mob.uniqueId}}"
     }
 }
