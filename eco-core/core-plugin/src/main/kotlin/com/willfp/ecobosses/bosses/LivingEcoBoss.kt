@@ -46,8 +46,6 @@ class LivingEcoBoss(
         ticker.cancel()
         entity.remove()
         tickers.forEach { it.onDeath(this, currentTick) }
-        forceLoadedChunks.forEach { it.isForceLoaded = false }
-        forceLoadedChunks.clear()
 
         boss.markDead(mob.uniqueId)
     }
