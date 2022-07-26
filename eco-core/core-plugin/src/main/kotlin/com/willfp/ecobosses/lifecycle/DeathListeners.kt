@@ -6,6 +6,7 @@ import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.events.BossKillEvent
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 
@@ -25,7 +26,8 @@ class DeathListeners : Listener {
     }
 
     @EventHandler(
-        ignoreCancelled = true
+        ignoreCancelled = true,
+        priority = EventPriority.HIGHEST
     )
     fun handle(event: EntityDeathEvent) {
         val boss = Bosses[event.entity] ?: return
