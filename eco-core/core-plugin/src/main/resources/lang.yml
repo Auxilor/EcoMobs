@@ -10,7 +10,6 @@ messages:
   spawned: "Spawned a boss!"
   killall: "Killed &a%amount%&f bosses!"
   needs-player: "&cYou must specify a player"
-  requires-player: "&cYou must specify a player"
   invalid-player: "&cInvalid player!"
   needs-stone: "&cYou must specify a boss"
   invalid-stone: "&cInvalid boss!"
@@ -20,6 +19,5 @@ messages:
   cannot-afford: "&cYou can't afford to do this! &fCost: &a$$%cost%"
   cannot-afford-type: "&cYou can't afford to do this! &fCost: &a%cost% %type%"
   cannot-transmit: "&cYou can't transmit here!"
-  repaired-effects: "Fixed lingering effects for %player%!&f They have been kicked to prevent effect mismatch."
 
 na: "N/A"
