@@ -18,4 +18,9 @@ class ChunkTicker : BossTicker {
         currentChunk.isForceLoaded = true
         boss.forceLoadedChunks.add(currentChunk)
     }
+
+    override fun onDeath(boss: LivingEcoBoss, tick: Int) {
+        boss.forceLoadedChunks.forEach { it.isForceLoaded = false }
+        boss.forceLoadedChunks.clear()
+    }
 }

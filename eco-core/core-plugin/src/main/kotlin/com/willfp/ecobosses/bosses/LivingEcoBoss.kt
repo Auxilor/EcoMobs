@@ -7,7 +7,7 @@ import org.bukkit.entity.Mob
 
 class LivingEcoBoss(
     plugin: EcoPlugin,
-    private val mob: Mob,
+    val entity: Mob,
     val boss: EcoBoss,
     private val tickers: Set<BossTicker>
 ) {
@@ -16,9 +16,6 @@ class LivingEcoBoss(
             it.cancel()
         }
     }.apply { runTaskTimer(1, 1) }
-
-    val entity: Mob
-        get() = mob
 
     val chunk: Chunk
         get() = entity.location.chunk
@@ -46,13 +43,11 @@ class LivingEcoBoss(
         ticker.cancel()
         entity.remove()
         tickers.forEach { it.onDeath(this, currentTick) }
-        forceLoadedChunks.forEach { it.isForceLoaded = false }
-        forceLoadedChunks.clear()
 
-        boss.markDead(mob.uniqueId)
+        boss.markDead(entity.uniqueId)
     }
 
     override fun toString(): String {
-        return "LivingEcoBoss{boss=${boss}, uuid=${mob.uniqueId}}"
+        return "LivingEcoBoss{boss=${boss}, uuid=${entity.uniqueId}}"
     }
 }
