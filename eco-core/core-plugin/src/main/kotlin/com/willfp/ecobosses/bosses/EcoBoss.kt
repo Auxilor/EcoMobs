@@ -5,7 +5,11 @@ import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.CustomEntity
 import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.entities.TestableEntity
-import com.willfp.eco.core.entities.ai.*
+import com.willfp.eco.core.entities.ai.EntityController
+import com.willfp.eco.core.entities.ai.EntityGoal
+import com.willfp.eco.core.entities.ai.EntityGoals
+import com.willfp.eco.core.entities.ai.TargetGoal
+import com.willfp.eco.core.entities.ai.TargetGoals
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
@@ -16,8 +20,22 @@ import com.willfp.eco.util.NamespacedKeyUtils
 import com.willfp.eco.util.toComponent
 import com.willfp.ecobosses.events.BossKillEvent
 import com.willfp.ecobosses.lifecycle.BossLifecycle
-import com.willfp.ecobosses.tick.*
-import com.willfp.ecobosses.util.*
+import com.willfp.ecobosses.tick.BossBarTicker
+import com.willfp.ecobosses.tick.BossTicker
+import com.willfp.ecobosses.tick.ChunkTicker
+import com.willfp.ecobosses.tick.DisplayNameTicker
+import com.willfp.ecobosses.tick.LifespanTicker
+import com.willfp.ecobosses.tick.TargetTicker
+import com.willfp.ecobosses.tick.TeleportHandler
+import com.willfp.ecobosses.util.BossDrop
+import com.willfp.ecobosses.util.CommandReward
+import com.willfp.ecobosses.util.ConfiguredSound
+import com.willfp.ecobosses.util.LocalBroadcast
+import com.willfp.ecobosses.util.LocalCommands
+import com.willfp.ecobosses.util.PlayableSound
+import com.willfp.ecobosses.util.SpawnTotem
+import com.willfp.ecobosses.util.XpReward
+import com.willfp.ecobosses.util.topDamagers
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
@@ -33,11 +51,10 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 class EcoBoss(
+    override val id: String,
     val config: Config,
     private val plugin: EcoPlugin
 ) : Holder {
-    override val id: String = config.getString("id")
-
     val displayName: String = config.getString("displayName")
 
     val lifespan = config.getInt("lifespan")

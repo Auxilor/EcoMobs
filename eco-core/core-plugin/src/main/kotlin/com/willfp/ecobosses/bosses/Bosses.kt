@@ -3,11 +3,13 @@ package com.willfp.ecobosses.bosses
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
+import com.willfp.eco.core.config.ConfigType
+import com.willfp.eco.core.config.TransientConfig
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.ecobosses.EcoBossesPlugin
-import com.willfp.libreforge.chains.EffectChains
 import org.bukkit.entity.LivingEntity
-import java.util.UUID
+import java.io.File
+import java.util.*
 
 object Bosses {
     /**
@@ -44,16 +46,18 @@ object Bosses {
     @ConfigUpdater
     @JvmStatic
     fun update(plugin: EcoBossesPlugin) {
-        plugin.ecoBossesYml.getSubsections("chains").mapNotNull {
-            EffectChains.compile(it, "Effect Chains")
-        }
-
         for (boss in values()) {
             removeBoss(boss)
         }
 
-        for (bossConfig in plugin.ecoBossesYml.getSubsections("bosses")) {
-            addNewBoss(EcoBoss(bossConfig, plugin))
+        for ((id, config) in plugin.fetchConfigs("bosses")) {
+            addNewBoss(EcoBoss(id, config, plugin))
+        }
+
+        val ecoBossesYml = TransientConfig(File(plugin.dataFolder, "ecobosses.yml"), ConfigType.YAML)
+
+        for (bossConfig in ecoBossesYml.getSubsections("bosses")) {
+            addNewBoss(EcoBoss(bossConfig.getString("id"), bossConfig, plugin))
         }
     }
 

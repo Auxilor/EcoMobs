@@ -7,7 +7,6 @@ import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.bosses.EggDisplay
 import com.willfp.ecobosses.bosses.bossHolders
 import com.willfp.ecobosses.commands.CommandEcobosses
-import com.willfp.ecobosses.config.EcoBossesYml
 import com.willfp.ecobosses.defence.DamageMultiplierHandler
 import com.willfp.ecobosses.defence.ImmunitiesHandler
 import com.willfp.ecobosses.defence.MountHandler
@@ -26,12 +25,13 @@ import com.willfp.libreforge.LibReforgePlugin
 import org.bukkit.event.Listener
 
 class EcoBossesPlugin : LibReforgePlugin() {
-    val ecoBossesYml: EcoBossesYml
-
     init {
         instance = this
-        ecoBossesYml = EcoBossesYml(this)
         registerHolderProvider { it.bossHolders }
+    }
+
+    override fun handleEnableAdditional() {
+        this.copyConfigs("bosses")
     }
 
     override fun handleReloadAdditional() {
