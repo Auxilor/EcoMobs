@@ -14,13 +14,14 @@ base {
 }
 
 dependencies {
-    implementation(project(":eco-core"))
+    project(":eco-core").dependencyProject.subprojects {
+        implementation(this)
+    }
 }
 
 allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
-    apply(plugin = "maven-publish")
     apply(plugin = "com.github.johnrengelman.shadow")
 
     repositories {
@@ -137,7 +138,9 @@ tasks {
 }
 
 publishing {
-    this.publications.register("maven", MavenPublication::class) {
-        from(components["java"])
+    publications {
+        register("maven", MavenPublication::class) {
+            from(subprojects.first { it.name == "core-plugin" }.components["java"])
+        }
     }
 }
