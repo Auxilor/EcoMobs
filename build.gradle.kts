@@ -49,6 +49,7 @@ allprojects {
         maven("https://maven.sk89q.com/repo/")
         maven("https://github.com/factions-site/repo/raw/public/")
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        maven("https://mvn.lumine.io/repository/maven-public/") { metadataSources.mavenPom() }
     }
 
     dependencies {
@@ -58,6 +59,8 @@ allprojects {
 
         implementation("com.willfp:libreforge:3.104.0")
         implementation("org.joml:joml:1.10.4")
+
+        compileOnly("com.ticxo.modelengine:api:R3.0.0")
     }
 
     java {

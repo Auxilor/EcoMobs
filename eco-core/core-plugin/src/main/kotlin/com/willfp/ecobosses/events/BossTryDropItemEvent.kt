@@ -1,7 +1,6 @@
 package com.willfp.ecobosses.events
 
 import com.willfp.ecobosses.bosses.EcoBoss
-import com.willfp.ecobosses.bosses.LivingEcoBoss
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -14,7 +13,7 @@ class BossTryDropItemEvent(
     var items: MutableCollection<ItemStack>,
     var chance: Double,
     val player: Player?
-): Event() {
+) : Event() {
     override fun getHandlers(): HandlerList {
         return HANDLERS
     }
