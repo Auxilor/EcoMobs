@@ -56,7 +56,7 @@ allprojects {
         compileOnly("org.jetbrains:annotations:23.0.0")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
 
-        implementation("com.willfp:libreforge:3.104.0")
+        implementation("com.willfp:libreforge:3.105.0")
         implementation("org.joml:joml:1.10.4")
     }
 
