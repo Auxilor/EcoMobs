@@ -348,6 +348,11 @@ class EcoBoss(
 
         if (modelEngineID.isNotBlank() && Bukkit.getPluginManager().isPluginEnabled("modelEngine")) {
             val model = ModelEngineAPI.createActiveModel(modelEngineID)
+
+            if (model == null) {
+                plugin.logger.warning("Invalid modelEngineID for boss $id")
+            }
+
             val modelled = ModelEngineAPI.createModeledEntity(mob)
             modelled.addModel(model, true)
             modelled.isBaseEntityVisible = false
