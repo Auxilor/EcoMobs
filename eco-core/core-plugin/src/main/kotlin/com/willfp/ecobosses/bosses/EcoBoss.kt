@@ -1,5 +1,6 @@
 package com.willfp.ecobosses.bosses
 
+import com.ticxo.modelengine.api.ModelEngineAPI
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.CustomEntity
@@ -168,11 +169,7 @@ class EcoBoss(
             val x = config.getDouble("x")
             val y = config.getDouble("y")
             val z = config.getDouble("z")
-            locations.add(
-                Location(
-                    world, x, y, z
-                )
-            )
+            locations.add(Location(world, x, y, z))
         }
 
         locations
@@ -206,9 +203,11 @@ class EcoBoss(
         val map = mutableMapOf<BossLifecycle, PlayableSound>()
 
         for (value in BossLifecycle.values()) {
-            map[value] = PlayableSound(config.getSubsections("sounds.${value.name.lowercase()}").map {
-                ConfiguredSound.fromConfig(it)
-            })
+            map[value] = PlayableSound(
+                config.getSubsections("sounds.${value.name.lowercase()}").map {
+                    ConfiguredSound.fromConfig(it)
+                }
+            )
         }
 
         map
@@ -279,7 +278,6 @@ class EcoBoss(
         config.getInt("rewards.xp.maximum")
     )
 
-
     private val drops: Iterable<BossDrop> = run {
         val list = mutableListOf<BossDrop>()
 
@@ -299,6 +297,8 @@ class EcoBoss(
     }
 
     private val mob: TestableEntity = Entities.lookup(config.getString("mob"))
+
+    private val modelEngineID: String = config.getString("modelEngineID")
 
     private val currentlyAlive = mutableMapOf<UUID, LivingEcoBoss>()
 
@@ -338,13 +338,24 @@ class EcoBoss(
         )
 
         if (hasCustomAI) {
-            val controller = EntityController.getFor(mob)
-                .clearAllGoals()
+            val controller = EntityController.getFor(mob).clearAllGoals()
 
             @Suppress("UNCHECKED_CAST") // What could go wrong?
             targetGoals.forEach { controller.addTargetGoal(it.priority, it.goal as TargetGoal<in Mob>) }
             @Suppress("UNCHECKED_CAST")
             entityGoals.forEach { controller.addEntityGoal(it.priority, it.goal as EntityGoal<in Mob>) }
+        }
+
+        if (modelEngineID.isNotBlank() && Bukkit.getPluginManager().isPluginEnabled("modelEngine")) {
+            val model = ModelEngineAPI.createActiveModel(modelEngineID)
+
+            if (model == null) {
+                plugin.logger.warning("Invalid modelEngineID for boss $id")
+            }
+
+            val modelled = ModelEngineAPI.createModeledEntity(mob)
+            modelled.addModel(model, true)
+            modelled.isBaseEntityVisible = false
         }
 
         val boss = LivingEcoBoss(
@@ -437,7 +448,6 @@ class EcoBoss(
         )
     }
 
-
     override fun equals(other: Any?): Boolean {
         if (other !is EcoBoss) {
             return false
@@ -451,8 +461,10 @@ class EcoBoss(
     }
 
     override fun toString(): String {
-        return ("EcoBoss{"
-                + id
-                + "}")
+        return (
+            "EcoBoss{" +
+                id +
+                "}"
+            )
     }
 }

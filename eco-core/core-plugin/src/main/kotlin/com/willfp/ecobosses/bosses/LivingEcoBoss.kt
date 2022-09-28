@@ -48,6 +48,6 @@ class LivingEcoBoss(
     }
 
     override fun toString(): String {
-        return "LivingEcoBoss{boss=${boss}, uuid=${entity.uniqueId}}"
+        return "LivingEcoBoss{boss=$boss, uuid=${entity.uniqueId}}"
     }
 }
