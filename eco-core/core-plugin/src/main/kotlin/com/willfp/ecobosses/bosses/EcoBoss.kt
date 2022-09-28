@@ -298,7 +298,7 @@ class EcoBoss(
 
     private val mob: TestableEntity = Entities.lookup(config.getString("mob"))
 
-    private val modelEngineID: String = config.getString("modelEngineID")
+    private val modelEngineID = config.getStringOrNull("modelEngineID")
 
     private val currentlyAlive = mutableMapOf<UUID, LivingEcoBoss>()
 
@@ -346,11 +346,11 @@ class EcoBoss(
             entityGoals.forEach { controller.addEntityGoal(it.priority, it.goal as EntityGoal<in Mob>) }
         }
 
-        if (modelEngineID.isNotBlank() && Bukkit.getPluginManager().isPluginEnabled("modelEngine")) {
+        if (modelEngineID != null && Bukkit.getPluginManager().isPluginEnabled("modelEngine")) {
             val model = ModelEngineAPI.createActiveModel(modelEngineID)
 
             if (model == null) {
-                plugin.logger.warning("Invalid modelEngineID for boss $id")
+                plugin.logger.warning("Invalid Model Engine ID for boss $id")
             }
 
             val modelled = ModelEngineAPI.createModeledEntity(mob)
@@ -462,9 +462,9 @@ class EcoBoss(
 
     override fun toString(): String {
         return (
-            "EcoBoss{" +
-                id +
-                "}"
-            )
+                "EcoBoss{" +
+                        id +
+                        "}"
+                )
     }
 }

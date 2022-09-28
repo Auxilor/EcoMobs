@@ -31,25 +31,9 @@ allprojects {
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://repo.codemc.org/repository/nms/")
         maven("https://repo.codemc.org/repository/maven-public")
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
-        maven("https://oss.sonatype.org/content/groups/public/")
-        maven("https://maven.enginehub.org/repo/")
-        maven("https://ci.ender.zone/plugin/repository/project/")
-        maven("https://ci.ender.zone/plugin/repository/everything/")
-        maven("https://repo.md-5.net/content/repositories/snapshots/")
         maven("https://repo.dmulloy2.net/nexus/repository/public/")
         maven("https://papermc.io/repo/repository/maven-public/")
-        maven("https://repo.maven.apache.org/maven2/")
-        maven("https://repo.dustplanet.de/artifactory/ext-release-local/")
-        maven("https://maven.seyfahni.de/repository/snapshots/")
-        maven("https://libraries.minecraft.net/")
-        maven("https://repo.spongepowered.org/maven/")
-        maven("https://org.kitteh.pastegg")
-        maven("https://repo.mikeprimm.com/")
-        maven("https://maven.sk89q.com/repo/")
-        maven("https://github.com/factions-site/repo/raw/public/")
-        maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-        maven("https://mvn.lumine.io/repository/maven-public/") { metadataSources.mavenPom() }
+        maven("https://mvn.lumine.io/repository/maven-public/")
     }
 
     dependencies {
@@ -59,8 +43,6 @@ allprojects {
 
         implementation("com.willfp:libreforge:3.105.0")
         implementation("org.joml:joml:1.10.4")
-
-        compileOnly("com.ticxo.modelengine:api:R3.0.0")
     }
 
     java {

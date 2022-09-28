@@ -7,14 +7,13 @@ import com.willfp.eco.core.config.ConfigType
 import com.willfp.eco.core.config.TransientConfig
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.ecobosses.EcoBossesPlugin
+import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import java.io.File
-import java.util.*
+import java.util.UUID
 
 object Bosses {
-    /**
-     * Registered bosses.
-     */
+    /** Registered bosses. */
     private val BY_ID: BiMap<String, EcoBoss> = HashBiMap.create()
 
     /**
@@ -123,4 +122,14 @@ object Bosses {
     operator fun get(entity: LivingEntity): LivingEcoBoss? {
         return get(entity.uniqueId)
     }
+
+    /** If an entity is a boss. */
+    val Entity?.isBoss: Boolean
+        get() {
+            if (this !is LivingEntity) {
+                return false
+            }
+
+            return Bosses[this] != null
+        }
 }
