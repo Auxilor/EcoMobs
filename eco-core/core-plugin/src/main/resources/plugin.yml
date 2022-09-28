@@ -20,6 +20,8 @@ softdepend:
   - EcoItems
   - EcoSkills
   - Boosters
+  - ModelEngine
+  - EcoJobs
 
 commands:
   ecobosses:
