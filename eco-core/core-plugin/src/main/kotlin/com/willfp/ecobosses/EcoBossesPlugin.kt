@@ -61,7 +61,7 @@ class EcoBossesPlugin : LibReforgePlugin() {
             DiscoverRecipeListener(this),
             TopDamagerListener(),
             LifecycleHandlers(),
-            SpawnEggHandler(),
+            SpawnEggHandler(this),
             DamageMultiplierHandler(),
             MountHandler(),
             PickupHandler(),
