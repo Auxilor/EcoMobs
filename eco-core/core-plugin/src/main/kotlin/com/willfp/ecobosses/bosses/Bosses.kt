@@ -7,6 +7,7 @@ import com.willfp.eco.core.config.ConfigType
 import com.willfp.eco.core.config.TransientConfig
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.ecobosses.EcoBossesPlugin
+import com.willfp.libreforge.separatorAmbivalent
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import java.io.File
@@ -56,7 +57,8 @@ object Bosses {
         val ecoBossesYml = TransientConfig(File(plugin.dataFolder, "ecobosses.yml"), ConfigType.YAML)
 
         for (bossConfig in ecoBossesYml.getSubsections("bosses")) {
-            addNewBoss(EcoBoss(bossConfig.getString("id"), bossConfig, plugin))
+            // Boss configs are separator ambivalent in order to preserve backwards compatibility
+            addNewBoss(EcoBoss(bossConfig.getString("id"), bossConfig.separatorAmbivalent(), plugin))
         }
     }
 

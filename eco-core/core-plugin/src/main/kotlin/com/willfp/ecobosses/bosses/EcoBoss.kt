@@ -49,14 +49,15 @@ import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import java.util.*
+import java.util.Objects
+import java.util.UUID
 
 class EcoBoss(
     override val id: String,
     val config: Config,
     private val plugin: EcoPlugin
 ) : Holder {
-    val displayName: String = config.getString("displayName")
+    val displayName: String = config.getString("display-name")
 
     val lifespan = config.getInt("lifespan")
 
@@ -66,23 +67,23 @@ class EcoBoss(
 
     val targetMode = TargetMode.getByID(config.getString("target.mode"))!!
 
-    val isBossBarEnabled = config.getBool("bossBar.enabled")
+    val isBossBarEnabled = config.getBool("boss-bar.enabled")
 
-    val bossBarRadius = config.getDouble("bossBar.radius")
+    val bossBarRadius = config.getDouble("boss-bar.radius")
 
-    val isPreventingMounts = config.getBool("defence.preventMounts")
+    val isPreventingMounts = config.getBool("defence.prevent-mounts")
 
-    val isImmuneToExplosions = config.getBool("defence.explosionImmune")
+    val isImmuneToExplosions = config.getBool("defence.explosion-immune")
 
-    val isImmuneToFire = config.getBool("defence.fireImmune")
+    val isImmuneToFire = config.getBool("defence.fire-immune")
 
-    val isImmuneToDrowning = config.getBool("defence.drowningImmune")
+    val isImmuneToDrowning = config.getBool("defence.drowning-immune")
 
-    val isImmuneToSuffocation = config.getBool("defence.suffocationImmune")
+    val isImmuneToSuffocation = config.getBool("defence.suffocation-immune")
 
-    val meleeDamageMultiplier = config.getDouble("defence.meleeDamageMultiplier")
+    val meleeDamageMultiplier = config.getDouble("defence.melee-damage-multiplier")
 
-    val projectileDamageMultiplier = config.getDouble("defence.projectileDamageMultiplier")
+    val projectileDamageMultiplier = config.getDouble("defence.projectile-damage-multiplier")
 
     val canTeleport = config.getBool("defence.teleportation.enabled")
 
@@ -175,16 +176,16 @@ class EcoBoss(
         locations
     }
 
-    val hasCustomAI = config.getBool("customai.enabled")
+    val hasCustomAI = config.getBool("custom-ai.enabled")
 
-    val targetGoals = config.getSubsections("customai.target-goals").mapNotNull {
+    val targetGoals = config.getSubsections("custom-ai.target-goals").mapNotNull {
         val key = NamespacedKeyUtils.fromStringOrNull(it.getString("key")) ?: return@mapNotNull null
         val deserializer = TargetGoals.getByKey(key) ?: return@mapNotNull null
         val goal = deserializer.deserialize(it.getSubsection("args")) ?: return@mapNotNull null
         ConfiguredGoal(it.getInt("priority"), goal)
     }
 
-    val entityGoals = config.getSubsections("customai.ai-goals").mapNotNull {
+    val entityGoals = config.getSubsections("custom-ai.ai-goals").mapNotNull {
         val key = NamespacedKeyUtils.fromStringOrNull(it.getString("key")) ?: return@mapNotNull null
         val deserializer = EntityGoals.getByKey(key) ?: return@mapNotNull null
         val goal = deserializer.deserialize(it.getSubsection("args")) ?: return@mapNotNull null
@@ -195,9 +196,9 @@ class EcoBoss(
         Conditions.compile(it, "$id Spawn Conditions")
     }
 
-    private val bossBarColor = BossBar.Color.valueOf(config.getString("bossBar.color").uppercase())
+    private val bossBarColor = BossBar.Color.valueOf(config.getString("boss-bar.color").uppercase())
 
-    private val bossBarStyle = BossBar.Overlay.valueOf(config.getString("bossBar.style").uppercase())
+    private val bossBarStyle = BossBar.Overlay.valueOf(config.getString("boss-bar.style").uppercase())
 
     private val sounds: Map<BossLifecycle, PlayableSound> = run {
         val map = mutableMapOf<BossLifecycle, PlayableSound>()
@@ -238,10 +239,10 @@ class EcoBoss(
     private val commandRewards: Map<Int, Iterable<CommandReward>> = run {
         val map = mutableMapOf<Int, Iterable<CommandReward>>()
 
-        for (rank in config.getSubsection("rewards.topDamagerCommands").getKeys(false)) {
+        for (rank in config.getSubsection("rewards.top-damager-commands").getKeys(false)) {
             val rankRewards = mutableListOf<CommandReward>()
 
-            for (config in config.getSubsections("rewards.topDamagerCommands.$rank")) {
+            for (config in config.getSubsections("rewards.top-damager-commands.$rank")) {
                 rankRewards.add(
                     CommandReward(
                         config.getDouble("chance"),
@@ -256,12 +257,12 @@ class EcoBoss(
         map
     }
 
-    private val nearbyCommandRewardRadius = config.getDouble("rewards.nearbyPlayerCommands.radius")
+    private val nearbyCommandRewardRadius = config.getDouble("rewards.nearby-player-commands.radius")
 
     private val nearbyCommands: Iterable<CommandReward> = run {
         val list = mutableListOf<CommandReward>()
 
-        for (config in config.getSubsections("rewards.nearbyPlayerCommands.commands")) {
+        for (config in config.getSubsections("rewards.nearby-player-commands.commands")) {
             list.add(
                 CommandReward(
                     config.getDouble("chance"),
@@ -298,7 +299,9 @@ class EcoBoss(
 
     private val mob: TestableEntity = Entities.lookup(config.getString("mob"))
 
-    private val modelEngineID = config.getStringOrNull("modelEngineID")
+    private val modelEngineID = config.getStringOrNull("model-engine-id")
+
+    private val modelEngineAnimation = config.getStringOrNull("model-engine-animation")
 
     private val currentlyAlive = mutableMapOf<UUID, LivingEcoBoss>()
 
@@ -346,11 +349,28 @@ class EcoBoss(
             entityGoals.forEach { controller.addEntityGoal(it.priority, it.goal as EntityGoal<in Mob>) }
         }
 
-        if (modelEngineID != null && Bukkit.getPluginManager().isPluginEnabled("modelEngine")) {
+        if (modelEngineID != null && Bukkit.getPluginManager().isPluginEnabled("ModelEngine")) {
             val model = ModelEngineAPI.createActiveModel(modelEngineID)
 
             if (model == null) {
                 plugin.logger.warning("Invalid Model Engine ID for boss $id")
+            }
+
+            if (modelEngineAnimation != null) {
+                val animationHandler = model.animationHandler
+                val animationProperty = animationHandler.getAnimation(modelEngineAnimation)
+
+                if (animationProperty != null) {
+                    animationHandler.playAnimation(animationProperty, true)
+                } else {
+                    plugin.logger.warning("Animation $modelEngineAnimation not found in model $modelEngineID, defaulting to walk!")
+                    val animationPropertyWalk = animationHandler.getAnimation("walk")
+                    if (animationPropertyWalk != null) {
+                        animationHandler.playAnimation(animationPropertyWalk, true)
+                    } else {
+                        plugin.logger.warning("Walk animation not found in $modelEngineID!")
+                    }
+                }
             }
 
             val modelled = ModelEngineAPI.createModeledEntity(mob)
