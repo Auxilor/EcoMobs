@@ -8,8 +8,9 @@
 # View an explanation for this system here: https://plugins.auxilor.io/all-plugins/the-entity-lookup-system
 mob: iron_golem attack-damage:90 movement-speed:1.5 follow-range:16 health:1200
 
-# If you're using model engine, you can specify the ID here
+# If you're using model engine, you can specify the ID and animation here. You can also specify these in the mob with the lookup system.
 model-engine-id: ""
+model-engine-animation: ""
 
 # Supported placeholders: %health%, %time% (formats as minutes:seconds, eg 1:56)
 display-name: "&8Steel Golem &7| &c%health%♥ &7| &e%time%"
