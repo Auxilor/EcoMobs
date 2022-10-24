@@ -4,7 +4,7 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
 import com.willfp.eco.core.config.ConfigType
-import com.willfp.eco.core.config.TransientConfig
+import com.willfp.eco.core.config.readConfig
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.ecobosses.EcoBossesPlugin
 import com.willfp.libreforge.separatorAmbivalent
@@ -54,7 +54,7 @@ object Bosses {
             addNewBoss(EcoBoss(id, config, plugin))
         }
 
-        val ecoBossesYml = TransientConfig(File(plugin.dataFolder, "ecobosses.yml"), ConfigType.YAML)
+        val ecoBossesYml = File(plugin.dataFolder, "ecobosses.yml").readConfig(ConfigType.YAML)
 
         for (bossConfig in ecoBossesYml.getSubsections("bosses")) {
             // Boss configs are separator ambivalent in order to preserve backwards compatibility
