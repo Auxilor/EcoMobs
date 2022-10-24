@@ -305,13 +305,15 @@ class EcoBoss(
 
     private val currentlyAlive = mutableMapOf<UUID, LivingEcoBoss>()
 
-    override val conditions = config.getSubsections("conditions").mapNotNull {
-        Conditions.compile(it, "Boss ID $id")
-    }.toSet()
+    override val conditions = Conditions.compile(
+        config.getSubsections("conditions"),
+        "Boss ID $id"
+    )
 
-    override val effects = config.getSubsections("effects").mapNotNull {
-        Effects.compile(it, "Boss ID $id")
-    }.toSet()
+    override val effects = Effects.compile(
+        config.getSubsections("effects"),
+        "Boss ID $id"
+    )
 
     fun markDead(uuid: UUID) {
         currentlyAlive.remove(uuid)

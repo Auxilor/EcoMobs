@@ -23,7 +23,7 @@ object AutospawnHandler {
                 val world = location.world ?: continue
 
                 if (plugin.configYml.getBool("autospawn.one-boss-per-world")) {
-                    if (Bosses.getAllAlive().mapNotNull { it.entity }.any { it.world == world }) {
+                    if (Bosses.getAllAlive().map { it.entity }.any { it.world == world }) {
                         continue
                     }
                 }

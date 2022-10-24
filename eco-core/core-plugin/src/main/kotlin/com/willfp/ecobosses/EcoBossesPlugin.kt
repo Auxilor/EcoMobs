@@ -79,10 +79,6 @@ class EcoBossesPlugin : LibReforgePlugin() {
         )
     }
 
-    override fun getMinimumEcoVersion(): String {
-        return "6.35.1"
-    }
-
     companion object {
         @JvmStatic
         lateinit var instance: EcoBossesPlugin

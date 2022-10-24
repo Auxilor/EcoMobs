@@ -1,6 +1,5 @@
 package com.willfp.ecobosses.util
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecobosses.EcoBossesPlugin
@@ -32,7 +31,7 @@ data class LocalCommands(
         }
 
         for (s in toDispatch) {
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), s);
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), s)
         }
     }
 }

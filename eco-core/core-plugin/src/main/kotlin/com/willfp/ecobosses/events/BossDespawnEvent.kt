@@ -1,7 +1,6 @@
 package com.willfp.ecobosses.events
 
 import com.willfp.ecobosses.bosses.LivingEcoBoss
-import com.willfp.ecobosses.lifecycle.BossLifecycle
 import org.bukkit.event.HandlerList
 
 class BossDespawnEvent(

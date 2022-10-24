@@ -11,7 +11,7 @@ class ChunkTicker : BossTicker {
         }
 
         if (currentChunk.isLoaded && currentChunk.isForceLoaded) {
-            return;
+            return
         }
 
         currentChunk.load()

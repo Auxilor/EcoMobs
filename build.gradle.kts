@@ -37,11 +37,11 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("com.willfp:eco:6.35.1")
+        compileOnly("com.willfp:eco:6.44.0")
         compileOnly("org.jetbrains:annotations:23.0.0")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
 
-        implementation("com.willfp:libreforge:3.114.1")
+        implementation("com.willfp:libreforge:3.115.0")
         implementation("org.joml:joml:1.10.4")
     }
 
