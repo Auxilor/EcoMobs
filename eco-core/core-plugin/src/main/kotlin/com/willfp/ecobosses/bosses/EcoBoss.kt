@@ -158,7 +158,7 @@ class EcoBoss(
         )
     }
 
-    val disabledTotemWorlds: List<String> = config.getStrings("spawn.totem.notInWorlds")
+    val disabledTotemWorlds: List<String> = config.getStrings("spawn.totem.not-in-worlds")
 
     val autoSpawnInterval = config.getInt("spawn.autospawn.interval")
 
