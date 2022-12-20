@@ -7,5 +7,5 @@ dependencies {
 
     // Integrations
     compileOnly("com.github.lokka30:LevelledMobs:3.1.4")
-    compileOnly("com.ticxo.modelengine:api:R3.0.1")
+    compileOnly("com.ticxo.modelengine:api:R3.1.3")
 }
