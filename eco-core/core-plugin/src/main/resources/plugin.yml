@@ -21,6 +21,8 @@ softdepend:
   - Boosters
   - ModelEngine
   - EcoJobs
+loadbefore:
+  - EcoEnchants
 
 commands:
   ecobosses:
