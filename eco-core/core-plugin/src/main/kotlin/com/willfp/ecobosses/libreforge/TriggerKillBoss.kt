@@ -17,7 +17,7 @@ object TriggerKillBoss : Trigger("kill_boss") {
     @EventHandler(ignoreCancelled = true)
     fun handle(event: BossKillEvent) {
         val killer = event.killer ?: return
-        val entity = event.boss.entity ?: return
+        val entity = event.boss.entity
 
         this.dispatch(
             killer,
