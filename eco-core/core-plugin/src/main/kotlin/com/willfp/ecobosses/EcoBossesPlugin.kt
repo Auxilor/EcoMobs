@@ -6,7 +6,7 @@ import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.bosses.EggDisplay
 import com.willfp.ecobosses.bosses.bossHolders
-import com.willfp.ecobosses.commands.CommandEcobosses
+import com.willfp.ecobosses.commands.CommandEcoBosses
 import com.willfp.ecobosses.defence.DamageMultiplierHandler
 import com.willfp.ecobosses.defence.ImmunitiesHandler
 import com.willfp.ecobosses.defence.MountHandler
@@ -21,28 +21,33 @@ import com.willfp.ecobosses.spawn.SpawnEggHandler
 import com.willfp.ecobosses.spawn.SpawnTotemHandler
 import com.willfp.ecobosses.util.DiscoverRecipeListener
 import com.willfp.ecobosses.util.TopDamagerListener
-import com.willfp.libreforge.LibReforgePlugin
+import com.willfp.libreforge.loader.LibreforgePlugin
+import com.willfp.libreforge.loader.configs.ConfigCategory
+import com.willfp.libreforge.registerHolderProvider
 import org.bukkit.event.Listener
 
-class EcoBossesPlugin : LibReforgePlugin() {
+class EcoBossesPlugin : LibreforgePlugin() {
     init {
         instance = this
+    }
+
+    override fun loadConfigCategories(): List<ConfigCategory> {
+        return listOf(
+            Bosses
+        )
+    }
+
+    override fun handleEnable() {
         registerHolderProvider { it.bossHolders }
     }
 
-    override fun handleEnableAdditional() {
-        this.copyConfigs("bosses")
-    }
-
-    override fun handleReloadAdditional() {
+    override fun handleReload() {
         Bosses.getAllAlive().forEach { it.remove() }
-
-        logger.info(Bosses.values().size.toString() + " Bosses Loaded")
 
         AutospawnHandler.startSpawning(this)
     }
 
-    override fun handleDisableAdditional() {
+    override fun handleDisable() {
         Bosses.getAllAlive().forEach { it.remove() }
     }
 
@@ -52,7 +57,7 @@ class EcoBossesPlugin : LibReforgePlugin() {
 
     override fun loadPluginCommands(): List<PluginCommand> {
         return listOf(
-            CommandEcobosses(this)
+            CommandEcoBosses(this)
         )
     }
 
@@ -73,7 +78,7 @@ class EcoBossesPlugin : LibReforgePlugin() {
         )
     }
 
-    override fun loadAdditionalIntegrations(): List<IntegrationLoader> {
+    override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
             IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs()) }
         )

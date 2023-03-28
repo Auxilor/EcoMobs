@@ -1,5 +1,5 @@
-name: EcoBosses
-version: ${projectVersion}
+name: ${pluginName}
+version: ${version}
 main: com.willfp.ecobosses.EcoBossesPlugin
 api-version: 1.17
 authors: [Auxilor]
@@ -7,20 +7,9 @@ website: willfp.com
 depend:
   - eco
 softdepend:
+  - libreforge
   - LevelledMobs
   - AureliumSkills
-  - Jobs
-  - mcMMO
-  - Vault
-  - TMMobcoins
-  - EcoEnchants
-  - Talismans
-  - EcoArmor
-  - EcoItems
-  - EcoSkills
-  - Boosters
-  - ModelEngine
-  - EcoJobs
 
 commands:
   ecobosses:
@@ -41,8 +30,6 @@ permissions:
       ecobosses.command.reload: true
       ecobosses.command.spawn: true
       ecobosses.command.give: true
-      ecobosses.command.import: true
-      ecobosses.command.export: true
 
   ecobosses.command.ecobosses:
     description: Allows the use of /ecobosses
@@ -62,12 +49,4 @@ permissions:
 
   ecobosses.command.reload:
     description: Allows the use of /ecobosses reload
-    default: op
-
-  ecobosses.command.import:
-    description: Allows the use of /ecobosses import
-    default: op
-
-  ecobosses.command.export:
-    description: Allows the use of /ecobosses export
     default: op

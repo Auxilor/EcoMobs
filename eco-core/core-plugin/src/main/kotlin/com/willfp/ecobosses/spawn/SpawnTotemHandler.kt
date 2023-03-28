@@ -28,11 +28,13 @@ class SpawnTotemHandler : Listener {
                     middle = event.block.getRelative(0, -1, 0)
                     bottom = event.block.getRelative(0, -2, 0)
                 }
+
                 1 -> {
                     top = event.block.getRelative(0, 2, 0)
                     middle = event.block.getRelative(0, 1, 0)
                     bottom = event.block
                 }
+
                 2 -> {
                     top = event.block.getRelative(0, 1, 0)
                     middle = event.block
@@ -52,7 +54,7 @@ class SpawnTotemHandler : Listener {
 
                 val player = event.player
 
-                if (!boss.spawnConditions.all { it.condition.isConditionMet(player, it.config) }) {
+                if (!boss.spawnConditions.areMet(player)) {
                     return
                 }
 

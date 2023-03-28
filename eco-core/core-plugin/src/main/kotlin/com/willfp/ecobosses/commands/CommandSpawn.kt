@@ -166,7 +166,7 @@ class CommandSpawn(plugin: EcoBossesPlugin) : Subcommand(
          * The cached names.
          */
         private val BOSS_NAMES: List<String>
-            get() = Bosses.values().map { it.id }
+            get() = Bosses.values().map { it.id.key }
 
         /**
          * The cached numbers.

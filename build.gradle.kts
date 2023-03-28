@@ -3,11 +3,13 @@ plugins {
     `java-library`
     `maven-publish`
     kotlin("jvm") version "1.7.10"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "8.0.0"
+    id("com.willfp.libreforge.gradle") version "1.0.0"
 }
 
 group = "com.willfp"
 version = findProperty("version")!!
+val libreforgeVersion = findProperty("libreforge-version")
 
 base {
     archivesName.set(project.name)
@@ -22,27 +24,22 @@ dependencies {
 allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
+    apply(plugin = "maven-publish")
     apply(plugin = "com.github.johnrengelman.shadow")
 
     repositories {
         mavenLocal()
         mavenCentral()
+
+        maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://jitpack.io")
-        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-        maven("https://repo.codemc.org/repository/nms/")
-        maven("https://repo.codemc.org/repository/maven-public")
-        maven("https://repo.dmulloy2.net/nexus/repository/public/")
-        maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://mvn.lumine.io/repository/maven-public/")
     }
 
     dependencies {
-        compileOnly("com.willfp:eco:6.44.0")
+        compileOnly("com.willfp:eco:6.53.0")
         compileOnly("org.jetbrains:annotations:23.0.0")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
-
-        implementation("com.willfp:libreforge:3.129.5")
-        implementation("org.joml:joml:1.10.4")
     }
 
     java {
@@ -51,10 +48,13 @@ allprojects {
     }
 
     tasks {
+        shadowJar {
+            relocate("com.willfp.libreforge.loader", "com.willfp.ecobosses.libreforge.loader")
+        }
+
         compileKotlin {
             kotlinOptions {
                 jvmTarget = "17"
-                freeCompilerArgs = freeCompilerArgs + "-Xjvm-default=all"
             }
         }
 
@@ -66,66 +66,17 @@ allprojects {
         }
 
         processResources {
-            val ignoreList = listOf("**/*.png", "**/models/**", "**/textures/**", "**lang.yml")
-            filesNotMatching(ignoreList) {
-                expand("projectVersion" to project.version)
+            filesMatching(listOf("**plugin.yml", "**eco.yml")) {
+                expand(
+                    "version" to project.version,
+                    "libreforgeVersion" to libreforgeVersion,
+                    "pluginName" to rootProject.name
+                )
             }
         }
 
         build {
             dependsOn(shadowJar)
-        }
-
-        shadowJar {
-            relocate("com.willfp.libreforge", "com.willfp.ecobosses.libreforge")
-            relocate("org.joml", "com.willfp.ecobosses.libreforge.joml")
-        }
-    }
-}
-
-tasks {
-    shadowJar {
-        destinationDirectory.set(file("$rootDir/bin"))
-    }
-
-    val buyThePlugins by creating {
-        dependsOn(subprojects.map { it.tasks.getByName("build") })
-
-        doLast {
-            println("If you like the plugin, please consider buying it on Spigot or Polymart!")
-            println("Spigot: https://www.spigotmc.org/resources/authors/auxilor.507394/")
-            println("Polymart: https://polymart.org/user/auxilor.1107/")
-            println("Buying gives you access to support and the plugin auto-updater, and it allows me to keep developing plugins.")
-        }
-    }
-
-    build {
-        dependsOn(shadowJar)
-        dependsOn(publishToMavenLocal)
-        finalizedBy(buyThePlugins)
-    }
-
-    clean.get().doLast { file("$rootDir/bin").deleteRecursively() }
-
-    fun fileName(extra: String): String = buildString {
-        append(findProperty("plugin-name"))
-        append(" v")
-        append(findProperty("version"))
-        if (extra.isNotEmpty()) {
-            append(" ")
-            append(extra)
-        }
-        append(".jar")
-    }
-
-    shadowJar.get().archiveFileName.set(fileName(""))
-    jar.get().archiveFileName.set(fileName("unshaded"))
-}
-
-publishing {
-    publications {
-        register("maven", MavenPublication::class) {
-            from(subprojects.first { it.name == "core-plugin" }.components["java"])
         }
     }
 }

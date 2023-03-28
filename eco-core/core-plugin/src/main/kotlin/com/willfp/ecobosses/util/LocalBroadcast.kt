@@ -38,6 +38,7 @@ data class LocalBroadcast(
 
         if (radius < 0) {
             for (message in toBroadcast) {
+                @Suppress("DEPRECATION")
                 Bukkit.broadcastMessage(message)
             }
         } else {

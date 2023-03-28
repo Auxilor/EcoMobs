@@ -17,6 +17,7 @@ import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.eco.core.recipe.recipes.CraftingRecipe
+import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.NamespacedKeyUtils
 import com.willfp.eco.util.toComponent
 import com.willfp.ecobosses.events.BossKillEvent
@@ -38,6 +39,7 @@ import com.willfp.ecobosses.util.SpawnTotem
 import com.willfp.ecobosses.util.XpReward
 import com.willfp.ecobosses.util.topDamagers
 import com.willfp.libreforge.Holder
+import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
 import net.kyori.adventure.bossbar.BossBar
@@ -53,10 +55,12 @@ import java.util.Objects
 import java.util.UUID
 
 class EcoBoss(
-    override val id: String,
+    id: String,
     val config: Config,
     private val plugin: EcoPlugin
-) : Holder {
+) : Holder, Registrable {
+    override val id = plugin.createNamespacedKey(id)
+
     val displayName: String = config.getString("display-name")
 
     val lifespan = config.getInt("lifespan")
@@ -192,9 +196,10 @@ class EcoBoss(
         ConfiguredGoal(it.getInt("priority"), goal)
     }
 
-    val spawnConditions = config.getSubsections("spawn.conditions").mapNotNull {
-        Conditions.compile(it, "$id Spawn Conditions")
-    }
+    val spawnConditions = Conditions.compile(
+        config.getSubsections("spawn.conditions"),
+        ViolationContext(plugin, "$id Spawn Conditions")
+    )
 
     private val bossBarColor = BossBar.Color.valueOf(config.getString("boss-bar.color").uppercase())
 
@@ -307,12 +312,12 @@ class EcoBoss(
 
     override val conditions = Conditions.compile(
         config.getSubsections("conditions"),
-        "Boss ID $id"
+        ViolationContext(plugin, "Boss ID $id")
     )
 
     override val effects = Effects.compile(
         config.getSubsections("effects"),
-        "Boss ID $id"
+        ViolationContext(plugin, "Boss ID $id")
     )
 
     fun markDead(uuid: UUID) {
@@ -339,7 +344,7 @@ class EcoBoss(
         mob.persistentDataContainer.set(
             plugin.namespacedKeyFactory.create("boss"),
             PersistentDataType.STRING,
-            this.id
+            this.id.key
         )
 
         if (hasCustomAI) {
@@ -468,6 +473,10 @@ class EcoBoss(
                 }
             )
         )
+    }
+
+    override fun getID(): String {
+        return this.id.key
     }
 
     override fun equals(other: Any?): Boolean {

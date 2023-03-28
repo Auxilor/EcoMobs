@@ -47,7 +47,7 @@ class CommandGive(plugin: EcoPlugin) : Subcommand(
         }
 
         var message = plugin.langYml.getMessage("give-success")
-        message = message.replace("%boss%", boss.id).replace("%recipient%", reciever.name)
+        message = message.replace("%boss%", boss.id.key).replace("%recipient%", reciever.name)
         sender.sendMessage(message)
 
         val itemStack = boss.spawnEgg!!
@@ -94,7 +94,7 @@ class CommandGive(plugin: EcoPlugin) : Subcommand(
          * The cached names.
          */
         private val BOSS_NAMES: List<String>
-            get() = Bosses.values().map { it.id }
+            get() = Bosses.values().map { it.id.key }
 
 
         /**

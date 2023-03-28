@@ -1,21 +1,29 @@
 package com.willfp.ecobosses.bosses
 
-import com.google.common.collect.BiMap
-import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
 import com.willfp.eco.core.config.ConfigType
+import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.config.readConfig
 import com.willfp.eco.core.config.updating.ConfigUpdater
+import com.willfp.eco.core.registry.Registry
 import com.willfp.ecobosses.EcoBossesPlugin
+import com.willfp.libreforge.loader.LibreforgePlugin
+import com.willfp.libreforge.loader.configs.ConfigCategory
+import com.willfp.libreforge.loader.configs.LegacyLocation
 import com.willfp.libreforge.separatorAmbivalent
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import java.io.File
 import java.util.UUID
 
-object Bosses {
+object Bosses : ConfigCategory("boss", "bosses") {
     /** Registered bosses. */
-    private val BY_ID: BiMap<String, EcoBoss> = HashBiMap.create()
+    private val registry = Registry<EcoBoss>()
+
+    override val legacyLocation = LegacyLocation(
+        "ecobosses.yml",
+        "bosses"
+    )
 
     /**
      * Get all registered [EcoBoss]s.
@@ -24,7 +32,7 @@ object Bosses {
      */
     @JvmStatic
     fun values(): List<EcoBoss> {
-        return ImmutableList.copyOf(BY_ID.values)
+        return ImmutableList.copyOf(registry.values())
     }
 
     /**
@@ -35,52 +43,15 @@ object Bosses {
      */
     @JvmStatic
     fun getByID(name: String): EcoBoss? {
-        return BY_ID[name]
+        return registry[name]
     }
 
-    /**
-     * Update all [EcoBoss]s.
-     *
-     * @param plugin Instance of EcoBosses.
-     */
-    @ConfigUpdater
-    @JvmStatic
-    fun update(plugin: EcoBossesPlugin) {
-        for (boss in values()) {
-            removeBoss(boss)
-        }
-
-        for ((id, config) in plugin.fetchConfigs("bosses")) {
-            addNewBoss(EcoBoss(id, config, plugin))
-        }
-
-        val ecoBossesYml = File(plugin.dataFolder, "ecobosses.yml").readConfig(ConfigType.YAML)
-
-        for (bossConfig in ecoBossesYml.getSubsections("bosses")) {
-            // Boss configs are separator ambivalent in order to preserve backwards compatibility
-            addNewBoss(EcoBoss(bossConfig.getString("id"), bossConfig.separatorAmbivalent(), plugin))
-        }
+    override fun clear(plugin: LibreforgePlugin) {
+        registry.clear()
     }
 
-    /**
-     * Add new [EcoBoss] to EcoBosses.
-     *
-     * @param set The [EcoBoss] to add.
-     */
-    @JvmStatic
-    fun addNewBoss(set: EcoBoss) {
-        BY_ID.remove(set.id)
-        BY_ID[set.id] = set
-    }
-
-    /**
-     * Remove [EcoBoss] from EcoBosses.
-     *
-     * @param set The [EcoBoss] to remove.
-     */
-    @JvmStatic
-    fun removeBoss(set: EcoBoss) {
-        BY_ID.remove(set.id)
+    override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
+        registry.register(EcoBoss(id, config, plugin as EcoBossesPlugin))
     }
 
     /**

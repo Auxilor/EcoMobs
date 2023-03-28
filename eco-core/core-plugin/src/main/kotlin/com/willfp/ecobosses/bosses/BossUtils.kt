@@ -2,15 +2,15 @@ package com.willfp.ecobosses.bosses
 
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecobosses.EcoBossesPlugin
-import com.willfp.libreforge.Holder
+import com.willfp.ecobosses.util.EntityProvidedHolder
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import kotlin.math.pow
 
-val Player.bossHolders: Iterable<Holder>
+val Player.bossHolders: Collection<EntityProvidedHolder>
     get() {
-        val holders = mutableListOf<Holder>()
+        val holders = mutableListOf<EntityProvidedHolder>()
 
         for (boss in Bosses.values()) {
             for (livingBoss in boss.getAllAlive()) {
@@ -21,7 +21,7 @@ val Player.bossHolders: Iterable<Holder>
                 }
 
                 if (entity.location.distanceSquared(this.location) <= boss.influence.pow(2)) {
-                    holders.add(boss)
+                    holders.add(EntityProvidedHolder(boss, entity))
                 }
             }
         }
@@ -38,7 +38,7 @@ var ItemStack.bossEgg: EcoBoss?
         if (value == null) {
             pdc.remove(spawnEggKey)
         } else {
-            pdc.set(spawnEggKey, PersistentDataType.STRING, value.id)
+            pdc.set(spawnEggKey, PersistentDataType.STRING, value.id.key)
         }
         this.itemMeta = meta
     }

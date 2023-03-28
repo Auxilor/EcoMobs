@@ -1,15 +1,15 @@
 package com.willfp.ecobosses.lifecycle
 
+import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecobosses.events.BossDespawnEvent
 import com.willfp.ecobosses.events.BossKillEvent
 import com.willfp.ecobosses.events.BossSpawnEvent
-import com.willfp.libreforge.LibReforgePlugin
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
 class ConsoleLoggers(
-    private val plugin: LibReforgePlugin
+    private val plugin: EcoPlugin
 ) : Listener {
     @EventHandler(
         ignoreCancelled = true,

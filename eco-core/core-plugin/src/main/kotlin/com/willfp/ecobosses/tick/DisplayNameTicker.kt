@@ -15,6 +15,7 @@ class DisplayNameTicker : BossTicker {
 
         val formattedTime = String.format("%d:%02d", timeLeft / 60, timeLeft % 60)
 
+        @Suppress("DEPRECATION")
         entity.customName = boss.boss.displayName
             .replace("%health%", NumberUtils.format(entity.health))
             .replace("%time%", formattedTime)

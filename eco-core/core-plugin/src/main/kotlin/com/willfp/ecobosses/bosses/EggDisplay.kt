@@ -27,7 +27,7 @@ class EggDisplay(
 
         val lines = egg.spawnConditions
             .filterNot { it.isMet(player) }
-            .mapNotNull { it.notMetLines?.map { line -> Display.PREFIX + line } }
+            .map { it.notMetLines.map { line -> Display.PREFIX + line } }
             .flatten()
 
 
