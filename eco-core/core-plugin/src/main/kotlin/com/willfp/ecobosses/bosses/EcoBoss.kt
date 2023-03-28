@@ -142,7 +142,7 @@ class EcoBoss(
 
         val recipe = Recipes.createAndRegisterRecipe(
             this@EcoBoss.plugin,
-            "${this.id}_spawn_egg",
+            "${this.id.key}_spawn_egg",
             spawnEggBacker,
             config.getStrings("spawn.egg.recipe")
         )
