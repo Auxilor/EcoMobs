@@ -6,19 +6,19 @@ import org.bukkit.entity.LivingEntity
 
 class EntityProvidedHolder(
     override val holder: Holder,
-    override val item: LivingEntity
+    override val provider: LivingEntity
 ) : ProvidedHolder {
     override fun equals(other: Any?): Boolean {
         if (other !is EntityProvidedHolder) {
             return false
         }
 
-        return other.holder == holder && other.item == item
+        return other.holder == holder && other.provider == provider
     }
 
     override fun hashCode(): Int {
         var result = holder.hashCode()
-        result = 31 * result + item.hashCode()
+        result = 31 * result + provider.hashCode()
         return result
     }
 }
