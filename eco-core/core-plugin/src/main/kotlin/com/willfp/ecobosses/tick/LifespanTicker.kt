@@ -14,11 +14,6 @@ class LifespanTicker : BossTicker {
             Bukkit.getPluginManager().callEvent(event)
 
             boss.remove()
-            boss.boss.handleLifecycle(
-                BossLifecycle.DESPAWN,
-                boss.entity.location,
-                boss.entity
-            )
         }
     }
 }
