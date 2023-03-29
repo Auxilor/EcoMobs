@@ -5,6 +5,7 @@ import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
 import com.willfp.eco.core.fast.fast
+import com.willfp.libreforge.SimpleProvidedHolder
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -26,7 +27,7 @@ class EggDisplay(
         val egg = itemStack.bossEgg ?: return
 
         val lines = egg.spawnConditions
-            .filterNot { it.isMet(player) }
+            .filterNot { it.isMet(player, SimpleProvidedHolder(egg)) }
             .map { it.notMetLines.map { line -> Display.PREFIX + line } }
             .flatten()
 
