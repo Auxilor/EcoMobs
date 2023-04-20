@@ -42,11 +42,13 @@ class EcoBossesPlugin : LibreforgePlugin() {
         )
     }
 
-    override fun handleEnable() {
+    override fun handleLoad() {
         Effects.register(EffectBossDropChanceMultiplier)
         Triggers.register(TriggerKillBoss)
         Triggers.register(TriggerSpawnBoss)
+    }
 
+    override fun handleEnable() {
         registerHolderProvider { it.bossHolders }
     }
 
