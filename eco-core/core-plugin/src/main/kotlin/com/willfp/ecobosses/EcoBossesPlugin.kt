@@ -13,6 +13,7 @@ import com.willfp.ecobosses.defence.MountHandler
 import com.willfp.ecobosses.defence.PickupHandler
 import com.willfp.ecobosses.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecobosses.libreforge.EffectBossDropChanceMultiplier
+import com.willfp.ecobosses.libreforge.MutatorLocationToBoss
 import com.willfp.ecobosses.libreforge.TriggerKillBoss
 import com.willfp.ecobosses.libreforge.TriggerSpawnBoss
 import com.willfp.ecobosses.lifecycle.CompatibilityListeners
@@ -27,6 +28,7 @@ import com.willfp.ecobosses.util.TopDamagerListener
 import com.willfp.libreforge.effects.Effects
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
+import com.willfp.libreforge.mutators.Mutators
 import com.willfp.libreforge.registerHolderProvider
 import com.willfp.libreforge.triggers.Triggers
 import org.bukkit.event.Listener
@@ -46,6 +48,7 @@ class EcoBossesPlugin : LibreforgePlugin() {
         Effects.register(EffectBossDropChanceMultiplier)
         Triggers.register(TriggerKillBoss)
         Triggers.register(TriggerSpawnBoss)
+        Mutators.register(MutatorLocationToBoss)
     }
 
     override fun handleEnable() {
