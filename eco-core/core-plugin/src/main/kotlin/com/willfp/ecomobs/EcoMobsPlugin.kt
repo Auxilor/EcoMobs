@@ -11,6 +11,7 @@ import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
+import com.willfp.ecomobs.handler.SpawnTotemHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
@@ -45,7 +46,8 @@ class EcoMobsPlugin : LibreforgePlugin() {
             MountHandler(),
             VanillaCompatibilityHandlers(),
             DiscoverRecipeListener(this),
-            SpawnEggHandler(this)
+            SpawnEggHandler(this),
+            SpawnTotemHandler()
         )
     }
 

@@ -33,6 +33,8 @@ import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.SpawnReason
+import com.willfp.ecomobs.mob.SpawnTotem
+import com.willfp.ecomobs.mob.SpawnTotemOptions
 import com.willfp.ecomobs.mob.addGoal
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.event.MobEvents
@@ -274,6 +276,26 @@ internal class ConfigDrivenEcoMob(
             item,
             name,
             lore
+        )
+    }
+
+    override val totemOptions = config.getBool("spawn.totem.enabled").ifTrue {
+        val conditions = Conditions.compile(
+            config.getSubsections("spawn.totem.conditions"),
+            context.with("spawn totem conditions")
+        )
+
+        val top = Items.lookup(config.getString("spawn.totem.top"))
+        val middle = Items.lookup(config.getString("spawn.totem.middle"))
+        val bottom = Items.lookup(config.getString("spawn.totem.bottom"))
+
+        SpawnTotemOptions(
+            conditions,
+            SpawnTotem(
+                top.item.type,
+                middle.item.type,
+                bottom.item.type
+            )
         )
     }
 

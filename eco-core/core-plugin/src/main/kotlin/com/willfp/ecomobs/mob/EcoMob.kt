@@ -40,6 +40,11 @@ interface EcoMob : KRegistrable {
     val spawnEgg: SpawnEgg?
 
     /**
+     * The spawn totem options.
+     */
+    val totemOptions: SpawnTotemOptions?
+
+    /**
      * Get a living mob from a bukkit mob.
      */
     fun getLivingMob(mob: Mob): LivingMob? {
