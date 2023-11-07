@@ -1,0 +1,210 @@
+mob: illusioner attack-damage:50 health:600 hand:"iron_sword sharpness:5"
+
+model-engine-id: ""
+model-engine-animation: ""
+
+display-name: "&9Illusioner &7| &c%health%♥ &7| &e%time%"
+
+influence: 40
+
+custom-ai:
+  enabled: true
+
+  target-goals:
+    - key: minecraft:hurt_by
+      priority: 0
+      args:
+        blacklist: [ ]
+    - key: minecraft:nearest_attackable
+      priority: 1
+      args:
+        target:
+          - player
+        checkVisibility: false
+        checkCanNavigate: true
+        reciprocalChance: 300
+    - key: minecraft:nearest_attackable
+      priority: 2
+      args:
+        target:
+          - iron_golem
+          - villager
+        checkVisibility: false
+        checkCanNavigate: true
+        reciprocalChance: 300
+
+  ai-goals:
+    - key: minecraft:float
+      priority: 0
+    - key: minecraft:illusioner_mirror_spell
+      priority: 1
+    - key: minecraft:melee_attack
+      priority: 2
+      args:
+        speed: 1.6
+        pauseWhenMobIdle: false
+    - key: minecraft:random_stroll
+      priority: 8
+      args:
+        speed: 0.6
+        interval: 80
+        canDespawn: false
+    - key: minecraft:look_at_player
+      priority: 9
+      args:
+        range: 6
+        chance: 1
+
+effects:
+  - id: run_chain
+    args:
+      chain: blind
+      self_as_victim: true
+      chance: 20
+    triggers:
+      - static_20
+
+conditions: [ ]
+
+lifespan: 120
+
+defence:
+  prevent-mounts: true
+  explosion-immune: true
+  fire-immune: true
+  drowning-immune: true
+  suffocation-immune: true
+
+  melee-damage-multiplier: 1
+  projectile-damage-multiplier: 0.8
+
+  teleportation:
+    enabled: true
+    interval: 200
+    range: 20
+
+rewards:
+  xp:
+    minimum: 20000
+    maximum: 40000
+
+  top-damager-commands:
+    1:
+      - chance: 100 # As a percentage
+        commands:
+          - eco give %player% 10000
+    2: [ ]
+    3: [ ]
+
+  nearby-player-commands:
+    radius: 10
+    commands: [ ]
+
+  drops: []
+
+target:
+  mode: closest
+  range: 40
+
+boss-bar:
+  enabled: true
+  color: blue
+  style: notched_20
+  radius: 120
+
+spawn:
+  conditions: [ ]
+  autospawn:
+    interval: -1
+    locations: []
+  totem:
+    enabled: false
+    top: carved_pumpkin
+    middle: beacon
+    bottom: diamond_block
+    not-in-worlds: [ ]
+  egg:
+    enabled: true
+    item: dolphin_spawn_egg unbreaking:1 hide_enchants
+    name: "&9Illusioner&f Spawn Egg"
+    lore:
+      - ""
+      - "&8&oPlace on the ground to"
+      - "&8&osummon an &9Illusioner"
+    craftable: true
+    recipe:
+      - ""
+      - fermented_spider_eye 64
+      - ""
+      - fermented_spider_eye 64
+      - ecoitems:boss_core ? nether_star
+      - fermented_spider_eye 64
+      - ""
+      - fermented_spider_eye 64
+      - ""
+
+commands:
+  spawn: [ ]
+  kill: [ ]
+  despawn: [ ]
+  injure: [ ]
+
+messages:
+  spawn:
+    - message:
+        - ""
+        - "&fAn &9&lIllusioner&r&f has been spawned!"
+        - "&fCome fight it at &9%x%&f, &9%y%&f, &9%z%&f!"
+        - ""
+      radius: -1
+
+  kill:
+    - message:
+        - ""
+        - "&fThe &9&lIllusioner&r&f has been killed!"
+        - "&fMost Damage:"
+        - "&f - &9%damage_1_player%&f (%damage_1% Damage)"
+        - "&f - &9%damage_2_player%&f (%damage_2% Damage)"
+        - "&f - &9%damage_3_player%&f (%damage_3% Damage)"
+        - ""
+      radius: -1
+  despawn:
+    - message:
+        - ""
+        - "&fYou ran out of time to kill the &9&lIllusioner&r&f!"
+        - ""
+      radius: -1
+  injure: [ ]
+
+sounds:
+  spawn:
+    - sound: entity_illusioner_mirror_move
+      pitch: 0.5
+      volume: 100
+    - sound: entity_wither_spawn
+      pitch: 2
+      volume: 100
+
+  kill:
+    - sound: entity_evoker_prepare_wololo
+      pitch: 0.8
+      volume: 100
+    - sound: entity_illusioner_prepare_blindness
+      pitch: 1
+      volume: 100
+    - sound: entity_wither_death
+      pitch: 2
+      volume: 100
+
+  despawn:
+    - sound: entity_ender_dragon_ambient
+      pitch: 0.6
+      volume: 50
+    - sound: entity_enderman_death
+      pitch: 0.8
+      volume: 50
+
+  injure:
+    - sound: entity_illusioner_cast_spell
+      pitch: 2
+      volume: 10

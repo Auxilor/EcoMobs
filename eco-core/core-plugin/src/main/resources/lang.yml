@@ -1,0 +1,14 @@
+messages:
+  prefix: "&9&lEcoMobs &f» "
+  no-permission: "&cYou don't have permission to do this!"
+  not-player: "&cThis command must be run by a player"
+  invalid-command: "&cUnknown subcommand!"
+  reloaded: "Reloaded!"
+
+  needs-player: "&cYou must specify a player"
+  invalid-player: "&cInvalid player!"
+  specify-mob: "&cYou must specify a valid mob!"
+  invalid-location: "&cInvalid location!"
+  spawned: "Spawned %mob%&f!"
+
+na: "N/A"

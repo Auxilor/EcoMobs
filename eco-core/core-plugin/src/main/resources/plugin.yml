@@ -1,0 +1,53 @@
+name: ${pluginName}
+version: ${version}
+main: com.willfp.ecomobs.EcoMobsPlugin
+api-version: 1.17
+authors: [ Auxilor ]
+website: willfp.com
+depend:
+  - eco
+softdepend:
+  - libreforge
+  - LevelledMobs
+  - ModelEngine
+  - LibsDisguises
+
+commands:
+  ecomobs:
+    description: Base command
+    permission: ecomobs.command.ecomobs
+
+permissions:
+  ecomobs.*:
+    description: All ecomobs permissions
+    default: op
+    children:
+      ecomobs.command.*: true
+  ecomobs.command.*:
+    description: All ecomobs commands
+    default: op
+    children:
+      ecomobs.command.ecomobs: true
+      ecomobs.command.reload: true
+      ecomobs.command.spawn: true
+      ecomobs.command.give: true
+
+  ecomobs.command.ecomobs:
+    description: Allows the use of /ecomobs
+    default: true
+
+  ecomobs.command.give:
+    description: Allows the use of /ecomobs give
+    default: op
+
+  ecomobs.command.spawn:
+    description: Allows the use of /ecomobs spawn
+    default: op
+
+  ecomobs.command.killall:
+    description: Allows the use of /ecomobs killall
+    default: op
+
+  ecomobs.command.reload:
+    description: Allows the use of /ecomobs reload
+    default: op

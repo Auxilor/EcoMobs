@@ -1,0 +1,8 @@
+environment:
+  - name: libreforge version
+    value: ${libreforgeVersion}
+
+options:
+  resource-id: 525
+  bstats-id: 10635
+  color: "&9"

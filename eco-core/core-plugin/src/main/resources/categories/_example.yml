@@ -1,0 +1,5 @@
+# The ID of the category is the name of the .yml file,
+# for example bosses.yml has the ID of bosses
+# You can place categories anywhere in this folder,
+# including in subfolders if you want to organize your category configs
+# _example.yml is not loaded.
