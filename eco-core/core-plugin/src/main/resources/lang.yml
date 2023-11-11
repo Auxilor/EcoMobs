@@ -10,5 +10,6 @@ messages:
   specify-mob: "&cYou must specify a valid mob!"
   invalid-location: "&cInvalid location!"
   spawned: "Spawned %mob%&f!"
+  gave-egg: "Gave %player%&f a %mob%&f egg!"
 
 na: "N/A"
