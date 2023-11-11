@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.mob
 
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.entities.CustomEntity
 import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.integrations.MobIntegration
@@ -43,6 +44,11 @@ interface EcoMob : KRegistrable {
      * The spawn totem options.
      */
     val totemOptions: SpawnTotemOptions?
+
+    /**
+     * The eco custom entity.
+     */
+    val customEntity: CustomEntity
 
     /**
      * Get a living mob from a bukkit mob.

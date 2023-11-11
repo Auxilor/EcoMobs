@@ -3,3 +3,21 @@
 # You can place categories anywhere in this folder,
 # including in subfolders if you want to organize your category configs
 # _example.yml is not loaded.
+
+spawning:
+  # Available methods:
+
+  # natural
+  # Uses the vanilla spawning system to spawn the mob, by replacing
+  # the vanilla mob with the custom mob when it spawns.
+
+  # custom
+  # Uses the EcoMobs spawning system.
+  type: natural
+
+  # Options for natural spawning
+  natural:
+    # The vanilla mobs to replace
+    replace:
+      - zombie
+      - skeleton

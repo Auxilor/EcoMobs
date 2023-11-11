@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.mob.impl
 
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.entities.CustomEntity
 import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.entities.ai.EntityGoals
 import com.willfp.eco.core.entities.ai.TargetGoals
@@ -57,6 +58,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.persistence.PersistentDataType
@@ -297,6 +299,13 @@ internal class ConfigDrivenEcoMob(
                 bottom.item.type
             )
         )
+    }
+
+    override val customEntity = CustomEntity(
+        plugin.createNamespacedKey(this.id),
+        { (it as? Mob)?.ecoMob == this }
+    ) {
+        this.spawn(it, SpawnReason.COMMAND)!!.entity
     }
 
     /*

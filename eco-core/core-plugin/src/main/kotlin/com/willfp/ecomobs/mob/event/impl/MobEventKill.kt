@@ -26,6 +26,9 @@ object MobEventKill : MobEvent("kill") {
             event = event
         )
 
+        // Clear vanilla drops
+        event.deathEvent.drops.clear()
+
         Bukkit.getPluginManager().callEvent(EcoMobKillEvent(living, player))
 
         ecoMob.handleEvent(this, data.dispatch(player))

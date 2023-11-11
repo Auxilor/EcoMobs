@@ -15,7 +15,6 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import sun.jvm.hotspot.oops.CellTypeState.value
 
 class SpawnEgg internal constructor(
     val mob: EcoMob,
