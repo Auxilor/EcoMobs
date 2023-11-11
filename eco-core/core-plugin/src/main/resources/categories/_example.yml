@@ -7,16 +7,17 @@
 spawning:
   # Available methods:
 
-  # natural
+  # replace
   # Uses the vanilla spawning system to spawn the mob, by replacing
   # the vanilla mob with the custom mob when it spawns.
 
   # custom
   # Uses the EcoMobs spawning system.
-  type: natural
 
-  # Options for natural spawning
-  natural:
+  type: replace
+
+  # Options for replace spawning
+  replace:
     # The vanilla mobs to replace
     replace:
       - zombie

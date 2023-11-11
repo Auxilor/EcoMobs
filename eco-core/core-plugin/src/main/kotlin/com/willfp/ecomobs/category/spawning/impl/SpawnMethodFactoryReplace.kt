@@ -14,12 +14,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 
-object SpawnMethodFactoryNatural : SpawnMethodFactory("natural") {
+object SpawnMethodFactoryReplace : SpawnMethodFactory("replace") {
     override fun create(category: MobCategory, config: Config, plugin: EcoPlugin): SpawnMethod {
-        return SpawnMethodNormal(category, config, plugin)
+        return SpawnMethodReplace(category, config, plugin)
     }
 
-    class SpawnMethodNormal(
+    class SpawnMethodReplace(
         category: MobCategory,
         config: Config,
         plugin: EcoPlugin
@@ -53,9 +53,9 @@ object SpawnMethodFactoryNatural : SpawnMethodFactory("natural") {
 
             val mob = category.mobs.randomOrNull() ?: return
 
-            mob.spawn(event.entity.location, SpawnReason.NATURAL)
 
-            event.isCancelled = true
+            event.entity.remove()
+            mob.spawn(event.entity.location, SpawnReason.NATURAL)
         }
     }
 }
