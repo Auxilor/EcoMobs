@@ -8,7 +8,7 @@
 # View an explanation for this system here: https://plugins.auxilor.io/all-plugins/the-entity-lookup-system
 mob: iron_golem attack-damage:90 movement-speed:1.5 follow-range:16 health:1200
 
-# The ID of the mob category.
+# The ID of the mob category, handles spawning.
 category: common
 
 # Supported placeholders: %health%, %time% (formats as minutes:seconds, eg 1:56)
