@@ -1,7 +1,6 @@
 package com.willfp.ecomobs.display
 
 import com.willfp.eco.core.EcoPlugin
-import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
 import com.willfp.eco.core.fast.fast
@@ -26,10 +25,6 @@ class SpawnEggDisplay(
 
         val egg = fis.ecoMobEgg?.spawnEgg ?: return
 
-        val notMetLines = egg.conditions
-            .getNotMetLines(player, ItemProvidedHolder(BlankHolder, itemStack))
-            .map { Display.PREFIX + it }
-
-        fis.lore = fis.lore + notMetLines
+        egg.item.display(itemStack, player, ItemProvidedHolder(BlankHolder, itemStack))
     }
 }

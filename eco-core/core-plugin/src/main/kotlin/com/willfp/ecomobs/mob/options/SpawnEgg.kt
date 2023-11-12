@@ -5,6 +5,7 @@ import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.items.builder.modify
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.namespacedKeyOf
+import com.willfp.ecomobs.display.BaseItem
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.LivingMob
@@ -19,17 +20,8 @@ import org.bukkit.persistence.PersistentDataType
 class SpawnEgg internal constructor(
     val mob: EcoMob,
     val conditions: ConditionList,
-    private val backingItem: ItemStack,
-    private val rawDisplayName: String,
-    private val rawLore: List<String>
+    val item: BaseItem
 ) {
-    fun getItem(player: Player?): ItemStack {
-        return backingItem.clone().modify {
-            this.setDisplayName(rawDisplayName.formatEco(player))
-            this.addLoreLines(rawLore.formatEco(player))
-        }
-    }
-
     fun trySpawn(location: Location, player: Player?): LivingMob? {
         if (player != null) {
             val canSpawn = conditions.areMetAndTrigger(

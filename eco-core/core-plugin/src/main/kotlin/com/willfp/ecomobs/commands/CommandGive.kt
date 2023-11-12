@@ -57,7 +57,7 @@ class CommandGive(plugin: EcoMobsPlugin) : Subcommand(
         )
 
         DropQueue(recipient)
-            .addItem(egg.getItem(recipient).apply {
+            .addItem(egg.item.item.apply {
                 setAmount(amount)
             })
             .forceTelekinesis()

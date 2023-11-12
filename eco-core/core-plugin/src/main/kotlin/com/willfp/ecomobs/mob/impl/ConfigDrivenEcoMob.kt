@@ -26,6 +26,7 @@ import com.willfp.ecomobs.config.ifTrue
 import com.willfp.ecomobs.config.toConfigKey
 import com.willfp.ecomobs.config.validate
 import com.willfp.ecomobs.config.validateNotNull
+import com.willfp.ecomobs.display.BaseItem
 import com.willfp.ecomobs.event.EcoMobPreSpawnEvent
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
@@ -275,9 +276,11 @@ internal class ConfigDrivenEcoMob(
         SpawnEgg(
             this,
             conditions,
-            item,
-            name,
-            lore
+            BaseItem(
+                item,
+                name,
+                lore
+            )
         )
     }
 
