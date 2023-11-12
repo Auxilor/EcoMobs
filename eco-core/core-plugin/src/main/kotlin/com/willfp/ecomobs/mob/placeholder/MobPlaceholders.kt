@@ -14,11 +14,13 @@ import com.willfp.ecomobs.mob.event.impl.MobEventRangedAttack
 import com.willfp.ecomobs.mob.event.impl.MobEventSpawn
 import com.willfp.ecomobs.mob.event.impl.MobEventTakeDamage
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHealth
+import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderMaxHealth
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderTime
 
 object MobPlaceholders : Registry<MobPlaceholder>() {
     init {
         register(MobPlaceholderHealth)
+        register(MobPlaceholderMaxHealth)
         register(MobPlaceholderTime)
     }
 }
