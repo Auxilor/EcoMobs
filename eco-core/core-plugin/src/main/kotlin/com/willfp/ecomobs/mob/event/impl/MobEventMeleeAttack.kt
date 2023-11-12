@@ -13,6 +13,7 @@ object MobEventMeleeAttack : MobEvent("melee_attack") {
     fun handle(event: EntityDamageByEntityEvent) {
         val bukkitMob = event.entity as? Mob ?: return
         val ecoMob = bukkitMob.ecoMob ?: return
+        val living = ecoMob.getLivingMob(bukkitMob) ?: return
         val player = event.damager as? Player ?: return
 
         val data = TriggerData(
@@ -22,7 +23,7 @@ object MobEventMeleeAttack : MobEvent("melee_attack") {
             event = event
         )
 
-        ecoMob.handleEvent(this, data.dispatch(player))
-        ecoMob.handleEvent(MobEventAnyAttack, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player))
+        living.handleEvent(MobEventAnyAttack, data.dispatch(player))
     }
 }

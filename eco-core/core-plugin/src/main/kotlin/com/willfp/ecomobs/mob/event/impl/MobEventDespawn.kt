@@ -8,16 +8,16 @@ import org.bukkit.event.EventHandler
 object MobEventDespawn: MobEvent("despawn") {
     @EventHandler
     fun handle(event: EcoMobDespawnEvent) {
-        val ecoMob = event.mob
+        val living = event.mob
 
         val data = TriggerData(
-            victim = ecoMob.entity,
-            location = ecoMob.entity.location,
+            victim = living.entity,
+            location = living.entity.location,
             event = event
         )
 
         val player = getArbitraryPlayer() ?: return
 
-        ecoMob.mob.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player))
     }
 }

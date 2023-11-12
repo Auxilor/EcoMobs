@@ -15,6 +15,7 @@ object MobEventTakeDamage : MobEvent("take_damage") {
     fun handle(event: EntityDamageEvent) {
         val bukkitMob = event.entity as? Mob ?: return
         val ecoMob = bukkitMob.ecoMob ?: return
+        val living = ecoMob.getLivingMob(bukkitMob) ?: return
 
         val data = TriggerData(
             victim = bukkitMob,
@@ -24,6 +25,6 @@ object MobEventTakeDamage : MobEvent("take_damage") {
 
         val player = Bukkit.getOnlinePlayers().firstOrNull() ?: return
 
-        ecoMob.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player))
     }
 }

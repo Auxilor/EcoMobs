@@ -14,6 +14,7 @@ object MobEventKillPlayer : MobEvent("kill_player") {
         val player = event.victim as? Player ?: return
         val bukkitMob = event.killer as? Mob ?: return
         val ecoMob = bukkitMob.ecoMob ?: return
+        val living = ecoMob.getLivingMob(bukkitMob) ?: return
 
         val data = TriggerData(
             player = player,
@@ -22,6 +23,6 @@ object MobEventKillPlayer : MobEvent("kill_player") {
             event = event
         )
 
-        ecoMob.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player))
     }
 }

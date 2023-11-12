@@ -31,7 +31,7 @@ object MobEventDeath : MobEvent("death") {
 
         Bukkit.getPluginManager().callEvent(EcoMobDeathEvent(living))
 
-        ecoMob.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player))
         living.kill(null)
     }
 }

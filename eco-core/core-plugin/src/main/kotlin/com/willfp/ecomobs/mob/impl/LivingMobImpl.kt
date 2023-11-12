@@ -5,8 +5,12 @@ import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.LivingMob
+import com.willfp.ecomobs.mob.event.MobEvent
+import com.willfp.ecomobs.mob.placeholder.MobPlaceholders
 import com.willfp.ecomobs.mob.placeholder.formatMobPlaceholders
 import com.willfp.ecomobs.tick.TickHandler
+import com.willfp.libreforge.NamedValue
+import com.willfp.libreforge.triggers.DispatchedTrigger
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -59,6 +63,14 @@ internal class LivingMobImpl(
 
         isRunning = true
         ticker.runTaskTimer(1, 1)
+    }
+
+    override fun handleEvent(event: MobEvent, trigger: DispatchedTrigger) {
+        for (placeholder in MobPlaceholders.values()) {
+            trigger.addPlaceholder(NamedValue(placeholder.id, placeholder.getValue(this)))
+        }
+
+        mob.handleEvent(event, trigger)
     }
 
     override fun kill(player: Player?) {

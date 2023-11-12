@@ -12,6 +12,7 @@ object MobEventInteract: MobEvent("interact") {
     fun handle(event: PlayerInteractEntityEvent) {
         val bukkitMob = event.rightClicked as? Mob ?: return
         val ecoMob = bukkitMob.ecoMob ?: return
+        val living = ecoMob.getLivingMob(bukkitMob) ?: return
         val player = event.player
 
         val data = TriggerData(
@@ -21,6 +22,6 @@ object MobEventInteract: MobEvent("interact") {
             event = event
         )
 
-        ecoMob.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player))
     }
 }
