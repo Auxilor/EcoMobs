@@ -16,9 +16,8 @@ base {
 }
 
 dependencies {
-    project(":eco-core").dependencyProject.subprojects {
-        implementation(this)
-    }
+    implementation(project(":eco-core:core-plugin"))
+    implementation(project(path = ":eco-core:core-nms:v1_20_R1", configuration = "reobf"))
 }
 
 allprojects {
