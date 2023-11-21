@@ -1,6 +1,7 @@
 package com.willfp.ecobosses.libreforge
 
 import com.willfp.ecobosses.events.BossSpawnEvent
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.Trigger
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
@@ -18,7 +19,7 @@ object TriggerSpawnBoss : Trigger("spawn_boss") {
         val location = event.location
 
         this.dispatch(
-            player,
+            player.toDispatcher(),
             TriggerData(
                 player = player,
                 location = location

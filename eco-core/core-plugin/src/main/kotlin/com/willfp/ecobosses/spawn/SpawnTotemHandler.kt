@@ -5,6 +5,7 @@ import com.willfp.ecobosses.bosses.Bosses
 import com.willfp.ecobosses.events.BossSpawnEvent
 import com.willfp.ecobosses.util.SpawnTotem
 import com.willfp.libreforge.SimpleProvidedHolder
+import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -55,7 +56,7 @@ class SpawnTotemHandler : Listener {
 
                 val player = event.player
 
-                if (!boss.spawnConditions.areMet(player, SimpleProvidedHolder(boss))) {
+                if (!boss.spawnConditions.areMet(player.toDispatcher(), SimpleProvidedHolder(boss))) {
                     return
                 }
 

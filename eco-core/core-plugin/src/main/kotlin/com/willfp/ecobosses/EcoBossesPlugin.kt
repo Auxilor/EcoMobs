@@ -30,7 +30,9 @@ import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.mutators.Mutators
 import com.willfp.libreforge.registerHolderProvider
+import com.willfp.libreforge.registerSpecificHolderProvider
 import com.willfp.libreforge.triggers.Triggers
+import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
 class EcoBossesPlugin : LibreforgePlugin() {
@@ -52,7 +54,9 @@ class EcoBossesPlugin : LibreforgePlugin() {
     }
 
     override fun handleEnable() {
-        registerHolderProvider { it.bossHolders }
+        registerSpecificHolderProvider<Player> {
+            it.bossHolders
+        }
     }
 
     override fun handleReload() {

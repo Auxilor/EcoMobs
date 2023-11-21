@@ -1,6 +1,7 @@
 package com.willfp.ecobosses.libreforge
 
 import com.willfp.ecobosses.events.BossKillEvent
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.Trigger
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
@@ -20,7 +21,7 @@ object TriggerKillBoss : Trigger("kill_boss") {
         val entity = event.boss.entity
 
         this.dispatch(
-            killer,
+            killer.toDispatcher(),
             TriggerData(
                 player = killer,
                 victim = entity,
