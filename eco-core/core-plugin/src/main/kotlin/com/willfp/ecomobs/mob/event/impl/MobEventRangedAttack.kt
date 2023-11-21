@@ -3,6 +3,7 @@ package com.willfp.ecomobs.mob.event.impl
 import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -30,7 +31,7 @@ object MobEventRangedAttack : MobEvent("ranged_attack") {
             event = event
         )
 
-        living.handleEvent(this, data.dispatch(player))
-        living.handleEvent(MobEventAnyAttack, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player.toDispatcher()))
+        living.handleEvent(MobEventAnyAttack, data.dispatch(player.toDispatcher()))
     }
 }

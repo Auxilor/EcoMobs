@@ -2,6 +2,7 @@ package com.willfp.ecomobs.mob.event.impl
 
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
 import com.willfp.ecomobs.mob.event.MobEvent
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.event.EventHandler
 
@@ -16,8 +17,6 @@ object MobEventDespawn: MobEvent("despawn") {
             event = event
         )
 
-        val player = getArbitraryPlayer() ?: return
-
-        living.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(living.entity.toDispatcher()))
     }
 }

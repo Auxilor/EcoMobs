@@ -3,6 +3,7 @@ package com.willfp.ecomobs.handler
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.SpawnTotem
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
@@ -38,7 +39,7 @@ class SpawnTotemHandler : Listener {
                 if (!options.conditions.areMetAndTrigger(
                         TriggerData(
                             player = player
-                        ).dispatch(player)
+                        ).dispatch(player.toDispatcher())
                     )
                 ) {
                     continue

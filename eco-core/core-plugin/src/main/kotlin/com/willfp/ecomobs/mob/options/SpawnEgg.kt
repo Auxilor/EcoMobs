@@ -11,6 +11,7 @@ import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.libreforge.conditions.ConditionList
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -27,7 +28,7 @@ class SpawnEgg internal constructor(
             val canSpawn = conditions.areMetAndTrigger(
                 TriggerData(
                     player = player
-                ).dispatch(player)
+                ).dispatch(player.toDispatcher())
             )
 
             if (!canSpawn) {

@@ -15,13 +15,4 @@ abstract class MobEvent(
     override fun onRegister() {
         plugin.eventManager.registerListener(this)
     }
-
-    /*
-    libreforge effects require a player to be passed in, so we just use an arbitrary player.
-    This means that if there are no players online, then certain events will not fire - but this
-    shouldn't cause much of an issue.
-     */
-    protected fun getArbitraryPlayer(): Player? {
-        return Bukkit.getOnlinePlayers().firstOrNull()
-    }
 }

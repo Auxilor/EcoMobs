@@ -2,6 +2,7 @@ package com.willfp.ecomobs.mob.event.impl
 
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -23,6 +24,6 @@ object MobEventDamagePlayer : MobEvent("damage_player") {
             event = event
         )
 
-        living.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player.toDispatcher()))
     }
 }

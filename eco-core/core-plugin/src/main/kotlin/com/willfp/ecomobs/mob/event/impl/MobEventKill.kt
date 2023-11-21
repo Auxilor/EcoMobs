@@ -5,6 +5,7 @@ import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.event.EcoMobKillEvent
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
@@ -31,7 +32,7 @@ object MobEventKill : MobEvent("kill") {
 
         Bukkit.getPluginManager().callEvent(EcoMobKillEvent(living, player))
 
-        living.handleEvent(this, data.dispatch(player))
+        living.handleEvent(this, data.dispatch(player.toDispatcher()))
         living.kill(player)
     }
 }
