@@ -1,12 +1,9 @@
 package com.willfp.ecomobs.integrations.modelengine
 
-import com.ticxo.modelengine.api.ModelEngineAPI
 import com.willfp.eco.core.integrations.Integration
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
-import com.willfp.ecomobs.mob.impl.ecoMob
-import me.lokka30.levelledmobs.events.MobPreLevelEvent
-import org.bukkit.entity.Mob
+import com.willfp.modelenginebridge.ModelEngineBridge
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -20,10 +17,10 @@ class IntegrationModelEngine : Listener, Integration {
 
         val modelEngineID = mob.getIntegrationConfig(integration).getStringOrNull("id") ?: return
 
-        val model = ModelEngineAPI.createActiveModel(modelEngineID) ?: return
+        val model = ModelEngineBridge.instance.createActiveModel(modelEngineID) ?: return
 
-        val modelled = ModelEngineAPI.createModeledEntity(entity)
-        modelled.addModel(model, true)
+        val modelled = ModelEngineBridge.instance.createModeledEntity(entity)
+        modelled.addModel(model)
         modelled.isBaseEntityVisible = true
     }
 
