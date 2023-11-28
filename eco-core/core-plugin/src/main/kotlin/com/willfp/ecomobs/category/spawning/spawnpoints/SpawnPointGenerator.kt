@@ -5,11 +5,13 @@ import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecomobs.math.Int3
 import com.willfp.ecomobs.plugin
 import org.bukkit.Material
+import org.bukkit.block.data.Waterlogged
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-val spawnPointCache = Caffeine.newBuilder()
+private val spawnPointCache = Caffeine.newBuilder()
     .expireAfterWrite(2, TimeUnit.SECONDS)
     .build<UUID, Set<SpawnPoint>>()
 
@@ -24,9 +26,19 @@ class SpawnPointGenerator(
     private val radius = plugin.configYml.getInt("custom-spawning.radius-around-player")
     private val max = plugin.configYml.getInt("custom-spawning.max-points-per-player")
     private val maxAttempts = plugin.configYml.getInt("custom-spawning.max-attempts")
+    private val maxMobs = plugin.configYml.getInt("custom-spawning.max-mobs-per-player")
 
     fun generate(player: Player): Set<SpawnPoint> {
         val points = mutableSetOf<SpawnPoint>()
+
+        val mobsAroundPlayer = player.location.world
+            .getNearbyEntities(player.location, radius.toDouble(), radius.toDouble(), radius.toDouble())
+            .filterIsInstance<Mob>()
+            .size
+
+        if (mobsAroundPlayer >= maxMobs) {
+            return points
+        }
 
         for (i in 1..max) {
             val point = generatePoint(player) ?: continue
@@ -63,10 +75,18 @@ class SpawnPointGenerator(
                 continue
             }
 
-            if (block.isPassable && blockAbove.isPassable && blockBelow.type.isSolid) {
+            // Handle land with a massive boolean expression
+            if (
+                block.isPassable &&
+                !block.isLiquid && block.blockData !is Waterlogged &&
+                blockAbove.isPassable &&
+                !blockAbove.isLiquid && blockAbove.blockData !is Waterlogged &&
+                blockBelow.type.isSolid
+            ) {
                 return SpawnPoint(block.location.add(0.5, 0.5, 0.5), SpawnPointType.LAND)
             }
 
+            // Handle water
             if (block.type == Material.WATER && blockAbove.type == Material.WATER) {
                 return SpawnPoint(block.location.add(0.5, 0.5, 0.5), SpawnPointType.WATER)
             }

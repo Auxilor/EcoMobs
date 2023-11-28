@@ -16,6 +16,7 @@ import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.enumValueOfOrNull
 import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
+import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -76,7 +77,7 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
                         continue
                     }
 
-                    mob.spawn(point.location, SpawnReason.NATURAL)
+                    point.spawn(mob, SpawnReason.NATURAL)
                 }
             }
         }

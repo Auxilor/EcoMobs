@@ -16,5 +16,8 @@ custom-spawning:
   # The max amount of spawn points to generate per player
   max-points-per-player: 8
 
+  # The max amount of mobs to spawn per player
+  max-mobs-per-player: 24
+
   # The max amount of attempts to generate a spawn point per player
   max-attempts: 64
