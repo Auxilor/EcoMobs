@@ -4,7 +4,13 @@ import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.category.MobCategory
+import com.willfp.libreforge.ViolationContext
 
 abstract class SpawnMethodFactory(override val id: String) : KRegistrable {
-    abstract fun create(category: MobCategory, config: Config, plugin: EcoPlugin): SpawnMethod
+    abstract fun create(
+        category: MobCategory,
+        config: Config,
+        plugin: EcoPlugin,
+        context: ViolationContext
+    ): SpawnMethod
 }

@@ -15,7 +15,12 @@ class ConfigDrivenMobCategory(
     private val context: ViolationContext
 ) : MobCategory {
     override val spawnMethod = SpawnMethodFactories[config.getString("spawning.type")]
-        ?.create(this, config.getSubsection("spawning.${config.getString("spawning.type")}"), plugin)
+        ?.create(
+            this,
+            config.getSubsection("spawning.${config.getString("spawning.type")}"),
+            plugin,
+            context.with("spawning").with(config.getString("spawning.type"))
+        )
         ?: throw ConfigViolationException(
             ConfigViolation(
                 "type",

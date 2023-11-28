@@ -7,6 +7,7 @@ import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
 import com.willfp.ecomobs.mob.SpawnReason
+import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.enumValueOfOrNull
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
@@ -15,7 +16,12 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 
 object SpawnMethodFactoryNone : SpawnMethodFactory("replace") {
-    override fun create(category: MobCategory, config: Config, plugin: EcoPlugin): SpawnMethod {
+    override fun create(
+        category: MobCategory,
+        config: Config,
+        plugin: EcoPlugin,
+        context: ViolationContext
+    ): SpawnMethod {
         return SpawnMethodNone(category, config, plugin)
     }
 

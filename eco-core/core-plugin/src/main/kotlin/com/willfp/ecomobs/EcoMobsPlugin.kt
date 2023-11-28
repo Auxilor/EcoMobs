@@ -5,6 +5,7 @@ import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.entities.ai.EntityGoals
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.ecomobs.category.MobCategories
+import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
 import com.willfp.ecomobs.commands.CommandEcoMobs
 import com.willfp.ecomobs.display.SpawnEggDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
@@ -25,6 +26,8 @@ internal lateinit var plugin: EcoMobsPlugin
     private set
 
 class EcoMobsPlugin : LibreforgePlugin() {
+    val spawnPointGenerator = SpawnPointGenerator(this)
+
     init {
         plugin = this
     }

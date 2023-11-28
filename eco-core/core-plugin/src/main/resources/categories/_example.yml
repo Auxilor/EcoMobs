@@ -29,5 +29,13 @@ spawning:
 
   # Options for custom spawning
   custom:
+    # Spawn types (choose from land, water)
+    spawn-types:
+      - land
 
+    # Conditions that the location must match in order for the mob to spawn
+    # Read here: https://plugins.auxilor.io/effects/configuring-a-condition
+    conditions: [ ]
 
+    # The chance for the mob to spawn if a valid spawn point is found (as a percentage)
+    chance: 100
