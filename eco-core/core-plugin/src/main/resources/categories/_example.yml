@@ -38,7 +38,7 @@ spawning:
     conditions: [ ]
 
     # The chance for the mob to spawn if a valid spawn point is found (as a percentage)
-    chance: 100
+    chance: 1.5
 
 
 # If the mob is persistent, then it will not despawn naturally.

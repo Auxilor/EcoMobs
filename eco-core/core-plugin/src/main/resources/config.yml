@@ -8,7 +8,7 @@ discover-recipes: true
 custom-spawning:
   # The spawn rate is the number of ticks to wait between trying to spawn a mob.
   # 20 ticks = 1 second; the higher the number, the less often mobs will spawn.
-  spawn-rate: 5
+  spawn-rate: 12
 
   # The radius to generate spawn points for around the player
   radius-around-player: 32
