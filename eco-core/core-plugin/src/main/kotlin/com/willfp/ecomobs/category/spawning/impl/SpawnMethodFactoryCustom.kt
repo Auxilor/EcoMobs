@@ -1,9 +1,8 @@
 package com.willfp.ecomobs.category.spawning.impl
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.util.randDouble
+import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
@@ -16,18 +15,14 @@ import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.enumValueOfOrNull
 import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
-import org.bukkit.entity.LivingEntity
-import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.scheduler.BukkitTask
 
 object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
     override fun create(
         category: MobCategory,
         config: Config,
-        plugin: EcoPlugin,
+        plugin: EcoMobsPlugin,
         context: ViolationContext
     ): SpawnMethod {
         return SpawnMethodCustom(category, config, plugin, context)
@@ -36,7 +31,7 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
     class SpawnMethodCustom(
         category: MobCategory,
         config: Config,
-        plugin: EcoPlugin,
+        plugin: EcoMobsPlugin,
         context: ViolationContext
     ) : SpawnMethod(category, config, plugin), Listener {
         private val spawnRate = plugin.configYml.getInt("custom-spawning.spawn-rate").toLong()

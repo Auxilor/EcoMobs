@@ -1,10 +1,13 @@
 package com.willfp.ecomobs.category.spawning.spawnpoints
 
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.sun.tools.javac.jvm.ByteCodes.ret
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecomobs.math.Int3
 import com.willfp.ecomobs.plugin
+import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.block.data.Waterlogged
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -28,11 +31,14 @@ class SpawnPointGenerator(
     private val maxAttempts = plugin.configYml.getInt("custom-spawning.max-attempts")
     private val maxMobs = plugin.configYml.getInt("custom-spawning.max-mobs-per-player")
 
-    fun generate(player: Player): Set<SpawnPoint> {
+    fun generate(player: Player): Set<SpawnPoint> =
+        generate(player.location)
+
+    fun generate(location: Location): Set<SpawnPoint> {
         val points = mutableSetOf<SpawnPoint>()
 
-        val mobsAroundPlayer = player.location.world
-            .getNearbyEntities(player.location, radius.toDouble(), radius.toDouble(), radius.toDouble())
+        val mobsAroundPlayer = location.world
+            .getNearbyEntities(location, radius.toDouble(), radius.toDouble(), radius.toDouble())
             .filterIsInstance<Mob>()
             .size
 
@@ -41,27 +47,34 @@ class SpawnPointGenerator(
         }
 
         for (i in 1..max) {
-            val point = generatePoint(player) ?: continue
+            val point = generateAroundLocation(location) ?: continue
             points.add(point)
         }
 
         return points
     }
 
-    private fun generatePoint(player: Player): SpawnPoint? {
-        val playerLocation = player.location
-        val world = playerLocation.world ?: return null
+    private fun generateAroundLocation(location: Location): SpawnPoint? {
+        val world = location.world ?: return null
 
         val bottomCorner = Int3(
-            playerLocation.x.toInt() - radius, playerLocation.y.toInt() - radius, playerLocation.z.toInt() - radius
+            location.x.toInt() - radius,
+            location.y.toInt() - radius,
+            location.z.toInt() - radius
         )
 
         val topCorner = Int3(
-            playerLocation.x.toInt() + radius, playerLocation.y.toInt() + radius, playerLocation.z.toInt() + radius
+            location.x.toInt() + radius,
+            location.y.toInt() + radius,
+            location.z.toInt() + radius
         )
 
+        return generateInBox(world, bottomCorner, topCorner)
+    }
+
+    private fun generateInBox(world: World, corner1: Int3, corner2: Int3): SpawnPoint? {
         var attempts = 0
-        val iterator = (bottomCorner..topCorner).randomIterator()
+        val iterator = (corner1..corner2).randomIterator()
 
         while (attempts < maxAttempts) {
             attempts++

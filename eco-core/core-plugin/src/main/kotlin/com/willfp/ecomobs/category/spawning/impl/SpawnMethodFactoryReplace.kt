@@ -1,8 +1,8 @@
 package com.willfp.ecomobs.category.spawning.impl
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.Entities
+import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
@@ -19,7 +19,7 @@ object SpawnMethodFactoryReplace : SpawnMethodFactory("replace") {
     override fun create(
         category: MobCategory,
         config: Config,
-        plugin: EcoPlugin,
+        plugin: EcoMobsPlugin,
         context: ViolationContext
     ): SpawnMethod {
         return SpawnMethodReplace(category, config, plugin)
@@ -28,7 +28,7 @@ object SpawnMethodFactoryReplace : SpawnMethodFactory("replace") {
     class SpawnMethodReplace(
         category: MobCategory,
         config: Config,
-        plugin: EcoPlugin
+        plugin: EcoMobsPlugin
     ) : SpawnMethod(category, config, plugin), Listener {
         private val toReplace = config.getStrings("replace")
             .mapNotNull { enumValueOfOrNull<EntityType>(it.uppercase()) }

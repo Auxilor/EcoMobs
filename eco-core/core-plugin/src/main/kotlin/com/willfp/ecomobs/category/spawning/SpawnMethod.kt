@@ -1,13 +1,13 @@
 package com.willfp.ecomobs.category.spawning
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategory
 
 abstract class SpawnMethod(
     val category: MobCategory,
     val config: Config,
-    protected val plugin: EcoPlugin
+    protected val plugin: EcoMobsPlugin
 ) {
     private var isStarted = false
 
