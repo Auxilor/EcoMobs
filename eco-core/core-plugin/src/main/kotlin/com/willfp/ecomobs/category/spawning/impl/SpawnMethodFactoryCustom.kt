@@ -66,15 +66,16 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
         private fun tick() {
             for (player in Bukkit.getOnlinePlayers()) {
                 for (point in player.spawnPoints.filter { it.type in spawnTypes }) {
-                    if (randDouble(0.0, 100.0) > chance) {
-                        continue
-                    }
+                    val mob = category.mobs.randomOrNull() ?: continue
 
                     if (!conditions.areMet(point.location.toDispatcher(), EmptyProvidedHolder)) {
                         continue
                     }
 
-                    val mob = category.mobs.randomOrNull() ?: continue
+                    if (randDouble(0.0, 100.0) > chance) {
+                        continue
+                    }
+
                     mob.spawn(point.location, SpawnReason.NATURAL)
                 }
             }
