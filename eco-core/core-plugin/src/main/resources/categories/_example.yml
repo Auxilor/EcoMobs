@@ -39,3 +39,7 @@ spawning:
 
     # The chance for the mob to spawn if a valid spawn point is found (as a percentage)
     chance: 100
+
+
+# If the mob is persistent, then it will not despawn naturally.
+persistent: false

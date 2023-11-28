@@ -5,6 +5,7 @@ import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactories
 import com.willfp.ecomobs.config.ConfigViolationException
+import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.libreforge.ConfigViolation
 import com.willfp.libreforge.ViolationContext
 
@@ -29,6 +30,15 @@ class ConfigDrivenMobCategory(
         ) {
             it.with("spawning")
         }
+
+    override val isPersistent = config.getBool("persistent")
+
+    override fun applyToMob(mob: LivingMob) {
+        if (isPersistent) {
+            mob.entity.isPersistent = true
+            mob.entity.removeWhenFarAway = false
+        }
+    }
 
     override fun onRegister() {
         spawnMethod.start()

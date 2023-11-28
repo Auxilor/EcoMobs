@@ -394,6 +394,9 @@ internal class ConfigDrivenEcoMob(
             action(livingMob)
         }
 
+        // Apply category
+        category.applyToMob(livingMob)
+
         // Add base tickets
         livingMob.addTickHandler(TickHandlerDisplayName())
         livingMob.addTickHandler(TickHandlerLifespan())
