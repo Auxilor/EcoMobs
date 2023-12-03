@@ -1,7 +1,6 @@
 mob: illusioner attack-damage:50 health:600 hand:"iron_sword sharpness:5"
 
 model-engine-id: ""
-model-engine-animation: ""
 
 display-name: "&9Illusioner &7| &c%health%♥ &7| &e%time%"
 

@@ -1,6 +1,5 @@
 package com.willfp.ecobosses.bosses
 
-import com.ticxo.modelengine.api.ModelEngineAPI
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.CustomEntity
@@ -42,6 +41,7 @@ import com.willfp.libreforge.Holder
 import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
+import com.willfp.modelenginebridge.ModelEngineBridge
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -306,8 +306,6 @@ class EcoBoss(
 
     private val modelEngineID = config.getStringOrNull("model-engine-id")
 
-    private val modelEngineAnimation = config.getStringOrNull("model-engine-animation")
-
     private val currentlyAlive = mutableMapOf<UUID, LivingEcoBoss>()
 
     override val conditions = Conditions.compile(
@@ -357,32 +355,15 @@ class EcoBoss(
         }
 
         if (modelEngineID != null && Bukkit.getPluginManager().isPluginEnabled("ModelEngine")) {
-            val model = ModelEngineAPI.createActiveModel(modelEngineID)
+            val model = ModelEngineBridge.instance.createActiveModel(modelEngineID)
 
             if (model == null) {
                 plugin.logger.warning("Invalid Model Engine ID for boss $id")
+            } else {
+                val modelled = ModelEngineBridge.instance.createModeledEntity(mob)
+                modelled.addModel(model)
+                modelled.isBaseEntityVisible = false
             }
-
-            if (modelEngineAnimation != null) {
-                val animationHandler = model.animationHandler
-                val animationProperty = animationHandler.getAnimation(modelEngineAnimation)
-
-                if (animationProperty != null) {
-                    animationHandler.playAnimation(animationProperty, true)
-                } else {
-                    plugin.logger.warning("Animation $modelEngineAnimation not found in model $modelEngineID, defaulting to walk!")
-                    val animationPropertyWalk = animationHandler.getAnimation("walk")
-                    if (animationPropertyWalk != null) {
-                        animationHandler.playAnimation(animationPropertyWalk, true)
-                    } else {
-                        plugin.logger.warning("Walk animation not found in $modelEngineID!")
-                    }
-                }
-            }
-
-            val modelled = ModelEngineAPI.createModeledEntity(mob)
-            modelled.addModel(model, true)
-            modelled.isBaseEntityVisible = false
         }
 
         val boss = LivingEcoBoss(

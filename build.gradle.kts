@@ -51,6 +51,7 @@ allprojects {
     tasks {
         shadowJar {
             relocate("com.willfp.libreforge.loader", "com.willfp.ecobosses.libreforge.loader")
+            relocate("com.willfp.modelenginebridge", "com.willfp.ecobosses.modelenginebridge")
         }
 
         compileKotlin {
