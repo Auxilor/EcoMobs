@@ -1,7 +1,6 @@
 package com.willfp.ecomobs.category.spawning.spawnpoints
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.sun.tools.javac.jvm.ByteCodes.ret
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecomobs.math.Int3
 import com.willfp.ecomobs.plugin
