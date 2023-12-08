@@ -232,12 +232,12 @@ internal class ConfigDrivenEcoMob(
 
     val drops = MobDrops(
         config.getInt("drops.experience"),
-        config.getSubsections("drops.items").map {
-            val items = it.getStrings("items")
+        config.getSubsections("drops.items").map { dropConfig ->
+            val items = dropConfig.getStrings("items")
                 .map { lookup -> Items.lookup(lookup) }
-                .filterNot { it is EmptyTestableItem }
+                .filterNot { item -> item is EmptyTestableItem }
 
-            val chance = it.getDouble("chance")
+            val chance = dropConfig.getDouble("chance")
 
             Drop(chance, items)
         }

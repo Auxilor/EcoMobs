@@ -3,6 +3,7 @@ package com.willfp.ecomobs.mob.options
 import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.core.items.TestableItem
 import com.willfp.eco.util.randDouble
+import com.willfp.libreforge.GlobalDispatcher.location
 import org.bukkit.Location
 import org.bukkit.entity.ExperienceOrb
 import org.bukkit.entity.Player
