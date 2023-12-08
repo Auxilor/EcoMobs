@@ -7,7 +7,7 @@ import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
 import com.willfp.libreforge.ViolationContext
 
-object SpawnMethodFactoryNone : SpawnMethodFactory("replace") {
+object SpawnMethodFactoryNone : SpawnMethodFactory("none") {
     override fun create(
         category: MobCategory,
         config: Config,
