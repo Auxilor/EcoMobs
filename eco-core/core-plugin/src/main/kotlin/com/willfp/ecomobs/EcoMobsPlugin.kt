@@ -18,6 +18,7 @@ import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
 import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
 import com.willfp.ecomobs.mob.EcoMobs
+import com.willfp.ecomobs.mob.damage.TopDamagerHandler
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
 import org.bukkit.event.Listener
@@ -27,6 +28,7 @@ internal lateinit var plugin: EcoMobsPlugin
 
 class EcoMobsPlugin : LibreforgePlugin() {
     val spawnPointGenerator = SpawnPointGenerator(this)
+    val topDamagerHandler = TopDamagerHandler(this)
 
     init {
         plugin = this

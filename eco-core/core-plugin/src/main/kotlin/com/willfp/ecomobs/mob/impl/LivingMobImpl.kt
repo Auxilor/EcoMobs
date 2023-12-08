@@ -16,7 +16,7 @@ import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 
 internal class LivingMobImpl(
-    plugin: EcoMobsPlugin,
+    private val plugin: EcoMobsPlugin,
     override val mob: EcoMob,
     override val entity: Mob,
     private val deathCallback: () -> Unit
@@ -68,6 +68,10 @@ internal class LivingMobImpl(
     override fun handleEvent(event: MobEvent, trigger: DispatchedTrigger) {
         for (placeholder in MobPlaceholders.values()) {
             trigger.addPlaceholder(NamedValue(placeholder.id, placeholder.getValue(this)))
+        }
+
+        for (placeholder in plugin.topDamagerHandler.generatePlaceholders(entity)) {
+            trigger.addPlaceholder(placeholder)
         }
 
         mob.handleEvent(event, trigger)

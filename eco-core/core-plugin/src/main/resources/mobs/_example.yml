@@ -55,6 +55,8 @@ custom-ai:
 # Effects are done from the player's perspective: to treat the player as the victim,
 # either use self_as_victim in args, or use player_as_victim in mutators.
 # You can use display name placeholders in effects
+# You can also use top damager placeholders:
+# %top_damager_<place>_name%, %top_damager_<place>_damage%, %top_damager_<place>_display%
 effects:
   # Effects ran when the mob spawns
   spawn: [ ]

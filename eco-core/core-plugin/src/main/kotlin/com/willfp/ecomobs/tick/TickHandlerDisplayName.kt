@@ -1,7 +1,8 @@
 package com.willfp.ecomobs.tick
 
+import com.willfp.eco.util.setClientsideDisplayName
+import com.willfp.eco.util.toComponent
 import com.willfp.ecomobs.mob.LivingMob
-import com.willfp.ecomobs.name.setClientDisplayName
 import org.bukkit.entity.Player
 
 class TickHandlerDisplayName : TickHandler {
@@ -12,6 +13,6 @@ class TickHandlerDisplayName : TickHandler {
 
         mob.entity.getNearbyEntities(20.0, 20.0, 20.0)
             .filterIsInstance<Player>()
-            .forEach { mob.entity.setClientDisplayName(it, mob.displayName, false) }
+            .forEach { mob.entity.setClientsideDisplayName(it, mob.displayName.toComponent(), false) }
     }
 }

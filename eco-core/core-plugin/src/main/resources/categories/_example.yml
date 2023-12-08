@@ -17,7 +17,7 @@ spawning:
   # none
   # Disables natural spawning
 
-  type: replace
+  type: custom
 
   # Options for replace spawning
   replace:
