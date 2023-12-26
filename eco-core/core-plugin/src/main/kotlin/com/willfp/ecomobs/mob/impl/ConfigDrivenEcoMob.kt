@@ -309,7 +309,7 @@ internal class ConfigDrivenEcoMob(
         { (it as? Mob)?.ecoMob == this }
     ) {
         this.spawn(it, SpawnReason.COMMAND)!!.entity
-    }
+    }.apply { register() }
 
     /*
     ----------
