@@ -353,7 +353,6 @@ internal class ConfigDrivenEcoMob(
         return trackedMobs[uuid]
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun spawn(location: Location, reason: SpawnReason): LivingMob? {
         // Call bukkit event
         val preSpawnEvent = EcoMobPreSpawnEvent(this, reason)
@@ -364,7 +363,7 @@ internal class ConfigDrivenEcoMob(
         }
 
         // Spawn bukkit mob
-        val entity = mob.spawn(location) as? Mob ?: throw IllegalStateException("Mob is not a mob")
+        val entity = mob.spawn(location) as? Mob ?: throw IllegalStateException("Base entity must be a mob!")
 
         // Mark as custom mob
         entity.ecoMob = this
