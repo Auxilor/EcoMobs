@@ -27,7 +27,7 @@ internal class LivingMobImpl(
 
         if (!isAlive) {
             it.cancel()
-            remove()
+            handleRemove()
         }
     }
 
@@ -78,23 +78,22 @@ internal class LivingMobImpl(
     }
 
     override fun kill(player: Player?) {
-        remove()
+        handleRemove()
 
         mob.spawnDrops(entity.location, player)
     }
 
     override fun despawn() {
-        remove()
+        entity.remove()
+        handleRemove()
 
         Bukkit.getPluginManager().callEvent(
             EcoMobDespawnEvent(this)
         )
     }
 
-    private fun remove() {
+    private fun handleRemove() {
         ticker.cancel()
-
-        entity.remove()
         deathCallback()
 
         for (handler in this.tickHandlers) {
