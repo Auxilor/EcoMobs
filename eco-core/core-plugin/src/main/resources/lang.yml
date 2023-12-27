@@ -1,5 +1,5 @@
 messages:
-  prefix: "&9&lEcoMobs &f» "
+  prefix: "&9&lEcoMobs &8» &f"
   no-permission: "&cYou don't have permission to do this!"
   not-player: "&cThis command must be run by a player"
   invalid-command: "&cUnknown subcommand!"
