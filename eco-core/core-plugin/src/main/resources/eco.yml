@@ -4,6 +4,6 @@ environment:
 
 options:
   resource-id: 525
-  bstats-id: 10635
+  bstats-id: 20581
   color: "&9"
   proxy-package: "com.willfp.ecomobs.nms"
