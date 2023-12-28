@@ -33,7 +33,7 @@ internal class LivingMobImpl(
 
     private var isRunning = false
 
-    private var tick = 1
+    private var tick = 0
 
     private val tickHandlers = mutableListOf<TickHandler>()
 
