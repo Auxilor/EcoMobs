@@ -21,7 +21,7 @@ class IntegrationModelEngine : Listener, Integration {
 
         val modelled = ModelEngineBridge.instance.createModeledEntity(entity)
         modelled.addModel(model)
-        modelled.isBaseEntityVisible = true
+        modelled.isBaseEntityVisible = false
     }
 
     override fun getPluginName(): String {
