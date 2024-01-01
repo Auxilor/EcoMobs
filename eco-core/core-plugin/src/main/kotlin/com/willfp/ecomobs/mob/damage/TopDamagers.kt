@@ -4,6 +4,7 @@ import com.willfp.eco.util.savedDisplayName
 import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.libreforge.NamedValue
+import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
