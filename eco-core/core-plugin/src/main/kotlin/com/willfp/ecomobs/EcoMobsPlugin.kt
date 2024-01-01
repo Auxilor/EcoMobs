@@ -52,7 +52,8 @@ class EcoMobsPlugin : LibreforgePlugin() {
             VanillaCompatibilityHandlers(),
             DiscoverRecipeListener(this),
             SpawnEggHandler(this),
-            SpawnTotemHandler()
+            SpawnTotemHandler(),
+            topDamagerHandler
         )
     }
 

@@ -27,7 +27,7 @@ interface LivingMob {
     /**
      * Kill the mob.
      */
-    fun kill(player: Player?)
+    fun kill(player: Player?, removeTracking: Boolean = true)
 
     /**
      * Despawn the mob.

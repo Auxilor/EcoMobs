@@ -33,6 +33,12 @@ object MobEventKill : MobEvent("kill") {
         Bukkit.getPluginManager().callEvent(EcoMobKillEvent(living, player))
 
         living.handleEvent(this, data.dispatch(player.toDispatcher()))
-        living.kill(player)
+
+        // Tracking isn't removed here because it's removed in MobEventDeath, which is called after this one.
+        // Otherwise, player kills wouldn't fire the death event.
+        living.kill(
+            player,
+            removeTracking = false
+        )
     }
 }
