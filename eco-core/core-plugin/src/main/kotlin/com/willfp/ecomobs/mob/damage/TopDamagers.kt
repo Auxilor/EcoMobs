@@ -49,10 +49,21 @@ class TopDamagerHandler(
 
     fun generatePlaceholders(mob: Mob): List<NamedValue> {
         return mob.topDamagers
-            .mapIndexed { index, damager ->
-                NamedValue("top_damager_${index + 1}_name", Bukkit.getOfflinePlayer(damager.uuid).name ?: "Unknown")
-                NamedValue("top_damager_${index + 1}_display", Bukkit.getOfflinePlayer(damager.uuid).savedDisplayName)
-                NamedValue("top_damager_${index + 1}_damage", damager.damage.toString())
+            .flatMapIndexed { index, damager ->
+                listOf(
+                    NamedValue(
+                        "top_damager_${index + 1}_name",
+                        Bukkit.getOfflinePlayer(damager.uuid).name ?: "Unknown"
+                    ),
+                    NamedValue(
+                        "top_damager_${index + 1}_display",
+                        Bukkit.getOfflinePlayer(damager.uuid).savedDisplayName
+                    ),
+                    NamedValue(
+                        "top_damager_${index + 1}_damage",
+                        damager.damage.toString()
+                    )
+                )
             }
     }
 }
