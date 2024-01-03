@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.mob.damage
 
 import com.willfp.eco.util.savedDisplayName
+import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.libreforge.NamedValue
@@ -62,7 +63,7 @@ class TopDamagerHandler(
                     ),
                     NamedValue(
                         "top_damager_${index + 1}_damage",
-                        damager.damage.toString()
+                        damager.damage.toNiceString()
                     )
                 )
             }
