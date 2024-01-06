@@ -19,7 +19,7 @@ internal class LivingMobImpl(
     private val plugin: EcoMobsPlugin,
     override val mob: EcoMob,
     override val entity: Mob,
-    private val deathCallback: () -> Unit
+    private val trackingRemovalCallback: () -> Unit
 ) : LivingMob {
     private val ticker = plugin.runnableFactory.create {
         tick(tick)
@@ -77,8 +77,8 @@ internal class LivingMobImpl(
         mob.handleEvent(event, trigger)
     }
 
-    override fun kill(player: Player?) {
-        handleRemove()
+    override fun kill(player: Player?, removeTracking: Boolean) {
+        handleRemove(removeTracking = removeTracking)
 
         mob.spawnDrops(entity.location, player)
     }
@@ -92,9 +92,11 @@ internal class LivingMobImpl(
         )
     }
 
-    private fun handleRemove() {
+    private fun handleRemove(removeTracking: Boolean = true) {
         ticker.cancel()
-        deathCallback()
+        if (removeTracking) {
+            trackingRemovalCallback()
+        }
 
         for (handler in this.tickHandlers) {
             handler.onRemove(this, tick)
