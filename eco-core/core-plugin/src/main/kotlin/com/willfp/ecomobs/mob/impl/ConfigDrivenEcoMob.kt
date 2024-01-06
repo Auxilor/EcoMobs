@@ -49,14 +49,19 @@ import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
 import com.willfp.ecomobs.tick.TickHandlerLifespan
 import com.willfp.libreforge.ConfigViolation
+import com.willfp.libreforge.Holder
 import com.willfp.libreforge.ViolationContext
+import com.willfp.libreforge.conditions.ConditionList
 import com.willfp.libreforge.conditions.Conditions
+import com.willfp.libreforge.conditions.emptyConditionList
+import com.willfp.libreforge.effects.EffectList
 import com.willfp.libreforge.effects.Effects
 import com.willfp.libreforge.enumValueOfOrNull
 import com.willfp.libreforge.triggers.DispatchedTrigger
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.CreatureSpawnEvent
@@ -310,6 +315,17 @@ internal class ConfigDrivenEcoMob(
     ) {
         this.spawn(it, SpawnReason.COMMAND)!!.entity
     }.apply { register() }
+
+    override val entityHolder = object : Holder {
+        override val id = plugin.createNamespacedKey(getID())
+
+        override val effects: EffectList = Effects.compile(
+            config.getSubsections("effects.permanent-effects"),
+            context.with("effects").with("permanent effects")
+        )
+
+        override val conditions = emptyConditionList()
+    }
 
     /*
     ----------

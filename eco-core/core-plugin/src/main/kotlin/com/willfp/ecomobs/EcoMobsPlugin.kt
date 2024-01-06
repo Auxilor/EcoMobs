@@ -4,6 +4,7 @@ import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.entities.ai.EntityGoals
 import com.willfp.eco.core.integrations.IntegrationLoader
+import com.willfp.eco.util.toSingletonList
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
 import com.willfp.ecomobs.commands.CommandEcoMobs
@@ -19,8 +20,13 @@ import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
 import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.damage.TopDamagerHandler
+import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.libreforge.EmptyProvidedHolder.holder
+import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
+import com.willfp.libreforge.registerSpecificHolderProvider
+import org.bukkit.entity.Mob
 import org.bukkit.event.Listener
 
 internal lateinit var plugin: EcoMobsPlugin
@@ -32,6 +38,14 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     init {
         plugin = this
+    }
+
+    override fun handleEnable() {
+        registerSpecificHolderProvider<Mob> {
+            it.ecoMob?.entityHolder.toSingletonList().map { holder ->
+                EntityProvidedHolder(holder, it)
+            }
+        }
     }
 
     override fun handleLoad() {
