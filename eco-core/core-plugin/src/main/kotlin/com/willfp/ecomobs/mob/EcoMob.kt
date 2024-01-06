@@ -7,6 +7,7 @@ import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.integrations.MobIntegration
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.options.SpawnEgg
+import com.willfp.libreforge.Holder
 import com.willfp.libreforge.triggers.DispatchedTrigger
 import org.bukkit.Location
 import org.bukkit.entity.Mob
@@ -49,6 +50,11 @@ interface EcoMob : KRegistrable {
      * The eco custom entity.
      */
     val customEntity: CustomEntity
+
+    /**
+     * The entity holder.
+     */
+    val entityHolder: Holder
 
     /**
      * Get a living mob from a bukkit mob.
