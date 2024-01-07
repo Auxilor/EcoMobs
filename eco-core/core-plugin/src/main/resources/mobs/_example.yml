@@ -87,11 +87,19 @@ effects:
   # Ran from the perspective of the player
   any-attack: [ ]
 
+<<<<<<< HEAD
   # Effects ran when the mob takes damage
   # Ran from the perspective of the entity
   take-damage: [ ]
 
   # Effects ran when the player is damaged by the mob
+=======
+    # Effects ran when the mob takes damage
+  # Ran from the perspective of the entity
+  take-damage: [ ]
+
+    # Effects ran when the player is damaged by the mob
+>>>>>>> f031fb51c6a3787bc44e8bc099d3655e74366f70
   # Ran from the perspective of the player
   damage-player: [ ]
 
