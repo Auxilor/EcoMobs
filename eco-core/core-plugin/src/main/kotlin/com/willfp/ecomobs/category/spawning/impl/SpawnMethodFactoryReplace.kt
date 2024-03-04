@@ -2,6 +2,7 @@ package com.willfp.ecomobs.category.spawning.impl
 
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.Entities
+import com.willfp.eco.util.randDouble
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
@@ -54,6 +55,10 @@ object SpawnMethodFactoryReplace : SpawnMethodFactory("replace") {
             }
 
             if (Entities.isCustomEntity(event.entity)) {
+                return
+            }
+
+            if (randDouble(0.0, 100.0) > config.getDouble("chance")) {
                 return
             }
 

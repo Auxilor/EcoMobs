@@ -26,6 +26,9 @@ spawning:
       - zombie
       - skeleton
 
+    # The chance for the mob to override, as a percentage
+    chance: 100
+
 
   # Options for custom spawning
   custom:
