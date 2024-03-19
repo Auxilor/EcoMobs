@@ -15,6 +15,9 @@ category: common
 # %health%, %max_health%, %health_percent%, %time% (formats as minutes:seconds, eg 1:56)
 display-name: "&cNecrotic Soldier &7| &c%health%♥ &7| &e%time%"
 
+# The lifespan of the mob, in seconds. Set to -1 to disable.
+lifespan: 120
+
 # If the mob you're using supports equipment, you can specify the items in each slot.
 # Remove any slots that you don't want to put equipment in.
 equipment:
@@ -87,19 +90,11 @@ effects:
   # Ran from the perspective of the player
   any-attack: [ ]
 
-<<<<<<< HEAD
   # Effects ran when the mob takes damage
   # Ran from the perspective of the entity
   take-damage: [ ]
 
   # Effects ran when the player is damaged by the mob
-=======
-    # Effects ran when the mob takes damage
-  # Ran from the perspective of the entity
-  take-damage: [ ]
-
-    # Effects ran when the player is damaged by the mob
->>>>>>> f031fb51c6a3787bc44e8bc099d3655e74366f70
   # Ran from the perspective of the player
   damage-player: [ ]
 
@@ -114,9 +109,6 @@ effects:
   # Effects ran when the mob is killed by the player
   # Ran from the perspective of the player
   kill: [ ]
-
-# The lifespan of the mob, in seconds. Set to -1 to disable.
-lifespan: 120
 
 defence:
   # If the mob can get into boats, minecarts, etc.
@@ -201,10 +193,11 @@ spawn:
       - iron_block
       - netherite_block
       - iron_block
+
       - air
       - ecoitems:boss_core ? nether_star
       - air
+
       - iron_block
       - netherite_block
       - iron_block
-
