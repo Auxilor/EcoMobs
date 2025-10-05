@@ -46,6 +46,9 @@ internal class LivingMobImpl(
     override val ticksLeft: Int
         get() = mob.lifespan - tick
 
+    // Fix for drops being sent twice
+    private var hasBeenKilled = false
+
     fun addTickHandler(handler: TickHandler) {
         tickHandlers += handler
     }
@@ -80,7 +83,11 @@ internal class LivingMobImpl(
     override fun kill(player: Player?, removeTracking: Boolean) {
         handleRemove(removeTracking = removeTracking)
 
-        mob.spawnDrops(entity.location, player)
+        if (!hasBeenKilled) {
+            mob.spawnDrops(entity.location, player)
+        }
+
+        hasBeenKilled = true
     }
 
     override fun despawn() {
