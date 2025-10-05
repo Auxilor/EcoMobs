@@ -11,6 +11,7 @@ import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.modify
+import com.willfp.eco.core.items.toSNBT
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.eco.util.NamespacedKeyUtils
@@ -263,7 +264,9 @@ internal class ConfigDrivenEcoMob(
 
         CustomItem(
             plugin.createNamespacedKey("${this.id}_spawn_egg"),
-            { item.fast().ecoMobEgg == this },
+            {
+                it.fast().ecoMobEgg == this@ConfigDrivenEcoMob
+            },
             item
         ).register()
 
