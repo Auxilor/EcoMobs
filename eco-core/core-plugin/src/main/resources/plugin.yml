@@ -11,6 +11,7 @@ softdepend:
   - LevelledMobs
   - ModelEngine
   - LibsDisguises
+  - BetterModel
 
 commands:
   ecomobs:

@@ -15,6 +15,7 @@ import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
+import com.willfp.ecomobs.integrations.bettermodel.IntegrationBetterModel
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
 import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
@@ -79,6 +80,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
         return listOf(
             IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs()) },
             IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine()) },
+            IntegrationLoader("BetterModel") { this.eventManager.registerListener(IntegrationBetterModel()) },
             IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises()) },
         )
     }
