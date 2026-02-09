@@ -7,9 +7,7 @@ import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.mob.EcoMobs
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
-import java.util.stream.Collectors
 
 private val amounts = listOf(1, 2, 3, 4, 5).map { it.toString() }
 

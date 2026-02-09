@@ -21,7 +21,6 @@ import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.damage.TopDamagerHandler
 import com.willfp.ecomobs.mob.impl.ecoMob
-import com.willfp.libreforge.EmptyProvidedHolder.holder
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory

@@ -7,5 +7,4 @@ package com.willfp.ecomobs.integrations
  */
 class MobIntegration(
     val configKey: String
-) {
-}
+)

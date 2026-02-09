@@ -5,7 +5,6 @@ import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.SpawnTotem
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
-import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent

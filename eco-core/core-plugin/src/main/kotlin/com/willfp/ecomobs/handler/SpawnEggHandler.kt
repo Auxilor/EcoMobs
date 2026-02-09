@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.handler
 
-import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.mob.options.ecoMobEgg
 import org.bukkit.Location
@@ -13,7 +12,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockDispenseEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
 class SpawnEggHandler(

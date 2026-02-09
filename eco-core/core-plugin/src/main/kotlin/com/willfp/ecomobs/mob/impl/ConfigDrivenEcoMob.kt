@@ -10,15 +10,11 @@ import com.willfp.eco.core.entities.impl.EmptyTestableEntity
 import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.modify
-import com.willfp.eco.core.items.toSNBT
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
-import com.willfp.eco.util.NamespacedKeyUtils
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.eco.util.safeNamespacedKeyOf
 import com.willfp.eco.util.toComponent
-import com.willfp.eco.util.toNiceString
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.config.ConfigViolationException
@@ -52,7 +48,6 @@ import com.willfp.ecomobs.tick.TickHandlerLifespan
 import com.willfp.libreforge.ConfigViolation
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.conditions.ConditionList
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.conditions.emptyConditionList
 import com.willfp.libreforge.effects.EffectList
@@ -62,10 +57,8 @@ import com.willfp.libreforge.triggers.DispatchedTrigger
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.NamespacedKey
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.persistence.PersistentDataType
@@ -100,7 +93,7 @@ internal class ConfigDrivenEcoMob(
             )
         )
 
-    val equipment = EquipmentSlot.values().associateWith {
+    val equipment = EquipmentSlot.entries.associateWith {
         config.getStringOrNull("equipment.${it.toConfigKey()}")
             ?.let { lookup -> Items.lookup(lookup) }
     }.onSpawn {
@@ -188,7 +181,7 @@ internal class ConfigDrivenEcoMob(
 
     override val canMount = config.getBool("defence.can-mount")
 
-    val damageModifiers = DamageCause.values().associateWith {
+    val damageModifiers = DamageCause.entries.associateWith {
         config.getDoubleOrNull("defence.damage-modifiers.${it.name.lowercase()}") ?: 1.0
     }
 
