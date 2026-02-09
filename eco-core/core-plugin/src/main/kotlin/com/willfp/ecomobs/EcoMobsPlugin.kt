@@ -32,8 +32,8 @@ internal lateinit var plugin: EcoMobsPlugin
     private set
 
 class EcoMobsPlugin : LibreforgePlugin() {
-    val spawnPointGenerator = SpawnPointGenerator
-    val topDamagerHandler = TopDamagerHandler
+    val spawnPointGenerator: SpawnPointGenerator = SpawnPointGenerator(this)
+    val topDamagerHandler: TopDamagerHandler = TopDamagerHandler(this)
 
     init {
         plugin = this

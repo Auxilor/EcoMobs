@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.category.spawning.spawnpoints
 
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.math.Int3
 import com.willfp.ecomobs.plugin
 import org.bukkit.Location
@@ -21,7 +22,7 @@ val Player.spawnPoints: Set<SpawnPoint>
         plugin.spawnPointGenerator.generate(this)
     }
 
-object SpawnPointGenerator {
+class SpawnPointGenerator(plugin: EcoMobsPlugin) {
     private val radius = plugin.configYml.getInt("custom-spawning.radius-around-player")
     private val max = plugin.configYml.getInt("custom-spawning.max-points-per-player")
     private val maxAttempts = plugin.configYml.getInt("custom-spawning.max-attempts")
