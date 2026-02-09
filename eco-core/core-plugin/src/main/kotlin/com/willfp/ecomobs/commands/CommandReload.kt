@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.ecomobs.EcoMobsPlugin
+import com.willfp.ecomobs.plugin
 import org.bukkit.command.CommandSender
 
-class CommandReload(plugin: EcoMobsPlugin) : Subcommand(
+object CommandReload : Subcommand(
     plugin,
     "reload",
     "ecomobs.command.reload",

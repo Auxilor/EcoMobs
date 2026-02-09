@@ -1,18 +1,16 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.plugin
 import com.willfp.libreforge.BlankHolder
 import com.willfp.libreforge.ItemProvidedHolder
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class SpawnEggDisplay(
-    plugin: EcoPlugin
-) : DisplayModule(
+object SpawnEggDisplay : DisplayModule(
     plugin,
     DisplayPriority.LOW
 ) {

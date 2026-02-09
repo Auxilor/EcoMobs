@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.spigotmc.event.entity.EntityMountEvent
 
-class MountHandler : Listener {
+object MountHandler : Listener {
     @EventHandler(
         ignoreCancelled = true
     )

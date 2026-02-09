@@ -32,8 +32,8 @@ internal lateinit var plugin: EcoMobsPlugin
     private set
 
 class EcoMobsPlugin : LibreforgePlugin() {
-    val spawnPointGenerator = SpawnPointGenerator(this)
-    val topDamagerHandler = TopDamagerHandler(this)
+    val spawnPointGenerator = SpawnPointGenerator
+    val topDamagerHandler = TopDamagerHandler
 
     init {
         plugin = this
@@ -60,31 +60,32 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun loadListeners(): List<Listener> {
         return listOf(
-            DamageModifierHandler(),
-            MountHandler(),
-            VanillaCompatibilityHandlers(),
-            DiscoverRecipeListener(this),
-            SpawnEggHandler(this),
-            SpawnTotemHandler(),
+            DamageModifierHandler,
+            MountHandler,
+            VanillaCompatibilityHandlers,
+            DiscoverRecipeListener,
+            SpawnEggHandler,
+            SpawnTotemHandler,
             topDamagerHandler
         )
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun createDisplayModule(): DisplayModule {
-        return SpawnEggDisplay(this)
+        return SpawnEggDisplay
     }
 
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
-            IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs()) },
-            IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine()) },
-            IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises()) },
+            IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs) },
+            IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine) },
+            IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
         )
     }
 
     override fun loadPluginCommands(): List<PluginCommand> {
         return listOf(
-            CommandEcoMobs(this)
+            CommandEcoMobs
         )
     }
 }

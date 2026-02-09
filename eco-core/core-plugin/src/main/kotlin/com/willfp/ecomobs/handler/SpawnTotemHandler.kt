@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
 
-class SpawnTotemHandler : Listener {
+object SpawnTotemHandler : Listener {
     @EventHandler(ignoreCancelled = true)
     fun handle(event: BlockPlaceEvent) {
         val block = event.block

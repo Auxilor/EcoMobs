@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList
 class EcoMobSpawnEvent(
     override val mob: LivingMob,
     val reason: SpawnReason,
-) : Event(), EcoMobEvent {
+) : Event(), MobEvent {
     override fun getHandlers(): HandlerList {
         return HANDLERS
     }

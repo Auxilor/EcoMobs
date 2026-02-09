@@ -1,9 +1,9 @@
 package com.willfp.ecomobs.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
+import com.willfp.ecomobs.plugin
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
@@ -13,7 +13,7 @@ import org.bukkit.util.StringUtil
 
 private val tilde = listOf("~")
 
-class CommandSpawn(plugin: EcoMobsPlugin) : Subcommand(
+object CommandSpawn : Subcommand(
     plugin,
     "spawn",
     "ecomobs.command.spawn",

@@ -7,7 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityTransformEvent
 import org.bukkit.event.entity.SlimeSplitEvent
 
-class VanillaCompatibilityHandlers : Listener {
+object VanillaCompatibilityHandlers : Listener {
     @EventHandler
     fun handle(event: SlimeSplitEvent) {
         if (event.entity.ecoMob != null) {

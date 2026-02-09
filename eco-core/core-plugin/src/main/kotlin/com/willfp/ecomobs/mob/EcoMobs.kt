@@ -1,7 +1,6 @@
 package com.willfp.ecomobs.mob
 
 import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.config.ConfigViolationException
 import com.willfp.ecomobs.mob.impl.ConfigDrivenEcoMob
 import com.willfp.libreforge.ViolationContext
@@ -18,7 +17,6 @@ object EcoMobs : RegistrableCategory<EcoMob>("mob", "mobs") {
 
         try {
             val mob = ConfigDrivenEcoMob(
-                plugin as EcoMobsPlugin,
                 id,
                 config,
                 context

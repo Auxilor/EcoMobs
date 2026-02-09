@@ -1,7 +1,6 @@
 package com.willfp.ecomobs.category.spawning.impl
 
 import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
@@ -11,15 +10,14 @@ object SpawnMethodFactoryNone : SpawnMethodFactory("none") {
     override fun create(
         category: MobCategory,
         config: Config,
-        plugin: EcoMobsPlugin,
         context: ViolationContext
     ): SpawnMethod {
-        return SpawnMethodNone(category, config, plugin)
+        return SpawnMethodNone(category, config)
     }
 
     class SpawnMethodNone(
-        category: MobCategory, config: Config, plugin: EcoMobsPlugin
-    ) : SpawnMethod(category, config, plugin) {
+        category: MobCategory, config: Config
+    ) : SpawnMethod(category, config) {
         override fun onStart() {
 
         }

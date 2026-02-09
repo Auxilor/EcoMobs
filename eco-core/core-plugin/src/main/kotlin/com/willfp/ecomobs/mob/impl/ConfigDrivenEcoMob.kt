@@ -15,7 +15,6 @@ import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.eco.util.safeNamespacedKeyOf
 import com.willfp.eco.util.toComponent
-import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.config.ConfigViolationException
 import com.willfp.ecomobs.config.filterNotNullValues
@@ -42,6 +41,7 @@ import com.willfp.ecomobs.mob.options.Drop
 import com.willfp.ecomobs.mob.options.MobDrops
 import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
 import com.willfp.ecomobs.tick.TickHandlerLifespan
@@ -67,7 +67,6 @@ import java.util.UUID
 val mobKey = namespacedKeyOf("ecomobs", "mob")
 
 internal class ConfigDrivenEcoMob(
-    private val plugin: EcoMobsPlugin,
     override val id: String,
     private val config: Config,
     private val context: ViolationContext
@@ -396,7 +395,7 @@ internal class ConfigDrivenEcoMob(
         }
 
         // Create living mob
-        val livingMob = LivingMobImpl(plugin, this, entity) {
+        val livingMob = LivingMobImpl(this, entity) {
             trackedMobs.remove(entity.uniqueId)
         }
 

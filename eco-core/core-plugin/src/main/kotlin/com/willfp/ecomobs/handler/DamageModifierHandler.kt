@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 
-class DamageModifierHandler : Listener {
+object DamageModifierHandler : Listener {
     @EventHandler
     fun handle(event: EntityDamageEvent) {
         val bukkitMob = event.entity as? Mob ?: return
