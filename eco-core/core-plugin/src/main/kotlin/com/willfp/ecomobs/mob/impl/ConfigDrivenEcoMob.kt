@@ -12,9 +12,11 @@ import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
+import com.willfp.eco.core.recipe.recipes.CraftingRecipe
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.eco.util.safeNamespacedKeyOf
 import com.willfp.eco.util.toComponent
+import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.config.ConfigViolationException
 import com.willfp.ecomobs.config.filterNotNullValues
@@ -48,6 +50,7 @@ import com.willfp.ecomobs.tick.TickHandlerLifespan
 import com.willfp.libreforge.ConfigViolation
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.ViolationContext
+import com.willfp.libreforge.conditions.ConditionList
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.conditions.emptyConditionList
 import com.willfp.libreforge.effects.EffectList
@@ -92,7 +95,7 @@ internal class ConfigDrivenEcoMob(
             )
         )
 
-    val equipment = EquipmentSlot.entries.associateWith {
+    val equipment = EquipmentSlot.values().associateWith {
         config.getStringOrNull("equipment.${it.toConfigKey()}")
             ?.let { lookup -> Items.lookup(lookup) }
     }.onSpawn {
@@ -180,7 +183,7 @@ internal class ConfigDrivenEcoMob(
 
     override val canMount = config.getBool("defence.can-mount")
 
-    val damageModifiers = DamageCause.entries.associateWith {
+    val damageModifiers = DamageCause.values().associateWith {
         config.getDoubleOrNull("defence.damage-modifiers.${it.name.lowercase()}") ?: 1.0
     }
 
@@ -262,16 +265,21 @@ internal class ConfigDrivenEcoMob(
             item
         ).register()
 
-        val isCraftable = config.getBool("spawn.egg.craftable")
+        val recipe: CraftingRecipe? = config.getBool("spawn.egg.craftable")
+            .takeIf { it }
+            ?.let {
+                val recipeStrings = config.getStrings("spawn.egg.recipe")
+                if (recipeStrings.isEmpty()) return@let null
 
-        if (isCraftable) {
-            Recipes.createAndRegisterRecipe(
-                plugin,
-                "${this.id}_spawn_egg",
-                item,
-                config.getStrings("spawn.egg.recipe")
-            )
-        }
+                Recipes.createAndRegisterRecipe(
+                    plugin,
+                    "${id}_spawn_egg",
+                    item,
+                    recipeStrings,
+                    config.getStringOrNull("spawn.egg.recipe-permission"),
+                    config.getBool("spawn.egg.shapeless")
+                )
+            }
 
         SpawnEgg(
             this,
