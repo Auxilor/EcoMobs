@@ -187,8 +187,9 @@ spawn:
       - "&8&oPlace on the ground to"
       - "&8&osummon a &cNecrotic Soldier"
 
-    craftable: true
-
+    craftable: true # Whether the spawn egg should be craftable
+    recipe-permission: "ecoitems.craft.necrotic_soldier_spawn_egg" # (Optional) The permission required to craft the spawn egg
+    shapeless: false # (Optional) Whether the crafting recipe should be shapeless, defaults to false
     recipe:
       - iron_block
       - netherite_block
