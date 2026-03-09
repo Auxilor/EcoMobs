@@ -5,7 +5,6 @@ import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.libreforge.NamedValue
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
@@ -24,9 +23,7 @@ data class Damager(
 
 private const val metaKey = "TOP_DAMAGERS"
 
-class TopDamagerHandler(
-    private val plugin: EcoMobsPlugin
-) : Listener {
+class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
     @Suppress("UNCHECKED_CAST")
     private var Mob.topDamagers: List<Damager>
         get() = (this.getMetadata(metaKey).getOrNull(0)?.value() as? List<Damager>) ?: emptyList()

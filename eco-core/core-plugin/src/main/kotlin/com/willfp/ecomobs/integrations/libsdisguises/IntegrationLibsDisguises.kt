@@ -7,7 +7,7 @@ import me.libraryaddict.disguise.DisguiseAPI
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class IntegrationLibsDisguises : Listener, Integration {
+object IntegrationLibsDisguises : Listener, Integration {
     private val integration = MobIntegration("libs-disguises")
 
     @EventHandler

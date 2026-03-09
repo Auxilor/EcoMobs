@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.commands
 
 import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.ecomobs.EcoMobsPlugin
+import com.willfp.ecomobs.plugin
 import org.bukkit.command.CommandSender
 
-class CommandEcoMobs(plugin: EcoMobsPlugin) : PluginCommand(
+object CommandEcoMobs : PluginCommand(
     plugin,
     "ecomobs",
     "ecomobs.command.ecomobs",
@@ -18,8 +18,8 @@ class CommandEcoMobs(plugin: EcoMobsPlugin) : PluginCommand(
     }
 
     init {
-        this.addSubcommand(CommandReload(plugin))
-            .addSubcommand(CommandSpawn(plugin))
-            .addSubcommand(CommandGive(plugin))
+        this.addSubcommand(CommandReload)
+            .addSubcommand(CommandSpawn)
+            .addSubcommand(CommandGive)
     }
 }

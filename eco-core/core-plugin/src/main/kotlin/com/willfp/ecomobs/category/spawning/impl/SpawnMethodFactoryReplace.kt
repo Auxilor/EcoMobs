@@ -3,11 +3,11 @@ package com.willfp.ecomobs.category.spawning.impl
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.util.randDouble
-import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
 import com.willfp.ecomobs.mob.SpawnReason
+import com.willfp.ecomobs.plugin
 import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.enumValueOfOrNull
 import org.bukkit.entity.EntityType
@@ -20,17 +20,15 @@ object SpawnMethodFactoryReplace : SpawnMethodFactory("replace") {
     override fun create(
         category: MobCategory,
         config: Config,
-        plugin: EcoMobsPlugin,
         context: ViolationContext
     ): SpawnMethod {
-        return SpawnMethodReplace(category, config, plugin)
+        return SpawnMethodReplace(category, config)
     }
 
     class SpawnMethodReplace(
         category: MobCategory,
-        config: Config,
-        plugin: EcoMobsPlugin
-    ) : SpawnMethod(category, config, plugin), Listener {
+        config: Config
+    ) : SpawnMethod(category, config), Listener {
         private val toReplace = config.getStrings("replace")
             .mapNotNull { enumValueOfOrNull<EntityType>(it.uppercase()) }
             .toSet()

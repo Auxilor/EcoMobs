@@ -43,12 +43,14 @@ import com.willfp.ecomobs.mob.options.Drop
 import com.willfp.ecomobs.mob.options.MobDrops
 import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
 import com.willfp.ecomobs.tick.TickHandlerLifespan
 import com.willfp.libreforge.ConfigViolation
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.ViolationContext
+import com.willfp.libreforge.conditions.ConditionList
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.conditions.emptyConditionList
 import com.willfp.libreforge.effects.EffectList
@@ -68,7 +70,6 @@ import java.util.UUID
 val mobKey = namespacedKeyOf("ecomobs", "mob")
 
 internal class ConfigDrivenEcoMob(
-    private val plugin: EcoMobsPlugin,
     override val id: String,
     private val config: Config,
     private val context: ViolationContext
@@ -402,7 +403,7 @@ internal class ConfigDrivenEcoMob(
         }
 
         // Create living mob
-        val livingMob = LivingMobImpl(plugin, this, entity) {
+        val livingMob = LivingMobImpl(this, entity) {
             trackedMobs.remove(entity.uniqueId)
         }
 

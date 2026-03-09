@@ -21,7 +21,6 @@ import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.damage.TopDamagerHandler
 import com.willfp.ecomobs.mob.impl.ecoMob
-import com.willfp.libreforge.EmptyProvidedHolder.holder
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
@@ -33,8 +32,8 @@ internal lateinit var plugin: EcoMobsPlugin
     private set
 
 class EcoMobsPlugin : LibreforgePlugin() {
-    val spawnPointGenerator = SpawnPointGenerator(this)
-    val topDamagerHandler = TopDamagerHandler(this)
+    val spawnPointGenerator: SpawnPointGenerator = SpawnPointGenerator(this)
+    val topDamagerHandler: TopDamagerHandler = TopDamagerHandler(this)
 
     init {
         plugin = this
@@ -61,31 +60,32 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun loadListeners(): List<Listener> {
         return listOf(
-            DamageModifierHandler(),
-            MountHandler(),
-            VanillaCompatibilityHandlers(),
-            DiscoverRecipeListener(this),
-            SpawnEggHandler(this),
-            SpawnTotemHandler(),
+            DamageModifierHandler,
+            MountHandler,
+            VanillaCompatibilityHandlers,
+            DiscoverRecipeListener,
+            SpawnEggHandler,
+            SpawnTotemHandler,
             topDamagerHandler
         )
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun createDisplayModule(): DisplayModule {
-        return SpawnEggDisplay(this)
+        return SpawnEggDisplay
     }
 
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
-            IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs()) },
-            IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine()) },
-            IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises()) },
+            IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs) },
+            IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine) },
+            IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
         )
     }
 
     override fun loadPluginCommands(): List<PluginCommand> {
         return listOf(
-            CommandEcoMobs(this)
+            CommandEcoMobs
         )
     }
 }

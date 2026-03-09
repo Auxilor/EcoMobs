@@ -8,7 +8,7 @@ import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class IntegrationLevelledMobs : Listener, Integration {
+object IntegrationLevelledMobs : Listener, Integration {
     private val integration = MobIntegration("levelled-mobs")
 
     @EventHandler

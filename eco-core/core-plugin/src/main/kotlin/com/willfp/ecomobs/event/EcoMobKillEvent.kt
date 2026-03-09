@@ -6,9 +6,9 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
 
 class EcoMobKillEvent(
-    val mob: LivingMob,
+    override val mob: LivingMob,
     player: Player,
-) : PlayerEvent(player) {
+) : PlayerEvent(player), MobEvent {
     override fun getHandlers(): HandlerList {
         return HANDLERS
     }

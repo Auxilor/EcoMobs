@@ -4,11 +4,8 @@ import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
-import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 
 object MobEventTakeDamage : MobEvent("take_damage") {

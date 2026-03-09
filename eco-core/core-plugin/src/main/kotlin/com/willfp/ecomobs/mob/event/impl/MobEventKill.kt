@@ -10,7 +10,6 @@ import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.EntityDeathEvent
 
 object MobEventKill : MobEvent("kill") {
     @EventHandler

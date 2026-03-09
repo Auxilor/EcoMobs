@@ -2,9 +2,6 @@ package com.willfp.ecomobs.mob.placeholder
 
 import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.mob.LivingMob
-import com.willfp.ecomobs.plugin
-import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
 abstract class MobPlaceholder(
