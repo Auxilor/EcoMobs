@@ -14,7 +14,7 @@ private val spawnerAmounts = listOf(1, 2, 3, 4, 5).map { it.toString() }
 object CommandGiveSpawner : Subcommand(
     plugin,
     "givespawner",
-    "ecomobs.command.give-spawner",
+    "ecomobs.command.givespawner",
     false
 ) {
     override fun onExecute(
