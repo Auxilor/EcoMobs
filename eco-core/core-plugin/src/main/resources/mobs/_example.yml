@@ -210,8 +210,7 @@ spawn:
     # not-met-lines will show up on the spawner item
     conditions: [ ]
 
-    # The spawner item
-    item: spawner
+    # The spawner item name and lore (item is always a spawner block)
     name: "&cNecrotic Soldier&f Spawner"
     lore:
       - ""

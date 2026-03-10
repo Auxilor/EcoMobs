@@ -324,7 +324,7 @@ internal class ConfigDrivenEcoMob(
         val name = config.getString("spawn.spawner.name")
         val lore = config.getStrings("spawn.spawner.lore")
 
-        val item = Items.lookup(config.getString("spawn.spawner.item")).item.apply {
+        val item = Items.lookup("spawner").item.apply {
             this.fast().ecoMobSpawner = this@ConfigDrivenEcoMob
         }
 
