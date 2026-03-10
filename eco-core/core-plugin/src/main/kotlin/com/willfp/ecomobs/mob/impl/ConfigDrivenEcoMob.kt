@@ -42,7 +42,10 @@ import com.willfp.ecomobs.mob.options.BossBarOptions
 import com.willfp.ecomobs.mob.options.Drop
 import com.willfp.ecomobs.mob.options.MobDrops
 import com.willfp.ecomobs.mob.options.SpawnEgg
+import com.willfp.ecomobs.mob.options.SpawnSpawner
+import com.willfp.ecomobs.mob.options.SpawnerSettings
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.mob.options.ecoMobSpawner
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
@@ -308,6 +311,100 @@ internal class ConfigDrivenEcoMob(
                 top.item.type,
                 middle.item.type,
                 bottom.item.type
+            )
+        )
+    }
+
+    override val spawnerOptions = config.getBool("spawn.spawner.enabled").ifTrue {
+        val conditions = Conditions.compile(
+            config.getSubsections("spawn.spawner.conditions"),
+            context.with("spawn spawner conditions")
+        )
+
+        val name = config.getString("spawn.spawner.name")
+        val lore = config.getStrings("spawn.spawner.lore")
+
+        val item = Items.lookup(config.getString("spawn.spawner.item")).item.apply {
+            this.fast().ecoMobSpawner = this@ConfigDrivenEcoMob
+        }
+
+        CustomItem(
+            plugin.createNamespacedKey("${this.id}_spawn_spawner"),
+            {
+                it.fast().ecoMobSpawner == this@ConfigDrivenEcoMob
+            },
+            item
+        ).register()
+
+        val minSpawnDelay = config.getInt("spawn.spawner.settings.min-spawn-delay")
+            .validate { it >= 0 }
+            .unwrap {
+                ConfigViolation(
+                    "spawn.spawner.settings.min-spawn-delay",
+                    "Spawner min spawn delay must be at least 0"
+                )
+            }
+
+        val maxSpawnDelay = config.getInt("spawn.spawner.settings.max-spawn-delay")
+            .validate { it >= minSpawnDelay }
+            .unwrap {
+                ConfigViolation(
+                    "spawn.spawner.settings.max-spawn-delay",
+                    "Spawner max spawn delay must be greater than or equal to the min spawn delay"
+                )
+            }
+
+        val spawnCount = config.getInt("spawn.spawner.settings.spawn-count")
+            .validate { it >= 1 }
+            .unwrap {
+                ConfigViolation(
+                    "spawn.spawner.settings.spawn-count",
+                    "Spawner spawn count must be at least 1"
+                )
+            }
+
+        val maxNearbyEntities = config.getInt("spawn.spawner.settings.max-nearby-entities")
+            .validate { it >= 1 }
+            .unwrap {
+                ConfigViolation(
+                    "spawn.spawner.settings.max-nearby-entities",
+                    "Spawner max nearby entities must be at least 1"
+                )
+            }
+
+        val requiredPlayerRange = config.getInt("spawn.spawner.settings.required-player-range")
+            .validate { it >= 1 }
+            .unwrap {
+                ConfigViolation(
+                    "spawn.spawner.settings.required-player-range",
+                    "Spawner required player range must be at least 1"
+                )
+            }
+
+        val spawnRange = config.getInt("spawn.spawner.settings.spawn-range")
+            .validate { it >= 0 }
+            .unwrap {
+                ConfigViolation(
+                    "spawn.spawner.settings.spawn-range",
+                    "Spawner spawn range must be at least 0"
+                )
+            }
+
+        SpawnSpawner(
+            this,
+            conditions,
+            SpawnerSettings(
+                minSpawnDelay,
+                maxSpawnDelay,
+                spawnCount,
+                maxNearbyEntities,
+                requiredPlayerRange,
+                spawnRange
+            ),
+            BaseItem(
+                item,
+                name,
+                lore
             )
         )
     }

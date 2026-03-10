@@ -4,6 +4,7 @@ import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.mob.options.ecoMobSpawner
 import com.willfp.ecomobs.plugin
 import com.willfp.libreforge.BlankHolder
 import com.willfp.libreforge.ItemProvidedHolder
@@ -21,8 +22,10 @@ object SpawnEggDisplay : DisplayModule(
 
         val fis = itemStack.fast()
 
-        val egg = fis.ecoMobEgg?.spawnEgg ?: return
+        val displayable = fis.ecoMobEgg?.spawnEgg?.item
+            ?: fis.ecoMobSpawner?.spawnerOptions?.item
+            ?: return
 
-        egg.item.display(itemStack, player, ItemProvidedHolder(BlankHolder, itemStack))
+        displayable.display(itemStack, player, ItemProvidedHolder(BlankHolder, itemStack))
     }
 }

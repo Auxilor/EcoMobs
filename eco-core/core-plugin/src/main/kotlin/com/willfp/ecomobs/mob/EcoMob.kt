@@ -7,6 +7,7 @@ import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.integrations.MobIntegration
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.options.SpawnEgg
+import com.willfp.ecomobs.mob.options.SpawnSpawner
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.triggers.DispatchedTrigger
 import org.bukkit.Location
@@ -45,6 +46,11 @@ interface EcoMob : KRegistrable {
      * The spawn totem options.
      */
     val totemOptions: SpawnTotemOptions?
+
+    /**
+     * The spawn spawner options.
+     */
+    val spawnerOptions: SpawnSpawner?
 
     /**
      * The eco custom entity.

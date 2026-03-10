@@ -31,6 +31,7 @@ permissions:
       ecomobs.command.reload: true
       ecomobs.command.spawn: true
       ecomobs.command.give: true
+      ecomobs.command.give-spawner: true
 
   ecomobs.command.ecomobs:
     description: Allows the use of /ecomobs
@@ -38,6 +39,10 @@ permissions:
 
   ecomobs.command.give:
     description: Allows the use of /ecomobs give
+    default: op
+
+  ecomobs.command.give-spawner:
+    description: Allows the use of /ecomobs givespawner
     default: op
 
   ecomobs.command.spawn:

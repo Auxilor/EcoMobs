@@ -201,3 +201,28 @@ spawn:
       - netherite_block
       - iron_block
 
+  # Options for a custom mob spawner item
+  spawner:
+    # If the mob should have a custom spawner item
+    enabled: false
+
+    # The conditions for placing the spawner
+    # not-met-lines will show up on the spawner item
+    conditions: [ ]
+
+    # The spawner item
+    item: spawner
+    name: "&cNecrotic Soldier&f Spawner"
+    lore:
+      - ""
+      - "&8&oPlace to spawn a &cNecrotic Soldier"
+      - "&8&owith custom spawner timings"
+
+    # Vanilla spawner settings applied when this spawner is placed
+    settings:
+      min-spawn-delay: 200
+      max-spawn-delay: 800
+      spawn-count: 2
+      max-nearby-entities: 6
+      required-player-range: 16
+      spawn-range: 4
