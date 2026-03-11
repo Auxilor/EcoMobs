@@ -1,13 +1,13 @@
 package com.willfp.ecomobs.mob.impl
 
 import com.willfp.eco.util.formatEco
-import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.placeholder.MobPlaceholders
 import com.willfp.ecomobs.mob.placeholder.formatMobPlaceholders
+import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandler
 import com.willfp.libreforge.NamedValue
 import com.willfp.libreforge.triggers.DispatchedTrigger
@@ -16,7 +16,6 @@ import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 
 internal class LivingMobImpl(
-    private val plugin: EcoMobsPlugin,
     override val mob: EcoMob,
     override val entity: Mob,
     private val trackingRemovalCallback: () -> Unit

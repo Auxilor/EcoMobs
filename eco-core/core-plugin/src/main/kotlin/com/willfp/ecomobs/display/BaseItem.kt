@@ -4,7 +4,6 @@ import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
-import com.willfp.libreforge.BlankHolder
 import com.willfp.libreforge.EmptyProvidedHolder
 import com.willfp.libreforge.ProvidedHolder
 import org.bukkit.entity.Player

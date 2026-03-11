@@ -7,7 +7,7 @@ import com.willfp.modelenginebridge.ModelEngineBridge
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class IntegrationModelEngine : Listener, Integration {
+object IntegrationModelEngine : Listener, Integration {
     private val integration = MobIntegration("model-engine")
 
     @EventHandler

@@ -1,8 +1,7 @@
 package com.willfp.ecomobs.handler
 
-import com.willfp.eco.core.fast.fast
-import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.plugin
 import org.bukkit.Location
 import org.bukkit.block.Container
 import org.bukkit.block.data.Directional
@@ -13,12 +12,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockDispenseEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
-class SpawnEggHandler(
-    private val plugin: EcoMobsPlugin
-) : Listener {
+object SpawnEggHandler : Listener {
     @EventHandler(ignoreCancelled = true)
     fun handle(event: PlayerInteractEvent) {
         if (event.action != Action.RIGHT_CLICK_BLOCK) {

@@ -10,15 +10,12 @@ import com.willfp.eco.core.entities.impl.EmptyTestableEntity
 import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.modify
-import com.willfp.eco.core.items.toSNBT
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
-import com.willfp.eco.util.NamespacedKeyUtils
+import com.willfp.eco.core.recipe.recipes.CraftingRecipe
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.eco.util.safeNamespacedKeyOf
 import com.willfp.eco.util.toComponent
-import com.willfp.eco.util.toNiceString
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.config.ConfigViolationException
@@ -46,6 +43,7 @@ import com.willfp.ecomobs.mob.options.Drop
 import com.willfp.ecomobs.mob.options.MobDrops
 import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
 import com.willfp.ecomobs.tick.TickHandlerLifespan
@@ -62,10 +60,8 @@ import com.willfp.libreforge.triggers.DispatchedTrigger
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.NamespacedKey
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.persistence.PersistentDataType
@@ -74,7 +70,6 @@ import java.util.UUID
 val mobKey = namespacedKeyOf("ecomobs", "mob")
 
 internal class ConfigDrivenEcoMob(
-    private val plugin: EcoMobsPlugin,
     override val id: String,
     private val config: Config,
     private val context: ViolationContext
@@ -270,16 +265,21 @@ internal class ConfigDrivenEcoMob(
             item
         ).register()
 
-        val isCraftable = config.getBool("spawn.egg.craftable")
+        val recipe: CraftingRecipe? = config.getBool("spawn.egg.craftable")
+            .takeIf { it }
+            ?.let {
+                val recipeStrings = config.getStrings("spawn.egg.recipe")
+                if (recipeStrings.isEmpty()) return@let null
 
-        if (isCraftable) {
-            Recipes.createAndRegisterRecipe(
-                plugin,
-                "${this.id}_spawn_egg",
-                item,
-                config.getStrings("spawn.egg.recipe")
-            )
-        }
+                Recipes.createAndRegisterRecipe(
+                    plugin,
+                    "${id}_spawn_egg",
+                    item,
+                    recipeStrings,
+                    config.getStringOrNull("spawn.egg.recipe-permission"),
+                    config.getBool("spawn.egg.shapeless")
+                )
+            }
 
         SpawnEgg(
             this,
@@ -403,7 +403,7 @@ internal class ConfigDrivenEcoMob(
         }
 
         // Create living mob
-        val livingMob = LivingMobImpl(plugin, this, entity) {
+        val livingMob = LivingMobImpl(this, entity) {
             trackedMobs.remove(entity.uniqueId)
         }
 

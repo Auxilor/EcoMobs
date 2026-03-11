@@ -2,8 +2,6 @@ package com.willfp.ecomobs.mob.options
 
 import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.eco.core.fast.fast
-import com.willfp.eco.core.items.builder.modify
-import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.display.BaseItem
 import com.willfp.ecomobs.mob.EcoMob
