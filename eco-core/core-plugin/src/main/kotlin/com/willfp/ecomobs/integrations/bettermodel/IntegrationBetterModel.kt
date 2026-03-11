@@ -3,12 +3,12 @@ package com.willfp.ecomobs.integrations.bettermodel
 import com.willfp.eco.core.integrations.Integration
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
-import com.willfp.modelenginebridge.ModelEngineBridge
 import kr.toxicity.model.api.BetterModel
+import kr.toxicity.model.api.bukkit.platform.BukkitAdapter
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class IntegrationBetterModel : Listener, Integration {
+object IntegrationBetterModel : Listener, Integration {
     private val integration = MobIntegration("better-model")
 
     @EventHandler
@@ -20,7 +20,7 @@ class IntegrationBetterModel : Listener, Integration {
 
         val model = BetterModel.modelOrNull(betterModelID) ?: return
 
-        model.getOrCreate(entity)
+        model.getOrCreate(BukkitAdapter.adapt(entity))
     }
 
     override fun getPluginName(): String {
