@@ -1,5 +1,6 @@
 package com.willfp.ecomobs.goals.entity
 
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.entities.ai.CustomGoal
 import com.willfp.eco.core.entities.ai.GoalFlag
@@ -60,7 +61,10 @@ class EntityGoalRandomTeleport(
             return
         }
 
-        mob.teleport(validLocations.random())
+        if (Prerequisite.HAS_PAPER.isMet)
+            mob.teleportAsync(validLocations.random())
+        else
+            mob.teleport(validLocations.random()) // damn spigot!
     }
 
     override fun getFlags(): EnumSet<GoalFlag> {
