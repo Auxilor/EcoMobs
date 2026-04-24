@@ -25,7 +25,7 @@ internal class LivingMobImpl(
         tick++
 
         if (!isAlive) {
-            it.cancel()
+            it.cancelTask()
             handleRemove()
         }
     }
@@ -99,7 +99,7 @@ internal class LivingMobImpl(
     }
 
     private fun handleRemove(removeTracking: Boolean = true) {
-        ticker.cancel()
+        ticker.cancelTask()
         if (removeTracking) {
             trackingRemovalCallback()
         }
