@@ -9,11 +9,13 @@ import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
 import com.willfp.ecomobs.commands.CommandEcoMobs
 import com.willfp.ecomobs.display.SpawnEggDisplay
+import com.willfp.ecomobs.display.SpawnerItemDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
+import com.willfp.ecomobs.handler.SpawnerHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
 import com.willfp.ecomobs.integrations.bettermodel.IntegrationBetterModel
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
@@ -22,6 +24,8 @@ import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.damage.TopDamagerHandler
 import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.ecomobs.spawner.SpawnerAnimations
+import com.willfp.ecomobs.spawner.SpawnerDisplay
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
@@ -59,6 +63,11 @@ class EcoMobsPlugin : LibreforgePlugin() {
         )
     }
 
+    override fun handleReload() {
+        SpawnerAnimations.reload()
+        SpawnerDisplay.start()
+    }
+
     override fun loadListeners(): List<Listener> {
         return listOf(
             DamageModifierHandler,
@@ -67,13 +76,13 @@ class EcoMobsPlugin : LibreforgePlugin() {
             DiscoverRecipeListener,
             SpawnEggHandler,
             SpawnTotemHandler,
-            topDamagerHandler
+            topDamagerHandler,
+            SpawnerHandler
         )
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun createDisplayModule(): DisplayModule {
-        return SpawnEggDisplay
+    override fun loadDisplayModules(): List<DisplayModule> {
+        return listOf(SpawnEggDisplay, SpawnerItemDisplay)
     }
 
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
