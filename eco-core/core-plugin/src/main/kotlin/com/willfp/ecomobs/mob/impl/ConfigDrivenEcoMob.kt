@@ -87,6 +87,9 @@ internal class ConfigDrivenEcoMob(
             )
         }
 
+    /** The first token of the mob lookup string, e.g. "zombie" from "zombie attack-damage:90". */
+    val baseMobId: String = config.getString("mob").split(" ").first()
+
     override val category = MobCategories[config.getString("category")]
         .validateNotNull(
             ConfigViolation(

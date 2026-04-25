@@ -17,6 +17,7 @@ import com.willfp.ecomobs.spawner.spawnerParticleAnim
 import com.willfp.ecomobs.spawner.spawnerPickup
 import com.willfp.ecomobs.spawner.spawnerPlayerRange
 import com.willfp.ecomobs.spawner.spawnerSpawnCount
+import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
@@ -87,7 +88,9 @@ object CommandSpawnerModify : Subcommand(
                 }
                 if (isHeld) heldFis.spawnerMob = mobId
                 else {
-                    targetState!!.spawnerMob = mobId; targetState.update()
+                    targetState!!.spawnerMob = mobId
+                    resolveEntityType(mobId)?.let { targetState.spawnedType = it }
+                    targetState.update()
                 }
             }
 

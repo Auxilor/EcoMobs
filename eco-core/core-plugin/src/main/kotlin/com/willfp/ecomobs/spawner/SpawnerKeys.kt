@@ -1,11 +1,13 @@
-// spawner/SpawnerKeys.kt
 package com.willfp.ecomobs.spawner
 
 import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.eco.core.fast.fast
 import com.willfp.eco.util.namespacedKeyOf
+import com.willfp.ecomobs.mob.EcoMobs
+import com.willfp.ecomobs.mob.impl.ConfigDrivenEcoMob
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
+import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
@@ -18,8 +20,6 @@ val spawnerPlayerRangeKey = namespacedKeyOf("ecomobs", "spawner_player_range")
 val spawnerMaxNearbyKey = namespacedKeyOf("ecomobs", "spawner_max_nearby")
 val spawnerPickupKey = namespacedKeyOf("ecomobs", "spawner_pickup")
 val spawnerParticleAnimKey = namespacedKeyOf("ecomobs", "spawner_particle_anim")
-
-// ── FastItemStack extensions ──────────────────────────────────────────────────
 
 val FastItemStack.isCustomSpawner: Boolean
     get() = persistentDataContainer.has(spawnerMobKey, PersistentDataType.STRING)
@@ -80,17 +80,6 @@ var FastItemStack.spawnerParticleAnim: String?
         else persistentDataContainer.set(spawnerParticleAnimKey, PersistentDataType.STRING, value)
     }
 
-// ── ItemStack convenience extensions ─────────────────────────────────────────
-
-val ItemStack.isCustomSpawner: Boolean get() = fast().isCustomSpawner
-var ItemStack.spawnerMob: String?
-    get() = fast().spawnerMob
-    set(value) {
-        fast().spawnerMob = value
-    }
-
-// ── CreatureSpawner (block state) extensions ──────────────────────────────────
-
 val CreatureSpawner.isCustomSpawner: Boolean
     get() = persistentDataContainer.has(spawnerMobKey, PersistentDataType.STRING)
 
@@ -150,20 +139,6 @@ var CreatureSpawner.spawnerParticleAnim: String?
         else persistentDataContainer.set(spawnerParticleAnimKey, PersistentDataType.STRING, value)
     }
 
-// ── Transfer helpers ──────────────────────────────────────────────────────────
-
-fun FastItemStack.copySpawnerPdcTo(state: CreatureSpawner) {
-    state.spawnerMob = spawnerMob
-    state.spawnerDelayMin = spawnerDelayMin
-    state.spawnerDelayMax = spawnerDelayMax
-    state.spawnerSpawnCount = spawnerSpawnCount
-    state.spawnerSpawnRange = spawnerSpawnRange
-    state.spawnerPlayerRange = spawnerPlayerRange
-    state.spawnerMaxNearby = spawnerMaxNearby
-    state.spawnerPickup = spawnerPickup
-    state.spawnerParticleAnim = spawnerParticleAnim
-}
-
 fun CreatureSpawner.applyVanillaSettings() {
     minSpawnDelay = spawnerDelayMin
     maxSpawnDelay = spawnerDelayMax
@@ -171,6 +146,19 @@ fun CreatureSpawner.applyVanillaSettings() {
     spawnRange = spawnerSpawnRange
     requiredPlayerRange = spawnerPlayerRange
     maxNearbyEntities = spawnerMaxNearby
+}
+
+/**
+ * Resolves the EntityType for a mob ID so the vanilla spawner preview spins
+ * the correct entity. Handles both plain vanilla IDs and EcoMob IDs.
+ */
+fun resolveEntityType(mobId: String): EntityType? {
+    // Plain vanilla entity type (e.g. "zombie", "ZOMBIE")
+    runCatching { return EntityType.valueOf(mobId.uppercase()) }
+    // EcoMob — derive entity type from the base mob lookup string (e.g. "zombie attack-damage:90")
+    val baseMobString = (EcoMobs[mobId] as? ConfigDrivenEcoMob)
+        ?.baseMobId ?: return null
+    return runCatching { EntityType.valueOf(baseMobString.uppercase()) }.getOrNull()
 }
 
 fun CreatureSpawner.toSpawnerItem(): ItemStack {

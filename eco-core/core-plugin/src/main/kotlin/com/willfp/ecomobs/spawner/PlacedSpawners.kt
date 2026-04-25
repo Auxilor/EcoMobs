@@ -6,8 +6,6 @@ import java.util.concurrent.ConcurrentHashMap
 object PlacedSpawners {
     private val loaded = ConcurrentHashMap<Location, PlacedSpawner>()
 
-    fun getAt(location: Location): PlacedSpawner? = loaded[location]
-
     fun set(location: Location, spawner: PlacedSpawner) {
         loaded[location] = spawner
     }

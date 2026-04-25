@@ -4,6 +4,8 @@ import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
 import com.willfp.eco.core.fast.fast
+import com.willfp.eco.core.placeholder.context.placeholderContext
+import com.willfp.eco.util.formatEco
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.isCustomSpawner
 import com.willfp.ecomobs.spawner.spawnerDelayMax
@@ -24,16 +26,22 @@ object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
         val fis = itemStack.fast()
         if (!fis.isCustomSpawner) return
 
-        val lore = listOf(
-            "${Display.PREFIX}&8Mob: &f${fis.spawnerMob}",
-            "${Display.PREFIX}&8Delay: &f${fis.spawnerDelayMin}-${fis.spawnerDelayMax} ticks",
-            "${Display.PREFIX}&8Radius: &f${fis.spawnerSpawnRange}",
-            "${Display.PREFIX}&8Player Range: &f${fis.spawnerPlayerRange}",
-            "${Display.PREFIX}&8Count: &f${fis.spawnerSpawnCount}",
-            "${Display.PREFIX}&8Max Nearby: &f${fis.spawnerMaxNearby}",
-            "${Display.PREFIX}&8Pickup: &f${fis.spawnerPickup}",
-            "${Display.PREFIX}&8Particle: &f${fis.spawnerParticleAnim ?: "none"}"
-        )
+        val context = placeholderContext(player = player, item = itemStack)
+
+        val lore = plugin.configYml.getStrings("spawner-display.lore")
+            .map { line ->
+                line
+                    .replace("%mob%", fis.spawnerMob ?: "")
+                    .replace("%delay_min%", fis.spawnerDelayMin.toString())
+                    .replace("%delay_max%", fis.spawnerDelayMax.toString())
+                    .replace("%radius%", fis.spawnerSpawnRange.toString())
+                    .replace("%player_range%", fis.spawnerPlayerRange.toString())
+                    .replace("%count%", fis.spawnerSpawnCount.toString())
+                    .replace("%max_nearby%", fis.spawnerMaxNearby.toString())
+                    .replace("%pickup%", fis.spawnerPickup)
+                    .replace("%particle%", fis.spawnerParticleAnim ?: "none")
+            }
+            .map { Display.PREFIX + it.formatEco(context) }
 
         fis.lore = lore + fis.lore
     }

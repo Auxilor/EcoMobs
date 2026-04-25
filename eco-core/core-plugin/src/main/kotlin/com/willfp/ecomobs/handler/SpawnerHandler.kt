@@ -18,6 +18,7 @@ import com.willfp.ecomobs.spawner.spawnerPickup
 import com.willfp.ecomobs.spawner.spawnerPlayerRange
 import com.willfp.ecomobs.spawner.spawnerSpawnCount
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
+import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
@@ -60,6 +61,7 @@ object SpawnerHandler : Listener {
             state.spawnerPickup = pickup
             state.spawnerParticleAnim = animId
             state.applyVanillaSettings()
+            resolveEntityType(mobId)?.let { state.spawnedType = it }
             state.update()
 
             PlacedSpawners.set(location, PlacedSpawner(location, animId))
