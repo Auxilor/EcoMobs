@@ -4,5 +4,6 @@ enum class SpawnReason {
     NATURAL,
     TOTEM,
     EGG,
-    COMMAND
+    COMMAND,
+    SPAWNER
 }

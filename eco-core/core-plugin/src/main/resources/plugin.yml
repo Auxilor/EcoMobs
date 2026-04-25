@@ -26,6 +26,7 @@ permissions:
     default: op
     children:
       ecomobs.command.*: true
+      ecomobs.spawner.*: true
   ecomobs.command.*:
     description: All ecomobs commands
     default: op
@@ -34,6 +35,7 @@ permissions:
       ecomobs.command.reload: true
       ecomobs.command.spawn: true
       ecomobs.command.give: true
+      ecomobs.command.spawner.*: true
 
   ecomobs.command.ecomobs:
     description: Allows the use of /ecomobs
@@ -53,4 +55,80 @@ permissions:
 
   ecomobs.command.reload:
     description: Allows the use of /ecomobs reload
+    default: op
+
+  ecomobs.command.spawner.*:
+    description: All spawner commands
+    default: op
+    children:
+      ecomobs.command.spawner.give: true
+      ecomobs.command.spawner.modify: true
+      ecomobs.command.spawner.modify.*: true
+
+  ecomobs.command.spawner.give:
+    description: Give spawner items
+    default: op
+
+  ecomobs.command.spawner.modify:
+    description: Use /ecomobs spawner modify
+    default: op
+
+  ecomobs.command.spawner.modify.*:
+    description: Modify all spawner attributes
+    default: op
+    children:
+      ecomobs.command.spawner.modify.mob: true
+      ecomobs.command.spawner.modify.delay: true
+      ecomobs.command.spawner.modify.radius: true
+      ecomobs.command.spawner.modify.player-radius: true
+      ecomobs.command.spawner.modify.count: true
+      ecomobs.command.spawner.modify.max-count: true
+      ecomobs.command.spawner.modify.pickup: true
+      ecomobs.command.spawner.modify.particle: true
+
+  ecomobs.command.spawner.modify.mob:
+    description: Modify spawner mob type
+    default: op
+
+  ecomobs.command.spawner.modify.delay:
+    description: Modify spawner delay
+    default: op
+
+  ecomobs.command.spawner.modify.radius:
+    description: Modify spawner spawn radius
+    default: op
+
+  ecomobs.command.spawner.modify.player-radius:
+    description: Modify spawner required player radius
+    default: op
+
+  ecomobs.command.spawner.modify.count:
+    description: Modify spawner spawn count
+    default: op
+
+  ecomobs.command.spawner.modify.max-count:
+    description: Modify spawner max nearby entities
+    default: op
+
+  ecomobs.command.spawner.modify.pickup:
+    description: Modify spawner pickup mode
+    default: op
+
+  ecomobs.command.spawner.modify.particle:
+    description: Modify spawner particle animation
+    default: op
+
+  ecomobs.spawner.*:
+    description: Spawner runtime permissions
+    default: op
+    children:
+      ecomobs.spawner.pickup: true
+      ecomobs.spawner.pickup.silktouch: true
+
+  ecomobs.spawner.pickup:
+    description: Pick up spawners when pickup mode is 'allow'
+    default: op
+
+  ecomobs.spawner.pickup.silktouch:
+    description: Pick up spawners with silk touch when pickup mode is 'silk_touch'
     default: op
