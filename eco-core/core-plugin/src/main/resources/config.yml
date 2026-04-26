@@ -23,6 +23,7 @@ custom-spawning:
   max-attempts: 64
 
 spawner-display:
+  title: "&f%mob% Spawner"
   lore:
     - "&8Mob: &f%mob%"
     - "&8Delay: &f%delay_min%-%delay_max% ticks"

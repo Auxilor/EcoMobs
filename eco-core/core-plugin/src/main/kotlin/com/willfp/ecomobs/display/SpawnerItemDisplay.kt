@@ -3,6 +3,7 @@ package com.willfp.ecomobs.display
 import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
+import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
@@ -20,6 +21,18 @@ import com.willfp.ecomobs.spawner.spawnerSpawnRange
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
+private fun FastItemStack.applySpawnerPlaceholders(text: String): String =
+    text
+        .replace("%mob%", spawnerMob ?: "")
+        .replace("%delay_min%", spawnerDelayMin.toString())
+        .replace("%delay_max%", spawnerDelayMax.toString())
+        .replace("%radius%", spawnerSpawnRange.toString())
+        .replace("%player_range%", spawnerPlayerRange.toString())
+        .replace("%count%", spawnerSpawnCount.toString())
+        .replace("%max_nearby%", spawnerMaxNearby.toString())
+        .replace("%pickup%", spawnerPickup)
+        .replace("%particle%", spawnerParticleAnim ?: "none")
+
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
     override fun display(itemStack: ItemStack, player: Player?, vararg args: Any) {
         if (player == null) return
@@ -28,20 +41,13 @@ object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
 
         val context = placeholderContext(player = player, item = itemStack)
 
+        val rawTitle = plugin.configYml.getString("spawner-display.title")
+        if (rawTitle.isNotEmpty()) {
+            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context))
+        }
+
         val lore = plugin.configYml.getStrings("spawner-display.lore")
-            .map { line ->
-                line
-                    .replace("%mob%", fis.spawnerMob ?: "")
-                    .replace("%delay_min%", fis.spawnerDelayMin.toString())
-                    .replace("%delay_max%", fis.spawnerDelayMax.toString())
-                    .replace("%radius%", fis.spawnerSpawnRange.toString())
-                    .replace("%player_range%", fis.spawnerPlayerRange.toString())
-                    .replace("%count%", fis.spawnerSpawnCount.toString())
-                    .replace("%max_nearby%", fis.spawnerMaxNearby.toString())
-                    .replace("%pickup%", fis.spawnerPickup)
-                    .replace("%particle%", fis.spawnerParticleAnim ?: "none")
-            }
-            .map { Display.PREFIX + it.formatEco(context) }
+            .map { Display.PREFIX + fis.applySpawnerPlaceholders(it).formatEco(context) }
 
         fis.lore = lore + fis.lore
     }
