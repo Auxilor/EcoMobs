@@ -9,9 +9,12 @@ import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.applyVanillaSettings
+import com.willfp.ecomobs.spawner.entityFromSpawnerKey
 import com.willfp.ecomobs.spawner.isCustomSpawner
+import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.spawnerDelayMax
 import com.willfp.ecomobs.spawner.spawnerDelayMin
+import com.willfp.ecomobs.spawner.spawnerExplosionProof
 import com.willfp.ecomobs.spawner.spawnerMaxNearby
 import com.willfp.ecomobs.spawner.spawnerMob
 import com.willfp.ecomobs.spawner.spawnerParticleAnim
@@ -19,14 +22,11 @@ import com.willfp.ecomobs.spawner.spawnerPickup
 import com.willfp.ecomobs.spawner.spawnerPlayerRange
 import com.willfp.ecomobs.spawner.spawnerSpawnCount
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
-import com.willfp.ecomobs.spawner.entityFromSpawnerKey
-import com.willfp.ecomobs.spawner.resolveEntityType
-import com.willfp.ecomobs.spawner.spawnerExplosionProof
 import com.willfp.ecomobs.spawner.toSpawnerItem
+import io.papermc.paper.event.player.PlayerPickItemEvent
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -34,7 +34,6 @@ import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.entity.SpawnerSpawnEvent
-import org.bukkit.event.inventory.InventoryCreativeEvent
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.persistence.PersistentDataType
@@ -142,16 +141,17 @@ object SpawnerHandler : Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    fun handlePickBlock(event: InventoryCreativeEvent) {
-        val player = event.whoClicked as? Player ?: return
-        if (event.cursor.type != Material.SPAWNER) return
+    fun handlePickBlock(event: PlayerPickItemEvent) {
+        val player = event.player
         val target = player.getTargetBlockExact(5) ?: return
         if (target.type != Material.SPAWNER) return
         val state = target.state as? CreatureSpawner ?: return
         if (!state.isCustomSpawner) return
         val item = state.toSpawnerItem()
         Display.display(item, player)
-        event.cursor = item
+        plugin.scheduler.runTask(player.location) {
+            player.inventory.setItem(player.inventory.heldItemSlot, item)
+        }
     }
 
     @EventHandler
