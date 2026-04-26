@@ -14,6 +14,7 @@ import com.willfp.ecomobs.spawner.spawnerDelayMin
 import com.willfp.ecomobs.spawner.spawnerMaxNearby
 import com.willfp.ecomobs.spawner.spawnerMob
 import com.willfp.ecomobs.spawner.spawnerParticleAnim
+import com.willfp.ecomobs.spawner.spawnerExplosionProof
 import com.willfp.ecomobs.spawner.spawnerPickup
 import com.willfp.ecomobs.spawner.spawnerPlayerRange
 import com.willfp.ecomobs.spawner.spawnerSpawnCount
@@ -32,6 +33,7 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String =
         .replace("%max_nearby%", spawnerMaxNearby.toString())
         .replace("%pickup%", spawnerPickup)
         .replace("%particle%", spawnerParticleAnim ?: "none")
+        .replace("%explosion_proof%", spawnerExplosionProof.toString())
 
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
     override fun display(itemStack: ItemStack, player: Player?, vararg args: Any) {

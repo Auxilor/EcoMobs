@@ -1,5 +1,6 @@
 package com.willfp.ecomobs.handler
 
+import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.mob.EcoMobs
@@ -20,6 +21,7 @@ import com.willfp.ecomobs.spawner.spawnerSpawnCount
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
 import com.willfp.ecomobs.spawner.entityFromSpawnerKey
 import com.willfp.ecomobs.spawner.resolveEntityType
+import com.willfp.ecomobs.spawner.spawnerExplosionProof
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
@@ -28,7 +30,9 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.entity.SpawnerSpawnEvent
 import org.bukkit.event.inventory.InventoryCreativeEvent
 import org.bukkit.event.world.ChunkLoadEvent
@@ -51,6 +55,7 @@ object SpawnerHandler : Listener {
         val playerRange = fis.spawnerPlayerRange
         val maxNearby = fis.spawnerMaxNearby
         val pickup = fis.spawnerPickup
+        val explosionProof = fis.spawnerExplosionProof
         val location = event.block.location
 
         plugin.scheduler.runTask(location) {
@@ -64,6 +69,7 @@ object SpawnerHandler : Listener {
             state.spawnerMaxNearby = maxNearby
             state.spawnerPickup = pickup
             state.spawnerParticleAnim = animId
+            state.spawnerExplosionProof = explosionProof
             state.applyVanillaSettings()
             resolveEntityType(mobId)?.let { state.spawnedType = it }
             state.update()
@@ -164,6 +170,30 @@ object SpawnerHandler : Listener {
             if (blockState !is CreatureSpawner) continue
             if (!blockState.isCustomSpawner) continue
             PlacedSpawners.remove(blockState.location)
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun handleEntityExplosion(event: EntityExplodeEvent) {
+        event.blockList().removeIf { block ->
+            if (block.type != Material.SPAWNER) return@removeIf false
+            val state = block.state as? CreatureSpawner ?: return@removeIf false
+            if (!state.isCustomSpawner) return@removeIf false
+            if (state.spawnerExplosionProof) return@removeIf true
+            PlacedSpawners.remove(block.location)
+            false
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun handleBlockExplosion(event: BlockExplodeEvent) {
+        event.blockList().removeIf { block ->
+            if (block.type != Material.SPAWNER) return@removeIf false
+            val state = block.state as? CreatureSpawner ?: return@removeIf false
+            if (!state.isCustomSpawner) return@removeIf false
+            if (state.spawnerExplosionProof) return@removeIf true
+            PlacedSpawners.remove(block.location)
+            false
         }
     }
 }

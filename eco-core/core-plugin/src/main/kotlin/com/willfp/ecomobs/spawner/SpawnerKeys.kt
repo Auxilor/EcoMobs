@@ -21,6 +21,7 @@ val spawnerPlayerRangeKey = namespacedKeyOf("ecomobs", "spawner_player_range")
 val spawnerMaxNearbyKey = namespacedKeyOf("ecomobs", "spawner_max_nearby")
 val spawnerPickupKey = namespacedKeyOf("ecomobs", "spawner_pickup")
 val spawnerParticleAnimKey = namespacedKeyOf("ecomobs", "spawner_particle_anim")
+val spawnerExplosionProofKey = namespacedKeyOf("ecomobs", "spawner_explosion_proof")
 
 val FastItemStack.isCustomSpawner: Boolean
     get() = persistentDataContainer.has(spawnerMobKey, PersistentDataType.STRING)
@@ -79,6 +80,12 @@ var FastItemStack.spawnerParticleAnim: String?
     set(value) {
         if (value == null) persistentDataContainer.remove(spawnerParticleAnimKey)
         else persistentDataContainer.set(spawnerParticleAnimKey, PersistentDataType.STRING, value)
+    }
+
+var FastItemStack.spawnerExplosionProof: Boolean
+    get() = persistentDataContainer.get(spawnerExplosionProofKey, PersistentDataType.BYTE) == 1.toByte()
+    set(value) {
+        persistentDataContainer.set(spawnerExplosionProofKey, PersistentDataType.BYTE, if (value) 1 else 0)
     }
 
 val CreatureSpawner.isCustomSpawner: Boolean
@@ -140,6 +147,12 @@ var CreatureSpawner.spawnerParticleAnim: String?
         else persistentDataContainer.set(spawnerParticleAnimKey, PersistentDataType.STRING, value)
     }
 
+var CreatureSpawner.spawnerExplosionProof: Boolean
+    get() = persistentDataContainer.get(spawnerExplosionProofKey, PersistentDataType.BYTE) == 1.toByte()
+    set(value) {
+        persistentDataContainer.set(spawnerExplosionProofKey, PersistentDataType.BYTE, if (value) 1 else 0)
+    }
+
 fun CreatureSpawner.applyVanillaSettings() {
     minSpawnDelay = spawnerDelayMin
     maxSpawnDelay = spawnerDelayMax
@@ -174,5 +187,6 @@ fun CreatureSpawner.toSpawnerItem(): ItemStack {
     fis.spawnerMaxNearby = spawnerMaxNearby
     fis.spawnerPickup = spawnerPickup
     fis.spawnerParticleAnim = spawnerParticleAnim
+    fis.spawnerExplosionProof = spawnerExplosionProof
     return fis.unwrap()
 }

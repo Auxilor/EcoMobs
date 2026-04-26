@@ -4,9 +4,11 @@ import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.plugin
+import com.willfp.ecomobs.spawner.PICKUP_VALUES
 import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAnimations
+import com.willfp.ecomobs.spawner.SpawnerItemModifier
 import com.willfp.ecomobs.spawner.applyVanillaSettings
 import com.willfp.ecomobs.spawner.isCustomSpawner
 import com.willfp.ecomobs.spawner.spawnerDelayMax
@@ -18,6 +20,7 @@ import com.willfp.ecomobs.spawner.spawnerPickup
 import com.willfp.ecomobs.spawner.spawnerPlayerRange
 import com.willfp.ecomobs.spawner.spawnerSpawnCount
 import com.willfp.ecomobs.spawner.resolveEntityType
+import com.willfp.ecomobs.spawner.spawnerExplosionProof
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
@@ -25,9 +28,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
-
-private val ATTRIBUTES = listOf("mob", "delay", "radius", "player-radius", "count", "max-count", "pickup", "particle")
-private val PICKUP_VALUES = listOf("allow", "silk_touch", "deny")
 
 object CommandSpawnerModify : Subcommand(
     plugin, "modify", "ecomobs.command.spawner.modify", true
@@ -77,94 +77,86 @@ object CommandSpawnerModify : Subcommand(
             targetState.update()
         }
 
-        when (attribute) {
-            "mob" -> {
-                val mobId = args.getOrNull(1) ?: return invalidValue()
-                val valid = EcoMobs[mobId] != null || runCatching {
-                    EntityType.valueOf(mobId.uppercase())
-                }.isSuccess
-                if (!valid) {
-                    sender.sendMessage(plugin.langYml.getMessage("spawner-invalid-mob")); return
+        if (isHeld) {
+            if (!SpawnerItemModifier.apply(heldFis, attribute, args.drop(1))) {
+                if (attribute !in SpawnerItemModifier.ATTRIBUTES) {
+                    sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
+                } else {
+                    invalidValue()
                 }
-                if (isHeld) heldFis.spawnerMob = mobId
-                else {
+                return
+            }
+            player.updateInventory()
+        } else {
+            when (attribute) {
+                "mob" -> {
+                    val mobId = args.getOrNull(1) ?: return invalidValue()
+                    val valid = EcoMobs[mobId] != null || runCatching {
+                        EntityType.valueOf(mobId.uppercase())
+                    }.isSuccess
+                    if (!valid) {
+                        sender.sendMessage(plugin.langYml.getMessage("spawner-invalid-mob")); return
+                    }
                     targetState!!.spawnerMob = mobId
                     resolveEntityType(mobId)?.let { targetState.spawnedType = it }
                     targetState.update()
                 }
-            }
 
-            "delay" -> {
-                val min = args.getOrNull(1)?.toIntOrNull()
-                val max = args.getOrNull(2)?.toIntOrNull()
-                if (min == null || max == null || min < 0 || min > max) return invalidValue()
-                if (isHeld) {
-                    heldFis.spawnerDelayMin = min; heldFis.spawnerDelayMax = max
-                } else {
+                "delay" -> {
+                    val min = args.getOrNull(1)?.toIntOrNull()
+                    val max = args.getOrNull(2)?.toIntOrNull()
+                    if (min == null || max == null || min < 0 || min > max) return invalidValue()
                     targetState!!.spawnerDelayMin = min; targetState.spawnerDelayMax = max; applyBlock()
                 }
-            }
 
-            "radius" -> {
-                val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
-                if (isHeld) heldFis.spawnerSpawnRange = value
-                else {
+                "radius" -> {
+                    val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
                     targetState!!.spawnerSpawnRange = value; applyBlock()
                 }
-            }
 
-            "player-radius" -> {
-                val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
-                if (isHeld) heldFis.spawnerPlayerRange = value
-                else {
+                "player-radius" -> {
+                    val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
                     targetState!!.spawnerPlayerRange = value; applyBlock()
                 }
-            }
 
-            "count" -> {
-                val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
-                if (isHeld) heldFis.spawnerSpawnCount = value
-                else {
+                "count" -> {
+                    val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
                     targetState!!.spawnerSpawnCount = value; applyBlock()
                 }
-            }
 
-            "max-count" -> {
-                val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
-                if (isHeld) heldFis.spawnerMaxNearby = value
-                else {
+                "max-nearby" -> {
+                    val value = args.getOrNull(1)?.toIntOrNull()?.takeIf { it >= 1 } ?: return invalidValue()
                     targetState!!.spawnerMaxNearby = value; applyBlock()
                 }
-            }
 
-            "pickup" -> {
-                val raw = args.getOrNull(1)?.lowercase() ?: return invalidValue()
-                val value = if (raw == "silk-touch") "silk_touch" else raw
-                if (value !in PICKUP_VALUES) return invalidValue()
-                if (isHeld) heldFis.spawnerPickup = value
-                else {
+                "pickup" -> {
+                    val raw = args.getOrNull(1)?.lowercase() ?: return invalidValue()
+                    val value = if (raw == "silk-touch") "silk_touch" else raw
+                    if (value !in PICKUP_VALUES) return invalidValue()
                     targetState!!.spawnerPickup = value; targetState.update()
                 }
-            }
 
-            "particle" -> {
-                val value = args.getOrNull(1)?.lowercase() ?: return invalidValue()
-                if (value != "none" && SpawnerAnimations[value] == null) return invalidValue()
-                val stored = if (value == "none") null else value
-                if (isHeld) heldFis.spawnerParticleAnim = stored
-                else {
+                "particle" -> {
+                    val value = args.getOrNull(1)?.lowercase() ?: return invalidValue()
+                    if (value != "none" && SpawnerAnimations[value] == null) return invalidValue()
+                    val stored = if (value == "none") null else value
                     targetState!!.spawnerParticleAnim = stored
                     targetState.update()
                     PlacedSpawners.set(targetLocation, PlacedSpawner(targetLocation, stored))
                 }
-            }
 
-            else -> {
-                sender.sendMessage(plugin.langYml.getMessage("invalid-command")); return
+                "explosion-proof" -> {
+                    val value = args.getOrNull(1)?.lowercase() ?: return invalidValue()
+                    if (value != "true" && value != "false") return invalidValue()
+                    targetState!!.spawnerExplosionProof = value == "true"
+                    targetState.update()
+                }
+
+                else -> {
+                    sender.sendMessage(plugin.langYml.getMessage("invalid-command")); return
+                }
             }
         }
-
-        if (isHeld) player.updateInventory()
 
         sender.sendMessage(
             plugin.langYml.getMessage("spawner-modified")
@@ -176,32 +168,29 @@ object CommandSpawnerModify : Subcommand(
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
         val completions = mutableListOf<String>()
 
-        if (args.size == 1)
+        if (args.size == 1) {
             StringUtil.copyPartialMatches(
                 args[0],
-                ATTRIBUTES.filter { sender.hasPermission("ecomobs.command.spawner.modify.$it") },
+                SpawnerItemModifier.ATTRIBUTES.filter { sender.hasPermission("ecomobs.command.spawner.modify.$it") },
                 completions
             )
-
-        if (args.size == 2) {
-            when (args[0].lowercase()) {
-                "mob" -> StringUtil.copyPartialMatches(
-                    args[1],
-                    EcoMobs.values().map { it.id } + EntityType.entries.map { it.name.lowercase() },
-                    completions
-                )
-
-                "pickup" -> StringUtil.copyPartialMatches(args[1], PICKUP_VALUES, completions)
-                "particle" -> StringUtil.copyPartialMatches(
-                    args[1], listOf("none") + SpawnerAnimations.keys(), completions
-                )
-
-                else -> StringUtil.copyPartialMatches(args[1], listOf("1", "4", "8", "16", "200"), completions)
-            }
         }
 
-        if (args.size == 3 && args[0].lowercase() == "delay")
-            StringUtil.copyPartialMatches(args[2], listOf("200", "400", "800"), completions)
+        if (args.size == 2) {
+            StringUtil.copyPartialMatches(
+                args[1],
+                SpawnerItemModifier.tabComplete(args[0].lowercase(), 0),
+                completions
+            )
+        }
+
+        if (args.size == 3 && args[0].lowercase() == "delay") {
+            StringUtil.copyPartialMatches(
+                args[2],
+                SpawnerItemModifier.tabComplete("delay", 1),
+                completions
+            )
+        }
 
         completions.sort()
         return completions

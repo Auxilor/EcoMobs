@@ -5,6 +5,7 @@ import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.plugin
+import com.willfp.ecomobs.spawner.SpawnerItemModifier
 import com.willfp.ecomobs.spawner.spawnerDelayMax
 import com.willfp.ecomobs.spawner.spawnerDelayMin
 import com.willfp.ecomobs.spawner.spawnerMaxNearby
@@ -49,6 +50,8 @@ object CommandSpawnerGive : Subcommand(
         }
 
         val amount = args.getOrNull(2)?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+        val tailStart = if (args.getOrNull(2)?.toIntOrNull() != null) 3 else 2
+        val tail = args.drop(tailStart)
 
         val item = ItemStack(Material.SPAWNER, amount)
         val fis = item.fast()
@@ -60,6 +63,32 @@ object CommandSpawnerGive : Subcommand(
         fis.spawnerPlayerRange = 16
         fis.spawnerMaxNearby = 6
         fis.spawnerPickup = "deny"
+
+        var i = 0
+        while (i < tail.size) {
+            val attribute = tail[i].lowercase()
+            if (attribute == "mob" || attribute !in SpawnerItemModifier.ATTRIBUTES) {
+                sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
+                return
+            }
+            if (!sender.hasPermission("ecomobs.command.spawner.modify.$attribute")) {
+                sender.sendMessage(plugin.langYml.getMessage("no-permission"))
+                return
+            }
+            val value = SpawnerItemModifier.valueCount(attribute)
+            val valueArgs = tail.subList(i + 1, minOf(i + 1 + value, tail.size))
+            if (valueArgs.size < value) {
+                sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
+                return
+            }
+            if (!SpawnerItemModifier.apply(fis, attribute, valueArgs)) {
+                sender.sendMessage(
+                    plugin.langYml.getMessage("spawner-invalid-value").replace("%attribute%", attribute)
+                )
+                return
+            }
+            i += 1 + value
+        }
 
         DropQueue(recipient)
             .addItem(fis.unwrap())
@@ -87,7 +116,51 @@ object CommandSpawnerGive : Subcommand(
             )
 
         if (args.size == 3)
-            StringUtil.copyPartialMatches(args[2], listOf("1", "2", "3", "4", "5"), completions)
+            StringUtil.copyPartialMatches(
+                args[2],
+                listOf("1", "2", "3", "4", "5") + SpawnerItemModifier.ATTRIBUTES
+                    .filter { it != "mob" && sender.hasPermission("ecomobs.command.spawner.modify.$it") },
+                completions
+            )
+
+        if (args.size >= 4) {
+            val tailStart = if (args[2].toIntOrNull() != null) 3 else 2
+            val tail = args.drop(tailStart)
+            val cursorIndex = tail.size - 1
+            val usedAttributes = mutableSetOf<String>()
+
+            var i = 0
+            while (i <= cursorIndex) {
+                val token = tail[i].lowercase()
+                if (i == cursorIndex) {
+                    StringUtil.copyPartialMatches(
+                        token,
+                        SpawnerItemModifier.ATTRIBUTES.filter { attr ->
+                            attr != "mob" && attr !in usedAttributes &&
+                                sender.hasPermission("ecomobs.command.spawner.modify.$attr")
+                        },
+                        completions
+                    )
+                    break
+                }
+                if (token !in SpawnerItemModifier.ATTRIBUTES || token == "mob") {
+                    i++
+                    continue
+                }
+                val value = SpawnerItemModifier.valueCount(token)
+                usedAttributes.add(token)
+                if (i + value >= cursorIndex) {
+                    val valueIndex = cursorIndex - i - 1
+                    StringUtil.copyPartialMatches(
+                        tail[cursorIndex],
+                        SpawnerItemModifier.tabComplete(token, valueIndex),
+                        completions
+                    )
+                    break
+                }
+                i += 1 + value
+            }
+        }
 
         completions.sort()
         return completions

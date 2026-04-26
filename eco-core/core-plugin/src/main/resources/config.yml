@@ -33,6 +33,7 @@ spawner-display:
     - "&8Max Nearby: &f%max_nearby%"
     - "&8Pickup: &f%pickup%"
     - "&8Particle: &f%particle%"
+    - "&8Explosion-Proof: &f%explosion_proof%"
 
 animations:
   circle:
