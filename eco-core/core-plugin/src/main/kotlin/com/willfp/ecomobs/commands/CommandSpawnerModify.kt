@@ -60,7 +60,7 @@ object CommandSpawnerModify : Subcommand(
                 return
             }
             val state = targetBlock.state as? CreatureSpawner
-            if (state == null || !state.isCustomSpawner) {
+            if (state == null) {
                 sender.sendMessage(plugin.langYml.getMessage("spawner-no-target"))
                 return
             }
