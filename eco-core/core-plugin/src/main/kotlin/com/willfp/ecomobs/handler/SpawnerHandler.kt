@@ -24,11 +24,13 @@ import com.willfp.ecomobs.spawner.toSpawnerItem
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.SpawnerSpawnEvent
+import org.bukkit.event.inventory.InventoryCreativeEvent
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.persistence.PersistentDataType
@@ -131,6 +133,17 @@ object SpawnerHandler : Listener {
                 PlacedSpawners.remove(block.location)
             }
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun handlePickBlock(event: InventoryCreativeEvent) {
+        val player = event.whoClicked as? Player ?: return
+        if (event.cursor.type != Material.SPAWNER) return
+        val target = player.getTargetBlockExact(5) ?: return
+        if (target.type != Material.SPAWNER) return
+        val state = target.state as? CreatureSpawner ?: return
+        if (!state.isCustomSpawner) return
+        event.cursor = state.toSpawnerItem()
     }
 
     @EventHandler
