@@ -18,6 +18,7 @@ import com.willfp.ecomobs.spawner.spawnerPickup
 import com.willfp.ecomobs.spawner.spawnerPlayerRange
 import com.willfp.ecomobs.spawner.spawnerSpawnCount
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
+import com.willfp.ecomobs.spawner.entityFromSpawnerKey
 import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import org.bukkit.Material
@@ -30,6 +31,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.SpawnerSpawnEvent
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
+import org.bukkit.persistence.PersistentDataType
 
 object SpawnerHandler : Listener {
 
@@ -78,11 +80,13 @@ object SpawnerHandler : Listener {
 
         val ecoMob = EcoMobs[mobId]
         if (ecoMob != null) {
-            ecoMob.spawn(location, SpawnReason.SPAWNER)
+            val livingMob = ecoMob.spawn(location, SpawnReason.SPAWNER)
+            livingMob?.entity?.persistentDataContainer?.set(entityFromSpawnerKey, PersistentDataType.BYTE, 1)
             return
         }
 
-        Entities.lookup(mobId).spawn(location)
+        val entity = Entities.lookup(mobId).spawn(location)
+        entity?.persistentDataContainer?.set(entityFromSpawnerKey, PersistentDataType.BYTE, 1)
     }
 
     @EventHandler(ignoreCancelled = true)

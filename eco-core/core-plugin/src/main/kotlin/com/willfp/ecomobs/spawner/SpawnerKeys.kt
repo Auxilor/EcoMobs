@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 val spawnerMobKey = namespacedKeyOf("ecomobs", "spawner_mob")
+val entityFromSpawnerKey = namespacedKeyOf("ecomobs", "from_spawner")
 val spawnerDelayMinKey = namespacedKeyOf("ecomobs", "spawner_delay_min")
 val spawnerDelayMaxKey = namespacedKeyOf("ecomobs", "spawner_delay_max")
 val spawnerSpawnCountKey = namespacedKeyOf("ecomobs", "spawner_spawn_count")
