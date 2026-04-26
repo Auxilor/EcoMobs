@@ -4,7 +4,7 @@ import com.willfp.ecomobs.mob.impl.ecoMob
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.spigotmc.event.entity.EntityMountEvent
+import org.bukkit.event.entity.EntityMountEvent
 
 object MountHandler : Listener {
     @EventHandler(

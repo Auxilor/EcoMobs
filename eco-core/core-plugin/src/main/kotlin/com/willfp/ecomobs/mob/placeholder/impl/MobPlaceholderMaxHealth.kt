@@ -7,6 +7,6 @@ import org.bukkit.attribute.Attribute
 
 object MobPlaceholderMaxHealth : MobPlaceholder("max_health") {
     override fun getValue(mob: LivingMob): String {
-        return mob.entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value.toNiceString()
+        return mob.entity.getAttribute(Attribute.MAX_HEALTH)?.value.toNiceString()
     }
 }

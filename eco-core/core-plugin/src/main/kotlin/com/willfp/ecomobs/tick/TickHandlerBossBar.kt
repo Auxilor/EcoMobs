@@ -19,7 +19,7 @@ class TickHandlerBossBar(
         }
 
         val entity = mob.entity
-        val maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value
+        val maxHealth = entity.getAttribute(Attribute.MAX_HEALTH)?.value
             ?: throw IllegalStateException("Entity ${entity.type} has no max health attribute")
 
         bar.name(mob.displayName.toComponent())
