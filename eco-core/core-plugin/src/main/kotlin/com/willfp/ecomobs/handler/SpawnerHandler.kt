@@ -149,7 +149,9 @@ object SpawnerHandler : Listener {
         if (target.type != Material.SPAWNER) return
         val state = target.state as? CreatureSpawner ?: return
         if (!state.isCustomSpawner) return
-        event.cursor = state.toSpawnerItem()
+        val item = state.toSpawnerItem()
+        Display.display(item, player)
+        event.cursor = item
     }
 
     @EventHandler
