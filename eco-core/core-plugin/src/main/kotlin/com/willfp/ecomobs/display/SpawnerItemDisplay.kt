@@ -7,6 +7,7 @@ import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
+import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.isCustomSpawner
 import com.willfp.ecomobs.spawner.spawnerDelayMax
@@ -25,6 +26,7 @@ import org.bukkit.inventory.ItemStack
 private fun FastItemStack.applySpawnerPlaceholders(text: String): String =
     text
         .replace("%mob%", spawnerMob ?: "")
+        .replace("%mob_formatted%", spawnerMob?.replace("_", " ")?.titlecase() ?: "")
         .replace("%delay_min%", spawnerDelayMin.toString())
         .replace("%delay_max%", spawnerDelayMax.toString())
         .replace("%radius%", spawnerSpawnRange.toString())
