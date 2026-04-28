@@ -1,7 +1,6 @@
 package com.willfp.ecomobs.category.spawning.impl
 
 import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.scheduling.EcoWrappedTask
 import com.willfp.eco.util.randDouble
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
@@ -17,6 +16,7 @@ import com.willfp.libreforge.enumValueOfOrNull
 import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
+import org.bukkit.scheduler.BukkitTask
 
 object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
     override fun create(
@@ -45,34 +45,32 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
 
         private val chance = config.getDouble("chance")
 
-        private var task: EcoWrappedTask? = null
+        private var task: BukkitTask? = null
 
         override fun onStart() {
-            task = plugin.scheduler.runTaskTimer(spawnRate, spawnRate) {
+            task = plugin.scheduler.runTimer(spawnRate, spawnRate) {
                 tick()
             }
         }
 
         override fun onStop() {
-            task?.cancelTask()
+            task?.cancel()
         }
 
         private fun tick() {
             for (player in Bukkit.getOnlinePlayers()) {
-                plugin.scheduler.runTask(player) { // folia issue
-                    for (point in player.spawnPoints.filter { it.type in spawnTypes }) {
-                        val mob = category.mobs.randomOrNull() ?: continue
+                for (point in player.spawnPoints.filter { it.type in spawnTypes }) {
+                    val mob = category.mobs.randomOrNull() ?: continue
 
-                        if (!conditions.areMet(point.location.toDispatcher(), EmptyProvidedHolder)) {
-                            continue
-                        }
-
-                        if (randDouble(0.0, 100.0) > chance) {
-                            continue
-                        }
-
-                        point.spawn(mob, SpawnReason.NATURAL)
+                    if (!conditions.areMet(point.location.toDispatcher(), EmptyProvidedHolder)) {
+                        continue
                     }
+
+                    if (randDouble(0.0, 100.0) > chance) {
+                        continue
+                    }
+
+                    point.spawn(mob, SpawnReason.NATURAL)
                 }
             }
         }

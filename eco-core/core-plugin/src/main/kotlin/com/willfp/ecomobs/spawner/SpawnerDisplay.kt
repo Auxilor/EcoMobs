@@ -1,21 +1,21 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.scheduling.EcoWrappedTask
 import com.willfp.ecomobs.plugin
+import org.bukkit.scheduler.BukkitTask
 
 object SpawnerDisplay {
     @Volatile
     private var tick = 0
-    private var asyncTask: EcoWrappedTask? = null
+    private var asyncTask: BukkitTask? = null
 
     fun start() {
-        asyncTask?.cancelTask()
-        asyncTask = plugin.scheduler.runTaskAsyncTimer(1, 1) { tickAsync() }
+        asyncTask?.cancel()
+        asyncTask = plugin.scheduler.runAsyncTimer(1, 1) { tickAsync() }
     }
 
     private fun tickAsync() {
         for (spawner in PlacedSpawners.values()) {
-            plugin.scheduler.runTask(spawner.location) {
+            plugin.scheduler.run {
                 if (spawner.location.isChunkLoaded) {
                     spawner.tickAsync(tick)
                 }

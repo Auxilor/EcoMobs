@@ -57,8 +57,8 @@ object SpawnerHandler : Listener {
         val explosionProof = fis.spawnerExplosionProof
         val location = event.block.location
 
-        plugin.scheduler.runTask(location) {
-            val state = location.block.state as? CreatureSpawner ?: return@runTask
+        plugin.scheduler.run {
+            val state = location.block.state as? CreatureSpawner ?: return@run
             state.spawnerMob = mobId
             state.spawnerDelayMin = delayMin
             state.spawnerDelayMax = delayMax
@@ -149,7 +149,7 @@ object SpawnerHandler : Listener {
         if (!state.isCustomSpawner) return
         val item = state.toSpawnerItem()
         Display.display(item, player)
-        plugin.scheduler.runTask(player.location) {
+        plugin.scheduler.run {
             player.inventory.setItem(player.inventory.heldItemSlot, item)
         }
     }
