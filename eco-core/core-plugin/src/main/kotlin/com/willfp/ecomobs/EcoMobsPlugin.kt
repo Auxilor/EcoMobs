@@ -1,5 +1,6 @@
 package com.willfp.ecomobs
 
+import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.entities.ai.EntityGoals
@@ -24,8 +25,10 @@ import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.damage.TopDamagerHandler
 import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
+import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
@@ -99,4 +102,12 @@ class EcoMobsPlugin : LibreforgePlugin() {
             CommandEcoMobs
         )
     }
+
+    override fun getCustomCharts() = listOf(
+        EcoMetricsChart.SingleLine("total_mobs") { EcoMobs.values().size },
+        EcoMetricsChart.SingleLine("total_mob_categories") { MobCategories.values().size },
+        EcoMetricsChart.SingleLine("total_particle_animations") { SpawnerParticleAnimations.values().size },
+        EcoMetricsChart.SingleLine("placed_spawners") { PlacedSpawners.values().size },
+        EcoMetricsChart.SingleLine("max_mobs_per_player") { configYml.getInt("max-mobs-per-player") }
+    )
 }
