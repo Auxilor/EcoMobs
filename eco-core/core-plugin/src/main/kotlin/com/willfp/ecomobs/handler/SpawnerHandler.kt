@@ -24,6 +24,7 @@ import com.willfp.ecomobs.spawner.spawnerSpawnCount
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
@@ -143,6 +144,7 @@ object SpawnerHandler : Listener {
     @EventHandler(ignoreCancelled = true)
     fun handlePickBlock(event: PlayerPickItemEvent) {
         val player = event.player
+        if (player.gameMode != GameMode.CREATIVE) return
         val target = player.getTargetBlockExact(5) ?: return
         if (target.type != Material.SPAWNER) return
         val state = target.state as? CreatureSpawner ?: return
