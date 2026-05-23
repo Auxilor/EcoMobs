@@ -110,9 +110,9 @@ object CommandSpawn : Subcommand(
             return
         }
 
-        var qty = 1
+        var quantity = 1
         if (args.size >= 6) {
-            qty = try {
+            quantity = try {
                 args[5].toInt().coerceAtLeast(1)
             } catch (e: NumberFormatException) {
                 1
@@ -121,7 +121,7 @@ object CommandSpawn : Subcommand(
 
         var spawned = 0
         var displayName = ""
-        repeat(qty) {
+        repeat(quantity) {
             val living = mob.spawn(location, SpawnReason.COMMAND)
             if (living != null) {
                 spawned++
@@ -133,7 +133,7 @@ object CommandSpawn : Subcommand(
             sender.sendMessage(
                 plugin.langYml.getMessage("spawned")
                     .replace("%mob%", displayName)
-                    .replace("%qty%", spawned.toString())
+                    .replace("%quantity%", spawned.toString())
             )
         }
     }
