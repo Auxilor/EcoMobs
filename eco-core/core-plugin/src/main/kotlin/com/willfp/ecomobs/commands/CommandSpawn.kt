@@ -110,12 +110,30 @@ object CommandSpawn : Subcommand(
             return
         }
 
-        val living = mob.spawn(location, SpawnReason.COMMAND)
+        var quantity = 1
+        if (args.size >= 6) {
+            quantity = try {
+                args[5].toInt().coerceAtLeast(1)
+            } catch (e: NumberFormatException) {
+                1
+            }
+        }
 
-        if (living != null) {
+        var spawned = 0
+        var displayName = ""
+        repeat(quantity) {
+            val living = mob.spawn(location, SpawnReason.COMMAND)
+            if (living != null) {
+                spawned++
+                displayName = living.displayName
+            }
+        }
+
+        if (spawned > 0) {
             sender.sendMessage(
                 plugin.langYml.getMessage("spawned")
-                    .replace("%mob%", living.displayName)
+                    .replace("%mob%", displayName)
+                    .replace("%quantity%", spawned.toString())
             )
         }
     }
@@ -144,6 +162,10 @@ object CommandSpawn : Subcommand(
 
         if (args.size == 5) {
             StringUtil.copyPartialMatches(args[4], Bukkit.getWorlds().map { it.name }, completions)
+        }
+
+        if (args.size == 6) {
+            StringUtil.copyPartialMatches(args[5], listOf("1", "5", "10", "25", "50"), completions)
         }
 
         completions.sort()

@@ -9,7 +9,7 @@ messages:
   invalid-player: "&cInvalid player!"
   specify-mob: "&cYou must specify a valid mob!"
   invalid-location: "&cInvalid location!"
-  spawned: "Spawned %mob%&f!"
+  spawned: "Spawned &c%quantity%x %mob%&f!"
   gave-egg: "Gave %player%&f a %mob%&f egg!"
 
   spawner-give: "Gave %player% a &c%mob%&f spawner!"
