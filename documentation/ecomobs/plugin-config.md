@@ -1,0 +1,81 @@
+---
+title: "Plugin Config"
+sidebar_position: 4
+---
+
+## Default config.yml
+
+```yaml
+discover-recipes: true
+
+custom-spawning:
+  # The spawn rate is the number of ticks to wait between trying to spawn a mob.
+  # 20 ticks = 1 second; the higher the number, the less often mobs will spawn.
+  spawn-rate: 12
+
+  # The radius to generate spawn points for around the player
+  radius-around-player: 32
+
+  # The max amount of spawn points to generate per player
+  max-points-per-player: 8
+
+  # The max amount of mobs to spawn per player
+  max-mobs-per-player: 24
+
+  # The max amount of attempts to generate a spawn point per player
+  max-attempts: 64
+
+spawner-display:
+  title: "&f%mob% Spawner"
+  lore:
+    - "&8Mob: &f%mob%"
+    - "&8Delay: &f%delay_min%-%delay_max% ticks"
+    - "&8Radius: &f%radius%"
+    - "&8Player Range: &f%player_range%"
+    - "&8Count: &f%count%"
+    - "&8Max Nearby: &f%max_nearby%"
+    - "&8Pickup: &f%pickup%"
+    - "&8Particle: &f%particle%"
+    - "&8Explosion-Proof: &f%explosion_proof%"
+
+animations:
+  circle:
+    spirals-per-second: 0.5
+    radius: 1.0
+    height: 0.5
+    count: 1
+  spiral:
+    spirals-per-second: 0.5
+    rises-per-second: 0.3
+    radius: 1.0
+    height: 0.5
+    count: 1
+  double_spiral:
+    spirals-per-second: 0.5
+    rises-per-second: 0.3
+    radius: 1.0
+    height: 0.5
+    count: 1
+  tilted_rings:
+    spirals-per-second: 0.5
+    radius: 1.0
+    x-offset: 0.5
+    y-offset: 0.5
+    count: 1
+  twirl:
+    small-radius: 0.2
+    large-radius: 1.0
+    ticks: 40.0
+    start-height: 0.0
+    end-height: 1.0
+    spirals-per-second: 0.5
+    count: 1
+
+spawner-animations:
+  circle_flame:
+    particle: flame
+    type: circle
+  spiral_end_rod:
+    particle: end_rod
+    type: spiral
+```
