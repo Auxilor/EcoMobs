@@ -1,4 +1,4 @@
----
+﻿---
 title: How to make a Mob
 sidebar_position: 1
 ---
@@ -115,7 +115,7 @@ spawn:
 
 ### The Mob Info Section
 
-:::dangerCategories:
+:::danger Categories:
 You **must** configure a category for the mob. This controls the natural spawning of the mob, even if you don't want any natural spawning.
 :::
 
@@ -189,7 +189,7 @@ custom-ai:
 ```
 
 ### The Effects & Conditions Section
-:::dangerEffects Section
+:::danger Effects Section
 
 The effects section is the core functionality of the mob. You can configure effects, conditions, filters, mutators to activate on specific mob actions.
 
