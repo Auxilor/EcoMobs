@@ -1,4 +1,6 @@
-﻿# ecomobs:random_teleport
+﻿---
+title: ecomobs:random_teleport
+---
 
 Allows a mob to teleport around randomly
 
