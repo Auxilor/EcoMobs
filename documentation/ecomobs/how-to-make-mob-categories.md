@@ -1,93 +1,119 @@
 ---
-title: How to make Mob Categories
+title: "How to Make Mob Categories"
 sidebar_position: 2
 ---
 
-## What are categories?
+A category is a config file that controls how a group of mobs spawns. Every mob belongs to one **category**, which decides whether mobs of that category appear naturally, how (by **replacing** vanilla mobs or through EcoMobs' own **custom spawning**), and whether they **persist**. This page covers building a category, naming it, and every part of its config.
 
-In EcoMobs, each mob belongs to a category, which control things like spawning behavior.
+## Quick start
 
-For example, you might have a category for common mobs, one for rare mobs, one for nether bosses, etc.
+1. Open `plugins/EcoMobs/categories/` and copy `_example.yml`, renaming it to your category's ID, e.g. `common.yml`. The file name (without `.yml`) is the category ID.
+2. Pick a spawning `type`: `replace`, `custom`, or `none`.
+3. Fill in the matching block (the `replace` mobs and chance, or the `custom` spawn types, conditions, and chance).
+4. Set `persistent` to control whether these mobs despawn naturally.
+5. Set `category: <id>` on a mob, run `/ecomobs reload`, and confirm the mob spawns the way the category defines.
 
-## How to add categories
-Each category is its own config file, placed in the `/categories/` folder, and you can add or remove them as you please. There's an example config called `_example.yml` to help you out!
+:::tip
+`_example.yml` is included as a reference and is **never loaded**, so copy or rename it to make a real category. You can also organise categories into subfolders inside `categories/`, and they'll still load.
+:::
 
-The ID of the category is the file name. This is what you use when [creating a mob](https://plugins.auxilor.io/ecomobs/how-to-make-a-custom-mob).
-ID's must be lowercase letters, numbers, and underscores only.
+## Naming and IDs
 
-## Example Category Config
+The category's file name without `.yml` is its ID. This is the value you put under `category:` when [creating a mob](how-to-make-a-custom-mob).
+
+:::warning ID rules
+IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the category will not load.
+:::
+
+## The structure of a category
+
+A category config has two parts.
+
+| Part | What it controls |
+| --- | --- |
+| **Spawning** | How mobs of this category enter the world |
+| **Despawning** | Whether mobs of this category persist |
+
+Here is a complete category:
 
 ```yaml
-persistent: false
-
+# === Spawning: how mobs of this category appear ===
 spawning:
-  type: custom
-
-  replace:
-    replace:
+  type: custom # replace, custom, or none
+  replace: # Used when type is replace
+    replace: # Vanilla mobs to replace
       - zombie
       - skeleton
-
-  custom:
-    spawn-types:
+    chance: 100 # Percent chance to replace the vanilla mob when it spawns
+  custom: # Used when type is custom
+    spawn-types: # Choose from land, water
       - land
-    conditions: [ ]
-    chance: 1.5
+    conditions: [ ] # Conditions the location must meet to spawn
+    chance: 1.5 # Percent chance to spawn when a valid point is found
+
+# === Despawning: whether mobs persist ===
+persistent: false # If true, mobs of this category never despawn naturally
 ```
 
-## Understanding all the sections
+### Spawning
 
-### The Despawning Section
+The `type` field picks one of three spawning methods, and you fill in the matching block.
 
-```yaml
-# If the mob is persistent, then it will not despawn naturally.
-persistent: false (true/false)
-```
-
-### The Spawning Section
-
-Three spawning methods are available: `replace`, `custom`, or `none`.
-
-#### replace
-Uses the vanilla spawning system by replacing the listed vanilla mobs with your custom mob when they spawn. 
+`replace` uses the vanilla spawning system, swapping the listed vanilla mobs for your custom mob when they spawn:
 
 ```yaml
 spawning:
   type: replace
   replace:
-    replace: # The list of mobs to replace
+    replace: # Vanilla mobs to replace
       - zombie
       - skeleton
-    chance: 100 # The chance for the mob to replace the vanilla mob when it spawns
+    chance: 100 # Percent chance to replace the vanilla mob when it spawns
 ```
 
-#### custom
-Uses EcoMobs' custom spawning system. 
-
-Example:
+`custom` uses EcoMobs' own spawning system, spawning the mob wherever a valid point matches your conditions:
 
 ```yaml
 spawning:
   type: custom
   custom:
-    spawn-types: # Choose from land or water
+    spawn-types: # Choose from land, water
       - land
-    conditions: [ ] # The conditions that need to be met for the mob to spawn, read more about conditions here: https://plugins.auxilor.io/effects/configuring-a-condition
-    chance: 1.5 # The chance for the mob to spawn when the conditions are met
+    conditions: [ ] # Conditions the location must meet to spawn
+    chance: 1.5 # Percent chance to spawn when a valid point is found
 ```
 
-#### none
-Disables natural spawning for this mob category.
-
-Example:
+`none` disables natural spawning entirely, for mobs you only summon via commands, eggs, or totems:
 
 ```yaml
 spawning:
   type: none
 ```
 
+:::danger Conditions are their own system
+The `conditions` list uses the shared eco conditions system, configured the same way everywhere.
+
+- [Configuring a Condition](https://plugins.auxilor.io/effects/configuring-a-condition)
+:::
+
+### Despawning
+
+Set whether mobs of this category stay loaded or despawn like vanilla mobs.
+
+```yaml
+persistent: false # If true, mobs of this category never despawn naturally
+```
+
+:::tip Troubleshooting
+- **Category won't load?** Check the ID rules above; the file name must be lowercase letters, numbers, and underscores only.
+- **Mobs never spawn naturally?** Confirm the `type` is `replace` or `custom`, not `none`, and that the chance is above zero.
+- **Custom spawns never appear?** Check the `conditions` are actually met at the spawn location, and that `spawn-types` matches the terrain.
+:::
+
 <hr/>
 
-## Default configs
-The default configs can be found [here](https://github.com/Auxilor/EcoMobs/tree/master/eco-core/core-plugin/src/main/resources/mobs). <br/>
-You can find additional user-created configs on [lrcdb](https://lrcdb.auxilor.io/).
+## Where to go next
+
+- **Make a mob:** [How to Make a Custom Mob](how-to-make-a-custom-mob) and point its `category` at this file.
+- **Conditions:** [Configuring a Condition](https://plugins.auxilor.io/effects/configuring-a-condition) for custom spawning rules.
+- **Default configs:** browse the shipped examples [here](https://github.com/Auxilor/EcoMobs/tree/master/eco-core/core-plugin/src/main/resources/categories), and community configs on [lrcdb](https://lrcdb.auxilor.io/).

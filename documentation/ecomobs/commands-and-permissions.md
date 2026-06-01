@@ -3,6 +3,10 @@ title: "Commands and Permissions"
 sidebar_position: 3
 ---
 
+Every EcoMobs command and the permission that gates it. The base commands cover reloading, spawning, giving, and importing or exporting mobs; the spawner commands hand out and edit spawner items and blocks. Grant the permission alongside each command you want a role to use.
+
+## Commands
+
 | Command                                    | Description                                          | Permission               |
 |--------------------------------------------|------------------------------------------------------|--------------------------|
 | `/ecomobs reload`                          | Reloads the plugin                                   | `ecomobs.command.reload` |
@@ -44,3 +48,11 @@ These permissions are not tied to commands but control player interactions with 
 |--------------------------------------|--------------------------------------------------------------------------|
 | `ecomobs.spawner.pickup`             | Allows picking up spawners when the pickup mode is set to `allow`        |
 | `ecomobs.spawner.pickup.silktouch`   | Allows picking up spawners with Silk Touch when pickup mode is `silk_touch` |
+
+<hr/>
+
+## Where to go next
+
+- **Make a mob:** [How to Make a Custom Mob](how-to-make-a-custom-mob) to give spawn and give commands something to summon.
+- **Spawner settings:** the [Plugin Config](plugin-config) reference for spawner display and animations.
+- **Import mobs:** browse community configs on [lrcdb](https://lrcdb.auxilor.io/).
