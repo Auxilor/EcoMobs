@@ -1,4 +1,5 @@
 {
     "label": "Custom Entity AI",
-    "position": 11
+    "position": 11,
+    "general": true
 }
