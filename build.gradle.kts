@@ -42,7 +42,6 @@ allprojects {
         compileOnly("com.willfp:eco:$ecoVersion")
         compileOnly("org.jetbrains:annotations:26.0.2")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
-        compileOnly("com.github.ben-manes.caffeine:caffeine:3.2.3")
         compileOnly("io.github.toxicity188:bettermodel-bukkit-api:2.2.0") {
             exclude("*", "kotlin-stdlib")
         }
