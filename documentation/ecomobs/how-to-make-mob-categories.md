@@ -93,7 +93,7 @@ spawning:
 :::danger Conditions are their own system
 The `conditions` list uses the shared eco conditions system, configured the same way everywhere.
 
-- [Configuring a Condition](https://plugins.auxilor.io/effects/configuring-a-condition)
+- [Configuring a Condition](https://hub.auxilor.io/wiki/libreforge/configuring-a-condition)
 :::
 
 ### Despawning
@@ -115,5 +115,5 @@ persistent: false # If true, mobs of this category never despawn naturally
 ## Where to go next
 
 - **Make a mob:** [How to Make a Custom Mob](how-to-make-a-custom-mob) and point its `category` at this file.
-- **Conditions:** [Configuring a Condition](https://plugins.auxilor.io/effects/configuring-a-condition) for custom spawning rules.
+- **Conditions:** [Configuring a Condition](https://hub.auxilor.io/wiki/libreforge/configuring-a-condition) for custom spawning rules.
 - **Default configs:** browse the shipped examples [here](https://github.com/Auxilor/EcoMobs/tree/master/eco-core/core-plugin/src/main/resources/categories), and community configs on [lrcdb](https://lrcdb.auxilor.io/).
