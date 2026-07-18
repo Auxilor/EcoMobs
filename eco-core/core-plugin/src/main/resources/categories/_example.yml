@@ -37,7 +37,7 @@ spawning:
       - land
 
     # Conditions that the location must match in order for the mob to spawn
-    # Read here: https://plugins.auxilor.io/effects/configuring-a-condition
+    # Read here: https://hub.auxilor.io/wiki/libreforge/configuring-a-condition
     conditions: [ ]
 
     # The chance for the mob to spawn if a valid spawn point is found (as a percentage)

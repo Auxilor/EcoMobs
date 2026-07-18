@@ -5,7 +5,7 @@
 # _example.yml is not loaded.
 
 # A base mob and modifiers
-# View an explanation for this system here: https://plugins.auxilor.io/all-plugins/the-entity-lookup-system
+# View an explanation for this system here: https://hub.auxilor.io/wiki/eco/the-entity-lookup-system
 mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200
 
 # The ID of the mob category, handles spawning.
@@ -45,7 +45,7 @@ integrations:
     id: ""
 
 # Custom Mob AI
-# Read here: https://plugins.auxilor.io/all-plugins/custom-entity-ai
+# Read here: https://hub.auxilor.io/wiki/eco/entity_ai_goals
 custom-ai:
   # If custom AI should override the vanilla entity AI.
   clear: false
