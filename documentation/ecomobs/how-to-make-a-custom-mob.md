@@ -19,7 +19,7 @@ A custom mob is a vanilla **base entity** wrapped with your own **stats, equipme
 
 ## Naming and IDs
 
-The mob's file name without `.yml` is its ID. This is what you pass to commands, effects, the [Entity Lookup System](https://hub.auxilor.io/wiki/eco/the-entity-lookup-system), and the [Item Lookup System](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system).
+The mob's file name without `.yml` is its ID. This is what you pass to commands, effects, the [Entity Lookup System](https://plugins.auxilor.io/the-entity-lookup-system), and the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system).
 
 :::warning ID rules
 IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the mob will not load.
@@ -161,7 +161,7 @@ display-name: "&cNecrotic Soldier &7| &c%health%♥ &7| &e%time%" # Supports the
 lifespan: 120 # Seconds before the mob despawns; set to -1 to disable
 ```
 
-The `mob` line is a base entity with stat modifiers, read through the [Entity Lookup System](https://hub.auxilor.io/wiki/eco/the-entity-lookup-system).
+The `mob` line is a base entity with stat modifiers, read through the [Entity Lookup System](https://plugins.auxilor.io/the-entity-lookup-system).
 
 :::warning
 Every mob **must** set a `category`, even if you want no natural spawning. The category drives spawning behaviour; without it the mob will not load. Use a category whose spawning `type` is `none` to opt out of natural spawning.
@@ -208,7 +208,7 @@ custom-ai:
   entity-goals: [ ] # How the mob moves and behaves
 ```
 
-See the [Custom Entity AI](https://hub.auxilor.io/wiki/eco/entity_ai_goals) docs for the full list of goals.
+See the [Custom Entity AI](https://plugins.auxilor.io/all-plugins/custom-entity-ai) docs for the full list of goals.
 
 ### Effects
 
@@ -230,8 +230,8 @@ Display-name placeholders and the top-damager placeholders (`%top_damager_<place
 :::danger Effects are their own system
 Effects and conditions are a shared system across every eco plugin, configured the same way everywhere.
 
-- [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect)
-- [Configuring an Effect Chain](https://hub.auxilor.io/wiki/libreforge/configuring-a-chain)
+- [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect)
+- [Configuring an Effect Chain](https://plugins.auxilor.io/effects/configuring-a-chain)
 :::
 
 ### Defence
@@ -307,7 +307,7 @@ spawn:
 ```
 
 :::tip
-We support shaped and shapeless recipes. Check out [Recipes](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system/recipes) for more info on how to configure these.
+We support shaped and shapeless recipes. Check out [Recipes](https://plugins.auxilor.io/the-item-lookup-system/recipes) for more info on how to configure these.
 :::
 
 ## Internal placeholders
@@ -338,4 +338,4 @@ These placeholders work in the `display-name` and in effects on this mob.
 - **Default configs:** browse the shipped examples [here](https://github.com/Auxilor/EcoMobs/tree/master/eco-core/core-plugin/src/main/resources/mobs), and community configs on [lrcdb](https://lrcdb.auxilor.io/).
 - **Spawning:** [How to Make Mob Categories](how-to-make-mob-categories) to control where and how mobs appear.
 - **Commands:** [Commands and Permissions](commands-and-permissions) for spawning and giving mobs.
-- **Effects:** [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect) to bring the effects section to life.
+- **Effects:** [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) to bring the effects section to life.

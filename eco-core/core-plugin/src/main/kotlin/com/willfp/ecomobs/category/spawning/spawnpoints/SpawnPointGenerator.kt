@@ -1,6 +1,6 @@
 package com.willfp.ecomobs.category.spawning.spawnpoints
 
-import com.github.benmanes.caffeine.cache.Caffeine
+import com.willfp.eco.core.cache.EcoCache
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.math.Int3
 import com.willfp.ecomobs.plugin
@@ -11,11 +11,11 @@ import org.bukkit.block.data.Waterlogged
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import java.util.UUID
-import java.util.concurrent.TimeUnit
+import java.time.Duration
 
-private val spawnPointCache = Caffeine.newBuilder()
-    .expireAfterWrite(2, TimeUnit.SECONDS)
-    .build<UUID, Set<SpawnPoint>>()
+private val spawnPointCache = EcoCache.builder<UUID, Set<SpawnPoint>>()
+    .expireAfterWrite(Duration.ofSeconds(2))
+    .build()
 
 val Player.spawnPoints: Set<SpawnPoint>
     get() = spawnPointCache.get(this.uniqueId) {
