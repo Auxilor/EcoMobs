@@ -4,6 +4,8 @@ import com.willfp.eco.util.savedDisplayName
 import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.EcoMobsPlugin
+import com.willfp.ecomobs.handler.hitCost
+import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.libreforge.NamedValue
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
@@ -37,10 +39,24 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
         val uuid = event.damager.tryAsPlayer()?.uniqueId ?: return
         val victim = event.entity as? Mob ?: return
 
+        val ecoMob = victim.ecoMob
+
+        // Hit-based mobs zero out their damage, so rank by hits landed instead.
+        // Uses the same hitCost as DamageModifierHandler so the two cannot disagree.
+        val amount = if (ecoMob != null && ecoMob.usesHits) {
+            event.hitCost(ecoMob)
+        } else {
+            event.damage
+        }
+
+        if (amount <= 0.0) {
+            return
+        }
+
         val topDamagers = victim.topDamagers.toMutableList()
 
         val damager = topDamagers.firstOrNull { it.uuid == uuid } ?: Damager(uuid, 0.0)
-        damager.damage += event.damage
+        damager.damage += amount
         topDamagers.removeIf { it.uuid == uuid }
         topDamagers.add(damager)
         victim.topDamagers = topDamagers.sortedByDescending { it.damage }

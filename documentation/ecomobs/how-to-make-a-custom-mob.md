@@ -49,6 +49,8 @@ mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200 # Ba
 category: common # The category ID; controls natural spawning (required)
 display-name: "&cNecrotic Soldier &7| &c%health%♥ &7| &e%time%" # Supports the internal placeholders below
 lifespan: 120 # Seconds before the mob despawns; set to -1 to disable
+use-hits: false # If the mob dies after a fixed number of hits instead of losing health
+hits: 10 # Hits the mob takes before dying; only used when use-hits is true
 
 # === Equipment: what the mob wears ===
 equipment:
@@ -159,6 +161,8 @@ mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200 # Ba
 category: common # The category ID; controls natural spawning
 display-name: "&cNecrotic Soldier &7| &c%health%♥ &7| &e%time%" # Supports the internal placeholders below
 lifespan: 120 # Seconds before the mob despawns; set to -1 to disable
+use-hits: false # If the mob dies after a fixed number of hits instead of losing health
+hits: 10 # Hits the mob takes before dying; only used when use-hits is true
 ```
 
 The `mob` line is a base entity with stat modifiers, read through the [Entity Lookup System](https://plugins.auxilor.io/the-entity-lookup-system).
@@ -166,6 +170,21 @@ The `mob` line is a base entity with stat modifiers, read through the [Entity Lo
 :::warning
 Every mob **must** set a `category`, even if you want no natural spawning. The category drives spawning behaviour; without it the mob will not load. Use a category whose spawning `type` is `none` to opt out of natural spawning.
 :::
+
+#### Hit-based mobs
+
+Set `use-hits: true` to make a mob die after a fixed number of hits rather than after losing a pool of health. A boss with `hits: 10` takes exactly ten hits whether the attacker punches it barehanded or swings a maxed netherite sword.
+
+```yaml
+mob: zombie health:1200 # Health is still read, but only drives the boss bar and health placeholders
+use-hits: true
+hits: 10
+display-name: "&cNecrotic Soldier &7| &c%hits%&7/&c%max_hits%"
+```
+
+The mob's health becomes a display mirror of its remaining hits, so the boss bar still fills and empties normally and healing the mob cannot buy it extra hits.
+
+By default, damage dealt by a player costs one hit and everything else — fire, lava, falling, other mobs — costs none. Change that in `defence.damage-modifiers`, below.
 
 ### Equipment
 
@@ -249,6 +268,20 @@ defence:
 
 The full list of damage causes is on the Spigot `EntityDamageEvent.DamageCause` javadoc.
 
+:::info Damage modifiers on hit-based mobs
+If the mob sets `use-hits: true`, these values change meaning. Each one becomes the **number of hits** that damage cause costs, not a damage multiplier.
+
+| Value | Effect on a hit-based mob |
+| --- | --- |
+| `1` | Costs one hit |
+| `0.5` | Costs half a hit |
+| `0` | The mob is immune to that cause |
+
+Any cause you do not list costs **one hit if a player dealt it, and no hits otherwise**. Damage from arrows, tridents, and player-primed TNT counts as player damage and is credited to the player who fired or placed it.
+
+That default means a hit-based mob with no `damage-modifiers` block is still killable by players in exactly `hits` hits, and simply ignores the environment. Add `fire_tick: 0.5` if you want fire to chip away at it; add `entity_attack: 0` if you want it immune to melee but still killable by arrows.
+:::
+
 ### Drops
 
 Set the experience and item drops awarded on death. Group several items under one `chance` to roll them together.
@@ -319,9 +352,12 @@ These placeholders work in the `display-name` and in effects on this mob.
 | `%health%` | The current health of the mob |
 | `%max_health%` | The max health of the mob |
 | `%health_percent%` | The percentage of health the mob has |
+| `%hits%` | The hits the mob has left, on a `use-hits` mob (`0` otherwise) |
+| `%max_hits%` | The total hits the mob takes to kill, on a `use-hits` mob (`0` otherwise) |
+| `%hits_percent%` | The percentage of hits the mob has left (`100` on a non-`use-hits` mob) |
 | `%time%` | The time left before the mob despawns (`minutes:seconds`) |
 | `%top_damager_<place>_name%` | The name of the [0-9] top damager |
-| `%top_damager_<place>_damage%` | The damage dealt by the [0-9] top damager |
+| `%top_damager_<place>_damage%` | The damage dealt by the [0-9] top damager, or the hits landed on a `use-hits` mob |
 | `%top_damager_<place>_display%` | The ranking of the [0-9] top damager |
 
 :::tip Troubleshooting
@@ -329,6 +365,7 @@ These placeholders work in the `display-name` and in effects on this mob.
 - **Mob loads but never spawns naturally?** It needs a `category` whose spawning `type` is `replace` or `custom`; a missing or `none` category means no natural spawning.
 - **Spawn egg won't craft?** Confirm `craftable: true` and that the crafting player has the `recipe-permission` if you set one.
 - **Equipment ignored?** The base entity must support that slot; not every vanilla mob wears armour or holds items.
+- **Hit-based mob taking no damage at all?** You have a `damage-modifiers` entry setting a player damage cause such as `entity_attack` or `projectile` to `0`. Remove it, or raise it to `1`.
 :::
 
 <hr/>

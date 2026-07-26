@@ -46,6 +46,7 @@ import com.willfp.ecomobs.mob.options.ecoMobEgg
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
+import com.willfp.ecomobs.tick.TickHandlerHitsHealth
 import com.willfp.ecomobs.tick.TickHandlerLifespan
 import com.willfp.libreforge.ConfigViolation
 import com.willfp.libreforge.Holder
@@ -186,9 +187,23 @@ internal class ConfigDrivenEcoMob(
 
     override val canMount = config.getBool("defence.can-mount")
 
+    override val usesHits = config.getBool("use-hits")
+
+    override val hits = config.getInt("hits")
+        .validate { !usesHits || it >= 1 }
+        .unwrap {
+            ConfigViolation(
+                "hits",
+                "Hits must be at least 1"
+            )
+        }
+
+    // Only the causes the admin actually wrote. The hit-mode default depends on the
+    // event rather than the cause, so "configured as 0" must stay distinguishable
+    // from "not configured at all".
     val damageModifiers = DamageCause.values().associateWith {
-        config.getDoubleOrNull("defence.damage-modifiers.${it.name.lowercase()}") ?: 1.0
-    }
+        config.getDoubleOrNull("defence.damage-modifiers.${it.name.lowercase()}")
+    }.filterNotNullValues()
 
     val bossBarOptions = config.getBool("boss-bar.enabled")
         .ifTrue {
@@ -351,8 +366,12 @@ internal class ConfigDrivenEcoMob(
         return config.getSubsection("integrations.${integration.configKey}")
     }
 
+    override fun getConfiguredDamageModifier(cause: DamageCause): Double? {
+        return damageModifiers[cause]
+    }
+
     override fun getDamageModifier(cause: DamageCause): Double {
-        return damageModifiers[cause] ?: 1.0
+        return getConfiguredDamageModifier(cause) ?: 1.0
     }
 
     override fun canPlayerSpawn(player: Player, spawnReason: SpawnReason, location: Location): Boolean {
@@ -421,6 +440,10 @@ internal class ConfigDrivenEcoMob(
         // Add base tickets
         livingMob.addTickHandler(TickHandlerDisplayName())
         livingMob.addTickHandler(TickHandlerLifespan())
+
+        if (usesHits) {
+            livingMob.addTickHandler(TickHandlerHitsHealth())
+        }
 
         // Call spawn event
         val spawnEvent = EcoMobSpawnEvent(livingMob, reason)

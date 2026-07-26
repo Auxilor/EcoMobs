@@ -32,6 +32,16 @@ interface EcoMob : KRegistrable {
     val lifespan: Int
 
     /**
+     * If the mob dies after a fixed number of hits rather than losing health.
+     */
+    val usesHits: Boolean
+
+    /**
+     * The number of hits the mob takes before dying, if usesHits is true.
+     */
+    val hits: Int
+
+    /**
      * The raw, unformatted display name.
      */
     val rawDisplayName: String
@@ -77,6 +87,12 @@ interface EcoMob : KRegistrable {
      * Spawn the mob at a location.
      */
     fun spawn(location: Location, reason: SpawnReason): LivingMob?
+
+    /**
+     * Get the explicitly configured damage modifier for a damage cause,
+     * or null if the config does not set one.
+     */
+    fun getConfiguredDamageModifier(cause: DamageCause): Double?
 
     /**
      * Get the damage modifier for a damage cause.
