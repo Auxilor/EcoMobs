@@ -285,6 +285,22 @@ The mob's health, set in the `mob` lookup string, becomes a display mirror of ov
 
 Stage 1's `start-effects` run when the mob spawns. Every other transition runs the finished stage's `end-effects` and then the next stage's `start-effects`, and the last stage's `end-effects` run as the mob dies.
 
+Stage effects run as the mob, with the mob as the victim and the player whose hit ended the stage as the player — no player on spawn. Use mutators and the `aoe` effect to retarget, for example to announce a phase to everyone fighting:
+
+```yaml
+start-effects:
+  - id: aoe
+    args:
+      shape: circle
+      radius: 30
+      effects:
+        - id: send_message
+          mutators:
+            - id: victim_as_player
+          args:
+            message: "&cStage 2 begins!"
+```
+
 :::info
 Damage that overflows a stage is discarded at the boundary, so a stage always begins at full and one huge hit can never skip a phase.
 
