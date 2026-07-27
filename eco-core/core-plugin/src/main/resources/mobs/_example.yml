@@ -114,15 +114,6 @@ effects:
 # The lifespan of the mob, in seconds. Set to -1 to disable.
 lifespan: 120
 
-# If the mob should die after a fixed number of hits instead of losing health.
-# The mob's health is set in the "mob" lookup string at the top of this file (health:1200).
-# When this is true, defence.damage-modifiers below changes meaning: each value becomes
-# the number of hits that damage cause costs, rather than a damage multiplier.
-use-hits: false
-
-# The number of hits the mob takes before dying. Only used when use-hits is true.
-hits: 10
-
 defence:
   # If the mob can get into boats, minecarts, etc.
   can-mount: true
@@ -130,13 +121,6 @@ defence:
   # A list of damage causes that the mob should multiply incoming damage by.
   # The list of damage causes can be found here:
   # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
-  #
-  # If use-hits is true, these values mean something different: each one is the
-  # number of hits that damage cause costs, not a damage multiplier.
-  #   1   = one hit      0.5 = half a hit      0 = the mob is immune to that cause
-  # Any cause you do not list costs one hit if a player dealt it, and no hits
-  # otherwise - so a hit-based mob with no list here is still killable by players
-  # and simply ignores fire, lava, falling, and other mobs.
   damage-modifiers:
     hot_floor: 1
     fire_tick: 1

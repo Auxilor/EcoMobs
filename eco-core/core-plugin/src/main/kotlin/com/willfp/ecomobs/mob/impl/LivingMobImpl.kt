@@ -45,22 +45,11 @@ internal class LivingMobImpl(
     override val ticksLeft: Int
         get() = mob.lifespan - tick
 
-    override var hitsRemaining = if (mob.usesHits) mob.hits.toDouble() else 0.0
-        private set
-
     // Fix for drops being sent twice
     private var hasBeenKilled = false
 
     fun addTickHandler(handler: TickHandler) {
         tickHandlers += handler
-    }
-
-    /**
-     * Consume [cost] hits. Returns true if the mob has no hits left.
-     */
-    internal fun consumeHits(cost: Double): Boolean {
-        hitsRemaining = (hitsRemaining - cost).coerceAtLeast(0.0)
-        return hitsRemaining <= 0.0
     }
 
     private fun tick(tick: Int) {

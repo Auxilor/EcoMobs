@@ -20,11 +20,6 @@ interface LivingMob {
     val ticksLeft: Int
 
     /**
-     * Hits remaining before the mob dies. Zero if the mob does not use hits.
-     */
-    val hitsRemaining: Double
-
-    /**
      * Handle an event.
      */
     fun handleEvent(event: MobEvent, trigger: DispatchedTrigger)
