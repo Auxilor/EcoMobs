@@ -46,6 +46,7 @@ import com.willfp.ecomobs.mob.options.ecoMobEgg
 import com.willfp.ecomobs.mob.stage.toDamageStage
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandlerBossBar
+import com.willfp.ecomobs.tick.TickHandlerDamageStages
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
 import com.willfp.ecomobs.tick.TickHandlerLifespan
 import com.willfp.libreforge.ConfigViolation
@@ -429,7 +430,10 @@ internal class ConfigDrivenEcoMob(
         livingMob.addTickHandler(TickHandlerDisplayName())
         livingMob.addTickHandler(TickHandlerLifespan())
 
-        livingMob.stageTracker?.start()
+        if (usesDamageStages) {
+            livingMob.addTickHandler(TickHandlerDamageStages())
+            livingMob.stageTracker?.start()
+        }
 
         // Call spawn event
         val spawnEvent = EcoMobSpawnEvent(livingMob, reason)
