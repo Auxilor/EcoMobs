@@ -4,6 +4,7 @@ import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.mob.impl.LivingMobImpl
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.mob.stage.DamageStageMode
+import com.willfp.ecomobs.plugin
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -45,6 +46,10 @@ object DamageStageHandler : Listener {
         if (cost <= 0.0) {
             event.isCancelled = true
             return
+        }
+
+        if (player != null) {
+            plugin.topDamagerHandler.credit(bukkitMob, player, cost)
         }
 
         if (tracker.consume(cost, player)) {
