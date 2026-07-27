@@ -36,6 +36,7 @@ A mob config is a set of named parts, each controlling one aspect of the mob.
 | **Integrations** | Hooks into other plugins (LevelledMobs, ModelEngine, etc.) |
 | **Custom AI** | The mob's targeting and behaviour goals |
 | **Effects** | Effects and conditions that fire on mob actions |
+| **Damage stages** | Optional phases the fight moves through as the mob takes damage |
 | **Defence** | Mounting and per-cause damage modifiers |
 | **Drops** | Experience and item drops on death |
 | **Boss bar** | The on-screen health bar |
@@ -49,6 +50,20 @@ mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200 # Ba
 category: common # The category ID; controls natural spawning (required)
 display-name: "&cNecrotic Soldier &7| &c%health%♥ &7| &e%time%" # Supports the internal placeholders below
 lifespan: 120 # Seconds before the mob despawns; set to -1 to disable
+
+# === Damage stages: optional, splits the fight into phases ===
+damage-stages:
+  1:
+    mode: health # This stage absorbs damage
+    health: 600 # The damage it absorbs before it ends
+    start-effects: [ ] # Effects run when the stage begins
+    end-effects: [ ] # Effects run when the stage ends
+  2:
+    mode: hits # This stage takes a fixed number of hits, whatever the weapon
+    required-hits: 20 # The hits it takes before it ends
+    player-only: true # If false, fire, lava, and other mobs also cost hits
+    start-effects: [ ]
+    end-effects: [ ]
 
 # === Equipment: what the mob wears ===
 equipment:
@@ -234,6 +249,48 @@ Effects and conditions are a shared system across every eco plugin, configured t
 - [Configuring an Effect Chain](https://plugins.auxilor.io/effects/configuring-a-chain)
 :::
 
+### Damage stages
+
+Optional. Splits the fight into ordered phases. Each stage either absorbs a pool of damage or takes a fixed number of hits, and can run effects when it begins and ends. Leave the section out entirely for a normal mob that simply loses health.
+
+```yaml
+damage-stages:
+  1:
+    mode: health # Absorbs damage
+    health: 600 # The damage this stage absorbs before it ends
+    start-effects: [ ]
+    end-effects: [ ]
+  2:
+    mode: hits # Takes a fixed number of hits, whatever the weapon
+    required-hits: 20 # The hits this stage takes before it ends
+    player-only: true # If false, fire, lava, and other mobs also cost hits
+    start-effects: [ ]
+    end-effects: [ ]
+```
+
+A `hits` stage is the reason this exists: with `required-hits: 20`, the stage takes exactly twenty hits whether the attacker punches barehanded or swings a maxed netherite sword.
+
+The keys order the stages. Any key that is not a number is ignored, and gaps are fine — `1`, `5`, `10` runs in that order.
+
+The mob's health, set in the `mob` lookup string, becomes a display mirror of overall stage progress. The boss bar drains once across the whole fight, with each stage taking an equal share of it, and healing the mob cannot buy it extra progress.
+
+| Key | Mode | Meaning |
+| --- | --- | --- |
+| `mode` | both | `health` or `hits` |
+| `health` | `health` | The damage the stage absorbs. Must be greater than 0 |
+| `required-hits` | `hits` | The hits the stage takes. Must be at least 1 |
+| `player-only` | `hits` | If `true`, only player damage costs a hit. Ignored in `health` mode |
+| `start-effects` | both | Effects run when the stage begins |
+| `end-effects` | both | Effects run when the stage ends |
+
+Stage 1's `start-effects` run when the mob spawns. Every other transition runs the finished stage's `end-effects` and then the next stage's `start-effects`, and the last stage's `end-effects` run as the mob dies.
+
+:::info
+Damage that overflows a stage is discarded at the boundary, so a stage always begins at full and one huge hit can never skip a phase.
+
+Arrows, tridents, and player-primed TNT all count as player damage, credited to the player who fired or placed them.
+:::
+
 ### Defence
 
 Control mounting and scale incoming damage per cause.
@@ -319,9 +376,15 @@ These placeholders work in the `display-name` and in effects on this mob.
 | `%health%` | The current health of the mob |
 | `%max_health%` | The max health of the mob |
 | `%health_percent%` | The percentage of health the mob has |
+| `%stage%` | The current damage stage, 1-based (`0` on a mob with no stages) |
+| `%max_stages%` | The number of damage stages (`0` on a mob with no stages) |
+| `%stage_percent%` | The percentage of the current stage completed |
+| `%hits%` | The hits left in the current stage (`0` outside a `hits` stage) |
+| `%max_hits%` | The hits the current stage takes (`0` outside a `hits` stage) |
+| `%hits_percent%` | The percentage of the current stage's hits left (`100` outside a `hits` stage) |
 | `%time%` | The time left before the mob despawns (`minutes:seconds`) |
 | `%top_damager_<place>_name%` | The name of the [0-9] top damager |
-| `%top_damager_<place>_damage%` | The damage dealt by the [0-9] top damager |
+| `%top_damager_<place>_damage%` | The damage dealt by the [0-9] top damager, counting one per hit during a `hits` stage |
 | `%top_damager_<place>_display%` | The ranking of the [0-9] top damager |
 
 :::tip Troubleshooting
@@ -329,6 +392,7 @@ These placeholders work in the `display-name` and in effects on this mob.
 - **Mob loads but never spawns naturally?** It needs a `category` whose spawning `type` is `replace` or `custom`; a missing or `none` category means no natural spawning.
 - **Spawn egg won't craft?** Confirm `craftable: true` and that the crafting player has the `recipe-permission` if you set one.
 - **Equipment ignored?** The base entity must support that slot; not every vanilla mob wears armour or holds items.
+- **Staged mob dying too fast or not at all?** Check every stage has the key its `mode` needs — `health` for `mode: health`, `required-hits` for `mode: hits`. A stage whose key is not a number is skipped entirely.
 :::
 
 <hr/>
