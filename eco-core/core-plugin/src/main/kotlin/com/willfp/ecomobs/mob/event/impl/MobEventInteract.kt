@@ -23,6 +23,6 @@ object MobEventInteract: MobEvent("interact") {
             event = event
         )
 
-        living.handleEvent(this, data.dispatch(bukkitMob.toDispatcher()))
+        living.handleEvent(this, data.dispatch(player.toDispatcher()))
     }
 }
