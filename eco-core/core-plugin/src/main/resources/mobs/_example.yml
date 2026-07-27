@@ -114,6 +114,26 @@ effects:
 # The lifespan of the mob, in seconds. Set to -1 to disable.
 lifespan: 120
 
+# Optional. Splits the fight into ordered stages, each of which either absorbs a pool of
+# damage or takes a fixed number of hits. Remove this section entirely for a normal mob
+# that simply loses health.
+#
+# The keys order the stages. The mob's health, set in the "mob" lookup string at the top of
+# this file, becomes a display mirror of overall stage progress: the boss bar drains once
+# across the whole fight, with each stage taking an equal share of it.
+damage-stages: { }
+#  1:
+#    mode: health         # This stage absorbs damage
+#    health: 600          # The damage it absorbs before it ends
+#    start-effects: [ ]   # Effects run when the stage begins
+#    end-effects: [ ]     # Effects run when the stage ends
+#  2:
+#    mode: hits           # This stage takes a fixed number of hits, whatever the weapon
+#    required-hits: 20    # The hits it takes before it ends
+#    player-only: true    # If false, fire, lava, and other mobs also cost hits
+#    start-effects: [ ]
+#    end-effects: [ ]
+
 defence:
   # If the mob can get into boats, minecarts, etc.
   can-mount: true

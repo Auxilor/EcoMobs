@@ -7,6 +7,7 @@ import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.integrations.MobIntegration
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.options.SpawnEgg
+import com.willfp.ecomobs.mob.stage.DamageStage
 import com.willfp.libreforge.Holder
 import com.willfp.libreforge.triggers.DispatchedTrigger
 import org.bukkit.Location
@@ -30,6 +31,17 @@ interface EcoMob : KRegistrable {
      * The lifespan of the mob, in ticks.
      */
     val lifespan: Int
+
+    /**
+     * The damage stages of the mob, in order. Empty if the mob does not use stages.
+     */
+    val damageStages: List<DamageStage>
+
+    /**
+     * If the mob's fight is split into damage stages.
+     */
+    val usesDamageStages: Boolean
+        get() = damageStages.isNotEmpty()
 
     /**
      * The raw, unformatted display name.

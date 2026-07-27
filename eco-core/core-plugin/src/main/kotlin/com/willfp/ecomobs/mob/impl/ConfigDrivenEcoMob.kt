@@ -43,6 +43,7 @@ import com.willfp.ecomobs.mob.options.Drop
 import com.willfp.ecomobs.mob.options.MobDrops
 import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.options.ecoMobEgg
+import com.willfp.ecomobs.mob.stage.toDamageStage
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
@@ -183,6 +184,12 @@ internal class ConfigDrivenEcoMob(
 
     override val lifespan = config.getInt("lifespan")
         .let { if (it < 1) Int.MAX_VALUE else it * 20 }
+
+    override val damageStages = config.getSubsection("damage-stages")
+        .getKeys(false)
+        .mapNotNull { it.toIntOrNull() }
+        .sorted()
+        .map { config.getSubsection("damage-stages.$it").toDamageStage(it, context) }
 
     override val canMount = config.getBool("defence.can-mount")
 
