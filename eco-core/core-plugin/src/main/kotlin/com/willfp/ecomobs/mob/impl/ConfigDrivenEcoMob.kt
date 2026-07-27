@@ -429,6 +429,8 @@ internal class ConfigDrivenEcoMob(
         livingMob.addTickHandler(TickHandlerDisplayName())
         livingMob.addTickHandler(TickHandlerLifespan())
 
+        livingMob.stageTracker?.start()
+
         // Call spawn event
         val spawnEvent = EcoMobSpawnEvent(livingMob, reason)
         Bukkit.getPluginManager().callEvent(spawnEvent)
