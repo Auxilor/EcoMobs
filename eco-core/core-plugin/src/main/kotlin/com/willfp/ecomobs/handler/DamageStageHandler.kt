@@ -40,6 +40,8 @@ object DamageStageHandler : Listener {
 
         val cost = when (tracker.stage.mode) {
             DamageStageMode.HEALTH -> event.finalDamage
+            // Flat 1.0 regardless of finalDamage, so a hits stage with player-only: false
+            // burns down just as fast from repeated fire/lava ticks as from player hits.
             DamageStageMode.HITS -> if (!tracker.stage.playerOnly || player != null) 1.0 else 0.0
         }
 
