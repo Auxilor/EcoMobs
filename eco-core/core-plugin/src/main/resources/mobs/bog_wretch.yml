@@ -1,0 +1,107 @@
+# A base mob and modifiers
+mob: zombie attack-damage:5 movement-speed:1.05 health:26
+
+# The ID of the mob category, handles spawning.
+category: common
+
+# Supported placeholders:
+# %health%, %max_health%, %health_percent%, %time% (formats as minutes:seconds, eg 1:56)
+display-name: "&2Bog Wretch &7| &c%health%♥"
+
+# If the mob you're using supports equipment, you can specify the items in each slot.
+equipment:
+  hand: stone_sword
+
+# Options for plugin integrations
+integrations:
+  levelled-mobs:
+    can-level: true
+  model-engine:
+    id: ""
+  better-model:
+    id: ""
+  libs-disguises:
+    id: ""
+
+# Custom Mob AI
+custom-ai:
+  clear: false
+  target-goals: [ ]
+  entity-goals: [ ]
+
+# Some effects are ran from the perspective of the entity, and others from the perspective
+# of the player - each section is marked with which perspective it is run from.
+effects:
+  permanent-effects: [ ]
+  spawn: [ ]
+  despawn: [ ]
+  interact: [ ]
+  melee-attack: [ ]
+  ranged-attack: [ ]
+  any-attack: [ ]
+  take-damage: [ ]
+
+  damage-player:
+    - id: bleed
+      args:
+        amount: 3
+        damage: 1.5
+        interval: 20
+
+  kill-player: [ ]
+  death: [ ]
+  kill: [ ]
+
+# The lifespan of the mob, in seconds. Set to -1 to disable.
+lifespan: 90
+
+defence:
+  can-mount: true
+  damage-modifiers:
+    hot_floor: 1
+    fire_tick: 1
+    lava: 1
+    suffocation: 1
+    drowning: 1
+    entity_explosion: 1
+    block_explosion: 1
+
+# Options for what the mob drops
+drops:
+  experience: 8
+  items:
+    - chance: 100
+      items:
+        - rotten_flesh
+    - chance: 20
+      items:
+        - iron_ingot
+
+# Options for the boss bar
+boss-bar:
+  enabled: false
+  color: white
+  style: progress
+  radius: 120
+
+# Options for spawning the mob
+spawn:
+  totem:
+    enabled: false
+    top: netherite_block
+    middle: iron_block
+    bottom: magma_block
+    conditions: [ ]
+
+  egg:
+    enabled: true
+    conditions: [ ]
+    item: zombie_spawn_egg
+    name: "&2Bog Wretch&f Spawn Egg"
+    lore:
+      - ""
+      - "&8&oPlace on the ground to"
+      - "&8&osummon a &2Bog Wretch"
+    craftable: false
+    shapeless: false
+    recipe: [ ]

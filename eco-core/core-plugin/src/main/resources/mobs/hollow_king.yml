@@ -1,0 +1,227 @@
+# A base mob and modifiers
+mob: wither_skeleton attack-damage:10 movement-speed:1 follow-range:40 health:350
+
+# The ID of the mob category, handles spawning.
+category: bosses
+
+# Supported placeholders:
+# %health%, %max_health%, %health_percent%, %time% (formats as minutes:seconds, eg 1:56)
+# %stage%, %max_stages% (damage stage progress)
+display-name: "&8Hollow King &7| &c%health%♥ &7| &fStage %stage%/%max_stages%"
+
+# The lifespan of the mob, in seconds. Set to -1 to disable. Bosses stick around.
+lifespan: -1
+
+# Three phases: opens by summoning voidlings, a fixed-hit ritual phase that
+# curses nearby players and calls in tide lurkers, then a final health pool
+# that ends in an explosion.
+damage-stages:
+  1:
+    mode: health
+    health: 150
+    start-effects: [ ]
+    end-effects:
+      - id: aoe
+        args:
+          shape: circle
+          radius: 40
+          effects:
+            - id: send_message
+              mutators:
+                - id: victim_as_player
+              args:
+                message: "&8The Hollow King calls out to the void..."
+      - id: spawn_mobs
+        args:
+          amount: 2
+          ticks_to_live: 500
+          range: 6
+          entity: ecomobs:voidling
+          health: 30
+  2:
+    mode: hits
+    required-hits: 20
+    player-only: true
+    start-effects:
+      - id: aoe
+        args:
+          shape: circle
+          radius: 15
+          effects:
+            - id: send_message
+              mutators:
+                - id: victim_as_player
+              args:
+                message: "&8The Hollow King begins his grim ritual..."
+            - id: potion_effect
+              args:
+                effect: wither
+                level: 1
+                duration: 100
+    end-effects:
+      - id: aoe
+        args:
+          shape: circle
+          radius: 40
+          effects:
+            - id: send_message
+              mutators:
+                - id: victim_as_player
+              args:
+                message: "&8The ritual breaks — the tide answers his call!"
+      - id: shockwave
+        args:
+          radius: 10
+          pulses: 2
+          damage: 8
+          knockback: 1.8
+      - id: spawn_mobs
+        args:
+          amount: 2
+          ticks_to_live: 500
+          range: 6
+          entity: ecomobs:tide_lurker
+          health: 30
+  3:
+    mode: health
+    health: 150
+    start-effects:
+      - id: aoe
+        args:
+          shape: circle
+          radius: 40
+          effects:
+            - id: send_message
+              mutators:
+                - id: victim_as_player
+              args:
+                message: "&8The Hollow King unravels — finish him!"
+    end-effects:
+      - id: aoe
+        args:
+          shape: circle
+          radius: 40
+          effects:
+            - id: send_message
+              mutators:
+                - id: victim_as_player
+              args:
+                message: "&6The Hollow King has fallen!"
+      - id: create_explosion
+        args:
+          amount: 1
+          power: 3
+          player_as_damager: false
+          create_fire: false
+          break_blocks: false
+
+# If the base entity you're using supports equipment, you can specify the items in each slot.
+equipment: { }
+
+# Options for plugin integrations
+integrations:
+  levelled-mobs:
+    can-level: true
+  model-engine:
+    id: ""
+  better-model:
+    id: ""
+  libs-disguises:
+    id: ""
+
+# Custom Mob AI
+custom-ai:
+  clear: false
+  target-goals: [ ]
+  entity-goals: [ ]
+
+# Some effects are ran from the perspective of the entity, and others from the perspective
+# of the player - each section is marked with which perspective it is run from.
+effects:
+  permanent-effects: [ ]
+  spawn: [ ]
+  despawn: [ ]
+  interact: [ ]
+  melee-attack: [ ]
+  ranged-attack: [ ]
+  any-attack: [ ]
+  take-damage: [ ]
+
+  damage-player:
+    - id: chain_lightning
+      args:
+        jumps: 3
+        range: 6
+        damage: 4
+
+  kill-player: [ ]
+  death: [ ]
+  kill: [ ]
+
+defence:
+  can-mount: false
+  damage-modifiers:
+    hot_floor: 1
+    fire_tick: 0
+    lava: 0.5
+    suffocation: 1
+    drowning: 1
+    entity_explosion: 1
+    block_explosion: 1
+
+# Options for what the mob drops
+drops:
+  experience: 500
+  items:
+    - chance: 100
+      items:
+        - netherite_sword unbreaking:3 name:"&8Hollow Reaper"
+    - chance: 100
+      items:
+        - wither_skeleton_skull
+    - chance: 60
+      items:
+        - nether_star
+    - chance: 30
+      items:
+        - totem_of_undying
+
+# Options for the boss bar
+boss-bar:
+  enabled: true
+  color: purple
+  style: notched_20
+  radius: 200
+
+# Options for spawning the mob
+spawn:
+  totem:
+    enabled: true
+    top: wither_skeleton_skull
+    middle: soul_sand
+    bottom: netherite_block
+    conditions:
+      - id: is_night
+
+  egg:
+    enabled: true
+    conditions: [ ]
+    item: wither_skeleton_spawn_egg
+    name: "&8Hollow King&f Spawn Egg"
+    lore:
+      - ""
+      - "&8&oPlace on the ground to"
+      - "&8&osummon the &8Hollow King"
+    craftable: true
+    recipe-permission: "ecomobs.craft.hollow_king"
+    shapeless: false
+    recipe:
+      - soul_sand
+      - netherite_block
+      - soul_sand
+      - wither_skeleton_skull
+      - nether_star
+      - wither_skeleton_skull
+      - soul_sand
+      - netherite_block
+      - soul_sand

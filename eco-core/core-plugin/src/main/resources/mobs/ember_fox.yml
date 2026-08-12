@@ -1,0 +1,105 @@
+# A base mob and modifiers
+mob: fox movement-speed:1.2 health:20
+
+# The ID of the mob category, handles spawning.
+category: wildlife
+
+# Supported placeholders:
+# %health%, %max_health%, %health_percent%, %time% (formats as minutes:seconds, eg 1:56)
+display-name: "&6Ember Fox &7| &c%health%♥"
+
+# If the mob you're using supports equipment, you can specify the items in each slot.
+equipment: { }
+
+# Options for plugin integrations
+integrations:
+  levelled-mobs:
+    can-level: true
+  model-engine:
+    id: ""
+  better-model:
+    id: ""
+  libs-disguises:
+    id: ""
+
+# Custom Mob AI
+custom-ai:
+  clear: false
+  target-goals: [ ]
+  entity-goals: [ ]
+
+# Some effects are ran from the perspective of the entity, and others from the perspective
+# of the player - each section is marked with which perspective it is run from.
+effects:
+  permanent-effects: [ ]
+  spawn: [ ]
+  despawn: [ ]
+
+  interact:
+    - id: send_message
+      args:
+        message: "&6The ember fox's fur crackles warmly as you approach."
+
+  melee-attack: [ ]
+  ranged-attack: [ ]
+  any-attack: [ ]
+  take-damage: [ ]
+  damage-player: [ ]
+  kill-player: [ ]
+  death: [ ]
+  kill: [ ]
+
+# The lifespan of the mob, in seconds. Set to -1 to disable.
+lifespan: -1
+
+defence:
+  can-mount: true
+  # Fire and lava barely bother it - flavor for an "ember" fox.
+  damage-modifiers:
+    hot_floor: 0.1
+    fire_tick: 0.1
+    lava: 0.4
+    suffocation: 1
+    drowning: 1
+    entity_explosion: 1
+    block_explosion: 1
+
+# Options for what the mob drops
+drops:
+  experience: 4
+  items:
+    - chance: 60
+      items:
+        - gold_nugget
+    - chance: 15
+      items:
+        - glowstone_dust
+
+# Options for the boss bar
+boss-bar:
+  enabled: false
+  color: white
+  style: progress
+  radius: 120
+
+# Options for spawning the mob
+spawn:
+  totem:
+    enabled: false
+    top: netherite_block
+    middle: iron_block
+    bottom: magma_block
+    conditions: [ ]
+
+  egg:
+    enabled: true
+    conditions: [ ]
+    item: fox_spawn_egg
+    name: "&6Ember Fox&f Spawn Egg"
+    lore:
+      - ""
+      - "&8&oPlace on the ground to"
+      - "&8&osummon an &6Ember Fox"
+    craftable: false
+    shapeless: false
+    recipe: [ ]

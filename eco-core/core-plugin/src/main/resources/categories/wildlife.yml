@@ -1,0 +1,38 @@
+spawning:
+  # Available methods:
+
+  # replace
+  # Uses the vanilla spawning system to spawn the mob, by replacing
+  # the vanilla mob with the custom mob when it spawns.
+
+  # custom
+  # Uses the EcoMobs spawning system.
+
+  # none
+  # Disables natural spawning
+
+  type: replace
+
+  # Options for replace spawning
+  replace:
+    # The vanilla mobs to replace
+    replace:
+      - fox
+
+    # The chance for the mob to override, as a percentage
+    chance: 15
+
+  # Options for custom spawning
+  custom:
+    # Spawn types (choose from land, water)
+    spawn-types:
+      - land
+
+    # Conditions that the location must match in order for the mob to spawn
+    conditions: [ ]
+
+    # The chance for the mob to spawn if a valid spawn point is found (as a percentage)
+    chance: 1.5
+
+# If the mob is persistent, then it will not despawn naturally.
+persistent: false
