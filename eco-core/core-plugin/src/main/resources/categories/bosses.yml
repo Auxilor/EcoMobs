@@ -1,0 +1,30 @@
+spawning:
+  # Available methods:
+
+  # replace
+  # Uses the vanilla spawning system to spawn the mob, by replacing
+  # the vanilla mob with the custom mob when it spawns.
+
+  # custom
+  # Uses the EcoMobs spawning system.
+
+  # none
+  # Disables natural spawning
+
+  # Bosses are summoned by totem/spawn egg only, never naturally.
+  type: none
+
+  # Options for replace spawning
+  replace:
+    replace: [ ]
+    chance: 100
+
+  # Options for custom spawning
+  custom:
+    spawn-types:
+      - land
+    conditions: [ ]
+    chance: 1.5
+
+# Bosses stick around once summoned, they don't despawn naturally.
+persistent: true

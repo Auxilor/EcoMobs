@@ -1,0 +1,184 @@
+# A base mob and modifiers
+mob: ravager attack-damage:14 movement-speed:0.9 follow-range:40 health:400
+
+# The ID of the mob category, handles spawning.
+category: bosses
+
+# Supported placeholders:
+# %health%, %max_health%, %health_percent%, %time% (formats as minutes:seconds, eg 1:56)
+# %stage%, %max_stages% (damage stage progress)
+display-name: "&bFrost Warden &7| &c%health%♥ &7| &fStage %stage%/%max_stages%"
+
+# The lifespan of the mob, in seconds. Set to -1 to disable. Bosses stick around.
+lifespan: -1
+
+# Two phases: an opening health pool that calls in reinforcements when it breaks,
+# then a fixed-hit finale that ends the fight in a burst of ice.
+damage-stages:
+  1:
+    mode: health
+    health: 250
+    start-effects: [ ]
+    end-effects:
+      - id: aoe
+        args:
+          shape: circle
+          radius: 40
+          effects:
+            - id: send_message
+              mutators:
+                - id: victim_as_player
+              args:
+                message: "&bThe Frost Warden roars — reinforcements emerge from the ice!"
+      - id: spawn_mobs
+        args:
+          amount: 3
+          ticks_to_live: 600
+          range: 6
+          entity: ecomobs:bog_wretch
+          health: 26
+  2:
+    mode: hits
+    required-hits: 15
+    player-only: true
+    start-effects:
+      - id: frost_nova
+        args:
+          radius: 8
+          freeze_ticks: 60
+          slow_duration: 100
+          slow_amplifier: 1
+    end-effects:
+      - id: aoe
+        args:
+          shape: circle
+          radius: 40
+          effects:
+            - id: send_message
+              mutators:
+                - id: victim_as_player
+              args:
+                message: "&bThe Frost Warden shatters into shards of ice!"
+      - id: shockwave
+        args:
+          radius: 8
+          pulses: 2
+          damage: 6
+          knockback: 1.5
+      - id: spawn_mobs
+        args:
+          amount: 2
+          ticks_to_live: 400
+          range: 6
+          entity: ecomobs:voidling
+          health: 30
+
+# If the base entity you're using supports equipment, you can specify the items in each slot.
+equipment: { }
+
+# Options for plugin integrations
+integrations:
+  levelled-mobs:
+    can-level: true
+  model-engine:
+    id: ""
+  better-model:
+    id: ""
+  libs-disguises:
+    id: ""
+
+# Custom Mob AI
+custom-ai:
+  clear: false
+  target-goals: [ ]
+  entity-goals: [ ]
+
+# Some effects are ran from the perspective of the entity, and others from the perspective
+# of the player - each section is marked with which perspective it is run from.
+effects:
+  permanent-effects: [ ]
+  spawn: [ ]
+  despawn: [ ]
+  interact: [ ]
+  melee-attack: [ ]
+  ranged-attack: [ ]
+  any-attack: [ ]
+  take-damage: [ ]
+
+  damage-player:
+    - id: frost_nova
+      args:
+        radius: 4
+        freeze_ticks: 20
+    - id: knock_away
+      args:
+        velocity: 1.2
+
+  kill-player: [ ]
+  death: [ ]
+  kill: [ ]
+
+defence:
+  can-mount: false
+  damage-modifiers:
+    hot_floor: 1
+    fire_tick: 1
+    lava: 1
+    suffocation: 1
+    drowning: 1
+    entity_explosion: 1
+    block_explosion: 1
+
+# Options for what the mob drops
+drops:
+  experience: 250
+  items:
+    - chance: 100
+      items:
+        - diamond_sword sharpness:2 unbreaking:2 name:"&bFrostbrand"
+    - chance: 100
+      items:
+        - packed_ice
+        - packed_ice
+    - chance: 40
+      items:
+        - diamond
+
+# Options for the boss bar
+boss-bar:
+  enabled: true
+  color: blue
+  style: notched_10
+  radius: 150
+
+# Options for spawning the mob
+spawn:
+  totem:
+    enabled: true
+    top: blue_ice
+    middle: diamond_block
+    bottom: packed_ice
+    conditions: [ ]
+
+  egg:
+    enabled: true
+    conditions: [ ]
+    item: ravager_spawn_egg
+    name: "&bFrost Warden&f Spawn Egg"
+    lore:
+      - ""
+      - "&8&oPlace on the ground to"
+      - "&8&osummon the &bFrost Warden"
+    craftable: true
+    recipe-permission: "ecomobs.craft.frost_warden"
+    shapeless: false
+    recipe:
+      - packed_ice
+      - diamond_block
+      - packed_ice
+      - blue_ice
+      - nether_star
+      - blue_ice
+      - packed_ice
+      - diamond_block
+      - packed_ice
