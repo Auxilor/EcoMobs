@@ -4,9 +4,11 @@ import com.willfp.eco.util.savedDisplayName
 import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.EcoMobsPlugin
+import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.libreforge.NamedValue
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -34,13 +36,27 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     fun handle(event: EntityDamageByEntityEvent) {
-        val uuid = event.damager.tryAsPlayer()?.uniqueId ?: return
+        val player = event.damager.tryAsPlayer() ?: return
         val victim = event.entity as? Mob ?: return
 
+        // Staged mobs zero their damage before this runs, so DamageStageHandler credits them.
+        if (victim.ecoMob?.usesDamageStages == true) {
+            return
+        }
+
+        credit(victim, player, event.damage)
+    }
+
+    fun credit(victim: Mob, player: Player, amount: Double) {
+        if (amount <= 0.0) {
+            return
+        }
+
+        val uuid = player.uniqueId
         val topDamagers = victim.topDamagers.toMutableList()
 
         val damager = topDamagers.firstOrNull { it.uuid == uuid } ?: Damager(uuid, 0.0)
-        damager.damage += event.damage
+        damager.damage += amount
         topDamagers.removeIf { it.uuid == uuid }
         topDamagers.add(damager)
         victim.topDamagers = topDamagers.sortedByDescending { it.damage }

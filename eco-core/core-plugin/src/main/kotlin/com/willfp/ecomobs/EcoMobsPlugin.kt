@@ -13,6 +13,7 @@ import com.willfp.ecomobs.display.SpawnEggDisplay
 import com.willfp.ecomobs.display.SpawnerItemDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
 import com.willfp.ecomobs.handler.DamageModifierHandler
+import com.willfp.ecomobs.handler.DamageStageHandler
 import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
@@ -74,6 +75,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
     override fun loadListeners(): List<Listener> {
         return listOf(
             DamageModifierHandler,
+            DamageStageHandler,
             MountHandler,
             VanillaCompatibilityHandlers,
             DiscoverRecipeListener,

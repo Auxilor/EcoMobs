@@ -4,7 +4,13 @@ import com.willfp.eco.core.registry.Registry
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHealth
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHealthPercent
+import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHits
+import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHitsPercent
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderMaxHealth
+import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderMaxHits
+import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderMaxStages
+import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderStage
+import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderStagePercent
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderTime
 
 object MobPlaceholders : Registry<MobPlaceholder>() {
@@ -12,6 +18,12 @@ object MobPlaceholders : Registry<MobPlaceholder>() {
         register(MobPlaceholderHealth)
         register(MobPlaceholderMaxHealth)
         register(MobPlaceholderHealthPercent)
+        register(MobPlaceholderStage)
+        register(MobPlaceholderMaxStages)
+        register(MobPlaceholderStagePercent)
+        register(MobPlaceholderHits)
+        register(MobPlaceholderMaxHits)
+        register(MobPlaceholderHitsPercent)
         register(MobPlaceholderTime)
     }
 }
