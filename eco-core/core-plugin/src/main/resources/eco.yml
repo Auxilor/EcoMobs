@@ -7,3 +7,4 @@ options:
   bstats-id: 20581
   color: "&9"
   proxy-package: "com.willfp.ecomobs.nms"
+  eco-api-version: ${ecoApiVersion}
