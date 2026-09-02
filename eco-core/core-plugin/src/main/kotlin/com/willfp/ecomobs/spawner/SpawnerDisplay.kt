@@ -1,12 +1,12 @@
 package com.willfp.ecomobs.spawner
 
+import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.ecomobs.plugin
-import org.bukkit.scheduler.BukkitTask
 
 object SpawnerDisplay {
     @Volatile
     private var tick = 0
-    private var asyncTask: BukkitTask? = null
+    private var asyncTask: EcoTask? = null
 
     fun start() {
         asyncTask?.cancel()
