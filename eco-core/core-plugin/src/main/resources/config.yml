@@ -5,6 +5,9 @@
 
 discover-recipes: true
 
+# The number of places to generate %top_damager_<place>_...% placeholders for
+top-damager-places: 10
+
 custom-spawning:
   # The spawn rate is the number of ticks to wait between trying to spawn a mob.
   # 20 ticks = 1 second; the higher the number, the less often mobs will spawn.
