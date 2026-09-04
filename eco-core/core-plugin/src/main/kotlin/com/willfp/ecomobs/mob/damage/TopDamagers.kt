@@ -26,6 +26,9 @@ data class Damager(
 private const val metaKey = "TOP_DAMAGERS"
 
 class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
+    private val places: Int
+        get() = plugin.configYml.getInt("top-damager-places")
+
     @Suppress("UNCHECKED_CAST")
     private var Mob.topDamagers: List<Damager>
         get() = (this.getMetadata(metaKey).getOrNull(0)?.value() as? List<Damager>) ?: emptyList()
@@ -63,22 +66,26 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
     }
 
     fun generatePlaceholders(mob: Mob): List<NamedValue> {
-        return mob.topDamagers
-            .flatMapIndexed { index, damager ->
-                listOf(
-                    NamedValue(
-                        "top_damager_${index + 1}_name",
-                        Bukkit.getOfflinePlayer(damager.uuid).name ?: "Unknown"
-                    ),
-                    NamedValue(
-                        "top_damager_${index + 1}_display",
-                        Bukkit.getOfflinePlayer(damager.uuid).savedDisplayName
-                    ),
-                    NamedValue(
-                        "top_damager_${index + 1}_damage",
-                        damager.damage.toNiceString()
-                    )
+        val topDamagers = mob.topDamagers
+
+        return (0 until places).flatMap { index ->
+            val damager = topDamagers.getOrNull(index)
+            val offlinePlayer = damager?.let { Bukkit.getOfflinePlayer(it.uuid) }
+
+            listOf(
+                NamedValue(
+                    "top_damager_${index + 1}_name",
+                    if (damager == null) "" else offlinePlayer?.name ?: "Unknown"
+                ),
+                NamedValue(
+                    "top_damager_${index + 1}_display",
+                    if (damager == null) "" else offlinePlayer?.savedDisplayName ?: "Unknown"
+                ),
+                NamedValue(
+                    "top_damager_${index + 1}_damage",
+                    damager?.damage?.toNiceString() ?: "0"
                 )
-            }
+            )
+        }
     }
 }

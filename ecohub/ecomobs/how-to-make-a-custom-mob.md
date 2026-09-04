@@ -399,9 +399,11 @@ These placeholders work in the `display-name` and in effects on this mob.
 | `%max_hits%` | The hits the current stage takes (`0` outside a `hits` stage) |
 | `%hits_percent%` | The percentage of the current stage's hits left (`100` outside a `hits` stage) |
 | `%time%` | The time left before the mob despawns (`minutes:seconds`) |
-| `%top_damager_<place>_name%` | The name of the [0-9] top damager |
-| `%top_damager_<place>_damage%` | The damage dealt by the [0-9] top damager, counting one per hit during a `hits` stage |
-| `%top_damager_<place>_display%` | The ranking of the [0-9] top damager |
+| `%top_damager_<place>_name%` | The name of the top damager in that place (empty if nobody placed there) |
+| `%top_damager_<place>_damage%` | The damage dealt by the top damager in that place, counting one per hit during a `hits` stage (`0` if nobody placed there) |
+| `%top_damager_<place>_display%` | The display name of the top damager in that place (empty if nobody placed there) |
+
+The number of places is set by `top-damager-places` in `config.yml`, and defaults to 10.
 
 :::tip Troubleshooting
 - **Mob won't load?** Check the ID rules above; the file name must be lowercase letters, numbers, and underscores only.
