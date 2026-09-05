@@ -1,5 +1,6 @@
 package com.willfp.ecomobs.mob.impl
 
+import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
 import com.willfp.ecomobs.mob.EcoMob
@@ -26,15 +27,7 @@ internal class LivingMobImpl(
     override val entity: Mob,
     private val trackingRemovalCallback: () -> Unit
 ) : LivingMob {
-    private val ticker = plugin.runnableFactory.create {
-        tick(tick)
-        tick++
-
-        if (!isAlive) {
-            it.cancel()
-            handleRemove()
-        }
-    }
+    private var ticker: EcoTask? = null
 
     private var isRunning = false
 
@@ -91,7 +84,17 @@ internal class LivingMobImpl(
         }
 
         isRunning = true
-        ticker.runTaskTimer(1, 1)
+        ticker = plugin.scheduler.on(entity)
+            .onRetired { handleRemove() }
+            .runTimer({ task ->
+                tick(tick)
+                tick++
+
+                if (!isAlive) {
+                    task.cancel()
+                    handleRemove()
+                }
+            }, 1, 1)
     }
 
     override fun handleEvent(event: MobEvent, trigger: DispatchedTrigger) {
@@ -140,7 +143,7 @@ internal class LivingMobImpl(
     }
 
     private fun handleRemove(removeTracking: Boolean = true) {
-        ticker.cancel()
+        ticker?.cancel()
         if (removeTracking) {
             trackingRemovalCallback()
         }

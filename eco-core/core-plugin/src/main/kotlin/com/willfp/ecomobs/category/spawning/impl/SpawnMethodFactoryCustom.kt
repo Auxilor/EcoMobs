@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.category.spawning.impl
 
 import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.randDouble
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
@@ -16,7 +17,6 @@ import com.willfp.libreforge.enumValueOfOrNull
 import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
-import org.bukkit.scheduler.BukkitTask
 
 object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
     override fun create(
@@ -45,7 +45,7 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
 
         private val chance = config.getDouble("chance")
 
-        private var task: BukkitTask? = null
+        private var task: EcoTask? = null
 
         override fun onStart() {
             task = plugin.scheduler.runTimer(spawnRate, spawnRate) {
