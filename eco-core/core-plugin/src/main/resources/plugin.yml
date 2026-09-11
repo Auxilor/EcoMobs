@@ -32,6 +32,7 @@ permissions:
       ecomobs.command.ecomobs: true
       ecomobs.command.reload: true
       ecomobs.command.spawn: true
+      ecomobs.command.killall: true
       ecomobs.command.give: true
       ecomobs.command.spawner.*: true
 
