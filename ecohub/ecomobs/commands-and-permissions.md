@@ -3,7 +3,7 @@ title: "Commands and Permissions"
 sidebar_position: 3
 ---
 
-Every EcoMobs command and the permission that gates it. The base commands cover reloading, spawning, giving, and importing or exporting mobs; the spawner commands hand out and edit spawner items and blocks. Grant the permission alongside each command you want a role to use.
+Every EcoMobs command and the permission that gates it. The base commands cover reloading, spawning, giving, killing, and importing or exporting mobs; the spawner commands hand out and edit spawner items and blocks. Grant the permission alongside each command you want a role to use.
 
 ## Commands
 
@@ -12,6 +12,7 @@ Every EcoMobs command and the permission that gates it. The base commands cover 
 | `/ecomobs reload`                          | Reloads the plugin                                   | `ecomobs.command.reload` |
 | `/ecomobs spawn <mob> [x] [y] [z] [world] [amount]` | Spawns the EcoMobs, optionally spawning multiple at once | `ecomobs.command.spawn`  |
 | `/ecomobs give <player> <mob>`             | Give the player an EcoMob spawn egg                   | `ecomobs.command.give`   |
+| `/ecomobs killall [mob]`                 | Kills every EcoMob in loaded chunks, or only the given mob type | `ecomobs.command.killall` |
 | `/ecomobs import <id>`                     | Import a mob from [lrcdb](https://lrcdb.auxilor.io/) | `ecomobs.command.import` |
 | `/ecomobs export <id>`                     | Export a mob to [lrcdb](https://lrcdb.auxilor.io/)   | `ecomobs.command.export` |
 
