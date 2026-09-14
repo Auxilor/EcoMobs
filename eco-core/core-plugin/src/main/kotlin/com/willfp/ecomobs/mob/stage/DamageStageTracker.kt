@@ -7,7 +7,8 @@ internal class DamageStageTracker(
     private val stages: List<DamageStage>,
     private val triggerEffects: (Chain, Player?) -> Unit
 ) {
-    private var index = 0
+    var index = 0
+        private set
 
     var remaining = stages.first().amount
         private set
@@ -26,6 +27,14 @@ internal class DamageStageTracker(
 
     val progress: Double
         get() = if (isFinished) 1.0 else (index + stageProgress) / stages.size
+
+    /**
+     * Resume from a previously saved position, without triggering any stage effects.
+     */
+    fun restore(index: Int, remaining: Double) {
+        this.index = index.coerceIn(0, stages.size)
+        this.remaining = if (isFinished) 0.0 else remaining.coerceIn(0.0, stage.amount)
+    }
 
     fun start() {
         stages.first().startEffects?.let { triggerEffects(it, null) }

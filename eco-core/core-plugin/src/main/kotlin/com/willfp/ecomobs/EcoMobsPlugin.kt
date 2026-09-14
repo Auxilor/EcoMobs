@@ -12,6 +12,7 @@ import com.willfp.ecomobs.commands.CommandEcoMobs
 import com.willfp.ecomobs.display.SpawnEggDisplay
 import com.willfp.ecomobs.display.SpawnerItemDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
+import com.willfp.ecomobs.handler.ChunkHandler
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.DamageStageHandler
 import com.willfp.ecomobs.handler.MountHandler
@@ -82,7 +83,8 @@ class EcoMobsPlugin : LibreforgePlugin() {
             SpawnEggHandler,
             SpawnTotemHandler,
             topDamagerHandler,
-            SpawnerHandler
+            SpawnerHandler,
+            ChunkHandler
         )
     }
 

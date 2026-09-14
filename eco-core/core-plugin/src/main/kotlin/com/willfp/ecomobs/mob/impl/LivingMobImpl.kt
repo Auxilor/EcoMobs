@@ -2,6 +2,7 @@ package com.willfp.ecomobs.mob.impl
 
 import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
+import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.LivingMob
@@ -21,6 +22,11 @@ import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
+import org.bukkit.persistence.PersistentDataType
+
+private val tickKey = namespacedKeyOf("ecomobs", "tick")
+private val stageIndexKey = namespacedKeyOf("ecomobs", "stage_index")
+private val stageRemainingKey = namespacedKeyOf("ecomobs", "stage_remaining")
 
 internal class LivingMobImpl(
     override val mob: EcoMob,
@@ -32,6 +38,9 @@ internal class LivingMobImpl(
     private var isRunning = false
 
     private var tick = 0
+
+    // Set when the entity's chunk unloads, so the removal that follows isn't treated as a despawn.
+    private var isUnloaded = false
 
     private val tickHandlers = mutableListOf<TickHandler>()
 
@@ -85,16 +94,64 @@ internal class LivingMobImpl(
 
         isRunning = true
         ticker = plugin.scheduler.on(entity)
-            .onRetired { handleRemove() }
+            .onRetired {
+                if (!isUnloaded) {
+                    handleRemove()
+                }
+            }
             .runTimer({ task ->
+                // Dead also covers unloaded, which is handled by ChunkHandler before this runs.
+                if (entity.isDead) {
+                    task.cancel()
+                    handleRemove()
+                    return@runTimer
+                }
+
+                // A freshly loaded entity may not be valid until the server starts tracking it.
+                if (!isAlive) {
+                    return@runTimer
+                }
+
                 tick(tick)
                 tick++
 
-                if (!isAlive) {
-                    task.cancel()
-                    handleRemove()
+                if (tick % 20 == 0) {
+                    saveState()
                 }
             }, 1, 1)
+    }
+
+    /**
+     * Load state saved by a previous instance of this mob, e.g. before its chunk unloaded.
+     */
+    fun loadState() {
+        val pdc = entity.persistentDataContainer
+
+        tick = pdc.get(tickKey, PersistentDataType.INTEGER) ?: 0
+
+        val stageIndex = pdc.get(stageIndexKey, PersistentDataType.INTEGER) ?: return
+        val stageRemaining = pdc.get(stageRemainingKey, PersistentDataType.DOUBLE) ?: return
+        stageTracker?.restore(stageIndex, stageRemaining)
+    }
+
+    private fun saveState() {
+        val pdc = entity.persistentDataContainer
+
+        pdc.set(tickKey, PersistentDataType.INTEGER, tick)
+
+        if (stageTracker != null) {
+            pdc.set(stageIndexKey, PersistentDataType.INTEGER, stageTracker.index)
+            pdc.set(stageRemainingKey, PersistentDataType.DOUBLE, stageTracker.remaining)
+        }
+    }
+
+    /**
+     * Stop tracking the mob as its chunk unloads. It is restored when the chunk loads again.
+     */
+    fun unload() {
+        saveState()
+        isUnloaded = true
+        handleRemove()
     }
 
     override fun handleEvent(event: MobEvent, trigger: DispatchedTrigger) {
