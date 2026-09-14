@@ -379,6 +379,11 @@ internal class ConfigDrivenEcoMob(
         eventEffects[event]?.trigger(trigger)
     }
 
+    override fun getLivingMob(mob: Mob): LivingMob? {
+        // Restore mobs that missed their load event, e.g. chunks loaded before the plugin enabled.
+        return getLivingMob(mob.uniqueId) ?: if (!mob.isDead && mob.ecoMob == this) restore(mob) else null
+    }
+
     override fun getLivingMob(uuid: UUID): LivingMob? {
         return trackedMobs[uuid]
     }
@@ -398,6 +403,44 @@ internal class ConfigDrivenEcoMob(
         // Mark as custom mob
         entity.ecoMob = this
 
+        val livingMob = createLivingMob(entity)
+
+        livingMob.stageTracker?.start()
+
+        // Call spawn event
+        val spawnEvent = EcoMobSpawnEvent(livingMob, reason)
+        Bukkit.getPluginManager().callEvent(spawnEvent)
+
+        // Track mob and start ticking
+        trackedMobs[entity.uniqueId] = livingMob
+        livingMob.startTicking()
+        return livingMob
+    }
+
+    /**
+     * Resume a mob whose entity was loaded back in, e.g. after its chunk unloaded.
+     */
+    fun restore(entity: Mob): LivingMob {
+        val existing = trackedMobs[entity.uniqueId] as? LivingMobImpl
+
+        if (existing != null) {
+            if (existing.entity === entity) {
+                return existing
+            }
+
+            // Tracking outlived the old entity, e.g. an unload was missed.
+            existing.unload()
+        }
+
+        val livingMob = createLivingMob(entity)
+        livingMob.loadState()
+
+        trackedMobs[entity.uniqueId] = livingMob
+        livingMob.startTicking()
+        return livingMob
+    }
+
+    private fun createLivingMob(entity: Mob): LivingMobImpl {
         // Set custom AI
         val controller = entity.controller
 
@@ -414,8 +457,10 @@ internal class ConfigDrivenEcoMob(
         }
 
         // Create living mob
-        val livingMob = LivingMobImpl(this, entity) {
-            trackedMobs.remove(entity.uniqueId)
+        lateinit var livingMob: LivingMobImpl
+        livingMob = LivingMobImpl(this, entity) {
+            // Only remove this instance, in case the mob has since been restored.
+            trackedMobs.remove(entity.uniqueId, livingMob)
         }
 
         // Run on-spawn actions
@@ -432,16 +477,8 @@ internal class ConfigDrivenEcoMob(
 
         if (usesDamageStages) {
             livingMob.addTickHandler(TickHandlerDamageStages())
-            livingMob.stageTracker?.start()
         }
 
-        // Call spawn event
-        val spawnEvent = EcoMobSpawnEvent(livingMob, reason)
-        Bukkit.getPluginManager().callEvent(spawnEvent)
-
-        // Track mob and start ticking
-        trackedMobs[entity.uniqueId] = livingMob
-        livingMob.startTicking()
         return livingMob
     }
 }

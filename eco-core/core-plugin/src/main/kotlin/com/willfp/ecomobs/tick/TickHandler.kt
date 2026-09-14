@@ -12,7 +12,7 @@ interface TickHandler {
     fun tick(mob: LivingMob, tick: Int)
 
     /**
-     * Called when the mob is removed.
+     * Called when the mob is removed, or when its chunk unloads.
      */
     fun onRemove(mob: LivingMob, tick: Int) {
         // Override when needed
