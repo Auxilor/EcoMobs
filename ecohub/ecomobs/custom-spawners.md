@@ -46,6 +46,19 @@ Each attribute is gated by its own permission, `ecomobs.command.spawner.modify.<
 
 Particle animations are defined in `config.yml` under `spawner-animations`; see the [Plugin Config](plugin-config) reference.
 
+### As an item
+
+Every spawner is registered as an eco item under `ecomobs:<mob>_spawner`, so it can be used anywhere an item is taken — mob drops, crafting recipes, shops, crate rewards, and other plugins' configs:
+
+```yaml
+drops:
+  - chance: 5
+    items:
+      - ecomobs:hollow_king_spawner
+```
+
+Vanilla entity types work the same way, so `ecomobs:zombie_spawner` is a plain zombie spawner. The item comes with every attribute at its default; a spawner matches the lookup on its mob alone, so one that has since had its delay or particle changed still counts as that spawner.
+
 ## Spawn methods
 
 `spawners.mode` in `config.yml` decides who ticks spawners. The attributes above mean the same thing in both modes — what changes is which vanilla requirements still apply.

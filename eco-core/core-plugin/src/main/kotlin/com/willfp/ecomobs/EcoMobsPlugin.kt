@@ -5,6 +5,7 @@ import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.entities.ai.EntityGoals
 import com.willfp.eco.core.integrations.IntegrationLoader
+import com.willfp.eco.core.items.Items
 import com.willfp.eco.util.toSingletonList
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
@@ -33,6 +34,7 @@ import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
 import com.willfp.ecomobs.spawner.SpawnerHolograms
+import com.willfp.ecomobs.spawner.SpawnerItems
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.SpawnerSettings
 import com.willfp.ecomobs.spawner.SpawnerSpawnLoop
@@ -67,6 +69,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleLoad() {
         EntityGoals.register(EntityGoalRandomTeleport.Deserializer)
+        Items.registerItemProvider(SpawnerItems)
     }
 
     override fun loadConfigCategories(): List<ConfigCategory> {
