@@ -6,6 +6,7 @@ import com.willfp.eco.core.integrations.hologram.HologramOptions
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.folia.atRegion
+import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.block.CreatureSpawner
@@ -81,7 +82,7 @@ object SpawnerHolograms {
         for (spawner in PlacedSpawners.values()) {
             val location = spawner.location
 
-            if (!location.isWorldLoaded) {
+            if (!location.isWorldLoaded || !location.isChunkLoaded) {
                 continue
             }
 
@@ -100,6 +101,23 @@ object SpawnerHolograms {
 
         holograms.clear()
         lookingAt.clear()
+    }
+
+    /**
+     * Drops the holograms in [chunk], which unload with it.
+     */
+    fun removeChunk(chunk: Chunk) {
+        for (location in holograms.keys.toList()) {
+            if (!location.isWorldLoaded || location.world != chunk.world) {
+                continue
+            }
+
+            if (location.blockX shr 4 != chunk.x || location.blockZ shr 4 != chunk.z) {
+                continue
+            }
+
+            remove(location)
+        }
     }
 
     fun removeWorld(world: World) {
@@ -140,6 +158,12 @@ object SpawnerHolograms {
 
     private fun render(top: Location) {
         if (!SpawnerStackSettings.enabled || !SpawnerStackSettings.hologramEnabled) {
+            return
+        }
+
+        // The column is tracked even while its chunk is unloaded, and reading its block
+        // states to build the lines would drag the chunk back in.
+        if (!top.isWorldLoaded || !top.isChunkLoaded) {
             return
         }
 

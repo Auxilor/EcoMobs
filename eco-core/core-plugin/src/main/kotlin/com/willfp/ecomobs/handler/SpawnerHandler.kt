@@ -21,6 +21,7 @@ import com.willfp.ecomobs.spawner.spawner
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
 import org.bukkit.Bukkit
+import org.bukkit.Chunk
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
@@ -253,9 +254,21 @@ object SpawnerHandler : Listener {
 
     @EventHandler
     fun handleChunkLoad(event: ChunkLoadEvent) {
+        indexChunk(event.chunk)
+    }
+
+    /**
+     * Rebuilds the tracked spawners in [chunk] from the chunk's own block entities.
+     *
+     * Everything previously tracked there is dropped first, so a spawner broken while the
+     * chunk was unloaded, or a mid-session config change, can't leave a stale entry behind.
+     */
+    fun indexChunk(chunk: Chunk) {
+        PlacedSpawners.removeChunk(chunk)
+
         val loaded = mutableListOf<Location>()
 
-        for (blockState in event.chunk.tileEntities) {
+        for (blockState in chunk.tileEntities) {
             if (blockState !is CreatureSpawner) continue
             if (!blockState.isTrackedByEcoMobs) continue
 
@@ -273,21 +286,32 @@ object SpawnerHandler : Listener {
         }
     }
 
+    /**
+     * Indexes every chunk that is already loaded, for the chunks that were loaded before
+     * the plugin enabled and so will never fire a [ChunkLoadEvent].
+     */
+    fun indexLoadedChunks() {
+        for (world in Bukkit.getWorlds()) {
+            for (chunk in world.loadedChunks) {
+                val corner = Location(world, (chunk.x shl 4).toDouble(), 0.0, (chunk.z shl 4).toDouble())
+
+                // Each chunk is read from the thread that owns it, for Folia.
+                plugin.scheduler.at(corner).run {
+                    // It can have gone away again before this runs, and reading its block
+                    // entities would pull it back in.
+                    if (chunk.isLoaded) {
+                        indexChunk(chunk)
+                    }
+                }
+            }
+        }
+    }
+
     @EventHandler
     fun handleChunkUnload(event: ChunkUnloadEvent) {
-        val unloaded = mutableListOf<Location>()
-
-        for (blockState in event.chunk.tileEntities) {
-            if (blockState !is CreatureSpawner) continue
-
-            // Unconditional, so a mid-session config change can't leak tracked spawners.
-            PlacedSpawners.remove(blockState.location)
-            unloaded += blockState.location
-        }
-
-        for (location in unloaded) {
-            SpawnerHolograms.refresh(location)
-        }
+        // The index deliberately survives the unload; only the holograms, which are real
+        // entities in the chunk, go away with it.
+        SpawnerHolograms.removeChunk(event.chunk)
     }
 
     @EventHandler
