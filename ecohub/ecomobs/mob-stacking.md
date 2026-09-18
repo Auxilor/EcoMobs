@@ -23,6 +23,9 @@ stacking:
   # mob in it. When false, each kill takes a single mob off the stack.
   kill-whole-stack: false
 
+  # Whether the death animation is hidden when a stacked mob is killed.
+  hide-death-animation: false
+
   # Whether babies and adults are kept in separate stacks.
   match-age: true
 
@@ -94,6 +97,14 @@ The whole stack dies at once, and pays out for every mob in it. A stack of 32 ki
 For EcoMobs, the drop table is rolled again per mob, so chance-based drops stay chance-based — a stack of 32 does not guarantee a 10% drop, it gets 32 rolls at it. For vanilla mobs the drops are copied and the XP is multiplied.
 
 Best for grinders and arenas, where clearing a stack in one hit is the point.
+
+### `hide-death-animation: false` (default)
+
+Whether the dead mob's body plays out its death animation. This applies to both settings above — the whole stack dying at once, and a single mob coming off the stack.
+
+Left at `false`, the corpse tips over and fades out the way any mob does, taking about a second. On a stack killed one mob at a time that second is spent lying next to the replacement mob, so a fast grinder ends up with a pile of bodies on top of the live stack.
+
+Set it to `true` and the corpse is taken away right after the kill, so the mob simply vanishes. Drops, XP, death messages, and everything else that hangs off the kill are unaffected — only the body goes early.
 
 :::warning
 `kill-whole-stack: true` multiplies loot, and a large `max-size` multiplies it a lot. Check what a full stack of your most valuable mob pays out before turning it on.

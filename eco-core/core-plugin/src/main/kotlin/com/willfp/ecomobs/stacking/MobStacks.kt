@@ -1,6 +1,8 @@
 package com.willfp.ecomobs.stacking
 
+import com.willfp.ecomobs.event.EcoMobStackMergeEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
+import org.bukkit.Bukkit
 import org.bukkit.entity.Ageable
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Tameable
@@ -103,6 +105,13 @@ object MobStacks {
             .filter { it.stack.size + size <= StackSettings.maxSize }
             .minByOrNull { it.location.distanceSquared(mob.location) }
             ?: return false
+
+        val mergeEvent = EcoMobStackMergeEvent(mob, target, target.stack.size + size)
+        Bukkit.getPluginManager().callEvent(mergeEvent)
+
+        if (mergeEvent.isCancelled) {
+            return false
+        }
 
         target.stack.size += size
         remove(mob)
