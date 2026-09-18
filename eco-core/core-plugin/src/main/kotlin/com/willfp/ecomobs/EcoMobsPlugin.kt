@@ -24,6 +24,7 @@ import com.willfp.ecomobs.handler.SpawnerStackHandler
 import com.willfp.ecomobs.handler.StackHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
 import com.willfp.ecomobs.integrations.bettermodel.IntegrationBetterModel
+import com.willfp.ecomobs.integrations.coreprotect.IntegrationCoreProtect
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
 import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
@@ -130,6 +131,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
             IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine) },
             IntegrationLoader("BetterModel") { this.eventManager.registerListener(IntegrationBetterModel) },
             IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
+            IntegrationLoader("CoreProtect") { this.eventManager.registerListener(IntegrationCoreProtect) },
         )
     }
 
