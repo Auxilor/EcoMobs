@@ -6,9 +6,11 @@ import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.impl.ConfigDrivenEcoMob
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
 val spawnerMobKey = namespacedKeyOf("ecomobs", "spawner_mob")
@@ -23,143 +25,113 @@ val spawnerPickupKey = namespacedKeyOf("ecomobs", "spawner_pickup")
 val spawnerParticleAnimKey = namespacedKeyOf("ecomobs", "spawner_particle_anim")
 val spawnerExplosionProofKey = namespacedKeyOf("ecomobs", "spawner_explosion_proof")
 
-val FastItemStack.isCustomSpawner: Boolean
-    get() = persistentDataContainer.has(spawnerMobKey, PersistentDataType.STRING)
+/**
+ * The values a spawner falls back to when its data has never been written.
+ */
+object SpawnerDefaults {
+    const val DELAY_MIN = 200
+    const val DELAY_MAX = 800
+    const val SPAWN_COUNT = 4
+    const val SPAWN_RANGE = 4
+    const val PLAYER_RANGE = 16
+    const val MAX_NEARBY = 6
+    const val PICKUP = "deny"
+}
 
-var FastItemStack.spawnerMob: String?
-    get() = persistentDataContainer.get(spawnerMobKey, PersistentDataType.STRING)
-    set(value) {
-        if (value == null) persistentDataContainer.remove(spawnerMobKey)
-        else persistentDataContainer.set(spawnerMobKey, PersistentDataType.STRING, value)
+private fun PersistentDataContainer.getInt(key: NamespacedKey, default: Int) =
+    get(key, PersistentDataType.INTEGER) ?: default
+
+private fun PersistentDataContainer.setInt(key: NamespacedKey, value: Int) =
+    set(key, PersistentDataType.INTEGER, value)
+
+private fun PersistentDataContainer.setOrRemove(key: NamespacedKey, value: String?) {
+    if (value == null) remove(key) else set(key, PersistentDataType.STRING, value)
+}
+
+/**
+ * A spawner's configuration, stored in [pdc].
+ *
+ * Both spawner items and placed spawner blocks carry their settings the same
+ * way, so they share this view rather than each having their own accessors.
+ */
+@JvmInline
+value class SpawnerData(val pdc: PersistentDataContainer) {
+    val isCustomSpawner: Boolean
+        get() = pdc.has(spawnerMobKey, PersistentDataType.STRING)
+
+    var mob: String?
+        get() = pdc.get(spawnerMobKey, PersistentDataType.STRING)
+        set(value) = pdc.setOrRemove(spawnerMobKey, value)
+
+    var delayMin: Int
+        get() = pdc.getInt(spawnerDelayMinKey, SpawnerDefaults.DELAY_MIN)
+        set(value) = pdc.setInt(spawnerDelayMinKey, value)
+
+    var delayMax: Int
+        get() = pdc.getInt(spawnerDelayMaxKey, SpawnerDefaults.DELAY_MAX)
+        set(value) = pdc.setInt(spawnerDelayMaxKey, value)
+
+    var spawnCount: Int
+        get() = pdc.getInt(spawnerSpawnCountKey, SpawnerDefaults.SPAWN_COUNT)
+        set(value) = pdc.setInt(spawnerSpawnCountKey, value)
+
+    var spawnRange: Int
+        get() = pdc.getInt(spawnerSpawnRangeKey, SpawnerDefaults.SPAWN_RANGE)
+        set(value) = pdc.setInt(spawnerSpawnRangeKey, value)
+
+    var playerRange: Int
+        get() = pdc.getInt(spawnerPlayerRangeKey, SpawnerDefaults.PLAYER_RANGE)
+        set(value) = pdc.setInt(spawnerPlayerRangeKey, value)
+
+    var maxNearby: Int
+        get() = pdc.getInt(spawnerMaxNearbyKey, SpawnerDefaults.MAX_NEARBY)
+        set(value) = pdc.setInt(spawnerMaxNearbyKey, value)
+
+    var pickup: String
+        get() = pdc.get(spawnerPickupKey, PersistentDataType.STRING) ?: SpawnerDefaults.PICKUP
+        set(value) {
+            pdc.set(spawnerPickupKey, PersistentDataType.STRING, value)
+        }
+
+    var particleAnim: String?
+        get() = pdc.get(spawnerParticleAnimKey, PersistentDataType.STRING)
+        set(value) = pdc.setOrRemove(spawnerParticleAnimKey, value)
+
+    var explosionProof: Boolean
+        get() = pdc.get(spawnerExplosionProofKey, PersistentDataType.BYTE) == 1.toByte()
+        set(value) {
+            pdc.set(spawnerExplosionProofKey, PersistentDataType.BYTE, if (value) 1 else 0)
+        }
+
+    fun copyTo(other: SpawnerData) {
+        other.mob = mob
+        other.delayMin = delayMin
+        other.delayMax = delayMax
+        other.spawnCount = spawnCount
+        other.spawnRange = spawnRange
+        other.playerRange = playerRange
+        other.maxNearby = maxNearby
+        other.pickup = pickup
+        other.particleAnim = particleAnim
+        other.explosionProof = explosionProof
     }
+}
 
-var FastItemStack.spawnerDelayMin: Int
-    get() = persistentDataContainer.get(spawnerDelayMinKey, PersistentDataType.INTEGER) ?: 200
-    set(value) {
-        persistentDataContainer.set(spawnerDelayMinKey, PersistentDataType.INTEGER, value)
-    }
+val FastItemStack.spawner: SpawnerData
+    get() = SpawnerData(persistentDataContainer)
 
-var FastItemStack.spawnerDelayMax: Int
-    get() = persistentDataContainer.get(spawnerDelayMaxKey, PersistentDataType.INTEGER) ?: 800
-    set(value) {
-        persistentDataContainer.set(spawnerDelayMaxKey, PersistentDataType.INTEGER, value)
-    }
-
-var FastItemStack.spawnerSpawnCount: Int
-    get() = persistentDataContainer.get(spawnerSpawnCountKey, PersistentDataType.INTEGER) ?: 4
-    set(value) {
-        persistentDataContainer.set(spawnerSpawnCountKey, PersistentDataType.INTEGER, value)
-    }
-
-var FastItemStack.spawnerSpawnRange: Int
-    get() = persistentDataContainer.get(spawnerSpawnRangeKey, PersistentDataType.INTEGER) ?: 4
-    set(value) {
-        persistentDataContainer.set(spawnerSpawnRangeKey, PersistentDataType.INTEGER, value)
-    }
-
-var FastItemStack.spawnerPlayerRange: Int
-    get() = persistentDataContainer.get(spawnerPlayerRangeKey, PersistentDataType.INTEGER) ?: 16
-    set(value) {
-        persistentDataContainer.set(spawnerPlayerRangeKey, PersistentDataType.INTEGER, value)
-    }
-
-var FastItemStack.spawnerMaxNearby: Int
-    get() = persistentDataContainer.get(spawnerMaxNearbyKey, PersistentDataType.INTEGER) ?: 6
-    set(value) {
-        persistentDataContainer.set(spawnerMaxNearbyKey, PersistentDataType.INTEGER, value)
-    }
-
-var FastItemStack.spawnerPickup: String
-    get() = persistentDataContainer.get(spawnerPickupKey, PersistentDataType.STRING) ?: "deny"
-    set(value) {
-        persistentDataContainer.set(spawnerPickupKey, PersistentDataType.STRING, value)
-    }
-
-var FastItemStack.spawnerParticleAnim: String?
-    get() = persistentDataContainer.get(spawnerParticleAnimKey, PersistentDataType.STRING)
-    set(value) {
-        if (value == null) persistentDataContainer.remove(spawnerParticleAnimKey)
-        else persistentDataContainer.set(spawnerParticleAnimKey, PersistentDataType.STRING, value)
-    }
-
-var FastItemStack.spawnerExplosionProof: Boolean
-    get() = persistentDataContainer.get(spawnerExplosionProofKey, PersistentDataType.BYTE) == 1.toByte()
-    set(value) {
-        persistentDataContainer.set(spawnerExplosionProofKey, PersistentDataType.BYTE, if (value) 1 else 0)
-    }
-
-val CreatureSpawner.isCustomSpawner: Boolean
-    get() = persistentDataContainer.has(spawnerMobKey, PersistentDataType.STRING)
-
-var CreatureSpawner.spawnerMob: String?
-    get() = persistentDataContainer.get(spawnerMobKey, PersistentDataType.STRING)
-    set(value) {
-        if (value == null) persistentDataContainer.remove(spawnerMobKey)
-        else persistentDataContainer.set(spawnerMobKey, PersistentDataType.STRING, value)
-    }
-
-var CreatureSpawner.spawnerDelayMin: Int
-    get() = persistentDataContainer.get(spawnerDelayMinKey, PersistentDataType.INTEGER) ?: 200
-    set(value) {
-        persistentDataContainer.set(spawnerDelayMinKey, PersistentDataType.INTEGER, value)
-    }
-
-var CreatureSpawner.spawnerDelayMax: Int
-    get() = persistentDataContainer.get(spawnerDelayMaxKey, PersistentDataType.INTEGER) ?: 800
-    set(value) {
-        persistentDataContainer.set(spawnerDelayMaxKey, PersistentDataType.INTEGER, value)
-    }
-
-var CreatureSpawner.spawnerSpawnCount: Int
-    get() = persistentDataContainer.get(spawnerSpawnCountKey, PersistentDataType.INTEGER) ?: 4
-    set(value) {
-        persistentDataContainer.set(spawnerSpawnCountKey, PersistentDataType.INTEGER, value)
-    }
-
-var CreatureSpawner.spawnerSpawnRange: Int
-    get() = persistentDataContainer.get(spawnerSpawnRangeKey, PersistentDataType.INTEGER) ?: 4
-    set(value) {
-        persistentDataContainer.set(spawnerSpawnRangeKey, PersistentDataType.INTEGER, value)
-    }
-
-var CreatureSpawner.spawnerPlayerRange: Int
-    get() = persistentDataContainer.get(spawnerPlayerRangeKey, PersistentDataType.INTEGER) ?: 16
-    set(value) {
-        persistentDataContainer.set(spawnerPlayerRangeKey, PersistentDataType.INTEGER, value)
-    }
-
-var CreatureSpawner.spawnerMaxNearby: Int
-    get() = persistentDataContainer.get(spawnerMaxNearbyKey, PersistentDataType.INTEGER) ?: 6
-    set(value) {
-        persistentDataContainer.set(spawnerMaxNearbyKey, PersistentDataType.INTEGER, value)
-    }
-
-var CreatureSpawner.spawnerPickup: String
-    get() = persistentDataContainer.get(spawnerPickupKey, PersistentDataType.STRING) ?: "deny"
-    set(value) {
-        persistentDataContainer.set(spawnerPickupKey, PersistentDataType.STRING, value)
-    }
-
-var CreatureSpawner.spawnerParticleAnim: String?
-    get() = persistentDataContainer.get(spawnerParticleAnimKey, PersistentDataType.STRING)
-    set(value) {
-        if (value == null) persistentDataContainer.remove(spawnerParticleAnimKey)
-        else persistentDataContainer.set(spawnerParticleAnimKey, PersistentDataType.STRING, value)
-    }
-
-var CreatureSpawner.spawnerExplosionProof: Boolean
-    get() = persistentDataContainer.get(spawnerExplosionProofKey, PersistentDataType.BYTE) == 1.toByte()
-    set(value) {
-        persistentDataContainer.set(spawnerExplosionProofKey, PersistentDataType.BYTE, if (value) 1 else 0)
-    }
+val CreatureSpawner.spawner: SpawnerData
+    get() = SpawnerData(persistentDataContainer)
 
 fun CreatureSpawner.applyVanillaSettings() {
-    minSpawnDelay = spawnerDelayMin
-    maxSpawnDelay = spawnerDelayMax
-    spawnCount = spawnerSpawnCount
-    spawnRange = spawnerSpawnRange
-    requiredPlayerRange = spawnerPlayerRange
-    maxNearbyEntities = spawnerMaxNearby
+    val data = spawner
+
+    minSpawnDelay = data.delayMin
+    maxSpawnDelay = data.delayMax
+    spawnCount = data.spawnCount
+    spawnRange = data.spawnRange
+    requiredPlayerRange = data.playerRange
+    maxNearbyEntities = data.maxNearby
 }
 
 /**
@@ -178,15 +150,6 @@ fun resolveEntityType(mobId: String): EntityType? {
 fun CreatureSpawner.toSpawnerItem(): ItemStack {
     val item = ItemStack(Material.SPAWNER)
     val fis = item.fast()
-    fis.spawnerMob = spawnerMob
-    fis.spawnerDelayMin = spawnerDelayMin
-    fis.spawnerDelayMax = spawnerDelayMax
-    fis.spawnerSpawnCount = spawnerSpawnCount
-    fis.spawnerSpawnRange = spawnerSpawnRange
-    fis.spawnerPlayerRange = spawnerPlayerRange
-    fis.spawnerMaxNearby = spawnerMaxNearby
-    fis.spawnerPickup = spawnerPickup
-    fis.spawnerParticleAnim = spawnerParticleAnim
-    fis.spawnerExplosionProof = spawnerExplosionProof
+    spawner.copyTo(fis.spawner)
     return fis.unwrap()
 }

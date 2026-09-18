@@ -3,21 +3,12 @@ package com.willfp.ecomobs.commands
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.core.fast.fast
-import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.plugin
-import com.willfp.ecomobs.spawner.SpawnerItemModifier
-import com.willfp.ecomobs.spawner.spawnerDelayMax
-import com.willfp.ecomobs.spawner.spawnerDelayMin
-import com.willfp.ecomobs.spawner.spawnerMaxNearby
-import com.willfp.ecomobs.spawner.spawnerMob
-import com.willfp.ecomobs.spawner.spawnerPickup
-import com.willfp.ecomobs.spawner.spawnerPlayerRange
-import com.willfp.ecomobs.spawner.spawnerSpawnCount
-import com.willfp.ecomobs.spawner.spawnerSpawnRange
+import com.willfp.ecomobs.spawner.SpawnerAttributes
+import com.willfp.ecomobs.spawner.spawner
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.StringUtil
 
@@ -40,11 +31,8 @@ object CommandSpawnerGive : Subcommand(
         }
 
         val mobId = args[1]
-        val validMob = EcoMobs[mobId] != null || runCatching {
-            EntityType.valueOf(mobId.uppercase())
-        }.isSuccess
 
-        if (!validMob) {
+        if (!SpawnerAttributes.isValidMob(mobId)) {
             sender.sendMessage(plugin.langYml.getMessage("spawner-invalid-mob"))
             return
         }
@@ -55,19 +43,12 @@ object CommandSpawnerGive : Subcommand(
 
         val item = ItemStack(Material.SPAWNER, amount)
         val fis = item.fast()
-        fis.spawnerMob = mobId
-        fis.spawnerDelayMin = 200
-        fis.spawnerDelayMax = 800
-        fis.spawnerSpawnCount = 4
-        fis.spawnerSpawnRange = 4
-        fis.spawnerPlayerRange = 16
-        fis.spawnerMaxNearby = 6
-        fis.spawnerPickup = "deny"
+        fis.spawner.mob = mobId
 
         var i = 0
         while (i < tail.size) {
             val attribute = tail[i].lowercase()
-            if (attribute == "mob" || attribute !in SpawnerItemModifier.ATTRIBUTES) {
+            if (attribute == "mob" || attribute !in SpawnerAttributes.ATTRIBUTES) {
                 sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
                 return
             }
@@ -75,13 +56,13 @@ object CommandSpawnerGive : Subcommand(
                 sender.sendMessage(plugin.langYml.getMessage("no-permission"))
                 return
             }
-            val value = SpawnerItemModifier.valueCount(attribute)
+            val value = SpawnerAttributes.valueCount(attribute)
             val valueArgs = tail.subList(i + 1, minOf(i + 1 + value, tail.size))
             if (valueArgs.size < value) {
                 sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
                 return
             }
-            if (!SpawnerItemModifier.apply(fis, attribute, valueArgs)) {
+            if (!SpawnerAttributes.apply(fis.spawner, attribute, valueArgs)) {
                 sender.sendMessage(
                     plugin.langYml.getMessage("spawner-invalid-value").replace("%attribute%", attribute)
                 )
@@ -111,14 +92,14 @@ object CommandSpawnerGive : Subcommand(
         if (args.size == 2)
             StringUtil.copyPartialMatches(
                 args[1],
-                EcoMobs.values().map { it.id } + EntityType.entries.map { it.name.lowercase() },
+                SpawnerAttributes.tabComplete("mob", 0),
                 completions
             )
 
         if (args.size == 3)
             StringUtil.copyPartialMatches(
                 args[2],
-                listOf("1", "2", "3", "4", "5") + SpawnerItemModifier.ATTRIBUTES
+                listOf("1", "2", "3", "4", "5") + SpawnerAttributes.ATTRIBUTES
                     .filter { it != "mob" && sender.hasPermission("ecomobs.command.spawner.modify.$it") },
                 completions
             )
@@ -135,7 +116,7 @@ object CommandSpawnerGive : Subcommand(
                 if (i == cursorIndex) {
                     StringUtil.copyPartialMatches(
                         token,
-                        SpawnerItemModifier.ATTRIBUTES.filter { attr ->
+                        SpawnerAttributes.ATTRIBUTES.filter { attr ->
                             attr != "mob" && attr !in usedAttributes &&
                                 sender.hasPermission("ecomobs.command.spawner.modify.$attr")
                         },
@@ -143,17 +124,17 @@ object CommandSpawnerGive : Subcommand(
                     )
                     break
                 }
-                if (token !in SpawnerItemModifier.ATTRIBUTES || token == "mob") {
+                if (token !in SpawnerAttributes.ATTRIBUTES || token == "mob") {
                     i++
                     continue
                 }
-                val value = SpawnerItemModifier.valueCount(token)
+                val value = SpawnerAttributes.valueCount(token)
                 usedAttributes.add(token)
                 if (i + value >= cursorIndex) {
                     val valueIndex = cursorIndex - i - 1
                     StringUtil.copyPartialMatches(
                         tail[cursorIndex],
-                        SpawnerItemModifier.tabComplete(token, valueIndex),
+                        SpawnerAttributes.tabComplete(token, valueIndex),
                         completions
                     )
                     break
