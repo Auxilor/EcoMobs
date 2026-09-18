@@ -27,6 +27,7 @@ stacking: # Merges nearby mobs of the same kind into one entity; see Mob Stackin
   max-size: 64 # The most mobs one stack can hold
   sweep-rate: 100 # Ticks between sweeps for mobs that drifted together after spawning
   kill-whole-stack: false # true kills and pays out the whole stack at once
+  hide-death-animation: false # true takes the corpse away instead of playing the death animation
   match-age: true # Whether babies and adults are kept in separate stacks
   nameplate: "&f%name% &7x%size%" # Shown above a stack; %size% and %name%
   blacklist: # Never stacks; EcoMob IDs and vanilla entity types both work
