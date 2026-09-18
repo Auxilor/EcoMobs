@@ -6,7 +6,7 @@ class PlacedSpawner(
     val location: Location,
     val animationId: String?
 ) {
-    fun tickAsync(tick: Int) {
+    fun tick(tick: Int) {
         val id = animationId?.takeIf { it != "none" } ?: return
         val data = SpawnerAnimations[id] ?: return
         data.animation.spawnParticle(

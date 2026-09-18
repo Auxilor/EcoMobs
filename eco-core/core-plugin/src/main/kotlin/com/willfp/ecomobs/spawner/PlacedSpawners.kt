@@ -14,5 +14,5 @@ object PlacedSpawners {
         loaded.remove(location)
     }
 
-    fun values(): List<PlacedSpawner> = loaded.values.toList()
+    fun values(): Collection<PlacedSpawner> = loaded.values
 }

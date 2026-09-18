@@ -4,23 +4,24 @@ import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.ecomobs.plugin
 
 object SpawnerDisplay {
-    @Volatile
     private var tick = 0
-    private var asyncTask: EcoTask? = null
+    private var task: EcoTask? = null
 
     fun start() {
-        asyncTask?.cancel()
-        asyncTask = plugin.scheduler.runAsyncTimer(1, 1) { tickAsync() }
+        task?.cancel()
+        tick = 0
+        task = plugin.scheduler.global().runTimer(1, 1) { tickSpawners() }
     }
 
-    private fun tickAsync() {
+    private fun tickSpawners() {
         for (spawner in PlacedSpawners.values()) {
-            plugin.scheduler.run {
-                if (spawner.location.isChunkLoaded) {
-                    spawner.tickAsync(tick)
-                }
+            if (!spawner.location.isChunkLoaded) {
+                continue
             }
+
+            spawner.tick(tick)
         }
+
         tick++
     }
 }
