@@ -28,6 +28,7 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -109,7 +110,18 @@ object SpawnerHandler : Listener {
             return
         }
 
-        val mobId = state.spawner.mob ?: return
+        val noAI = state.spawner.noAI
+        val mobId = state.spawner.mob
+
+        // Vanilla spawns the entity itself, so a spawner with no custom mob still has
+        // its AI stripped here, before the mob is added to the world.
+        if (mobId == null) {
+            if (noAI) {
+                (event.entity as? LivingEntity)?.setAI(false)
+            }
+
+            return
+        }
 
         event.isCancelled = true
 
@@ -117,7 +129,7 @@ object SpawnerHandler : Listener {
         val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
 
         repeat(stackSize) {
-            spawnFromSpawner(state.location, event.location, mobId)
+            spawnFromSpawner(state.location, event.location, mobId, noAI)
         }
     }
 

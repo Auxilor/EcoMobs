@@ -28,6 +28,7 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
         .replace("%pickup%", data.pickup)
         .replace("%particle%", data.particleAnim ?: "none")
         .replace("%explosion_proof%", data.explosionProof.toString())
+        .replace("%no_ai%", data.noAI.toString())
         .replace("%size%", data.stackSize.toString())
 }
 

@@ -69,6 +69,7 @@ spawner-display: # The held/placed spawner item's name and lore; supports the pl
     - "&8Pickup: &f%pickup%"
     - "&8Particle: &f%particle%"
     - "&8Explosion-Proof: &f%explosion_proof%"
+    - "&8No AI: &f%no_ai%"
   stacked-lore: # Added only when the item holds more than one spawner
     - "&8Stack: &f%size%"
 

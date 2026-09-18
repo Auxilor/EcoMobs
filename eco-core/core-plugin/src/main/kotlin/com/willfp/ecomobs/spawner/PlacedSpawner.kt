@@ -89,6 +89,7 @@ class PlacedSpawner(
 
         // A stack of spawners spawns as many mobs as it holds, on the one cycle.
         val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
+        val noAI = state.spawner.noAI
 
         val tickEvent = EcoMobSpawnerTickEvent(location, mobId, state.spawnCount, stackSize)
         Bukkit.getPluginManager().callEvent(tickEvent)
@@ -100,7 +101,7 @@ class PlacedSpawner(
         val toSpawn = tickEvent.spawnCount.coerceAtLeast(0) * tickEvent.stackSize.coerceAtLeast(0)
 
         repeat(toSpawn) {
-            spawnFromSpawner(location, randomSpawnLocation(state.spawnRange), mobId)
+            spawnFromSpawner(location, randomSpawnLocation(state.spawnRange), mobId, noAI)
         }
     }
 

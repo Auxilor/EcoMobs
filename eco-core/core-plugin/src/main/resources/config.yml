@@ -129,6 +129,7 @@ spawner-display:
     - "&8Pickup: &f%pickup%"
     - "&8Particle: &f%particle%"
     - "&8Explosion-Proof: &f%explosion_proof%"
+    - "&8No AI: &f%no_ai%"
 
   # Added to the lore only when the spawner item holds more than one spawner.
   stacked-lore:
