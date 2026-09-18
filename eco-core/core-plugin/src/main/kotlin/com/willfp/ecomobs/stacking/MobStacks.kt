@@ -42,7 +42,7 @@ object MobStacks {
         }
 
         // EcoMobs paint their names clientside, so a real one always came from elsewhere.
-        if (StackSettings.excludeNamed && mob.ecoMob == null && mob.customName != null) {
+        if (StackSettings.excludeNamed && mob.ecoMob == null && mob.customName() != null) {
             return false
         }
 
