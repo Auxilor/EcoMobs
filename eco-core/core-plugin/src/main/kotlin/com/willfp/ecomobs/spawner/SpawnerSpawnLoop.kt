@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.spawner
 
 import com.willfp.eco.core.scheduling.EcoTask
+import com.willfp.ecomobs.folia.atRegion
 import com.willfp.ecomobs.plugin
 
 /**
@@ -18,7 +19,7 @@ object SpawnerSpawnLoop {
 
         val rate = SpawnerSettings.tickRate
 
-        task = plugin.scheduler.runTimer(rate, rate) {
+        task = plugin.scheduler.global().runTimer(rate, rate) {
             tickSpawners(rate.toInt())
         }
     }
@@ -29,12 +30,18 @@ object SpawnerSpawnLoop {
     }
 
     private fun tickSpawners(elapsed: Int) {
-        for (spawner in PlacedSpawners.values()) {
-            if (!spawner.location.isWorldLoaded || !spawner.location.isChunkLoaded) {
-                continue
-            }
+        // Spawning reads the spawner's block state and puts mobs into the world, so each
+        // chunk's spawners are ticked on the region that owns them.
+        PlacedSpawners.forEachChunk { world, chunkX, chunkZ, spawners ->
+            atRegion(world, chunkX, chunkZ) {
+                for (spawner in spawners) {
+                    if (!spawner.location.isChunkLoaded) {
+                        continue
+                    }
 
-            spawner.tickSpawning(elapsed)
+                    spawner.tickSpawning(elapsed)
+                }
+            }
         }
     }
 }

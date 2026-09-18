@@ -5,6 +5,7 @@ import com.willfp.eco.core.integrations.hologram.HologramManager
 import com.willfp.eco.core.integrations.hologram.HologramOptions
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.titlecase
+import com.willfp.ecomobs.folia.atRegion
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.block.CreatureSpawner
@@ -84,7 +85,11 @@ object SpawnerHolograms {
                 continue
             }
 
-            refresh(location)
+            // Called on reload, from the global region. Rebuilding a column reads the
+            // spawner block states in it, so it runs on the region owning them.
+            atRegion(location) {
+                refresh(location)
+            }
         }
     }
 

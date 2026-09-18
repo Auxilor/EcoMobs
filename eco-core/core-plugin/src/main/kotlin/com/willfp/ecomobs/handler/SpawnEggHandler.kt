@@ -52,7 +52,10 @@ object SpawnEggHandler : Listener {
 
         // This is needed as the event must finish first,
         // Otherwise the dispenser/dropper thinks the item is already removed from this event.
-        plugin.scheduler.run {
+        // The dispenser's inventory is block state, so this goes to the block's region
+        // rather than the global one. Off Folia it is the same next-tick main thread run
+        // it has always been.
+        plugin.scheduler.at(event.block.location).run {
             val item = dispenser.inventory.find { it?.isSimilar(event.item) == true } ?: return@run
             item.amount--
             dispenser.update()

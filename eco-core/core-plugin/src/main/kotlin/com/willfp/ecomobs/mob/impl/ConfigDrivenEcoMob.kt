@@ -68,6 +68,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.persistence.PersistentDataType
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 val mobKey = namespacedKeyOf("ecomobs", "mob")
 
@@ -76,7 +77,8 @@ internal class ConfigDrivenEcoMob(
     private val config: Config,
     private val context: ViolationContext
 ) : EcoMob {
-    private val trackedMobs = mutableMapOf<UUID, LivingMob>()
+    // Concurrent: mobs are spawned, restored and removed from every region thread.
+    private val trackedMobs = ConcurrentHashMap<UUID, LivingMob>()
 
     private val onSpawnActions = mutableListOf<(LivingMobImpl) -> Unit>()
 
@@ -388,6 +390,9 @@ internal class ConfigDrivenEcoMob(
         return trackedMobs[uuid]
     }
 
+    override val livingMobs: Collection<LivingMob>
+        get() = trackedMobs.values.toList()
+
     override fun spawn(location: Location, reason: SpawnReason): LivingMob? {
         // Call bukkit event
         val preSpawnEvent = EcoMobPreSpawnEvent(this, reason)
@@ -435,7 +440,15 @@ internal class ConfigDrivenEcoMob(
         val livingMob = createLivingMob(entity)
         livingMob.loadState()
 
-        trackedMobs[entity.uniqueId] = livingMob
+        // Two region threads can reach here for the same entity, e.g. a chunk load on
+        // one side of a region border and a nearby-mob lookup on the other. The loser
+        // drops its instance rather than leaving a second ticker on the same mob.
+        val raced = trackedMobs.putIfAbsent(entity.uniqueId, livingMob)
+
+        if (raced != null) {
+            return raced
+        }
+
         livingMob.startTicking()
         return livingMob
     }

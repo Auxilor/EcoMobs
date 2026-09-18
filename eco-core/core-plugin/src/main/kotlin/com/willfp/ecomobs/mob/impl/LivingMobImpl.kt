@@ -33,14 +33,25 @@ internal class LivingMobImpl(
     override val entity: Mob,
     private val trackingRemovalCallback: () -> Unit
 ) : LivingMob {
+    // The flags below are written from the entity's ticker and read from elsewhere: the
+    // onRetired callback, chunk unload, and placeholder reads on other regions. Volatile
+    // so none of those can see a stale value.
+    @Volatile
     private var ticker: EcoTask? = null
 
+    @Volatile
     private var isRunning = false
 
+    @Volatile
     private var tick = 0
 
     // Set when the entity's chunk unloads, so the removal that follows isn't treated as a despawn.
+    @Volatile
     private var isUnloaded = false
+
+    // Set once the removal handlers have run, so a retire racing a cancel can't fire them twice.
+    @Volatile
+    private var hasHandledRemove = false
 
     private val tickHandlers = mutableListOf<TickHandler>()
 
@@ -75,6 +86,7 @@ internal class LivingMobImpl(
             ?: 0.0
 
     // Fix for drops being sent twice
+    @Volatile
     private var hasBeenKilled = false
 
     fun addTickHandler(handler: TickHandler) {
@@ -201,9 +213,22 @@ internal class LivingMobImpl(
 
     private fun handleRemove(removeTracking: Boolean = true) {
         ticker?.cancel()
+
+        // Untracking stays outside the guard: kill(removeTracking = false) leaves the
+        // mob tracked on purpose, and a later despawn must still be able to drop it.
         if (removeTracking) {
             trackingRemovalCallback()
         }
+
+        // On Folia the entity's task can retire on one thread while another cancels it,
+        // so the handlers below can be reached twice for one removal.
+        if (hasHandledRemove) {
+            return
+        }
+
+        hasHandledRemove = true
+
+        plugin.topDamagerHandler.forget(entity.uniqueId)
 
         for (handler in this.tickHandlers) {
             handler.onRemove(this, tick)

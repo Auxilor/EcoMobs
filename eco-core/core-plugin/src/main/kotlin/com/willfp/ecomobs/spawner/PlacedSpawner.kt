@@ -62,9 +62,13 @@ class PlacedSpawner(
 
     private fun isPlayerInRange(): Boolean {
         val world = location.world ?: return false
-        val rangeSquared = playerRange.toDouble() * playerRange
+        val range = playerRange.toDouble()
+        val rangeSquared = range * range
 
-        return world.players.any { it.location.distanceSquared(location) <= rangeSquared }
+        // Only the players near the spawner, whose region this tick already owns.
+        // world.players would reach players being ticked on other regions.
+        return world.getNearbyPlayers(location, range)
+            .any { it.location.distanceSquared(location) <= rangeSquared }
     }
 
     private fun randomDelay(state: CreatureSpawner): Int {
