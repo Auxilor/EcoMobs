@@ -73,7 +73,7 @@ object SpawnerStackHandler : Listener {
 
         val amount = if (player.isSneaking) held.amount else 1
 
-        return SpawnerStacks.add(state, item, amount)
+        return SpawnerStacks.add(state, item, amount, player)
     }
 
     private fun consume(player: Player, slot: EquipmentSlot, amount: Int) {

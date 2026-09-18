@@ -4,13 +4,17 @@ import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.ecomobs.event.EcoMobSpawnerStackEvent
 import org.bukkit.Bukkit
 import org.bukkit.block.CreatureSpawner
+import org.bukkit.entity.Player
 
 object SpawnerStacks {
     /**
      * Adds up to [amount] spawners from [item] onto the stack at [state], returning how
      * many were actually taken. Zero means the two don't match, or the stack is full.
+     *
+     * [player] is whoever is stacking them, and is only carried through to
+     * [EcoMobSpawnerStackEvent].
      */
-    fun add(state: CreatureSpawner, item: FastItemStack, amount: Int): Int {
+    fun add(state: CreatureSpawner, item: FastItemStack, amount: Int, player: Player? = null): Int {
         if (!SpawnerStackSettings.enabled) {
             return 0
         }
@@ -33,6 +37,7 @@ object SpawnerStacks {
         val stackEvent = EcoMobSpawnerStackEvent(
             state.location,
             state.spawner.mob,
+            player,
             current,
             minOf(amount, space)
         )

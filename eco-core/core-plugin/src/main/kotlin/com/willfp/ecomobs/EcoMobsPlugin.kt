@@ -40,6 +40,7 @@ import com.willfp.ecomobs.spawner.SpawnerSettings
 import com.willfp.ecomobs.spawner.SpawnerSpawnLoop
 import com.willfp.ecomobs.stacking.MobStackTicker
 import com.willfp.ecomobs.stacking.StackSettings
+import com.willfp.ecomobs.trigger.EcoMobsTriggers
 import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
@@ -70,6 +71,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
     override fun handleLoad() {
         EntityGoals.register(EntityGoalRandomTeleport.Deserializer)
         Items.registerItemProvider(SpawnerItems)
+        EcoMobsTriggers.registerAll()
     }
 
     override fun loadConfigCategories(): List<ConfigCategory> {
