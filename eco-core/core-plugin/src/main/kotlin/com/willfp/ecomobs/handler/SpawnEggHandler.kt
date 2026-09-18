@@ -52,7 +52,7 @@ object SpawnEggHandler : Listener {
 
         // This is needed as the event must finish first,
         // Otherwise the dispenser/dropper thinks the item is already removed from this event.
-        plugin.scheduler.run {
+        plugin.scheduler.at(event.block.location).run {
             val item = dispenser.inventory.find { it?.isSimilar(event.item) == true } ?: return@run
             item.amount--
             dispenser.update()
