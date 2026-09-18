@@ -3,7 +3,6 @@ package com.willfp.ecomobs.commands
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.plugin
-import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAttributes
 import com.willfp.ecomobs.spawner.applyVanillaSettings
@@ -80,7 +79,7 @@ object CommandSpawnerModify : Subcommand(
             }
             state.update()
 
-            PlacedSpawners.set(block.location, PlacedSpawner(block.location, state.spawner.particleAnim))
+            PlacedSpawners.sync(state)
         }
 
         sender.sendMessage(

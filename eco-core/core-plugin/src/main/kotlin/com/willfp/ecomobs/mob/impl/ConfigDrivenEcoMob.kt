@@ -25,6 +25,7 @@ import com.willfp.ecomobs.config.toConfigKey
 import com.willfp.ecomobs.config.validate
 import com.willfp.ecomobs.config.validateNotNull
 import com.willfp.ecomobs.display.BaseItem
+import com.willfp.ecomobs.event.EcoMobDropsEvent
 import com.willfp.ecomobs.event.EcoMobPreSpawnEvent
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
@@ -45,6 +46,7 @@ import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.options.ecoMobEgg
 import com.willfp.ecomobs.mob.stage.toDamageStage
 import com.willfp.ecomobs.plugin
+import com.willfp.ecomobs.spawner.SpawnerItems
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDamageStages
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
@@ -366,6 +368,9 @@ internal class ConfigDrivenEcoMob(
     }
 
     override fun onRegister() {
+        // Every mob can be put in a spawner, so the spawner item exists for all of them.
+        SpawnerItems.register(this.id)
+
         // Bound per mob type, not per spawned mob: a mode that feeds on something other
         // than damage finds the mobs it applies to when the progress lands.
         for (stage in damageStages) {
@@ -388,7 +393,14 @@ internal class ConfigDrivenEcoMob(
     }
 
     override fun spawnDrops(location: Location, player: Player?) {
-        drops.drop(location, player)
+        val dropsEvent = EcoMobDropsEvent(this, location, player, drops.roll(player), drops.experience)
+        Bukkit.getPluginManager().callEvent(dropsEvent)
+
+        if (dropsEvent.isCancelled) {
+            return
+        }
+
+        drops.give(location, player, dropsEvent.drops, dropsEvent.experience)
     }
 
     override fun handleEvent(event: MobEvent, trigger: DispatchedTrigger) {

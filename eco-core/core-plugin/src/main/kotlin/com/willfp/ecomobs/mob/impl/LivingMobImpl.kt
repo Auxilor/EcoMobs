@@ -4,6 +4,7 @@ import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
+import com.willfp.ecomobs.event.EcoMobStageChangeEvent
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.event.MobEvent
@@ -64,7 +65,7 @@ internal class LivingMobImpl(
         get() = mob.lifespan - tick
 
     internal val stageTracker = if (mob.usesDamageStages) {
-        DamageStageTracker(mob.damageStages, ::triggerStageEffects)
+        DamageStageTracker(mob.damageStages, ::triggerStageEffects, ::fireStageChange)
     } else {
         null
     }
@@ -175,6 +176,17 @@ internal class LivingMobImpl(
         for (placeholder in plugin.topDamagerHandler.generatePlaceholders(entity)) {
             trigger.addPlaceholder(placeholder)
         }
+    }
+
+    private fun fireStageChange(
+        previousStage: DamageStage,
+        stage: DamageStage?,
+        stageNumber: Int,
+        player: Player?
+    ) {
+        Bukkit.getPluginManager().callEvent(
+            EcoMobStageChangeEvent(this, previousStage, stage, stageNumber, player)
+        )
     }
 
     private fun triggerStageEffects(effects: Chain, player: Player?) {
