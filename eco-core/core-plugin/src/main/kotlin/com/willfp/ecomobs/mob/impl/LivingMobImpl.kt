@@ -4,13 +4,13 @@ import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
+import com.willfp.ecomobs.event.EcoMobStageChangeEvent
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.placeholder.MobPlaceholders
 import com.willfp.ecomobs.mob.placeholder.formatMobPlaceholders
 import com.willfp.ecomobs.mob.stage.DamageStage
-import com.willfp.ecomobs.mob.stage.DamageStageMode
 import com.willfp.ecomobs.mob.stage.DamageStageTracker
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandler
@@ -65,7 +65,7 @@ internal class LivingMobImpl(
         get() = mob.lifespan - tick
 
     internal val stageTracker = if (mob.usesDamageStages) {
-        DamageStageTracker(mob.damageStages, ::triggerStageEffects)
+        DamageStageTracker(mob.damageStages, ::triggerStageEffects, ::fireStageChange)
     } else {
         null
     }
@@ -79,11 +79,8 @@ internal class LivingMobImpl(
     override val damageStageProgress: Double
         get() = stageTracker?.stageProgress ?: 1.0
 
-    override val hitsRemaining: Double
-        get() = stageTracker
-            ?.takeIf { it.stage.mode == DamageStageMode.HITS }
-            ?.remaining
-            ?: 0.0
+    override val stageRemaining: Double
+        get() = stageTracker?.remaining ?: 0.0
 
     // Fix for drops being sent twice
     @Volatile
@@ -179,6 +176,17 @@ internal class LivingMobImpl(
         for (placeholder in plugin.topDamagerHandler.generatePlaceholders(entity)) {
             trigger.addPlaceholder(placeholder)
         }
+    }
+
+    private fun fireStageChange(
+        previousStage: DamageStage,
+        stage: DamageStage?,
+        stageNumber: Int,
+        player: Player?
+    ) {
+        Bukkit.getPluginManager().callEvent(
+            EcoMobStageChangeEvent(this, previousStage, stage, stageNumber, player)
+        )
     }
 
     private fun triggerStageEffects(effects: Chain, player: Player?) {
