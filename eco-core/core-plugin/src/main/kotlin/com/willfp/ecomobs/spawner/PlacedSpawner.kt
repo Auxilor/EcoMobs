@@ -9,9 +9,26 @@ import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.Mob
 import kotlin.random.Random
 
+/**
+ * A spawner EcoMobs tracks.
+ *
+ * Everything needed to describe the spawner is mirrored here, so anything that only
+ * has to name it - holograms, the API - can do that without loading its chunk to read
+ * the block state back.
+ */
 class PlacedSpawner(
     val location: Location,
-    val animationId: String?
+    val animationId: String?,
+
+    /**
+     * The mob the spawner spawns, mirrored from its block state.
+     */
+    val mobId: String? = null,
+
+    /**
+     * How many spawners it stands in for, mirrored from its block state.
+     */
+    val stackSize: Int = 1
 ) {
     /**
      * Ticks left until the next spawn attempt. Only used in [SpawnerMode.ECOMOBS].

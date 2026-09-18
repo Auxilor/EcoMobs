@@ -195,6 +195,13 @@ fun resolveEntityType(mobId: String): EntityType? {
 }
 
 /**
+ * The spawner as it is tracked in [PlacedSpawners], taken from the block state so the
+ * index carries the same data the block does.
+ */
+fun CreatureSpawner.toPlacedSpawner(): PlacedSpawner =
+    PlacedSpawner(location, spawner.particleAnim, spawner.mob, spawner.stackSize)
+
+/**
  * The spawner as an item, carrying its whole stack unless [stackSize] says otherwise.
  */
 fun CreatureSpawner.toSpawnerItem(stackSize: Int = spawner.stackSize): ItemStack {

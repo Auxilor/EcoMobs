@@ -8,7 +8,6 @@ import com.willfp.ecomobs.event.EcoMobSpawnerPickBlockEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerPlaceEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerUnstackEvent
 import com.willfp.ecomobs.plugin
-import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerHolograms
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
@@ -18,6 +17,7 @@ import com.willfp.ecomobs.spawner.isTrackedByEcoMobs
 import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.spawnFromSpawner
 import com.willfp.ecomobs.spawner.spawner
+import com.willfp.ecomobs.spawner.toPlacedSpawner
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
 import org.bukkit.Bukkit
@@ -54,7 +54,7 @@ object SpawnerHandler : Listener {
             plugin.scheduler.at(location).run {
                 val state = location.block.state as? CreatureSpawner ?: return@run
                 if (state.isTrackedByEcoMobs) {
-                    PlacedSpawners.set(location, PlacedSpawner(location, null))
+                    PlacedSpawners.sync(state)
                     SpawnerHolograms.refresh(location)
                 }
             }
@@ -62,7 +62,6 @@ object SpawnerHandler : Listener {
         }
 
         val mobId = placed.spawner.mob ?: return
-        val animId = placed.spawner.particleAnim
 
         val placeEvent = EcoMobSpawnerPlaceEvent(event.player, location, mobId, placed.spawner.stackSize)
         Bukkit.getPluginManager().callEvent(placeEvent)
@@ -80,7 +79,7 @@ object SpawnerHandler : Listener {
             resolveEntityType(mobId)?.let { state.spawnedType = it }
             state.update()
 
-            PlacedSpawners.set(location, PlacedSpawner(location, animId))
+            PlacedSpawners.sync(state)
             SpawnerHolograms.refresh(location)
         }
     }
@@ -96,7 +95,7 @@ object SpawnerHandler : Listener {
 
             val added = PlacedSpawners.setIfAbsent(
                 spawnerLocation,
-                PlacedSpawner(spawnerLocation, state.spawner.particleAnim)
+                state.toPlacedSpawner()
             )
 
             if (added) {
@@ -179,6 +178,8 @@ object SpawnerHandler : Listener {
 
             state.spawner.stackSize = stackSize - taken
             state.update()
+
+            PlacedSpawners.sync(state)
 
             if (unstackEvent.dropsItem) {
                 block.world.dropItemNaturally(block.location, state.toSpawnerItem(taken))
@@ -286,7 +287,7 @@ object SpawnerHandler : Listener {
 
             PlacedSpawners.set(
                 blockState.location,
-                PlacedSpawner(blockState.location, blockState.spawner.particleAnim)
+                blockState.toPlacedSpawner()
             )
 
             loaded += blockState.location

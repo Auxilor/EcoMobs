@@ -4,6 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.block.CreatureSpawner
 import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -71,6 +72,13 @@ object PlacedSpawners {
         val locations = byChunk[ChunkPos(world.uid, chunkX, chunkZ)] ?: return emptyList()
 
         return Collections.unmodifiableList(locations.mapNotNull { loaded[it] })
+    }
+
+    /**
+     * Re-reads [state] into the index, for after its data has been written.
+     */
+    fun sync(state: CreatureSpawner) {
+        set(state.location, state.toPlacedSpawner())
     }
 
     fun contains(location: Location): Boolean = loaded.containsKey(location)
