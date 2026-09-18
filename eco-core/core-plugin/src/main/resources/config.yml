@@ -25,6 +25,20 @@ custom-spawning:
   # The max amount of attempts to generate a spawn point per player
   max-attempts: 64
 
+spawners:
+  # How spawners tick.
+  # vanilla - the server ticks spawners, respecting light levels and block space
+  # ecomobs - EcoMobs ticks spawners itself, ignoring light levels and block space
+  mode: vanilla
+
+  # How often (in ticks) the EcoMobs spawner loop runs. Only used when mode is ecomobs.
+  tick-rate: 5
+
+  # Whether the EcoMobs loop takes over every spawner, or only EcoMobs spawners.
+  # false - vanilla spawners (dungeon spawners, etc) are left completely alone
+  # true  - every spawner in the world is ticked by EcoMobs
+  all-spawners: false
+
 spawner-display:
   title: "&f%mob% Spawner"
   lore:

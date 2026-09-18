@@ -30,6 +30,8 @@ import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
+import com.willfp.ecomobs.spawner.SpawnerSettings
+import com.willfp.ecomobs.spawner.SpawnerSpawnLoop
 import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
@@ -70,11 +72,14 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleReload() {
         SpawnerAnimations.reload()
+        SpawnerSettings.reload()
         SpawnerDisplay.start()
+        SpawnerSpawnLoop.start()
     }
 
     override fun handleDisable() {
         SpawnerDisplay.stop()
+        SpawnerSpawnLoop.stop()
         PlacedSpawners.clear()
     }
 

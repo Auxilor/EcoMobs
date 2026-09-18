@@ -1,16 +1,15 @@
 package com.willfp.ecomobs.handler
 
 import com.willfp.eco.core.display.Display
-import com.willfp.eco.core.entities.Entities
 import com.willfp.eco.core.fast.fast
-import com.willfp.ecomobs.mob.EcoMobs
-import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.applyVanillaSettings
-import com.willfp.ecomobs.spawner.entityFromSpawnerKey
+import com.willfp.ecomobs.spawner.isHandledByEcoMobs
+import com.willfp.ecomobs.spawner.isTrackedByEcoMobs
 import com.willfp.ecomobs.spawner.resolveEntityType
+import com.willfp.ecomobs.spawner.spawnFromSpawner
 import com.willfp.ecomobs.spawner.spawner
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
@@ -28,7 +27,6 @@ import org.bukkit.event.entity.SpawnerSpawnEvent
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.event.world.WorldUnloadEvent
-import org.bukkit.persistence.PersistentDataType
 
 object SpawnerHandler : Listener {
 
@@ -36,11 +34,21 @@ object SpawnerHandler : Listener {
     fun handlePlace(event: BlockPlaceEvent) {
         // A snapshot, as the placed item is gone by the time the block state exists.
         val placed = event.itemInHand.clone().fast()
-        if (!placed.spawner.isCustomSpawner) return
+        val location = event.block.location
+
+        if (!placed.spawner.isCustomSpawner) {
+            // A vanilla spawner still needs tracking when EcoMobs ticks every spawner.
+            plugin.scheduler.run {
+                val state = location.block.state as? CreatureSpawner ?: return@run
+                if (state.isTrackedByEcoMobs) {
+                    PlacedSpawners.set(location, PlacedSpawner(location, null))
+                }
+            }
+            return
+        }
 
         val mobId = placed.spawner.mob ?: return
         val animId = placed.spawner.particleAnim
-        val location = event.block.location
 
         plugin.scheduler.run {
             val state = location.block.state as? CreatureSpawner ?: return@run
@@ -57,28 +65,27 @@ object SpawnerHandler : Listener {
     @EventHandler(ignoreCancelled = true)
     fun handleSpawn(event: SpawnerSpawnEvent) {
         val state = event.spawner ?: return
-        val mobId = state.spawner.mob ?: return
 
         // Spawners that never fired a place event (/setblock, world edits, pastes) are
         // otherwise only picked up on chunk load, so register them the first time they tick.
-        val spawnerLocation = state.location
-        PlacedSpawners.setIfAbsent(
-            spawnerLocation,
-            PlacedSpawner(spawnerLocation, state.spawner.particleAnim)
-        )
+        if (state.isTrackedByEcoMobs) {
+            val spawnerLocation = state.location
+            PlacedSpawners.setIfAbsent(
+                spawnerLocation,
+                PlacedSpawner(spawnerLocation, state.spawner.particleAnim)
+            )
+        }
 
-        event.isCancelled = true
-        val location = event.location
-
-        val ecoMob = EcoMobs[mobId]
-        if (ecoMob != null) {
-            val livingMob = ecoMob.spawn(location, SpawnReason.SPAWNER)
-            livingMob?.entity?.persistentDataContainer?.set(entityFromSpawnerKey, PersistentDataType.BYTE, 1)
+        // EcoMobs runs its own loop for this spawner, so vanilla's attempt is dropped.
+        if (state.isHandledByEcoMobs) {
+            event.isCancelled = true
             return
         }
 
-        val entity = Entities.lookup(mobId).spawn(location)
-        entity?.persistentDataContainer?.set(entityFromSpawnerKey, PersistentDataType.BYTE, 1)
+        val mobId = state.spawner.mob ?: return
+
+        event.isCancelled = true
+        spawnFromSpawner(event.location, mobId)
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -87,7 +94,10 @@ object SpawnerHandler : Listener {
         if (block.type != Material.SPAWNER) return
 
         val state = block.state as? CreatureSpawner ?: return
-        if (!state.spawner.isCustomSpawner) return
+        if (!state.spawner.isCustomSpawner) {
+            PlacedSpawners.remove(block.location)
+            return
+        }
 
         val player = event.player
         val pickup = state.spawner.pickup
@@ -148,7 +158,7 @@ object SpawnerHandler : Listener {
     fun handleChunkLoad(event: ChunkLoadEvent) {
         for (blockState in event.chunk.tileEntities) {
             if (blockState !is CreatureSpawner) continue
-            if (!blockState.spawner.isCustomSpawner) continue
+            if (!blockState.isTrackedByEcoMobs) continue
             PlacedSpawners.set(
                 blockState.location,
                 PlacedSpawner(blockState.location, blockState.spawner.particleAnim)
@@ -160,7 +170,7 @@ object SpawnerHandler : Listener {
     fun handleChunkUnload(event: ChunkUnloadEvent) {
         for (blockState in event.chunk.tileEntities) {
             if (blockState !is CreatureSpawner) continue
-            if (!blockState.spawner.isCustomSpawner) continue
+            // Unconditional, so a mid-session config change can't leak tracked spawners.
             PlacedSpawners.remove(blockState.location)
         }
     }
@@ -175,8 +185,7 @@ object SpawnerHandler : Listener {
         event.blockList().removeIf { block ->
             if (block.type != Material.SPAWNER) return@removeIf false
             val state = block.state as? CreatureSpawner ?: return@removeIf false
-            if (!state.spawner.isCustomSpawner) return@removeIf false
-            if (state.spawner.explosionProof) return@removeIf true
+            if (state.spawner.isCustomSpawner && state.spawner.explosionProof) return@removeIf true
             PlacedSpawners.remove(block.location)
             false
         }
@@ -187,8 +196,7 @@ object SpawnerHandler : Listener {
         event.blockList().removeIf { block ->
             if (block.type != Material.SPAWNER) return@removeIf false
             val state = block.state as? CreatureSpawner ?: return@removeIf false
-            if (!state.spawner.isCustomSpawner) return@removeIf false
-            if (state.spawner.explosionProof) return@removeIf true
+            if (state.spawner.isCustomSpawner && state.spawner.explosionProof) return@removeIf true
             PlacedSpawners.remove(block.location)
             false
         }
