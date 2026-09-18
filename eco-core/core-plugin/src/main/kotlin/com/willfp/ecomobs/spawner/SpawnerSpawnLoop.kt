@@ -18,7 +18,7 @@ object SpawnerSpawnLoop {
 
         val rate = SpawnerSettings.tickRate
 
-        task = plugin.scheduler.runTimer(rate, rate) {
+        task = plugin.scheduler.global().runTimer(rate, rate) {
             tickSpawners(rate.toInt())
         }
     }
@@ -30,11 +30,17 @@ object SpawnerSpawnLoop {
 
     private fun tickSpawners(elapsed: Int) {
         for (spawner in PlacedSpawners.values()) {
-            if (!spawner.location.isWorldLoaded || !spawner.location.isChunkLoaded) {
+            val location = spawner.location
+
+            if (!location.isWorldLoaded || !location.isChunkLoaded) {
                 continue
             }
 
-            spawner.tickSpawning(elapsed)
+            // Reading the block state and spawning mobs both belong to the spawner's
+            // own region, so the cycle is submitted there rather than run globally.
+            plugin.scheduler.at(location).run {
+                spawner.tickSpawning(elapsed)
+            }
         }
     }
 }

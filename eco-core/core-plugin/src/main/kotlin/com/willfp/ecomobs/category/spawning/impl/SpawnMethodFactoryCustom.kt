@@ -16,6 +16,7 @@ import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.enumValueOfOrNull
 import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
     override fun create(
@@ -47,7 +48,7 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
         private var task: EcoTask? = null
 
         override fun onStart() {
-            task = plugin.scheduler.runTimer(spawnRate, spawnRate) {
+            task = plugin.scheduler.global().runTimer(spawnRate, spawnRate) {
                 tick()
             }
         }
@@ -58,19 +59,27 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
 
         private fun tick() {
             for (player in Bukkit.getOnlinePlayers()) {
-                for (point in player.spawnPoints.filter { it.type in spawnTypes }) {
-                    val mob = category.mobs.randomOrNull() ?: continue
-
-                    if (!conditions.areMet(point.location.toDispatcher(), EmptyProvidedHolder)) {
-                        continue
-                    }
-
-                    if (randDouble(0.0, 100.0) > chance) {
-                        continue
-                    }
-
-                    point.spawn(mob, SpawnReason.NATURAL)
+                // The spawn points belong to the player's region, so the work is
+                // submitted to their context rather than run from the global one.
+                plugin.scheduler.on(player).run {
+                    tickPlayer(player)
                 }
+            }
+        }
+
+        private fun tickPlayer(player: Player) {
+            for (point in player.spawnPoints.filter { it.type in spawnTypes }) {
+                val mob = category.mobs.randomOrNull() ?: continue
+
+                if (!conditions.areMet(point.location.toDispatcher(), EmptyProvidedHolder)) {
+                    continue
+                }
+
+                if (randDouble(0.0, 100.0) > chance) {
+                    continue
+                }
+
+                point.spawn(mob, SpawnReason.NATURAL)
             }
         }
     }
