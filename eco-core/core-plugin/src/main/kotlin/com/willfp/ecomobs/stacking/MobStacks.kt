@@ -2,6 +2,7 @@ package com.willfp.ecomobs.stacking
 
 import com.willfp.ecomobs.event.EcoMobStackMergeEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.ecomobs.mob.impl.ecoMobId
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Ageable
@@ -53,27 +54,28 @@ object MobStacks {
     }
 
     private fun isBlacklisted(mob: Mob): Boolean {
-        val blacklist = StackSettings.blacklist
-
-        if (blacklist.isEmpty()) {
+        if (StackSettings.blacklist.isEmpty()) {
             return false
         }
 
-        if (mob.type.name.lowercase() in blacklist) {
+        if (mob.type in StackSettings.blacklistTypes) {
             return true
         }
 
-        val ecoMobId = mob.ecoMob?.id?.lowercase() ?: return false
+        val ecoMobId = mob.ecoMobId?.lowercase() ?: return false
 
-        return ecoMobId in blacklist
+        return ecoMobId in StackSettings.blacklist
     }
 
     /**
-     * What decides whether two mobs can merge. Mobs of the same kind stack together,
-     * and babies are kept out of adult stacks unless the config says otherwise.
+     * A mob's kind as one string: what stacks with what. Mobs of the same kind stack
+     * together, and babies are kept out of adult stacks unless the config says otherwise.
+     *
+     * [tryMerge] compares the parts of this directly rather than building the string per
+     * mob it looks at, so this is for callers that want the value itself.
      */
     fun stackKey(mob: Mob): String {
-        val id = mob.ecoMob?.id ?: mob.type.name.lowercase()
+        val id = mob.ecoMobId ?: mob.type.name.lowercase()
 
         if (!StackSettings.matchAge) {
             return id
@@ -85,8 +87,11 @@ object MobStacks {
     }
 
     /**
-     * Merges [mob] into the nearest stack that has room for it, returning whether it
-     * was absorbed. The absorbed mob is removed; the stack it joined grows by its size.
+     * Merges [mob] into a stack near it that has room, returning whether it was
+     * absorbed. The absorbed mob is removed; the stack it joined grows by its size.
+     *
+     * Costs one of the tick's merges from [MergeBudget], so a flood of mobs is stacked
+     * over several ticks rather than all at once.
      */
     fun tryMerge(mob: Mob): Boolean {
         if (!canStack(mob)) {
@@ -94,17 +99,36 @@ object MobStacks {
         }
 
         val size = mob.stack.size
-        val key = stackKey(mob)
-        val radius = StackSettings.radius
+        val maxSize = StackSettings.maxSize
 
+        if (size >= maxSize) {
+            return false
+        }
+
+        // Taken before the search, as the search is the expensive part and the whole
+        // point of the budget is to not do it a hundred thousand times in one tick.
+        if (!MergeBudget.take()) {
+            return false
+        }
+
+        val radius = StackSettings.radius
+        val type = mob.type
+        val ecoMobId = mob.ecoMobId
+        val isAdult = isAdult(mob)
+
+        // The first stack that fits rather than the nearest one, as picking the nearest
+        // means running every check against every mob standing nearby - which is how a
+        // wall of spawners used to hold the server thread for a minute at a time.
         val target = mob.getNearbyEntities(radius, radius, radius)
-            .asSequence()
-            .filterIsInstance<Mob>()
-            .filter { it.uniqueId != mob.uniqueId }
-            .filter { canStack(it) }
-            .filter { stackKey(it) == key }
-            .filter { it.stack.size + size <= StackSettings.maxSize }
-            .minByOrNull { it.location.distanceSquared(mob.location) }
+            .firstOrNull {
+                it is Mob &&
+                        it.type == type &&
+                        it.uniqueId != mob.uniqueId &&
+                        it.stack.size + size <= maxSize &&
+                        (!StackSettings.matchAge || isAdult(it) == isAdult) &&
+                        it.ecoMobId == ecoMobId &&
+                        canStack(it)
+            } as? Mob
             ?: return false
 
         val mergeEvent = EcoMobStackMergeEvent(mob, target, target.stack.size + size)
@@ -140,12 +164,12 @@ object MobStacks {
         val maxSize = StackSettings.maxSize
 
         val target = world.getNearbyEntities(location, radius, radius, radius)
-            .asSequence()
-            .filterIsInstance<Mob>()
-            .filter { it.stack.size < maxSize }
-            .filter { isKind(it, mobId) }
-            .filter { canStack(it) }
-            .minByOrNull { it.location.distanceSquared(location) }
+            .firstOrNull {
+                it is Mob &&
+                        it.stack.size < maxSize &&
+                        isKind(it, mobId) &&
+                        canStack(it)
+            } as? Mob
             ?: return 0
 
         val taken = minOf(amount, maxSize - target.stack.size)
@@ -161,11 +185,11 @@ object MobStacks {
      * a spawner makes are adults.
      */
     private fun isKind(mob: Mob, mobId: String): Boolean {
-        if (StackSettings.matchAge && (mob as? Ageable)?.isAdult == false) {
+        if (StackSettings.matchAge && !isAdult(mob)) {
             return false
         }
 
-        val ecoMobId = mob.ecoMob?.id
+        val ecoMobId = mob.ecoMobId
 
         if (ecoMobId != null) {
             return ecoMobId.equals(mobId, ignoreCase = true)
@@ -173,6 +197,12 @@ object MobStacks {
 
         return mob.type.name.equals(mobId, ignoreCase = true)
     }
+
+    /**
+     * Whether [mob] counts as grown. Anything that was never a baby is one.
+     */
+    private fun isAdult(mob: Mob): Boolean =
+        (mob as? Ageable)?.isAdult ?: true
 
     /**
      * Removes an absorbed mob, going through EcoMobs' own despawn so its tracking and

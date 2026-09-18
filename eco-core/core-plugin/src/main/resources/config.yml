@@ -37,6 +37,16 @@ stacking:
   # How often (in ticks) to sweep for mobs that have drifted together since spawning.
   sweep-rate: 100
 
+  # The most merges the server will do in a single tick.
+  #
+  # Merging a mob means looking around it for a stack to join, so the work grows with
+  # how many mobs are standing there. This is the ceiling on it: anything left over is
+  # merged on later ticks instead of holding the server up. The stacks end up the same,
+  # just a moment later.
+  #
+  # Set to 0 for no limit.
+  max-merges-per-tick: 20
+
   # Whether killing a stacked mob kills the whole stack, dropping loot and XP for every
   # mob in it. When false, each kill takes a single mob off the stack.
   kill-whole-stack: false

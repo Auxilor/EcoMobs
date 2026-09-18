@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.stacking
 
 import com.willfp.ecomobs.plugin
+import org.bukkit.entity.EntityType
 
 /**
  * The stacking settings, cached so the hot loop doesn't re-read the config every tick.
@@ -33,6 +34,19 @@ object StackSettings {
     var blacklist = emptySet<String>()
         private set
 
+    /**
+     * The blacklist's vanilla entity types, resolved once here so the merge loop doesn't
+     * lowercase a type name per mob it looks at.
+     */
+    var blacklistTypes = emptySet<EntityType>()
+        private set
+
+    /**
+     * The most merges done in a single tick. 0 is no limit.
+     */
+    var maxMergesPerTick = 20
+        private set
+
     var excludeTamed = true
         private set
 
@@ -60,6 +74,8 @@ object StackSettings {
         matchAge = config.getBool("stacking.match-age")
         nameplate = config.getString("stacking.nameplate")
         blacklist = config.getStrings("stacking.blacklist").map { it.lowercase() }.toSet()
+        blacklistTypes = EntityType.entries.filter { it.name.lowercase() in blacklist }.toSet()
+        maxMergesPerTick = config.getInt("stacking.max-merges-per-tick").coerceAtLeast(0)
 
         excludeTamed = config.getBool("stacking.exclude.tamed")
         excludeLeashed = config.getBool("stacking.exclude.leashed")

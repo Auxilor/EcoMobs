@@ -26,6 +26,7 @@ stacking: # Merges nearby mobs of the same kind into one entity; see Mob Stackin
   radius: 8 # How far to look for a stack to merge into
   max-size: 64 # The most mobs one stack can hold
   sweep-rate: 100 # Ticks between sweeps for mobs that drifted together after spawning
+  max-merges-per-tick: 20 # The most merges done in one tick; leftovers merge on later ticks; 0 is no limit
   kill-whole-stack: false # true kills and pays out the whole stack at once
   hide-death-animation: false # true takes the corpse away instead of playing the death animation
   match-age: true # Whether babies and adults are kept in separate stacks
@@ -127,7 +128,7 @@ spawner-animations: # Named animations players can pick via the spawner particle
 
 ## Where to go next
 
-- **Spawners:** [Custom Spawners](custom-spawners) for attributes and spawn methods.
+- **Spawners:** [Custom Spawners](custom-spawners) for attributes and how spawners tick.
 - **Stacking:** [Mob Stacking](mob-stacking) and [Spawner Stacking](spawner-stacking).
 - **Commands:** [Commands and Permissions](commands-and-permissions) for giving and modifying spawner items.
 - **Make a mob:** [How to Make a Custom Mob](how-to-make-a-custom-mob).

@@ -18,6 +18,7 @@ stacking:
   radius: 8 # How far to look for a stack to merge into
   max-size: 64 # The most mobs one stack can hold
   sweep-rate: 100 # How often (in ticks) to sweep for mobs that drifted together
+  max-merges-per-tick: 20 # The most merges done in one tick; 0 is no limit
 
   # Whether killing a stacked mob kills the whole stack, dropping loot and XP for every
   # mob in it. When false, each kill takes a single mob off the stack.
@@ -73,6 +74,12 @@ Stack size is stored on the entity, so a stack survives chunk unloads, restarts,
 With stacking on, spawners don't spawn a mob per mob. A cycle is added to the nearest stack within `radius`, or spawned as a single mob already standing for the whole cycle, capped at `max-size`. See [Custom Spawners](./custom-spawners.md#spawners-with-mob-stacking-on).
 
 `max-nearby` on a spawner counts a stack as every mob it holds, so the vanilla default of `6` stops a stacking spawner almost at once. Raise it on any spawner meant to feed a farm.
+
+## Merge cost
+
+Merging a mob means looking around it for a stack to join, so the work grows with how many mobs are standing there. `max-merges-per-tick` (default `20`) is the ceiling on that per tick — anything left over is merged on later ticks instead of holding the server up, and the stacks end up identical, just a moment later.
+
+Raise it if mobs visibly take too long to stack on a busy server; `0` removes the limit and restores the old behaviour, which on a large farm could stall the server thread badly enough to be killed by the watchdog.
 
 ## Nameplates
 

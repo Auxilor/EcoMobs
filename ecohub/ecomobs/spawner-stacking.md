@@ -57,7 +57,7 @@ Either way the `pickup` attribute still decides whether anything drops at all, a
 
 A stacked spawner spawns as many mobs as it holds, on the one cycle. A stack of 10 with `count: 4` spawns 40 mobs when it fires.
 
-It fires on the same schedule a single spawner would — stacking multiplies the mobs per cycle, not the number of cycles. This holds in both [spawn methods](custom-spawners#spawn-methods).
+It fires on the same schedule a single spawner would — stacking multiplies the mobs per cycle, not the number of cycles. See [how spawners tick](custom-spawners#how-spawners-tick).
 
 :::warning
 `max-nearby` is unchanged by stacking, so it is what actually caps a grinder. A stack of 64 that spawns 256 mobs at once will stop firing almost immediately against the default `max-nearby: 6`. Raise it on spawners meant to be stacked, or pair them with [Mob Stacking](mob-stacking) so the mobs merge as fast as they appear.
@@ -110,6 +110,6 @@ spawner-display:
 
 ## Where to go next
 
-- **Spawner attributes and spawn methods:** [Custom Spawners](custom-spawners).
+- **Spawner attributes and how spawners tick:** [Custom Spawners](custom-spawners).
 - **Stack the mobs they spawn:** [Mob Stacking](mob-stacking).
 - **Commands and permissions:** [Commands and Permissions](commands-and-permissions).

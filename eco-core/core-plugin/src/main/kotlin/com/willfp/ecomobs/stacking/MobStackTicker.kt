@@ -39,6 +39,9 @@ object MobStackTicker {
     }
 
     private fun tick() {
+        // Refilled from the global region, spent from whichever region does the merging.
+        MergeBudget.refill()
+
         val nameplates = tick % NAMEPLATE_RATE == 0
         val sweep = tick % StackSettings.sweepRate == 0
 
@@ -75,6 +78,12 @@ object MobStackTicker {
 
     private fun sweepAround(player: Player) {
         for (mob in nearbyMobs(player, SWEEP_RADIUS)) {
+            // Stopping here rather than letting every mob ask and be turned down, as
+            // the sweep runs over everything around the player.
+            if (!MergeBudget.hasRemaining()) {
+                return
+            }
+
             MobStacks.tryMerge(mob)
         }
     }

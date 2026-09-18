@@ -522,9 +522,18 @@ internal class ConfigDrivenEcoMob(
     }
 }
 
-var Mob.ecoMob: EcoMob?
+/**
+ * The ID of the EcoMob this mob is, without looking it up.
+ *
+ * Everything that only has to tell two mobs apart - stacking above all, which asks per
+ * mob per candidate - uses this rather than [ecoMob], as resolving the ID to its EcoMob
+ * is the expensive half and tells those callers nothing they need.
+ */
+val Mob.ecoMobId: String?
     get() = persistentDataContainer.get(mobKey, PersistentDataType.STRING)
-        ?.let { EcoMobs[it] }
+
+var Mob.ecoMob: EcoMob?
+    get() = ecoMobId?.let { EcoMobs[it] }
     internal set(value) {
         if (value == null) {
             persistentDataContainer.remove(mobKey)
