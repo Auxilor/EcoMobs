@@ -42,7 +42,7 @@ object SpawnerHandler : Listener {
 
         if (!placed.spawner.isCustomSpawner) {
             // A vanilla spawner still needs tracking when EcoMobs ticks every spawner.
-            plugin.scheduler.run {
+            plugin.scheduler.at(location).run {
                 val state = location.block.state as? CreatureSpawner ?: return@run
                 if (state.isTrackedByEcoMobs) {
                     PlacedSpawners.set(location, PlacedSpawner(location, null))
@@ -55,7 +55,7 @@ object SpawnerHandler : Listener {
         val mobId = placed.spawner.mob ?: return
         val animId = placed.spawner.particleAnim
 
-        plugin.scheduler.run {
+        plugin.scheduler.at(location).run {
             val state = location.block.state as? CreatureSpawner ?: return@run
 
             placed.spawner.copyTo(state.spawner)
@@ -189,7 +189,7 @@ object SpawnerHandler : Listener {
         if (!state.spawner.isCustomSpawner) return
         val item = state.toSpawnerItem()
         Display.display(item, player)
-        plugin.scheduler.run {
+        plugin.scheduler.on(player).run {
             player.inventory.setItem(player.inventory.heldItemSlot, item)
         }
     }
