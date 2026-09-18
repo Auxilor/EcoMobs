@@ -1,6 +1,8 @@
 package com.willfp.ecomobs.spawner
 
 import com.willfp.eco.core.scheduling.EcoTask
+import com.willfp.ecomobs.folia.atRegion
+import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.plugin
 import org.bukkit.Bukkit
 
@@ -22,12 +24,20 @@ object SpawnerDisplay {
     }
 
     private fun tickSpawners() {
-        for (spawner in PlacedSpawners.values()) {
-            if (!spawner.location.isWorldLoaded || !spawner.location.isChunkLoaded) {
-                continue
-            }
+        val currentTick = tick
 
-            spawner.tick(tick)
+        // Particles touch the world, so each chunk's spawners are ticked on the region
+        // that owns them rather than from the global one.
+        PlacedSpawners.forEachChunk { world, chunkX, chunkZ, spawners ->
+            atRegion(world, chunkX, chunkZ) {
+                for (spawner in spawners) {
+                    if (!spawner.location.isChunkLoaded) {
+                        continue
+                    }
+
+                    spawner.tick(currentTick)
+                }
+            }
         }
 
         if (tick % LOOK_AT_RATE == 0) {
@@ -50,9 +60,9 @@ object SpawnerDisplay {
         }
 
         for (player in Bukkit.getOnlinePlayers()) {
-            // The ray trace touches the world around the player, so it's submitted to
-            // their own context rather than run from the global one.
-            plugin.scheduler.on(player).run {
+            // The ray trace touches the world around the player, so it's run on their
+            // own region rather than from the global one.
+            onEntity(player) {
                 SpawnerHolograms.updateLookAt(player)
             }
         }

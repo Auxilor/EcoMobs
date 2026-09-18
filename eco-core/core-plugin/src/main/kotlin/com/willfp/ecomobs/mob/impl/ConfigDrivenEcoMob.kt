@@ -25,6 +25,7 @@ import com.willfp.ecomobs.config.toConfigKey
 import com.willfp.ecomobs.config.validate
 import com.willfp.ecomobs.config.validateNotNull
 import com.willfp.ecomobs.display.BaseItem
+import com.willfp.ecomobs.event.EcoMobDropsEvent
 import com.willfp.ecomobs.event.EcoMobPreSpawnEvent
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
@@ -45,6 +46,7 @@ import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.options.ecoMobEgg
 import com.willfp.ecomobs.mob.stage.toDamageStage
 import com.willfp.ecomobs.plugin
+import com.willfp.ecomobs.spawner.SpawnerItems
 import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDamageStages
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
@@ -68,6 +70,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.persistence.PersistentDataType
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 val mobKey = namespacedKeyOf("ecomobs", "mob")
 
@@ -76,7 +79,8 @@ internal class ConfigDrivenEcoMob(
     private val config: Config,
     private val context: ViolationContext
 ) : EcoMob {
-    private val trackedMobs = mutableMapOf<UUID, LivingMob>()
+    // Concurrent: mobs are spawned, restored and removed from every region thread.
+    private val trackedMobs = ConcurrentHashMap<UUID, LivingMob>()
 
     private val onSpawnActions = mutableListOf<(LivingMobImpl) -> Unit>()
 
@@ -363,6 +367,23 @@ internal class ConfigDrivenEcoMob(
         return damageModifiers[cause] ?: 1.0
     }
 
+    override fun onRegister() {
+        // Every mob can be put in a spawner, so the spawner item exists for all of them.
+        SpawnerItems.register(this.id)
+
+        // Bound per mob type, not per spawned mob: a mode that feeds on something other
+        // than damage finds the mobs it applies to when the progress lands.
+        for (stage in damageStages) {
+            stage.mode.bind(this, stage)
+        }
+    }
+
+    override fun onRemove() {
+        for (stage in damageStages) {
+            stage.mode.unbind()
+        }
+    }
+
     override fun canPlayerSpawn(player: Player, spawnReason: SpawnReason, location: Location): Boolean {
         if (spawnReason == SpawnReason.NATURAL) {
             throw IllegalArgumentException("Players cannot spawn mobs naturally")
@@ -372,7 +393,14 @@ internal class ConfigDrivenEcoMob(
     }
 
     override fun spawnDrops(location: Location, player: Player?) {
-        drops.drop(location, player)
+        val dropsEvent = EcoMobDropsEvent(this, location, player, drops.roll(player), drops.experience)
+        Bukkit.getPluginManager().callEvent(dropsEvent)
+
+        if (dropsEvent.isCancelled) {
+            return
+        }
+
+        drops.give(location, player, dropsEvent.drops, dropsEvent.experience)
     }
 
     override fun handleEvent(event: MobEvent, trigger: DispatchedTrigger) {
@@ -387,6 +415,9 @@ internal class ConfigDrivenEcoMob(
     override fun getLivingMob(uuid: UUID): LivingMob? {
         return trackedMobs[uuid]
     }
+
+    override val livingMobs: Collection<LivingMob>
+        get() = trackedMobs.values.toList()
 
     override fun spawn(location: Location, reason: SpawnReason): LivingMob? {
         // Call bukkit event
@@ -435,7 +466,15 @@ internal class ConfigDrivenEcoMob(
         val livingMob = createLivingMob(entity)
         livingMob.loadState()
 
-        trackedMobs[entity.uniqueId] = livingMob
+        // Two region threads can reach here for the same entity, e.g. a chunk load on
+        // one side of a region border and a nearby-mob lookup on the other. The loser
+        // drops its instance rather than leaving a second ticker on the same mob.
+        val raced = trackedMobs.putIfAbsent(entity.uniqueId, livingMob)
+
+        if (raced != null) {
+            return raced
+        }
+
         livingMob.startTicking()
         return livingMob
     }

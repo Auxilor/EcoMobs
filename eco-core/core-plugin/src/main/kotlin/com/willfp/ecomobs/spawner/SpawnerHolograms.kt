@@ -5,10 +5,10 @@ import com.willfp.eco.core.integrations.hologram.HologramManager
 import com.willfp.eco.core.integrations.hologram.HologramOptions
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.titlecase
+import com.willfp.ecomobs.folia.atRegion
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.Player
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -85,7 +85,11 @@ object SpawnerHolograms {
                 continue
             }
 
-            refresh(location)
+            // Called on reload, from the global region. Rebuilding a column reads the
+            // spawner block states in it, so it runs on the region owning them.
+            atRegion(location) {
+                refresh(location)
+            }
         }
     }
 
@@ -156,8 +160,8 @@ object SpawnerHolograms {
             return
         }
 
-        // The column is tracked even while its chunk is unloaded, and reading its block
-        // states to build the lines would drag the chunk back in.
+        // The hologram is a real entity, so it can only exist while the chunk it sits
+        // in is loaded. The lines themselves come from the index, not the block states.
         if (!top.isWorldLoaded || !top.isChunkLoaded) {
             return
         }
@@ -190,15 +194,12 @@ object SpawnerHolograms {
         var y = top.blockY
 
         while (isTracked(world, x, y, z)) {
-            val state = blockLocation(world, x, y, z).block.state as? CreatureSpawner
+            val spawner = PlacedSpawners[blockLocation(world, x, y, z)]
+            val mob = spawner?.mobId
 
-            if (state != null) {
-                val mob = state.spawner.mob
-
-                if (mob != null) {
-                    sizes[mob] = (sizes[mob] ?: 0) + state.spawner.stackSize
-                    members++
-                }
+            if (mob != null) {
+                sizes[mob] = (sizes[mob] ?: 0) + spawner.stackSize
+                members++
             }
 
             y--
@@ -217,6 +218,7 @@ object SpawnerHolograms {
             .map { (mob, size) ->
                 SpawnerStackSettings.hologramLine
                     .replace("%size%", size.toString())
+                    .replace("%max_stack_size%", SpawnerStackSettings.maxSize.toString())
                     .replace("%mob%", mob)
                     .replace("%mob_formatted%", mob.replace("_", " ").titlecase())
                     .formatEco()

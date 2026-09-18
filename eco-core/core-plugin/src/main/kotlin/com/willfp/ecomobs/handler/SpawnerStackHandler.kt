@@ -73,7 +73,7 @@ object SpawnerStackHandler : Listener {
 
         val amount = if (player.isSneaking) held.amount else 1
 
-        return SpawnerStacks.add(state, item, amount)
+        return SpawnerStacks.add(state, item, amount, player)
     }
 
     private fun consume(player: Player, slot: EquipmentSlot, amount: Int) {
@@ -87,7 +87,9 @@ object SpawnerStackHandler : Listener {
             return
         }
 
-        item.amount -= amount
+        // Capped, as a listener on EcoMobSpawnerStackEvent can raise the amount taken
+        // above what the player is actually holding.
+        item.amount -= amount.coerceAtMost(item.amount)
 
         player.inventory.setItem(slot, item.takeIf { it.amount > 0 })
     }

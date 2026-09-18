@@ -1,8 +1,10 @@
 package com.willfp.ecomobs.spawner
 
+import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.block.CreatureSpawner
 import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -23,7 +25,8 @@ object PlacedSpawners {
 
     /**
      * The tracked locations in each chunk, so a chunk can be rebuilt without walking
-     * every spawner on the server.
+     * every spawner on the server, and so the tick loops can dispatch one task per
+     * occupied chunk instead of one per spawner.
      */
     private val byChunk = ConcurrentHashMap<ChunkPos, MutableSet<Location>>()
 
@@ -71,6 +74,13 @@ object PlacedSpawners {
         return Collections.unmodifiableList(locations.mapNotNull { loaded[it] })
     }
 
+    /**
+     * Re-reads [state] into the index, for after its data has been written.
+     */
+    fun sync(state: CreatureSpawner) {
+        set(state.location, state.toPlacedSpawner())
+    }
+
     fun contains(location: Location): Boolean = loaded.containsKey(location)
 
     fun remove(location: Location) {
@@ -82,6 +92,9 @@ object PlacedSpawners {
 
         byChunk.computeIfPresent(pos) { _, locations ->
             locations.remove(location)
+
+            // Dropped wholesale once empty, so the index doesn't grow a key per chunk
+            // that ever held a spawner.
             locations.ifEmpty { null }
         }
     }
@@ -99,8 +112,21 @@ object PlacedSpawners {
     }
 
     fun removeWorld(world: World) {
-        loaded.keys.removeIf { it.isWorldLoaded && it.world == world }
-        byChunk.keys.removeIf { it.world == world.uid }
+        val uid = world.uid
+
+        for (pos in byChunk.keys) {
+            if (pos.world != uid) {
+                continue
+            }
+
+            // Removed from the index first, so the locations are still reachable even
+            // once the world reference behind them has gone.
+            val locations = byChunk.remove(pos) ?: continue
+
+            for (location in locations) {
+                loaded.remove(location)
+            }
+        }
     }
 
     fun clear() {
@@ -109,6 +135,24 @@ object PlacedSpawners {
     }
 
     fun values(): Collection<PlacedSpawner> = loaded.values
+
+    /**
+     * Runs [action] once per chunk holding tracked spawners, with the spawners in it.
+     *
+     * Chunks in worlds that have since unloaded are skipped. The collection passed in is
+     * a snapshot, so it must only be read.
+     */
+    fun forEachChunk(action: (World, Int, Int, Collection<PlacedSpawner>) -> Unit) {
+        for ((pos, locations) in byChunk) {
+            if (locations.isEmpty()) {
+                continue
+            }
+
+            val world = Bukkit.getWorld(pos.world) ?: continue
+
+            action(world, pos.x, pos.z, inChunk(world, pos.x, pos.z))
+        }
+    }
 
     private fun index(location: Location) {
         val pos = chunkPosOf(location) ?: return

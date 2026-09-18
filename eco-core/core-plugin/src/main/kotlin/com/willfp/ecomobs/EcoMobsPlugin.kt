@@ -5,6 +5,7 @@ import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.entities.ai.EntityGoals
 import com.willfp.eco.core.integrations.IntegrationLoader
+import com.willfp.eco.core.items.Items
 import com.willfp.eco.util.toSingletonList
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
@@ -23,6 +24,7 @@ import com.willfp.ecomobs.handler.SpawnerStackHandler
 import com.willfp.ecomobs.handler.StackHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
 import com.willfp.ecomobs.integrations.bettermodel.IntegrationBetterModel
+import com.willfp.ecomobs.integrations.coreprotect.IntegrationCoreProtect
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
 import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
@@ -33,11 +35,13 @@ import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
 import com.willfp.ecomobs.spawner.SpawnerHolograms
+import com.willfp.ecomobs.spawner.SpawnerItems
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.SpawnerSettings
 import com.willfp.ecomobs.spawner.SpawnerSpawnLoop
 import com.willfp.ecomobs.stacking.MobStackTicker
 import com.willfp.ecomobs.stacking.StackSettings
+import com.willfp.ecomobs.trigger.EcoMobsTriggers
 import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
@@ -67,6 +71,8 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleLoad() {
         EntityGoals.register(EntityGoalRandomTeleport.Deserializer)
+        Items.registerItemProvider(SpawnerItems)
+        EcoMobsTriggers.registerAll()
     }
 
     override fun loadConfigCategories(): List<ConfigCategory> {
@@ -125,6 +131,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
             IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine) },
             IntegrationLoader("BetterModel") { this.eventManager.registerListener(IntegrationBetterModel) },
             IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
+            IntegrationLoader("CoreProtect") { this.eventManager.registerListener(IntegrationCoreProtect) },
         )
     }
 

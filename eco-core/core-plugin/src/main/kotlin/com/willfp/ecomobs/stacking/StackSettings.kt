@@ -21,6 +21,9 @@ object StackSettings {
     var killWholeStack = false
         private set
 
+    var hideDeathAnimation = false
+        private set
+
     var matchAge = true
         private set
 
@@ -53,6 +56,7 @@ object StackSettings {
         maxSize = config.getInt("stacking.max-size").coerceAtLeast(2)
         sweepRate = config.getInt("stacking.sweep-rate").coerceAtLeast(1)
         killWholeStack = config.getBool("stacking.kill-whole-stack")
+        hideDeathAnimation = config.getBool("stacking.hide-death-animation")
         matchAge = config.getBool("stacking.match-age")
         nameplate = config.getString("stacking.nameplate")
         blacklist = config.getStrings("stacking.blacklist").map { it.lowercase() }.toSet()

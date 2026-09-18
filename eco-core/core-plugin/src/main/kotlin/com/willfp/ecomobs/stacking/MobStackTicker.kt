@@ -4,6 +4,7 @@ import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.setClientsideDisplayName
 import com.willfp.eco.util.toComponent
+import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
 import org.bukkit.Bukkit
@@ -48,9 +49,9 @@ object MobStackTicker {
         }
 
         for (player in Bukkit.getOnlinePlayers()) {
-            // The work touches entities, so it's submitted to the player's own context
-            // rather than run from the global one.
-            plugin.scheduler.on(player).run {
+            // The work touches entities, so it runs on the player's own region rather
+            // than on the global one.
+            onEntity(player) {
                 if (nameplates) {
                     renderNameplates(player)
                 }
