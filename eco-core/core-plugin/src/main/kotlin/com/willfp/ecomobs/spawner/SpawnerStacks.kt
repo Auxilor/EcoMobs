@@ -58,6 +58,8 @@ object SpawnerStacks {
         state.spawner.stackSize = current + taken
         state.update()
 
+        PlacedSpawners.sync(state)
+
         SpawnerHolograms.refresh(state.location)
 
         return taken

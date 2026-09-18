@@ -8,7 +8,6 @@ import com.willfp.ecomobs.event.EcoMobSpawnerPickBlockEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerPlaceEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerUnstackEvent
 import com.willfp.ecomobs.plugin
-import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerHolograms
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
@@ -18,6 +17,7 @@ import com.willfp.ecomobs.spawner.isTrackedByEcoMobs
 import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.spawnFromSpawner
 import com.willfp.ecomobs.spawner.spawner
+import com.willfp.ecomobs.spawner.toPlacedSpawner
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
 import org.bukkit.Bukkit
@@ -28,6 +28,7 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -53,7 +54,7 @@ object SpawnerHandler : Listener {
             plugin.scheduler.at(location).run {
                 val state = location.block.state as? CreatureSpawner ?: return@run
                 if (state.isTrackedByEcoMobs) {
-                    PlacedSpawners.set(location, PlacedSpawner(location, null))
+                    PlacedSpawners.sync(state)
                     SpawnerHolograms.refresh(location)
                 }
             }
@@ -61,9 +62,20 @@ object SpawnerHandler : Listener {
         }
 
         val mobId = placed.spawner.mob ?: return
-        val animId = placed.spawner.particleAnim
 
-        val placeEvent = EcoMobSpawnerPlaceEvent(event.player, location, mobId, placed.spawner.stackSize)
+        val perItem = placed.spawner.stackSize.coerceAtLeast(1)
+
+        // Sneaking places the whole held stack at once, mirroring sneak-break taking it all.
+        val extraItems = if (SpawnerStackSettings.enabled && event.player.isSneaking) {
+            val maxExtra = (SpawnerStackSettings.maxSize / perItem - 1).coerceAtLeast(0)
+            (event.itemInHand.amount - 1).coerceIn(0, maxExtra)
+        } else {
+            0
+        }
+
+        val stackSize = perItem * (extraItems + 1)
+
+        val placeEvent = EcoMobSpawnerPlaceEvent(event.player, location, mobId, stackSize)
         Bukkit.getPluginManager().callEvent(placeEvent)
 
         if (placeEvent.isCancelled) {
@@ -75,12 +87,47 @@ object SpawnerHandler : Listener {
             val state = location.block.state as? CreatureSpawner ?: return@run
 
             placed.spawner.copyTo(state.spawner)
+            state.spawner.stackSize = stackSize
             state.applyVanillaSettings()
             resolveEntityType(mobId)?.let { state.spawnedType = it }
             state.update()
 
-            PlacedSpawners.set(location, PlacedSpawner(location, animId))
+            PlacedSpawners.sync(state)
             SpawnerHolograms.refresh(location)
+        }
+
+        if (extraItems > 0) {
+            consumeExtra(event, extraItems)
+        }
+    }
+
+    /**
+     * Takes the [extra] spawner items beyond the one vanilla removes for the placement.
+     *
+     * Deferred a tick, as a later handler (stacking onto the spawner placed against) can
+     * still cancel the placement, in which case nothing extra is taken.
+     */
+    private fun consumeExtra(event: BlockPlaceEvent, extra: Int) {
+        val player = event.player
+
+        if (player.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        plugin.scheduler.on(player).run {
+            if (event.isCancelled) {
+                return@run
+            }
+
+            val item = player.inventory.getItem(event.hand) ?: return@run
+
+            if (item.type != Material.SPAWNER) {
+                return@run
+            }
+
+            item.amount -= extra.coerceAtMost(item.amount)
+
+            player.inventory.setItem(event.hand, item.takeIf { it.amount > 0 })
         }
     }
 
@@ -95,7 +142,7 @@ object SpawnerHandler : Listener {
 
             val added = PlacedSpawners.setIfAbsent(
                 spawnerLocation,
-                PlacedSpawner(spawnerLocation, state.spawner.particleAnim)
+                state.toPlacedSpawner()
             )
 
             if (added) {
@@ -109,7 +156,18 @@ object SpawnerHandler : Listener {
             return
         }
 
-        val mobId = state.spawner.mob ?: return
+        val noAI = state.spawner.noAI
+        val mobId = state.spawner.mob
+
+        // Vanilla spawns the entity itself, so a spawner with no custom mob still has
+        // its AI stripped here, before the mob is added to the world.
+        if (mobId == null) {
+            if (noAI) {
+                (event.entity as? LivingEntity)?.setAI(false)
+            }
+
+            return
+        }
 
         event.isCancelled = true
 
@@ -117,7 +175,7 @@ object SpawnerHandler : Listener {
         val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
 
         repeat(stackSize) {
-            spawnFromSpawner(state.location, event.location, mobId)
+            spawnFromSpawner(state.location, event.location, mobId, noAI)
         }
     }
 
@@ -167,6 +225,8 @@ object SpawnerHandler : Listener {
 
             state.spawner.stackSize = stackSize - taken
             state.update()
+
+            PlacedSpawners.sync(state)
 
             if (unstackEvent.dropsItem) {
                 block.world.dropItemNaturally(block.location, state.toSpawnerItem(taken))
@@ -274,7 +334,7 @@ object SpawnerHandler : Listener {
 
             PlacedSpawners.set(
                 blockState.location,
-                PlacedSpawner(blockState.location, blockState.spawner.particleAnim)
+                blockState.toPlacedSpawner()
             )
 
             loaded += blockState.location
