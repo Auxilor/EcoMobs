@@ -19,6 +19,7 @@ import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
 import com.willfp.ecomobs.handler.SpawnerHandler
+import com.willfp.ecomobs.handler.StackHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
 import com.willfp.ecomobs.integrations.bettermodel.IntegrationBetterModel
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
@@ -32,6 +33,8 @@ import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
 import com.willfp.ecomobs.spawner.SpawnerSettings
 import com.willfp.ecomobs.spawner.SpawnerSpawnLoop
+import com.willfp.ecomobs.stacking.MobStackTicker
+import com.willfp.ecomobs.stacking.StackSettings
 import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
@@ -75,11 +78,14 @@ class EcoMobsPlugin : LibreforgePlugin() {
         SpawnerSettings.reload()
         SpawnerDisplay.start()
         SpawnerSpawnLoop.start()
+        StackSettings.reload()
+        MobStackTicker.start()
     }
 
     override fun handleDisable() {
         SpawnerDisplay.stop()
         SpawnerSpawnLoop.stop()
+        MobStackTicker.stop()
         PlacedSpawners.clear()
     }
 
@@ -94,6 +100,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
             SpawnTotemHandler,
             topDamagerHandler,
             SpawnerHandler,
+            StackHandler,
             ChunkHandler
         )
     }

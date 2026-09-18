@@ -25,6 +25,56 @@ custom-spawning:
   # The max amount of attempts to generate a spawn point per player
   max-attempts: 64
 
+stacking:
+  enabled: true
+
+  # The radius, in blocks, to look for a stack to merge into.
+  radius: 8
+
+  # The most mobs a single stack can hold.
+  max-size: 64
+
+  # How often (in ticks) to sweep for mobs that have drifted together since spawning.
+  sweep-rate: 100
+
+  # Whether killing a stacked mob kills the whole stack, dropping loot and XP for every
+  # mob in it. When false, each kill takes a single mob off the stack.
+  kill-whole-stack: false
+
+  # Whether babies and adults are kept in separate stacks.
+  # Set to false to let babies stack into adult stacks, and vice versa.
+  match-age: true
+
+  # The nameplate shown above a stack.
+  # %size% is the stack size, %name% is the mob name.
+  nameplate: "&f%name% &7x%size%"
+
+  # What never stacks. EcoMob IDs and vanilla entity types are both valid.
+  # Only mobs stack in the first place, so items, projectiles, armour stands and
+  # players are already excluded.
+  blacklist:
+    - villager
+    - wandering_trader
+    - ender_dragon
+    - wither
+
+  # Mobs that never stack. Set any of these to false to let them stack anyway.
+  exclude:
+    # Pets and other tamed mobs
+    tamed: true
+
+    # Mobs on a lead
+    leashed: true
+
+    # Mobs riding something else
+    mounted: true
+
+    # Mobs carrying passengers
+    ridden: true
+
+    # Mobs already named, by a name tag or another plugin
+    named: true
+
 spawners:
   # How spawners tick.
   # vanilla - the server ticks spawners, respecting light levels and block space
