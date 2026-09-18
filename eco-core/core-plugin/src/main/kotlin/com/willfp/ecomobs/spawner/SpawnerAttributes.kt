@@ -15,7 +15,7 @@ object SpawnerAttributes {
     fun valueCount(attribute: String): Int = if (attribute == "delay") 2 else 1
 
     fun isValidMob(mobId: String): Boolean =
-        EcoMobs[mobId] != null || runCatching { EntityType.valueOf(mobId.uppercase()) }.isSuccess
+        EcoMobs[mobId] != null || entityTypeOrNull(mobId) != null
 
     fun apply(data: SpawnerData, attribute: String, args: List<String>): Boolean {
         when (attribute) {

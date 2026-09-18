@@ -134,17 +134,21 @@ fun CreatureSpawner.applyVanillaSettings() {
     maxNearbyEntities = data.maxNearby
 }
 
+fun entityTypeOrNull(name: String): EntityType? =
+    EntityType.entries.firstOrNull { it.name.equals(name, ignoreCase = true) }
+
 /**
  * Resolves the EntityType for a mob ID so the vanilla spawner preview spins
  * the correct entity. Handles both plain vanilla IDs and EcoMob IDs.
  */
 fun resolveEntityType(mobId: String): EntityType? {
     // Plain vanilla entity type (e.g. "zombie", "ZOMBIE")
-    runCatching { return EntityType.valueOf(mobId.uppercase()) }
-    // EcoMob — derive entity type from the base mob lookup string (e.g. "zombie attack-damage:90")
-    val baseMobString = (EcoMobs[mobId] as? ConfigDrivenEcoMob)
-        ?.baseMobId ?: return null
-    return runCatching { EntityType.valueOf(baseMobString.uppercase()) }.getOrNull()
+    entityTypeOrNull(mobId)?.let { return it }
+
+    // EcoMob — fall back to the entity its base mob is built from
+    val baseMobId = (EcoMobs[mobId] as? ConfigDrivenEcoMob)?.baseMobId ?: return null
+
+    return entityTypeOrNull(baseMobId)
 }
 
 fun CreatureSpawner.toSpawnerItem(): ItemStack {
