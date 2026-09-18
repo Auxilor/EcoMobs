@@ -138,6 +138,10 @@ object SpawnerHandler : Listener {
                 }
                 PlacedSpawners.remove(block.location)
             }
+
+            else -> {
+                PlacedSpawners.remove(block.location)
+            }
         }
     }
 
