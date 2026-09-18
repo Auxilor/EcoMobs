@@ -16,7 +16,6 @@ import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.enumValueOfOrNull
 import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
-import org.bukkit.event.Listener
 
 object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
     override fun create(
@@ -31,7 +30,7 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
         category: MobCategory,
         config: Config,
         context: ViolationContext
-    ) : SpawnMethod(category, config), Listener {
+    ) : SpawnMethod(category, config) {
         private val spawnRate = plugin.configYml.getInt("custom-spawning.spawn-rate").toLong()
 
         private val spawnTypes = config.getStrings("spawn-types")
