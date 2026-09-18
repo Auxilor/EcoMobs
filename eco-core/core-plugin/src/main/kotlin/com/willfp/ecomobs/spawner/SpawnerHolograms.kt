@@ -181,7 +181,8 @@ object SpawnerHolograms {
 
     /**
      * One line per distinct mob in the column, with the stack sizes summed, largest
-     * first. Null when the column is a single unstacked spawner, which shows nothing.
+     * first. Shown for every spawner, including a lone one standing at a stack of one.
+     * Null only when nothing in the column names a mob.
      */
     private fun linesFor(top: Location): List<String>? {
         val world = top.world ?: return null
@@ -189,7 +190,6 @@ object SpawnerHolograms {
         val z = top.blockZ
 
         val sizes = mutableMapOf<String, Int>()
-        var members = 0
 
         var y = top.blockY
 
@@ -198,18 +198,13 @@ object SpawnerHolograms {
             val mob = spawner?.mobId
 
             if (mob != null) {
-                sizes[mob] = (sizes[mob] ?: 0) + spawner.stackSize
-                members++
+                sizes[mob] = (sizes[mob] ?: 0) + spawner.stackSize.coerceAtLeast(1)
             }
 
             y--
         }
 
         if (sizes.isEmpty()) {
-            return null
-        }
-
-        if (members == 1 && sizes.values.first() <= 1) {
             return null
         }
 
