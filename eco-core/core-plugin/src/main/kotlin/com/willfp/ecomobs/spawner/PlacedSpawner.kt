@@ -81,7 +81,10 @@ class PlacedSpawner(
             return
         }
 
-        repeat(state.spawnCount) {
+        // A stack of spawners spawns as many mobs as it holds, on the one cycle.
+        val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
+
+        repeat(state.spawnCount * stackSize) {
             spawnFromSpawner(randomSpawnLocation(state.spawnRange), mobId)
         }
     }

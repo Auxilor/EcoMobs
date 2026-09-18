@@ -5,6 +5,8 @@ import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
+import com.willfp.ecomobs.spawner.SpawnerHolograms
+import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.applyVanillaSettings
 import com.willfp.ecomobs.spawner.isHandledByEcoMobs
 import com.willfp.ecomobs.spawner.isTrackedByEcoMobs
@@ -14,9 +16,11 @@ import com.willfp.ecomobs.spawner.spawner
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
 import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -42,6 +46,7 @@ object SpawnerHandler : Listener {
                 val state = location.block.state as? CreatureSpawner ?: return@run
                 if (state.isTrackedByEcoMobs) {
                     PlacedSpawners.set(location, PlacedSpawner(location, null))
+                    SpawnerHolograms.refresh(location)
                 }
             }
             return
@@ -59,6 +64,7 @@ object SpawnerHandler : Listener {
             state.update()
 
             PlacedSpawners.set(location, PlacedSpawner(location, animId))
+            SpawnerHolograms.refresh(location)
         }
     }
 
@@ -70,10 +76,15 @@ object SpawnerHandler : Listener {
         // otherwise only picked up on chunk load, so register them the first time they tick.
         if (state.isTrackedByEcoMobs) {
             val spawnerLocation = state.location
-            PlacedSpawners.setIfAbsent(
+
+            val added = PlacedSpawners.setIfAbsent(
                 spawnerLocation,
                 PlacedSpawner(spawnerLocation, state.spawner.particleAnim)
             )
+
+            if (added) {
+                SpawnerHolograms.refresh(spawnerLocation)
+            }
         }
 
         // EcoMobs runs its own loop for this spawner, so vanilla's attempt is dropped.
@@ -85,7 +96,13 @@ object SpawnerHandler : Listener {
         val mobId = state.spawner.mob ?: return
 
         event.isCancelled = true
-        spawnFromSpawner(event.location, mobId)
+
+        // Vanilla fires this once per mob it wanted to spawn, so the stack multiplies it.
+        val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
+
+        repeat(stackSize) {
+            spawnFromSpawner(event.location, mobId)
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -96,48 +113,71 @@ object SpawnerHandler : Listener {
         val state = block.state as? CreatureSpawner ?: return
         if (!state.spawner.isCustomSpawner) {
             PlacedSpawners.remove(block.location)
+            SpawnerHolograms.refresh(block.location)
             return
         }
 
         val player = event.player
-        val pickup = state.spawner.pickup
 
-        when (pickup) {
-            "deny" -> {
-                PlacedSpawners.remove(block.location)
+        // Null means the player cannot break it at all, and has been told why.
+        val dropsItem = resolvePickup(player, state) ?: run {
+            event.isCancelled = true
+            return
+        }
+
+        val stackSize = state.spawner.stackSize
+
+        // A stacked spawner gives up one spawner per break, or the whole stack on sneak.
+        if (SpawnerStackSettings.enabled && stackSize > 1 && !player.isSneaking) {
+            event.isCancelled = true
+
+            state.spawner.stackSize = stackSize - 1
+            state.update()
+
+            if (dropsItem) {
+                block.world.dropItemNaturally(block.location, state.toSpawnerItem(1))
             }
 
+            SpawnerHolograms.refresh(block.location)
+            return
+        }
+
+        if (dropsItem) {
+            event.isDropItems = false
+            block.world.dropItemNaturally(block.location, state.toSpawnerItem())
+        }
+
+        PlacedSpawners.remove(block.location)
+        SpawnerHolograms.refresh(block.location)
+    }
+
+    /**
+     * Whether breaking the spawner gives an item back, or null if the player cannot
+     * break it, in which case they have already been told why.
+     */
+    private fun resolvePickup(player: Player, state: CreatureSpawner): Boolean? =
+        when (state.spawner.pickup) {
             "allow" -> {
-                if (!player.hasPermission("ecomobs.spawner.pickup")) {
-                    event.isCancelled = true
+                if (player.hasPermission("ecomobs.spawner.pickup")) {
+                    true
+                } else {
                     player.sendMessage(plugin.langYml.getMessage("spawner-cannot-pickup"))
-                    return
+                    null
                 }
-                event.isDropItems = false
-                block.world.dropItemNaturally(block.location, state.toSpawnerItem())
-                PlacedSpawners.remove(block.location)
             }
 
             "silk_touch" -> {
                 if (!player.hasPermission("ecomobs.spawner.pickup.silktouch")) {
-                    event.isCancelled = true
                     player.sendMessage(plugin.langYml.getMessage("spawner-cannot-pickup"))
-                    return
+                    null
+                } else {
+                    player.inventory.itemInMainHand
+                        .itemMeta?.enchants?.containsKey(Enchantment.SILK_TOUCH) == true
                 }
-                val hasSilkTouch = player.inventory.itemInMainHand
-                    .itemMeta?.enchants?.containsKey(Enchantment.SILK_TOUCH) == true
-                if (hasSilkTouch) {
-                    event.isDropItems = false
-                    block.world.dropItemNaturally(block.location, state.toSpawnerItem())
-                }
-                PlacedSpawners.remove(block.location)
             }
 
-            else -> {
-                PlacedSpawners.remove(block.location)
-            }
+            else -> false
         }
-    }
 
     @EventHandler(ignoreCancelled = true)
     fun handlePickBlock(event: PlayerPickItemEvent) {
@@ -156,28 +196,47 @@ object SpawnerHandler : Listener {
 
     @EventHandler
     fun handleChunkLoad(event: ChunkLoadEvent) {
+        val loaded = mutableListOf<Location>()
+
         for (blockState in event.chunk.tileEntities) {
             if (blockState !is CreatureSpawner) continue
             if (!blockState.isTrackedByEcoMobs) continue
+
             PlacedSpawners.set(
                 blockState.location,
                 PlacedSpawner(blockState.location, blockState.spawner.particleAnim)
             )
+
+            loaded += blockState.location
+        }
+
+        // Held until the whole chunk is tracked, so columns are seen as complete.
+        for (location in loaded) {
+            SpawnerHolograms.refresh(location)
         }
     }
 
     @EventHandler
     fun handleChunkUnload(event: ChunkUnloadEvent) {
+        val unloaded = mutableListOf<Location>()
+
         for (blockState in event.chunk.tileEntities) {
             if (blockState !is CreatureSpawner) continue
+
             // Unconditional, so a mid-session config change can't leak tracked spawners.
             PlacedSpawners.remove(blockState.location)
+            unloaded += blockState.location
+        }
+
+        for (location in unloaded) {
+            SpawnerHolograms.refresh(location)
         }
     }
 
     @EventHandler
     fun handleWorldUnload(event: WorldUnloadEvent) {
         PlacedSpawners.removeWorld(event.world)
+        SpawnerHolograms.removeWorld(event.world)
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -187,6 +246,7 @@ object SpawnerHandler : Listener {
             val state = block.state as? CreatureSpawner ?: return@removeIf false
             if (state.spawner.isCustomSpawner && state.spawner.explosionProof) return@removeIf true
             PlacedSpawners.remove(block.location)
+            SpawnerHolograms.refresh(block.location)
             false
         }
     }
@@ -198,6 +258,7 @@ object SpawnerHandler : Listener {
             val state = block.state as? CreatureSpawner ?: return@removeIf false
             if (state.spawner.isCustomSpawner && state.spawner.explosionProof) return@removeIf true
             PlacedSpawners.remove(block.location)
+            SpawnerHolograms.refresh(block.location)
             false
         }
     }

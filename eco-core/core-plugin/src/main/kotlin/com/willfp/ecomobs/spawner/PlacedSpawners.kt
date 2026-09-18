@@ -11,9 +11,13 @@ object PlacedSpawners {
         loaded[location] = spawner
     }
 
-    fun setIfAbsent(location: Location, spawner: PlacedSpawner) {
-        loaded.putIfAbsent(location, spawner)
-    }
+    /**
+     * Tracks a spawner unless one is already tracked there, returning whether it was added.
+     */
+    fun setIfAbsent(location: Location, spawner: PlacedSpawner): Boolean =
+        loaded.putIfAbsent(location, spawner) == null
+
+    fun contains(location: Location): Boolean = loaded.containsKey(location)
 
     fun remove(location: Location) {
         loaded.remove(location)

@@ -28,6 +28,7 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
         .replace("%pickup%", data.pickup)
         .replace("%particle%", data.particleAnim ?: "none")
         .replace("%explosion_proof%", data.explosionProof.toString())
+        .replace("%size%", data.stackSize.toString())
 }
 
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
@@ -43,7 +44,14 @@ object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
             fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context))
         }
 
-        val lore = plugin.configYml.getStrings("spawner-display.lore")
+        val rawLore = plugin.configYml.getStrings("spawner-display.lore") +
+                if (fis.spawner.stackSize > 1) {
+                    plugin.configYml.getStrings("spawner-display.stacked-lore")
+                } else {
+                    emptyList()
+                }
+
+        val lore = rawLore
             .map { Display.PREFIX + fis.applySpawnerPlaceholders(it).formatEco(context) }
 
         fis.lore = lore + fis.lore
