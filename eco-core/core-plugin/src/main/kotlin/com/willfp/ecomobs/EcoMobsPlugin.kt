@@ -80,6 +80,9 @@ class EcoMobsPlugin : LibreforgePlugin() {
         SpawnerAnimations.reload()
         SpawnerStackSettings.reload()
         SpawnerSettings.reload()
+        // Chunks loaded before the plugin enabled never fire a ChunkLoadEvent, and a
+        // config change can flip which spawners are tracked, so the index is rebuilt here.
+        SpawnerHandler.indexLoadedChunks()
         SpawnerDisplay.start()
         SpawnerSpawnLoop.start()
         StackSettings.reload()

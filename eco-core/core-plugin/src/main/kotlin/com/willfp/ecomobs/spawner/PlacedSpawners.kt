@@ -1,37 +1,37 @@
 package com.willfp.ecomobs.spawner
 
 import org.bukkit.Bukkit
+import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.World
+import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * A chunk holding tracked spawners.
+ * Every spawner EcoMobs tracks, whether or not its chunk is loaded right now.
  *
- * The world is held by UUID rather than by reference, so an unloaded world isn't kept
- * alive by the index.
+ * The index outlives chunk unloads on purpose: it is rebuilt a chunk at a time whenever
+ * one loads, and every consumer skips spawners in unloaded chunks, so a chunk going away
+ * and coming back can't lose a spawner. Dropping entries on unload instead would leave
+ * every spawner in a chunk that was already loaded when the plugin enabled untracked,
+ * as no [org.bukkit.event.world.ChunkLoadEvent] is ever fired for those.
  */
-data class SpawnerChunk(
-    val world: UUID,
-    val x: Int,
-    val z: Int
-)
-
 object PlacedSpawners {
+    private data class ChunkPos(val world: UUID, val x: Int, val z: Int)
+
     private val loaded = ConcurrentHashMap<Location, PlacedSpawner>()
 
     /**
-     * The same spawners, grouped by the chunk they sit in.
-     *
-     * The tick loops walk this rather than [loaded] so that on Folia they can dispatch
-     * one task per occupied chunk instead of one per spawner.
+     * The tracked locations in each chunk, so a chunk can be rebuilt without walking
+     * every spawner on the server, and so the tick loops can dispatch one task per
+     * occupied chunk instead of one per spawner.
      */
-    private val byChunk = ConcurrentHashMap<SpawnerChunk, ConcurrentHashMap<Location, PlacedSpawner>>()
+    private val byChunk = ConcurrentHashMap<ChunkPos, MutableSet<Location>>()
 
     fun set(location: Location, spawner: PlacedSpawner) {
         loaded[location] = spawner
-        index(location, spawner)
+        index(location)
     }
 
     /**
@@ -42,8 +42,35 @@ object PlacedSpawners {
             return false
         }
 
-        index(location, spawner)
+        index(location)
         return true
+    }
+
+    /**
+     * The spawner tracked at [location], or null if there isn't one.
+     *
+     * The spawner is returned whether or not its chunk is loaded, so callers that touch
+     * the world still need to check that themselves.
+     */
+    operator fun get(location: Location): PlacedSpawner? = loaded[location]
+
+    /**
+     * Every spawner tracked in [chunk], as an unmodifiable snapshot.
+     */
+    fun inChunk(chunk: Chunk): Collection<PlacedSpawner> =
+        inChunk(chunk.world, chunk.x, chunk.z)
+
+    /**
+     * Every spawner tracked in the chunk at [chunkX], [chunkZ] in [world], without
+     * needing the chunk itself, and so without loading it.
+     *
+     * The returned collection is an unmodifiable snapshot: tracking a spawner is done
+     * through [set] and [remove], never by writing to this.
+     */
+    fun inChunk(world: World, chunkX: Int, chunkZ: Int): Collection<PlacedSpawner> {
+        val locations = byChunk[ChunkPos(world.uid, chunkX, chunkZ)] ?: return emptyList()
+
+        return Collections.unmodifiableList(locations.mapNotNull { loaded[it] })
     }
 
     fun contains(location: Location): Boolean = loaded.containsKey(location)
@@ -53,22 +80,42 @@ object PlacedSpawners {
             return
         }
 
-        unindex(location)
+        val pos = chunkPosOf(location) ?: return
+
+        byChunk.computeIfPresent(pos) { _, locations ->
+            locations.remove(location)
+
+            // Dropped wholesale once empty, so the index doesn't grow a key per chunk
+            // that ever held a spawner.
+            locations.ifEmpty { null }
+        }
+    }
+
+    /**
+     * Drops everything tracked in [chunk], for rebuilding it from the chunk's own
+     * block entities.
+     */
+    fun removeChunk(chunk: Chunk) {
+        val locations = byChunk.remove(ChunkPos(chunk.world.uid, chunk.x, chunk.z)) ?: return
+
+        for (location in locations) {
+            loaded.remove(location)
+        }
     }
 
     fun removeWorld(world: World) {
         val uid = world.uid
 
-        for (chunk in byChunk.keys) {
-            if (chunk.world != uid) {
+        for (pos in byChunk.keys) {
+            if (pos.world != uid) {
                 continue
             }
 
             // Removed from the index first, so the locations are still reachable even
             // once the world reference behind them has gone.
-            val spawners = byChunk.remove(chunk) ?: continue
+            val locations = byChunk.remove(pos) ?: continue
 
-            for (location in spawners.keys) {
+            for (location in locations) {
                 loaded.remove(location)
             }
         }
@@ -85,45 +132,34 @@ object PlacedSpawners {
      * Runs [action] once per chunk holding tracked spawners, with the spawners in it.
      *
      * Chunks in worlds that have since unloaded are skipped. The collection passed in is
-     * the live one, so it must only be read.
+     * a snapshot, so it must only be read.
      */
     fun forEachChunk(action: (World, Int, Int, Collection<PlacedSpawner>) -> Unit) {
-        for ((chunk, spawners) in byChunk) {
-            if (spawners.isEmpty()) {
+        for ((pos, locations) in byChunk) {
+            if (locations.isEmpty()) {
                 continue
             }
 
-            val world = Bukkit.getWorld(chunk.world) ?: continue
+            val world = Bukkit.getWorld(pos.world) ?: continue
 
-            action(world, chunk.x, chunk.z, spawners.values)
+            action(world, pos.x, pos.z, inChunk(world, pos.x, pos.z))
         }
     }
 
-    private fun index(location: Location, spawner: PlacedSpawner) {
-        val chunk = chunkOf(location) ?: return
+    private fun index(location: Location) {
+        val pos = chunkPosOf(location) ?: return
 
-        byChunk.computeIfAbsent(chunk) { ConcurrentHashMap() }[location] = spawner
+        byChunk.computeIfAbsent(pos) { ConcurrentHashMap.newKeySet() }
+            .add(location)
     }
 
-    private fun unindex(location: Location) {
-        val chunk = chunkOf(location) ?: return
-
-        byChunk.computeIfPresent(chunk) { _, spawners ->
-            spawners.remove(location)
-
-            // Dropped wholesale once empty, so the index doesn't grow a key per chunk
-            // that ever held a spawner.
-            if (spawners.isEmpty()) null else spawners
-        }
-    }
-
-    private fun chunkOf(location: Location): SpawnerChunk? {
+    private fun chunkPosOf(location: Location): ChunkPos? {
         if (!location.isWorldLoaded) {
             return null
         }
 
         val world = location.world ?: return null
 
-        return SpawnerChunk(world.uid, location.blockX shr 4, location.blockZ shr 4)
+        return ChunkPos(world.uid, location.blockX shr 4, location.blockZ shr 4)
     }
 }
