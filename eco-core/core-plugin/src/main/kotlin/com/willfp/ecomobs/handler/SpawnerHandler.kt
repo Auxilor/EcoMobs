@@ -63,7 +63,19 @@ object SpawnerHandler : Listener {
 
         val mobId = placed.spawner.mob ?: return
 
-        val placeEvent = EcoMobSpawnerPlaceEvent(event.player, location, mobId, placed.spawner.stackSize)
+        val perItem = placed.spawner.stackSize.coerceAtLeast(1)
+
+        // Sneaking places the whole held stack at once, mirroring sneak-break taking it all.
+        val extraItems = if (SpawnerStackSettings.enabled && event.player.isSneaking) {
+            val maxExtra = (SpawnerStackSettings.maxSize / perItem - 1).coerceAtLeast(0)
+            (event.itemInHand.amount - 1).coerceIn(0, maxExtra)
+        } else {
+            0
+        }
+
+        val stackSize = perItem * (extraItems + 1)
+
+        val placeEvent = EcoMobSpawnerPlaceEvent(event.player, location, mobId, stackSize)
         Bukkit.getPluginManager().callEvent(placeEvent)
 
         if (placeEvent.isCancelled) {
@@ -75,12 +87,47 @@ object SpawnerHandler : Listener {
             val state = location.block.state as? CreatureSpawner ?: return@run
 
             placed.spawner.copyTo(state.spawner)
+            state.spawner.stackSize = stackSize
             state.applyVanillaSettings()
             resolveEntityType(mobId)?.let { state.spawnedType = it }
             state.update()
 
             PlacedSpawners.sync(state)
             SpawnerHolograms.refresh(location)
+        }
+
+        if (extraItems > 0) {
+            consumeExtra(event, extraItems)
+        }
+    }
+
+    /**
+     * Takes the [extra] spawner items beyond the one vanilla removes for the placement.
+     *
+     * Deferred a tick, as a later handler (stacking onto the spawner placed against) can
+     * still cancel the placement, in which case nothing extra is taken.
+     */
+    private fun consumeExtra(event: BlockPlaceEvent, extra: Int) {
+        val player = event.player
+
+        if (player.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        plugin.scheduler.on(player).run {
+            if (event.isCancelled) {
+                return@run
+            }
+
+            val item = player.inventory.getItem(event.hand) ?: return@run
+
+            if (item.type != Material.SPAWNER) {
+                return@run
+            }
+
+            item.amount -= extra.coerceAtMost(item.amount)
+
+            player.inventory.setItem(event.hand, item.takeIf { it.amount > 0 })
         }
     }
 
