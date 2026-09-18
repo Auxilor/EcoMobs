@@ -1,7 +1,9 @@
 package com.willfp.ecomobs.handler
 
+import com.willfp.ecomobs.event.EcoMobEggUseEvent
 import com.willfp.ecomobs.mob.options.ecoMobEgg
 import com.willfp.ecomobs.plugin
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.Container
 import org.bukkit.block.data.Directional
@@ -23,7 +25,7 @@ object SpawnEggHandler : Listener {
 
         val location = event.clickedBlock?.location?.add(0.0, 1.5, 0.0) ?: return
 
-        if (!this.handleSpawnEgg(event.item, location, event.player)) {
+        if (!this.handleSpawnEgg(event.item, location, event.player, EcoMobEggUseEvent.Source.PLAYER)) {
             return
         }
 
@@ -42,7 +44,7 @@ object SpawnEggHandler : Listener {
         // What does the 1.7 do? I don't know, this is from old EcoBosses code.
         val location = event.block.location.add(facing.direction.multiply(1.7))
 
-        if (!this.handleSpawnEgg(event.item, location, null)) {
+        if (!this.handleSpawnEgg(event.item, location, null, EcoMobEggUseEvent.Source.DISPENSER)) {
             return
         }
 
@@ -65,12 +67,20 @@ object SpawnEggHandler : Listener {
     private fun handleSpawnEgg(
         item: ItemStack?,
         location: Location,
-        player: Player?
+        player: Player?,
+        source: EcoMobEggUseEvent.Source
     ): Boolean {
         val mob = item?.ecoMobEgg ?: return false
 
         val egg = mob.spawnEgg ?: return false
 
-        return egg.trySpawn(location, player) != null
+        val useEvent = EcoMobEggUseEvent(mob, location, player, source)
+        Bukkit.getPluginManager().callEvent(useEvent)
+
+        if (useEvent.isCancelled) {
+            return false
+        }
+
+        return egg.trySpawn(useEvent.location, player) != null
     }
 }

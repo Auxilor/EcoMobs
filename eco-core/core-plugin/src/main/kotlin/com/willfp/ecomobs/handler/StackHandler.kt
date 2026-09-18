@@ -1,11 +1,14 @@
 package com.willfp.ecomobs.handler
 
+import com.willfp.ecomobs.event.EcoMobStackDeathEvent
+import com.willfp.ecomobs.event.EcoMobStackSplitEvent
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.stacking.MobStacks
 import com.willfp.ecomobs.stacking.StackSettings
 import com.willfp.ecomobs.stacking.stack
+import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -38,12 +41,31 @@ object StackHandler : Listener {
             return
         }
 
-        if (StackSettings.killWholeStack) {
+        val deathEvent = EcoMobStackDeathEvent(mob, size, StackSettings.killWholeStack)
+        Bukkit.getPluginManager().callEvent(deathEvent)
+
+        if (deathEvent.killWholeStack) {
             multiplyRewards(event, mob, size)
-            return
+        } else {
+            respawnRemainder(mob, size - 1)
         }
 
-        respawnRemainder(mob, size - 1)
+        if (StackSettings.hideDeathAnimation) {
+            hideCorpse(mob)
+        }
+    }
+
+    /**
+     * Takes the corpse away a tick after the kill, so the twenty-tick death animation
+     * never plays out next to what's left of the stack.
+     *
+     * Deferred rather than removed here, as taking the entity out during its own death
+     * event loses the XP it was about to drop.
+     */
+    private fun hideCorpse(mob: Mob) {
+        plugin.scheduler.at(mob.location).run {
+            mob.remove()
+        }
     }
 
     private fun multiplyRewards(event: EntityDeathEvent, mob: Mob, size: Int) {
@@ -80,6 +102,19 @@ object StackHandler : Listener {
         val ecoMob = mob.ecoMob
         val type = mob.type
 
+        val splitEvent = EcoMobStackSplitEvent(mob, location, remaining)
+        Bukkit.getPluginManager().callEvent(splitEvent)
+
+        if (splitEvent.isCancelled) {
+            return
+        }
+
+        val left = splitEvent.remaining
+
+        if (left <= 0) {
+            return
+        }
+
         plugin.scheduler.at(location).run {
             val spawned = if (ecoMob != null) {
                 ecoMob.spawn(location, SpawnReason.NATURAL)?.entity
@@ -88,7 +123,7 @@ object StackHandler : Listener {
             }
 
             if (spawned != null) {
-                spawned.stack.size = remaining
+                spawned.stack.size = left
             }
         }
     }
