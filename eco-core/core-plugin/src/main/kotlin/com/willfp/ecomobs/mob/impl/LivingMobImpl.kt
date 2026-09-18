@@ -10,7 +10,6 @@ import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.placeholder.MobPlaceholders
 import com.willfp.ecomobs.mob.placeholder.formatMobPlaceholders
 import com.willfp.ecomobs.mob.stage.DamageStage
-import com.willfp.ecomobs.mob.stage.DamageStageMode
 import com.willfp.ecomobs.mob.stage.DamageStageTracker
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandler
@@ -79,11 +78,8 @@ internal class LivingMobImpl(
     override val damageStageProgress: Double
         get() = stageTracker?.stageProgress ?: 1.0
 
-    override val hitsRemaining: Double
-        get() = stageTracker
-            ?.takeIf { it.stage.mode == DamageStageMode.HITS }
-            ?.remaining
-            ?: 0.0
+    override val stageRemaining: Double
+        get() = stageTracker?.remaining ?: 0.0
 
     // Fix for drops being sent twice
     @Volatile

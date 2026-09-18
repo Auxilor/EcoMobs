@@ -114,9 +114,9 @@ effects:
 # The lifespan of the mob, in seconds. Set to -1 to disable.
 lifespan: 120
 
-# Optional. Splits the fight into ordered stages, each of which either absorbs a pool of
-# damage or takes a fixed number of hits. Remove this section entirely for a normal mob
-# that simply loses health.
+# Optional. Splits the fight into ordered stages, each drained by one of three modes: a
+# pool of damage, a fixed number of hits, or a count of anything libreforge can count.
+# Remove this section entirely for a normal mob that simply loses health.
 #
 # The keys order the stages. The mob's health, set in the "mob" lookup string at the top of
 # this file, becomes a display mirror of overall stage progress: the boss bar drains once
@@ -131,6 +131,18 @@ damage-stages: { }
 #    mode: hits           # This stage takes a fixed number of hits, whatever the weapon
 #    required-hits: 20    # The hits it takes before it ends
 #    player-only: true    # If false, fire, lava, and other mobs also cost hits
+#    start-effects: [ ]
+#    end-effects: [ ]
+#  3:
+#    mode: trigger        # This stage is drained by counting, not by damage. Nothing a
+#                         # player hits it with moves it, so give it a count it can reach.
+#    required-count: 30   # The count it takes before it ends
+#    radius: 32           # How far from the mob a player has to be for their count to land
+#    count-methods:       # What counts; the same counters EcoJobs and EcoSkills use
+#      - trigger: mine_block
+#        value: 1
+#        filters:
+#          blocks: [ coal_ore ]
 #    start-effects: [ ]
 #    end-effects: [ ]
 

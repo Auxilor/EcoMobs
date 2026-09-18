@@ -56,6 +56,9 @@ internal class DamageStageTracker(
         index++
 
         if (isFinished) {
+            // Floored, so the overshoot from a large count can't be read back as a
+            // negative amount remaining.
+            remaining = 0.0
             return true
         }
 

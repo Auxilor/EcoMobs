@@ -10,6 +10,7 @@ EcoMobs lets you build fully custom mobs from simple config files. You control e
 
 - **Config-only mobs.** A mob is one YAML file. No code, no compiling, no paying someone to build a system for you.
 - **Built on the eco framework.** Effects, conditions, and the entity lookup system are shared across every eco plugin, so what you learn here carries over.
+- **Bosses with phases.** Split a fight into stages drained by damage, by a fixed number of hits, or by anything you can count — mine the altar to break the shield.
 - **Spawns the way you want.** Replace vanilla mobs, drive spawning with conditions, or hand out spawn eggs and craftable totems.
 - **Spawners worth selling.** Custom spawners for any mob, stackable, with their own pickup rules, explosion immunity, and particle animations.
 - **Built for grinders.** Mob and spawner stacking keep a thousand-mob farm down to a handful of entities.

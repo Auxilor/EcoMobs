@@ -36,7 +36,7 @@ A mob config is a set of named parts, each controlling one aspect of the mob.
 | **Integrations** | Hooks into other plugins (LevelledMobs, ModelEngine, etc.) |
 | **Custom AI** | The mob's targeting and behaviour goals |
 | **Effects** | Effects and conditions that fire on mob actions |
-| **Damage stages** | Optional phases the fight moves through as the mob takes damage |
+| **Damage stages** | Optional phases the fight moves through, drained by damage, by hits, or by anything you can count |
 | **Defence** | Mounting and per-cause damage modifiers |
 | **Drops** | Experience and item drops on death |
 | **Boss bar** | The on-screen health bar |
@@ -62,6 +62,17 @@ damage-stages:
     mode: hits # This stage takes a fixed number of hits, whatever the weapon
     required-hits: 20 # The hits it takes before it ends
     player-only: true # If false, fire, lava, and other mobs also cost hits
+    start-effects: [ ]
+    end-effects: [ ]
+  3:
+    mode: trigger # This stage is drained by anything you can count, not by damage
+    required-count: 30 # The count it takes before it ends
+    radius: 32 # How far from the mob a player has to be for their count to land
+    count-methods: # What counts; the same counters EcoJobs and EcoSkills use
+      - trigger: mine_block
+        value: 1
+        filters:
+          blocks: [ coal_ore ]
     start-effects: [ ]
     end-effects: [ ]
 
@@ -251,7 +262,7 @@ Effects and conditions are a shared system across every eco plugin, configured t
 
 ### Damage stages
 
-Optional. Splits the fight into ordered phases. Each stage either absorbs a pool of damage or takes a fixed number of hits, and can run effects when it begins and ends. Leave the section out entirely for a normal mob that simply loses health.
+Optional. Splits the fight into ordered phases. Each stage is drained by one of three **modes**, and can run effects when it begins and ends. Leave the section out entirely for a normal mob that simply loses health.
 
 ```yaml
 damage-stages:
@@ -266,6 +277,17 @@ damage-stages:
     player-only: true # If false, fire, lava, and other mobs also cost hits
     start-effects: [ ]
     end-effects: [ ]
+  3:
+    mode: trigger # Drained by anything you can count, not by damage
+    required-count: 30 # The count this stage takes before it ends
+    radius: 32 # How far from the mob a player has to be for their count to land
+    count-methods:
+      - trigger: mine_block
+        value: 1
+        filters:
+          blocks: [ coal_ore ]
+    start-effects: [ ]
+    end-effects: [ ]
 ```
 
 A `hits` stage is the reason this exists: with `required-hits: 20`, the stage takes exactly twenty hits whether the attacker punches barehanded or swings a maxed netherite sword.
@@ -276,12 +298,61 @@ The mob's health, set in the `mob` lookup string, becomes a display mirror of ov
 
 | Key | Mode | Meaning |
 | --- | --- | --- |
-| `mode` | both | `health` or `hits` |
+| `mode` | all | `health`, `hits`, or `trigger` |
 | `health` | `health` | The damage the stage absorbs. Must be greater than 0 |
 | `required-hits` | `hits` | The hits the stage takes. Must be at least 1 |
-| `player-only` | `hits` | If `true`, only player damage costs a hit. Ignored in `health` mode |
-| `start-effects` | both | Effects run when the stage begins |
-| `end-effects` | both | Effects run when the stage ends |
+| `player-only` | `hits` | If `true`, only player damage costs a hit |
+| `required-count` | `trigger` | The count the stage takes. Must be greater than 0 |
+| `radius` | `trigger` | How far the stage reaches from the player who earned a count, in blocks. Defaults to 32 |
+| `count-methods` | `trigger` | What counts toward the stage. At least one is required |
+| `start-effects` | all | Effects run when the stage begins |
+| `end-effects` | all | Effects run when the stage ends |
+
+#### Modes
+
+**`health`** — a pool of damage. Every point of damage from any source drains it, whoever or whatever dealt it.
+
+**`hits`** — a fixed number of hits, whatever the weapon. Each hit costs exactly one, so the stage lasts the same number of swings no matter how hard they land. With `player-only: true` only player damage counts, and everything else is cancelled outright; with `player-only: false` fire, lava, and other mobs each cost a hit too.
+
+**`trigger`** — drained by anything libreforge can count, rather than by damage. The mob is untouchable for the length of the stage: hits still flinch it, knock it back, and fire its `take-damage` effects, but they move the stage not at all. It ends when its `count-methods` have delivered `required-count`.
+
+#### Trigger stages and `count-methods`
+
+`count-methods` is a list of libreforge counters, the same system EcoJobs and EcoSkills use for their own progress. Each entry names a `trigger`, and optionally `filters`, `conditions`, and either a `value` or a `multiplier`:
+
+```yaml
+damage-stages:
+  1:
+    mode: trigger
+    required-count: 500
+    radius: 48
+    count-methods:
+      # Every soul sand mined near the boss counts for one
+      - trigger: mine_block
+        value: 1
+        filters:
+          blocks: [ soul_sand ]
+          player_placed: false
+      # Every wither skeleton killed near the boss counts for twenty-five
+      - trigger: kill
+        value: 25
+        filters:
+          entities: [ wither_skeleton ]
+    start-effects:
+      - id: send_message
+        args:
+          message: "&8The Hollow King is shielded! Feed the altar to break it."
+```
+
+See [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) for the full trigger, filter, and condition lists.
+
+A count is earned by a player, so the stage has to decide which mob it belongs to. Every mob of that type **within `radius` blocks of the player**, and currently in that stage, receives it. Two players fighting the same boss both feed it; a boss on the other side of the world is untouched. Set `radius` deliberately: too large and unrelated activity drains the fight, too small and players have to stand on top of the mob.
+
+Counts also place the player on the mob's top-damager board, so `%top_damager_1_name%` names whoever fed the altar hardest, not only whoever hit the boss hardest. They are credited raw, in whatever the counter counted — a `value: 25` count adds 25. That is the same convention a `hits` stage uses, where one hit credits one, so a mob mixing modes ranks players on a mix of units. Keep the `value` of a stage's count methods roughly in scale with the damage the mob's `health` stages take if you want one board to read sensibly across the whole fight.
+
+:::caution Every trigger stage needs a way out
+A `trigger` stage cannot be damaged down. If its `count-methods` can never fire — a trigger nobody can reach, a filter that matches nothing — the mob is invulnerable forever. EcoMobs rejects a `trigger` stage with no valid count method at load, but it cannot tell whether the ones you wrote are actually reachable.
+:::
 
 Stage 1's `start-effects` run when the mob spawns. Every other transition runs the finished stage's `end-effects` and then the next stage's `start-effects`, and the last stage's `end-effects` run as the mob dies.
 
@@ -450,9 +521,12 @@ These placeholders work in the `display-name` and in effects on this mob.
 | `%hits%` | The hits left in the current stage (`0` outside a `hits` stage) |
 | `%max_hits%` | The hits the current stage takes (`0` outside a `hits` stage) |
 | `%hits_percent%` | The percentage of the current stage's hits left (`100` outside a `hits` stage) |
+| `%count%` | The count left in the current stage (`0` outside a `trigger` stage) |
+| `%max_count%` | The count the current stage takes (`0` outside a `trigger` stage) |
+| `%count_percent%` | The percentage of the current stage's count left (`100` outside a `trigger` stage) |
 | `%time%` | The time left before the mob despawns (`minutes:seconds`) |
 | `%top_damager_<place>_name%` | The name of the top damager in that place (empty if nobody placed there) |
-| `%top_damager_<place>_damage%` | The damage dealt by the top damager in that place, counting one per hit during a `hits` stage (`0` if nobody placed there) |
+| `%top_damager_<place>_damage%` | The contribution of the top damager in that place (`0` if nobody placed there). A staged mob ranks players in whatever each stage counts: damage in `health`, one per hit in `hits`, and the count itself in `trigger` |
 | `%top_damager_<place>_display%` | The display name of the top damager in that place (empty if nobody placed there) |
 
 The number of places is set by `top-damager-places` in `config.yml`, and defaults to 10.

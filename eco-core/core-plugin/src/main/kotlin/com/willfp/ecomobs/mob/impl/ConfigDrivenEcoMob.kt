@@ -365,6 +365,20 @@ internal class ConfigDrivenEcoMob(
         return damageModifiers[cause] ?: 1.0
     }
 
+    override fun onRegister() {
+        // Bound per mob type, not per spawned mob: a mode that feeds on something other
+        // than damage finds the mobs it applies to when the progress lands.
+        for (stage in damageStages) {
+            stage.mode.bind(this, stage)
+        }
+    }
+
+    override fun onRemove() {
+        for (stage in damageStages) {
+            stage.mode.unbind()
+        }
+    }
+
     override fun canPlayerSpawn(player: Player, spawnReason: SpawnReason, location: Location): Boolean {
         if (spawnReason == SpawnReason.NATURAL) {
             throw IllegalArgumentException("Players cannot spawn mobs naturally")
