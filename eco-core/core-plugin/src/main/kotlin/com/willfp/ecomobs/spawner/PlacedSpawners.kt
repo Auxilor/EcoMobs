@@ -11,6 +11,10 @@ object PlacedSpawners {
         loaded[location] = spawner
     }
 
+    fun setIfAbsent(location: Location, spawner: PlacedSpawner) {
+        loaded.putIfAbsent(location, spawner)
+    }
+
     fun remove(location: Location) {
         loaded.remove(location)
     }

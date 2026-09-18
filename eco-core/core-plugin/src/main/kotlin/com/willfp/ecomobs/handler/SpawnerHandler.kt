@@ -59,6 +59,14 @@ object SpawnerHandler : Listener {
         val state = event.spawner ?: return
         val mobId = state.spawner.mob ?: return
 
+        // Spawners that never fired a place event (/setblock, world edits, pastes) are
+        // otherwise only picked up on chunk load, so register them the first time they tick.
+        val spawnerLocation = state.location
+        PlacedSpawners.setIfAbsent(
+            spawnerLocation,
+            PlacedSpawner(spawnerLocation, state.spawner.particleAnim)
+        )
+
         event.isCancelled = true
         val location = event.location
 
