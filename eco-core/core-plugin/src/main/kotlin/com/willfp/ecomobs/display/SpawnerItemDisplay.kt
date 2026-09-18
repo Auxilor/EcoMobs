@@ -9,6 +9,7 @@ import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.plugin
+import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.spawner
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -28,6 +29,9 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
         .replace("%pickup%", data.pickup)
         .replace("%particle%", data.particleAnim ?: "none")
         .replace("%explosion_proof%", data.explosionProof.toString())
+        .replace("%no_ai%", data.noAI.toString())
+        .replace("%size%", data.stackSize.toString())
+        .replace("%max_stack_size%", SpawnerStackSettings.maxSize.toString())
 }
 
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
@@ -43,7 +47,14 @@ object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
             fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context))
         }
 
-        val lore = plugin.configYml.getStrings("spawner-display.lore")
+        val rawLore = plugin.configYml.getStrings("spawner-display.lore") +
+                if (fis.spawner.stackSize > 1) {
+                    plugin.configYml.getStrings("spawner-display.stacked-lore")
+                } else {
+                    emptyList()
+                }
+
+        val lore = rawLore
             .map { Display.PREFIX + fis.applySpawnerPlaceholders(it).formatEco(context) }
 
         fis.lore = lore + fis.lore

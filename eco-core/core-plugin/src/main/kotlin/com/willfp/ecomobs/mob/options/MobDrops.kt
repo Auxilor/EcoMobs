@@ -6,6 +6,7 @@ import com.willfp.eco.util.randDouble
 import org.bukkit.Location
 import org.bukkit.entity.ExperienceOrb
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 data class Drop(
     val chance: Double,
@@ -16,30 +17,53 @@ data class MobDrops(
     val experience: Int,
     val drops: List<Drop>
 ) {
-    fun drop(location: Location, player: Player?) {
+    /**
+     * Rolls the drop table, without giving anything out. Split from [give] so the drops
+     * can be shown to [com.willfp.ecomobs.event.EcoMobDropsEvent] before they land.
+     *
+     * A drop that hits its chance gives every one of its items to a player, and one of
+     * them at random when there is nobody to credit.
+     */
+    fun roll(player: Player?): MutableList<ItemStack> {
+        val rolled = mutableListOf<ItemStack>()
+
+        for (drop in drops) {
+            if (randDouble(0.0, 100.0) > drop.chance) {
+                continue
+            }
+
+            if (player != null) {
+                rolled += drop.items.map { it.item }
+            } else {
+                rolled += drop.items.random().item
+            }
+        }
+
+        return rolled
+    }
+
+    /**
+     * Gives out [items] and [xp], to [player] where there is one and on the ground at
+     * [location] otherwise.
+     */
+    fun give(location: Location, player: Player?, items: List<ItemStack>, xp: Int) {
         if (player != null) {
-            val queue = DropQueue(player)
-                .addXP(experience)
+            DropQueue(player)
+                .addXP(xp)
+                .addItems(items)
+                .push()
 
-            for (drop in drops) {
-                if (randDouble(0.0, 100.0) <= drop.chance) {
-                    queue.addItems(drop.items.map { it.item })
-                }
-            }
+            return
+        }
 
-            queue.push()
-        } else {
-            val world = location.world ?: throw IllegalStateException("Location has no world")
+        val world = location.world ?: throw IllegalStateException("Location has no world")
 
-            for (drop in drops) {
-                if (randDouble(0.0, 100.0) <= drop.chance) {
-                    world.dropItemNaturally(location, drop.items.random().item)
-                }
-            }
+        for (item in items) {
+            world.dropItemNaturally(location, item)
+        }
 
-            world.spawn(location, ExperienceOrb::class.java).apply {
-                experience = experience
-            }
+        world.spawn(location, ExperienceOrb::class.java).apply {
+            experience = xp
         }
     }
 }

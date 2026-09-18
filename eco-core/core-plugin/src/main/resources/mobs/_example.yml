@@ -114,9 +114,9 @@ effects:
 # The lifespan of the mob, in seconds. Set to -1 to disable.
 lifespan: 120
 
-# Optional. Splits the fight into ordered stages, each of which either absorbs a pool of
-# damage or takes a fixed number of hits. Remove this section entirely for a normal mob
-# that simply loses health.
+# Optional. Splits the fight into ordered stages, each drained by one of three modes: a
+# pool of damage, a fixed number of hits, or a count of anything libreforge can count.
+# Remove this section entirely for a normal mob that simply loses health.
 #
 # The keys order the stages. The mob's health, set in the "mob" lookup string at the top of
 # this file, becomes a display mirror of overall stage progress: the boss bar drains once
@@ -133,14 +133,43 @@ damage-stages: { }
 #    player-only: true    # If false, fire, lava, and other mobs also cost hits
 #    start-effects: [ ]
 #    end-effects: [ ]
+#  3:
+#    mode: trigger # This stage is drained by counting, not by damage. Nothing a
+#                  # player hits it with moves it, so give it a count it can reach.
+#    required-count: 30 # The count it takes before it ends
+#    radius: 32 # How far from the mob a player has to be for their count to land
+#    count-methods: # What counts; the same counters EcoJobs and EcoSkills use
+#      - trigger: mine_block
+#        value: 1
+#        filters:
+#          blocks:
+#            - coal_ore
+#    start-effects: [ ]
+#    end-effects: [ ]
 
 defence:
   # If the mob can get into boats, minecarts, etc.
   can-mount: true
 
-  # A list of damage causes that the mob should multiply incoming damage by.
-  # The list of damage causes can be found here:
+  # Multiplies the damage the mob takes, per damage cause. 1 is vanilla damage,
+  # 0.5 is half, 2 is double, and 0 makes the mob immune to that cause. Any cause
+  # left out of this list stays at 1, so only list the ones you want to change.
+  #
+  # Each key is the lowercase name of a Bukkit damage cause, so FIRE_TICK is
+  # written fire_tick. Every cause on this list works, not only the ones below:
   # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+  #
+  # Other causes worth knowing: entity_attack (melee), projectile (arrows and
+  # tridents), magic (harming potions), fire (standing in fire), fall, lightning,
+  # thorns, and void.
+  #
+  # The multiplier is applied before armour and protection are taken off, so the
+  # reductions scale with it. It only affects damage the mob takes - to change the
+  # damage it deals, set attack-damage in the "mob" lookup string at the top.
+  #
+  # On a mob with damage stages, this only changes how fast a "health" stage
+  # drains. A "hits" stage counts the hit whatever the multiplier is, including 0.
+  # Negative values are not supported; use 0 for immunity.
   damage-modifiers:
     hot_floor: 1
     fire_tick: 1

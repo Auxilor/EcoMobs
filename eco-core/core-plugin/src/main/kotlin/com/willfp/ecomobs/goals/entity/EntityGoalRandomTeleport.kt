@@ -60,7 +60,9 @@ class EntityGoalRandomTeleport(
             return
         }
 
-        mob.teleport(validLocations.random())
+        // teleportAsync, not teleport: Folia removed the synchronous form, and the goal
+        // has nothing to do with the result either way.
+        mob.teleportAsync(validLocations.random())
     }
 
     override fun getFlags(): EnumSet<GoalFlag> {
