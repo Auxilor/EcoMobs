@@ -7,7 +7,6 @@ import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.stacking.stack
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Mob
 import org.bukkit.persistence.PersistentDataType
 
@@ -51,6 +50,20 @@ fun spawnFromSpawner(
     }
 
     if (noAI) {
-        (entity as? LivingEntity)?.setAI(false)
+        (entity as? Mob)?.applySpawnerNoAI()
     }
+}
+
+/**
+ * Takes a spawner mob's mind away without taking its body with it.
+ *
+ * Vanilla's NoAI tag freezes the whole entity: an unaware mob is still a mob - it falls,
+ * it takes knockback, it can be hit about - it simply doesn't think. Which is what the
+ * no-ai attribute is for, and why it isn't NoAI.
+ *
+ * Nothing else NoAI did is brought back with it: the mob still despawns, still collides,
+ * still falls and still takes the damage for landing, like any other mob.
+ */
+fun Mob.applySpawnerNoAI() {
+    isAware = false
 }
