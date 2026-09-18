@@ -101,6 +101,16 @@ spawners:
   # this to false to keep that.
   redstone-deactivates: true
 
+  # Whether a spawner the world generated - a dungeon spawner, or one from /setblock or
+  # a world edit - has its own settings written into it, so it can be stacked, show a
+  # hologram and be picked up like any EcoMobs spawner.
+  #
+  # Spawners are ticked either way, so turning this off only means dungeon spawners stay
+  # exactly as they generated, with none of the EcoMobs extras.
+  #
+  # Written once per spawner, as its chunk loads, and skipped on every load after that.
+  adopt-vanilla-spawners: true
+
   # The most things a chunk can hold before the spawners in it stop.
   #
   # This counts ENTITIES, not mobs. It does NOT add up stack sizes.

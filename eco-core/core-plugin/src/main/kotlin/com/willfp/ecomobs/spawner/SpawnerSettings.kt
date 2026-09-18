@@ -58,6 +58,16 @@ object SpawnerSettings {
         private set
 
     /**
+     * Whether a spawner with no EcoMobs data has its own settings written into it, so
+     * that it can stack, hold a hologram and be picked up like any EcoMobs spawner.
+     *
+     * Ticking doesn't need this - the loop reads whichever settings a spawner has - so
+     * turning it off leaves dungeon spawners exactly as the world generated them.
+     */
+    var adoptVanillaSpawners = true
+        private set
+
+    /**
      * The most entities a chunk can hold before the spawners in it stop.
      *
      * This counts entities, not mobs. One stacked mob is one entity, however many mobs
@@ -86,6 +96,7 @@ object SpawnerSettings {
 
         redstoneDeactivates = config.getBool("spawners.redstone-deactivates")
         maxMobsPerChunk = config.getInt("spawners.max-mobs-per-chunk").coerceAtLeast(0)
+        adoptVanillaSpawners = config.getBool("spawners.adopt-vanilla-spawners")
 
         warnAboutLegacyKeys()
     }

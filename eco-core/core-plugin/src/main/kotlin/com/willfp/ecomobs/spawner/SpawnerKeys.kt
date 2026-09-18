@@ -231,6 +231,42 @@ fun CreatureSpawner.toPlacedSpawner(): PlacedSpawner =
     PlacedSpawner(location, spawner.particleAnim, effectiveMob, spawner.stackSize)
 
 /**
+ * Writes this spawner's own settings into EcoMobs' data, for a spawner that has never
+ * carried any - a dungeon spawner, a `/setblock`, a world edit.
+ *
+ * Ticking never needed this, as the loop reads whichever of the two a spawner has. What
+ * does need it is everything that only EcoMobs spawners can do: stacking, holograms,
+ * pickup rules, the attribute commands. All of those live in the data, so a spawner has
+ * to have some.
+ *
+ * Does nothing to a spawner that already has data, or to one with no mob to copy.
+ * Returns whether anything was written.
+ */
+fun CreatureSpawner.adoptVanillaSettings(): Boolean {
+    if (spawner.isCustomSpawner) {
+        return false
+    }
+
+    return copyVanillaSettingsInto(spawner)
+}
+
+/**
+ * Copies the block's own spawner settings into [data], as the settings EcoMobs would
+ * have written for the same spawner. False when there is no mob to copy.
+ */
+private fun CreatureSpawner.copyVanillaSettingsInto(data: SpawnerData): Boolean {
+    data.mob = effectiveMob ?: return false
+    data.delayMin = minSpawnDelay
+    data.delayMax = maxSpawnDelay
+    data.spawnCount = spawnCount
+    data.spawnRange = spawnRange
+    data.playerRange = requiredPlayerRange
+    data.maxNearby = maxNearbyEntities
+
+    return true
+}
+
+/**
  * The spawner as an item, carrying its whole stack unless [stackSize] says otherwise.
  */
 fun CreatureSpawner.toSpawnerItem(stackSize: Int = spawner.stackSize): ItemStack {
@@ -238,5 +274,30 @@ fun CreatureSpawner.toSpawnerItem(stackSize: Int = spawner.stackSize): ItemStack
     val fis = item.fast()
     spawner.copyTo(fis.spawner)
     fis.spawner.stackSize = stackSize
+    return fis.unwrap()
+}
+
+/**
+ * The spawner as an EcoMobs spawner item, whichever kind of spawner it is.
+ *
+ * A spawner with no EcoMobs data - a dungeon spawner - would otherwise give back the
+ * plain block, which carries no mob and so stacks with nothing and places as an empty
+ * spawner. This copies its own settings into the item instead, so what you get back is
+ * the spawner you were looking at.
+ */
+fun CreatureSpawner.toReplicaSpawnerItem(): ItemStack {
+    if (spawner.isCustomSpawner) {
+        return toSpawnerItem()
+    }
+
+    val item = ItemStack(Material.SPAWNER)
+    val fis = item.fast()
+
+    // A spawner with nothing in it gives back the plain block, as there is nothing to
+    // make a replica of.
+    if (!copyVanillaSettingsInto(fis.spawner)) {
+        return item
+    }
+
     return fis.unwrap()
 }

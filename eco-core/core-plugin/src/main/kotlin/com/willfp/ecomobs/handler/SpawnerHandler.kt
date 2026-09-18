@@ -10,11 +10,14 @@ import com.willfp.ecomobs.event.EcoMobSpawnerUnstackEvent
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerHolograms
+import com.willfp.ecomobs.spawner.SpawnerSettings
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
+import com.willfp.ecomobs.spawner.adoptVanillaSettings
 import com.willfp.ecomobs.spawner.applyVanillaSettings
 import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.spawner
 import com.willfp.ecomobs.spawner.toPlacedSpawner
+import com.willfp.ecomobs.spawner.toReplicaSpawnerItem
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
 import org.bukkit.Bukkit
@@ -269,8 +272,11 @@ object SpawnerHandler : Listener {
         val target = player.getTargetBlockExact(5) ?: return
         if (target.type != Material.SPAWNER) return
         val state = target.state as? CreatureSpawner ?: return
-        if (!state.spawner.isCustomSpawner) return
-        val item = state.toSpawnerItem()
+
+        // A vanilla spawner gives back a replica of itself rather than the empty block
+        // vanilla would hand over, so what you pick up is what you were looking at - and
+        // stacks like the spawners EcoMobs gives out.
+        val item = state.toReplicaSpawnerItem()
 
         val pickEvent = EcoMobSpawnerPickBlockEvent(player, target.location, state.spawner.mob, item)
         Bukkit.getPluginManager().callEvent(pickEvent)
@@ -305,6 +311,13 @@ object SpawnerHandler : Listener {
         for (blockState in chunk.tileEntities) {
             // Every spawner is tracked, not only EcoMobs' own, as the loop ticks them all.
             if (blockState !is CreatureSpawner) continue
+
+            // Spawners the world generated carry no EcoMobs data, so they are given
+            // their own settings as they come into reach. Written once - a spawner that
+            // has been adopted is left alone on every later chunk load.
+            if (SpawnerSettings.adoptVanillaSpawners && blockState.adoptVanillaSettings()) {
+                blockState.update(true, false)
+            }
 
             PlacedSpawners.set(
                 blockState.location,
