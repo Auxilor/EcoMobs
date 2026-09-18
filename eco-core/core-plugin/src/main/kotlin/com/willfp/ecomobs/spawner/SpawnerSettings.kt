@@ -57,6 +57,21 @@ object SpawnerSettings {
     var redstoneDeactivates = true
         private set
 
+    /**
+     * The most entities a chunk can hold before the spawners in it stop.
+     *
+     * This counts entities, not mobs. One stacked mob is one entity, however many mobs
+     * it stands for: a stack of 60 counts as 1, the same as a single mob on its own. So
+     * with mob stacking on, a limit of 50 can still mean thousands of mobs in a chunk.
+     *
+     * The point of the limit is the number of things the server has to tick, and a
+     * stack is one thing to tick.
+     *
+     * 0 turns the limit off.
+     */
+    var maxMobsPerChunk = 50
+        private set
+
     fun reload() {
         val config = plugin.configYml
 
@@ -70,6 +85,7 @@ object SpawnerSettings {
         maxLightLevel = config.getInt("spawners.checks.max-light-level").coerceAtLeast(0)
 
         redstoneDeactivates = config.getBool("spawners.redstone-deactivates")
+        maxMobsPerChunk = config.getInt("spawners.max-mobs-per-chunk").coerceAtLeast(0)
 
         warnAboutLegacyKeys()
     }

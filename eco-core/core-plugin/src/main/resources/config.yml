@@ -91,6 +91,19 @@ spawners:
   # this to false to keep that.
   redstone-deactivates: true
 
+  # The most things a chunk can hold before the spawners in it stop.
+  #
+  # This counts ENTITIES, not mobs. It does NOT add up stack sizes.
+  # One stacked mob is one entity, even if it stands for 60 mobs. So a stack of 60
+  # counts as 1, the same as a single mob on its own.
+  # That means 50 here can be thousands of mobs when mob stacking is on.
+  #
+  # The limit is about how much work the server has to do, and one stack is one thing
+  # for the server to tick, however many mobs it holds.
+  #
+  # Set to 0 to turn the limit off.
+  max-mobs-per-chunk: 50
+
   # The spawn requirements. Every default here is what vanilla does, so leaving them
   # alone leaves spawners feeling like vanilla spawners.
   checks:

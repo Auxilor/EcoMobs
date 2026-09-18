@@ -1,6 +1,8 @@
 package com.willfp.ecomobs.spawner
 
 import com.willfp.ecomobs.event.EcoMobSpawnerTickEvent
+import com.willfp.ecomobs.stacking.MobStacks
+import com.willfp.ecomobs.stacking.StackSettings
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.CreatureSpawner
@@ -123,15 +125,65 @@ class PlacedSpawner(
         }
 
         val toSpawn = tickEvent.spawnCount.coerceAtLeast(0) * tickEvent.stackSize.coerceAtLeast(0)
+
+        if (toSpawn <= 0) {
+            return
+        }
+
+        // How much room the chunk has left. Counts entities, not mobs, so a stack of
+        // sixty is one.
+        val budget = SpawnerChecks.entityBudget(location)
+
+        if (budget <= 0) {
+            return
+        }
+
         val type = resolveEntityType(mobId)
 
-        repeat(toSpawn) {
+        // With mob stacking on, the cycle goes in as stack size rather than as an entity
+        // per mob, which is what keeps a wall of spawners from filling the world.
+        if (StackSettings.enabled) {
+            spawnStacked(mobId, toSpawn, noAI, spawnRange, type)
+            return
+        }
+
+        repeat(minOf(toSpawn, budget)) {
             // A mob with nowhere to go is lost rather than retried elsewhere, which is
             // what vanilla does with a failed attempt.
             val spawnLocation = findSpawnLocation(spawnRange, type) ?: return@repeat
 
             spawnFromSpawner(location, spawnLocation, mobId, noAI)
         }
+    }
+
+    /**
+     * Puts the cycle into the nearest stack, or into one new stacked mob when there is
+     * no stack nearby to join.
+     *
+     * Whatever doesn't fit is dropped: a full stack next to the spawner holds it up the
+     * same way the nearby cap does, rather than the spawner working around it with more
+     * entities.
+     */
+    private fun spawnStacked(
+        mobId: String,
+        toSpawn: Int,
+        noAI: Boolean,
+        spawnRange: Int,
+        type: EntityType?
+    ) {
+        if (MobStacks.addToNearbyStack(location, mobId, toSpawn) > 0) {
+            return
+        }
+
+        val spawnLocation = findSpawnLocation(spawnRange, type) ?: return
+
+        spawnFromSpawner(
+            location,
+            spawnLocation,
+            mobId,
+            noAI,
+            toSpawn.coerceAtMost(StackSettings.maxSize)
+        )
     }
 
     /**

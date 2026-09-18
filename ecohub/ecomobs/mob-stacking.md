@@ -68,6 +68,12 @@ The mob joins the **nearest** stack that fits. The absorbed entity is removed an
 
 Stack size is stored on the entity, so a stack survives chunk unloads, restarts, and anything else that takes it out of memory. A stack of one carries no data at all — it is simply a mob again.
 
+## Spawners
+
+With stacking on, spawners don't spawn a mob per mob. A cycle is added to the nearest stack within `radius`, or spawned as a single mob already standing for the whole cycle, capped at `max-size`. See [Custom Spawners](./custom-spawners.md#spawners-with-mob-stacking-on).
+
+`max-nearby` on a spawner counts a stack as every mob it holds, so the vanilla default of `6` stops a stacking spawner almost at once. Raise it on any spawner meant to feed a farm.
+
 ## Nameplates
 
 Stacks are labelled with `nameplate`, drawn above the mob:

@@ -45,6 +45,7 @@ stacking: # Merges nearby mobs of the same kind into one entity; see Mob Stackin
 spawners: # How spawners tick; see Custom Spawners
   tick-rate: 5 # Ticks between spawner loop runs
   redstone-deactivates: true # Whether a powered spawner stops spawning
+  max-mobs-per-chunk: 50 # Entities a chunk can hold before its spawners stop; counts entities, NOT summed stack sizes; 0 is off
   checks: # The spawn requirements; every default is what vanilla does
     spawn-space: true # Whether a mob needs room where it would spawn
     solid-ground: false # Whether a mob needs solid ground; vanilla spawners do not require it

@@ -119,6 +119,29 @@ object SpawnerChecks {
             .sumOf { (it as? Mob)?.stack?.size ?: 1 }
     }
 
+    /**
+     * How many more entities the chunk at [location] can take before its spawners stop.
+     *
+     * This counts entities, not mobs. One stacked mob is one entity, however many mobs
+     * it stands for: a stack of 60 counts as 1, the same as a single mob on its own. So
+     * a limit of 50 is 50 things in the chunk, which with stacking on can be thousands
+     * of mobs.
+     *
+     * The limit is about how much the server has to tick, and a stack is one thing to
+     * tick, which is why it is counted the way it is.
+     */
+    fun entityBudget(location: Location): Int {
+        val max = SpawnerSettings.maxMobsPerChunk
+
+        if (max <= 0) {
+            return Int.MAX_VALUE
+        }
+
+        val current = location.chunk.entities.count { it is Mob }
+
+        return (max - current).coerceAtLeast(0)
+    }
+
     private fun hasRoomFor(block: Block, type: EntityType?): Boolean {
         if (!block.isPassable) {
             return false

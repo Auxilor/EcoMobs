@@ -67,6 +67,7 @@ EcoMobs ticks every spawner itself — its own and vanilla's, dungeon spawners i
 spawners:
   tick-rate: 5 # Ticks between loop runs
   redstone-deactivates: true # Whether a powered spawner stops spawning
+  max-mobs-per-chunk: 50 # Entities a chunk can hold before its spawners stop
   checks:
     spawn-space: true
     solid-ground: false
@@ -82,6 +83,20 @@ What the loop does every cycle:
 - `count` mobs are spawned per cycle, scattered within `radius` horizontally and one block either side vertically. A stack of spawners spawns that many mobs per spawner in the stack, on the one cycle.
 - The spawner holds off while `max-nearby` or more of that mob are already around — counted in a box of double `radius` across and 4 blocks tall, and only mobs of that exact kind count. Two EcoMobs built on the same base entity do not block each other.
 
+### Spawners with mob stacking on
+
+While `stacking.enabled` is true, a cycle goes into the world as **stack size, not as one entity per mob**.
+
+- If there is a stack of that mob within `stacking.radius`, the cycle is added to it and nothing is spawned.
+- If there isn't, one mob is spawned already standing for the whole cycle, up to `stacking.max-size`.
+- Anything that doesn't fit is dropped. A full stack beside the spawner holds it up the same way `max-nearby` does.
+
+This is what lets a wall of spawners represent hundreds of thousands of mobs without the server ticking hundreds of thousands of entities. A spawner set to `count: 200`, stacked 64 high, puts **one** entity into the world per cycle instead of 12 800.
+
+Note that `max-nearby` counts stacked mobs as every mob they stand for, so on a stacking server the default of `6` stops a spawner almost immediately — raise it on farm spawners.
+
+Growing a stack this way spawns nothing, so no merge event is fired for it.
+
 ### `checks`
 
 | Check | Default | What it does |
@@ -94,6 +109,20 @@ What the loop does every cycle:
 | `max-light-level` | `0` | The most block light a darkness-spawning mob tolerates. Vanilla is `0`; raising it lets spawners keep working in dim rooms. |
 
 For a grinder or an arena that should fire regardless of the light, set `light-level: false`. To let mobs spawn inside a 1x1 hole as well, add `spawn-space: false`.
+
+### `max-mobs-per-chunk`
+
+How many things a chunk can hold before the spawners in it stop for that cycle. `0` turns it off.
+
+:::info
+**This counts entities, not mobs. It does not add up stack sizes.**
+
+One stacked mob is one entity, even when it stands for 60 mobs. A stack of 60 counts as **1**, exactly like a single mob standing on its own. So `50` is 50 entities in the chunk, which with mob stacking on can be thousands of mobs.
+
+The limit exists because of the work the server has to do, and one stack is one thing for the server to tick, however many mobs it holds.
+:::
+
+With mob stacking off, a cycle spawns at most as many mobs as the chunk has room for, and the rest of the cycle is dropped.
 
 ### `redstone-deactivates`
 

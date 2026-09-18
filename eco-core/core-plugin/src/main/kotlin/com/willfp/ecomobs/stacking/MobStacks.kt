@@ -3,6 +3,7 @@ package com.willfp.ecomobs.stacking
 import com.willfp.ecomobs.event.EcoMobStackMergeEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.entity.Ageable
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Tameable
@@ -117,6 +118,60 @@ object MobStacks {
         remove(mob)
 
         return true
+    }
+
+    /**
+     * Adds up to [amount] mobs of [mobId] to the nearest stack around [location] with
+     * room for them, returning how many were taken. Zero means there was no stack there
+     * to join.
+     *
+     * This is how a spawner puts a whole cycle into the world without putting an entity
+     * per mob into it: the mobs become stack size on something already standing there.
+     * Nothing is spawned, so [EcoMobStackMergeEvent] is not called - no mob was absorbed
+     * into another.
+     */
+    fun addToNearbyStack(location: Location, mobId: String, amount: Int): Int {
+        if (!StackSettings.enabled || amount <= 0) {
+            return 0
+        }
+
+        val world = location.world ?: return 0
+        val radius = StackSettings.radius
+        val maxSize = StackSettings.maxSize
+
+        val target = world.getNearbyEntities(location, radius, radius, radius)
+            .asSequence()
+            .filterIsInstance<Mob>()
+            .filter { it.stack.size < maxSize }
+            .filter { isKind(it, mobId) }
+            .filter { canStack(it) }
+            .minByOrNull { it.location.distanceSquared(location) }
+            ?: return 0
+
+        val taken = minOf(amount, maxSize - target.stack.size)
+
+        target.stack.size += taken
+
+        return taken
+    }
+
+    /**
+     * Whether [mob] is what a spawner set to [mobId] spawns, for both EcoMobs and plain
+     * entity types. Babies are left out while babies keep their own stacks, as the mobs
+     * a spawner makes are adults.
+     */
+    private fun isKind(mob: Mob, mobId: String): Boolean {
+        if (StackSettings.matchAge && (mob as? Ageable)?.isAdult == false) {
+            return false
+        }
+
+        val ecoMobId = mob.ecoMob?.id
+
+        if (ecoMobId != null) {
+            return ecoMobId.equals(mobId, ignoreCase = true)
+        }
+
+        return mob.type.name.equals(mobId, ignoreCase = true)
     }
 
     /**
