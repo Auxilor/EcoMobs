@@ -81,7 +81,11 @@ object SpawnerStackHandler : Listener {
             return
         }
 
-        val item = player.inventory.getItem(slot) ?: return
+        val item = player.inventory.getItem(slot)
+
+        if (item.type != Material.SPAWNER) {
+            return
+        }
 
         item.amount -= amount
 
