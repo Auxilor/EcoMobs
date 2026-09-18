@@ -1,10 +1,12 @@
 package com.willfp.ecomobs.mob.event.impl
 
 import com.willfp.eco.core.events.EntityDeathByEntityEvent
+import com.willfp.ecomobs.event.EcoMobKillPlayerEvent
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
+import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -23,6 +25,8 @@ object MobEventKillPlayer : MobEvent("kill_player") {
             location = bukkitMob.location,
             event = event
         )
+
+        Bukkit.getPluginManager().callEvent(EcoMobKillPlayerEvent(living, player))
 
         living.handleEvent(this, data.dispatch(player.toDispatcher()))
     }

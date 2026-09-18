@@ -1,15 +1,34 @@
 package com.willfp.ecomobs.spawner
 
+import com.willfp.ecomobs.event.EcoMobSpawnerTickEvent
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.impl.ecoMob
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.Mob
 import kotlin.random.Random
 
+/**
+ * A spawner EcoMobs tracks.
+ *
+ * Everything needed to describe the spawner is mirrored here, so anything that only
+ * has to name it - holograms, the API - can do that without loading its chunk to read
+ * the block state back.
+ */
 class PlacedSpawner(
     val location: Location,
-    val animationId: String?
+    val animationId: String?,
+
+    /**
+     * The mob the spawner spawns, mirrored from its block state.
+     */
+    val mobId: String? = null,
+
+    /**
+     * How many spawners it stands in for, mirrored from its block state.
+     */
+    val stackSize: Int = 1
 ) {
     /**
      * Ticks left until the next spawn attempt. Only used in [SpawnerMode.ECOMOBS].
@@ -62,9 +81,13 @@ class PlacedSpawner(
 
     private fun isPlayerInRange(): Boolean {
         val world = location.world ?: return false
-        val rangeSquared = playerRange.toDouble() * playerRange
+        val range = playerRange.toDouble()
+        val rangeSquared = range * range
 
-        return world.players.any { it.location.distanceSquared(location) <= rangeSquared }
+        // Only the players near the spawner, whose region this tick already owns.
+        // world.players would reach players being ticked on other regions.
+        return world.getNearbyPlayers(location, range)
+            .any { it.location.distanceSquared(location) <= rangeSquared }
     }
 
     private fun randomDelay(state: CreatureSpawner): Int {
@@ -81,8 +104,21 @@ class PlacedSpawner(
             return
         }
 
-        repeat(state.spawnCount) {
-            spawnFromSpawner(randomSpawnLocation(state.spawnRange), mobId)
+        // A stack of spawners spawns as many mobs as it holds, on the one cycle.
+        val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
+        val noAI = state.spawner.noAI
+
+        val tickEvent = EcoMobSpawnerTickEvent(location, mobId, state.spawnCount, stackSize)
+        Bukkit.getPluginManager().callEvent(tickEvent)
+
+        if (tickEvent.isCancelled) {
+            return
+        }
+
+        val toSpawn = tickEvent.spawnCount.coerceAtLeast(0) * tickEvent.stackSize.coerceAtLeast(0)
+
+        repeat(toSpawn) {
+            spawnFromSpawner(location, randomSpawnLocation(state.spawnRange), mobId, noAI)
         }
     }
 

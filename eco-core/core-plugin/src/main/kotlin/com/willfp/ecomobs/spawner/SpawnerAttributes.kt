@@ -10,7 +10,7 @@ val PICKUP_VALUES = listOf("allow", "silk_touch", "deny")
  * spawner items and to placed spawner blocks.
  */
 object SpawnerAttributes {
-    val ATTRIBUTES = listOf("mob", "delay", "radius", "player-radius", "count", "max-nearby", "pickup", "particle", "explosion-proof")
+    val ATTRIBUTES = listOf("mob", "delay", "radius", "player-radius", "count", "max-nearby", "pickup", "particle", "explosion-proof", "no-ai", "stack-size")
 
     fun valueCount(attribute: String): Int = if (attribute == "delay") 2 else 1
 
@@ -63,6 +63,15 @@ object SpawnerAttributes {
                 if (value != "true" && value != "false") return false
                 data.explosionProof = value == "true"
             }
+            "no-ai" -> {
+                val value = args.getOrNull(0)?.lowercase() ?: return false
+                if (value != "true" && value != "false") return false
+                data.noAI = value == "true"
+            }
+            "stack-size" -> {
+                val value = args.getOrNull(0)?.toIntOrNull()?.takeIf { it >= 1 } ?: return false
+                data.stackSize = value
+            }
             else -> return false
         }
         return true
@@ -73,7 +82,8 @@ object SpawnerAttributes {
         "delay" -> if (valueIndex == 0) listOf("200", "400", "800") else listOf("400", "800", "1600")
         "pickup" -> PICKUP_VALUES
         "particle" -> listOf("none") + SpawnerAnimations.keys()
-        "explosion-proof" -> listOf("true", "false")
+        "explosion-proof", "no-ai" -> listOf("true", "false")
+        "stack-size" -> listOf("1", "8", "16", "64")
         else -> listOf("1", "4", "8", "16")
     }
 }

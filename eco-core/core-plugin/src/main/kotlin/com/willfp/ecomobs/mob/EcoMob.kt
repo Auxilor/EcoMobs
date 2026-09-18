@@ -69,6 +69,13 @@ interface EcoMob : KRegistrable {
     val entityHolder: Holder
 
     /**
+     * Every mob of this type currently tracked, in no particular order.
+     *
+     * A snapshot: mobs can be spawned and removed from other regions while it is read.
+     */
+    val livingMobs: Collection<LivingMob>
+
+    /**
      * Get a living mob from a bukkit mob.
      */
     fun getLivingMob(mob: Mob): LivingMob? {

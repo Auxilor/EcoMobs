@@ -8,6 +8,7 @@ import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointType
 import com.willfp.ecomobs.category.spawning.spawnpoints.spawnPoints
+import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.plugin
 import com.willfp.libreforge.EmptyProvidedHolder
@@ -59,9 +60,10 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
 
         private fun tick() {
             for (player in Bukkit.getOnlinePlayers()) {
-                // The spawn points belong to the player's region, so the work is
-                // submitted to their context rather than run from the global one.
-                plugin.scheduler.on(player).run {
+                // Spawn points are found by scanning the blocks around the player, and
+                // the mobs then go into the world there, so the whole pass runs on the
+                // player's own region rather than the global one.
+                onEntity(player) {
                     tickPlayer(player)
                 }
             }

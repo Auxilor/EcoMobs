@@ -4,13 +4,13 @@ import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
+import com.willfp.ecomobs.event.EcoMobStageChangeEvent
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.placeholder.MobPlaceholders
 import com.willfp.ecomobs.mob.placeholder.formatMobPlaceholders
 import com.willfp.ecomobs.mob.stage.DamageStage
-import com.willfp.ecomobs.mob.stage.DamageStageMode
 import com.willfp.ecomobs.mob.stage.DamageStageTracker
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandler
@@ -33,14 +33,25 @@ internal class LivingMobImpl(
     override val entity: Mob,
     private val trackingRemovalCallback: () -> Unit
 ) : LivingMob {
+    // The flags below are written from the entity's ticker and read from elsewhere: the
+    // onRetired callback, chunk unload, and placeholder reads on other regions. Volatile
+    // so none of those can see a stale value.
+    @Volatile
     private var ticker: EcoTask? = null
 
+    @Volatile
     private var isRunning = false
 
+    @Volatile
     private var tick = 0
 
     // Set when the entity's chunk unloads, so the removal that follows isn't treated as a despawn.
+    @Volatile
     private var isUnloaded = false
+
+    // Set once the removal handlers have run, so a retire racing a cancel can't fire them twice.
+    @Volatile
+    private var hasHandledRemove = false
 
     private val tickHandlers = mutableListOf<TickHandler>()
 
@@ -54,7 +65,7 @@ internal class LivingMobImpl(
         get() = mob.lifespan - tick
 
     internal val stageTracker = if (mob.usesDamageStages) {
-        DamageStageTracker(mob.damageStages, ::triggerStageEffects)
+        DamageStageTracker(mob.damageStages, ::triggerStageEffects, ::fireStageChange)
     } else {
         null
     }
@@ -68,13 +79,11 @@ internal class LivingMobImpl(
     override val damageStageProgress: Double
         get() = stageTracker?.stageProgress ?: 1.0
 
-    override val hitsRemaining: Double
-        get() = stageTracker
-            ?.takeIf { it.stage.mode == DamageStageMode.HITS }
-            ?.remaining
-            ?: 0.0
+    override val stageRemaining: Double
+        get() = stageTracker?.remaining ?: 0.0
 
     // Fix for drops being sent twice
+    @Volatile
     private var hasBeenKilled = false
 
     fun addTickHandler(handler: TickHandler) {
@@ -169,6 +178,17 @@ internal class LivingMobImpl(
         }
     }
 
+    private fun fireStageChange(
+        previousStage: DamageStage,
+        stage: DamageStage?,
+        stageNumber: Int,
+        player: Player?
+    ) {
+        Bukkit.getPluginManager().callEvent(
+            EcoMobStageChangeEvent(this, previousStage, stage, stageNumber, player)
+        )
+    }
+
     private fun triggerStageEffects(effects: Chain, player: Player?) {
         val trigger = TriggerData(
             player = player,
@@ -201,9 +221,22 @@ internal class LivingMobImpl(
 
     private fun handleRemove(removeTracking: Boolean = true) {
         ticker?.cancel()
+
+        // Untracking stays outside the guard: kill(removeTracking = false) leaves the
+        // mob tracked on purpose, and a later despawn must still be able to drop it.
         if (removeTracking) {
             trackingRemovalCallback()
         }
+
+        // On Folia the entity's task can retire on one thread while another cancels it,
+        // so the handlers below can be reached twice for one removal.
+        if (hasHandledRemove) {
+            return
+        }
+
+        hasHandledRemove = true
+
+        plugin.topDamagerHandler.forget(entity.uniqueId)
 
         for (handler in this.tickHandlers) {
             handler.onRemove(this, tick)
