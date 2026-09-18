@@ -87,7 +87,9 @@ object SpawnerStackHandler : Listener {
             return
         }
 
-        item.amount -= amount
+        // Capped, as a listener on EcoMobSpawnerStackEvent can raise the amount taken
+        // above what the player is actually holding.
+        item.amount -= amount.coerceAtMost(item.amount)
 
         player.inventory.setItem(slot, item.takeIf { it.amount > 0 })
     }

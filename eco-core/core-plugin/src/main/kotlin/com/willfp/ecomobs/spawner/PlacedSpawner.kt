@@ -1,7 +1,9 @@
 package com.willfp.ecomobs.spawner
 
+import com.willfp.ecomobs.event.EcoMobSpawnerTickEvent
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.impl.ecoMob
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.Mob
@@ -88,8 +90,17 @@ class PlacedSpawner(
         // A stack of spawners spawns as many mobs as it holds, on the one cycle.
         val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
 
-        repeat(state.spawnCount * stackSize) {
-            spawnFromSpawner(randomSpawnLocation(state.spawnRange), mobId)
+        val tickEvent = EcoMobSpawnerTickEvent(location, mobId, state.spawnCount, stackSize)
+        Bukkit.getPluginManager().callEvent(tickEvent)
+
+        if (tickEvent.isCancelled) {
+            return
+        }
+
+        val toSpawn = tickEvent.spawnCount.coerceAtLeast(0) * tickEvent.stackSize.coerceAtLeast(0)
+
+        repeat(toSpawn) {
+            spawnFromSpawner(location, randomSpawnLocation(state.spawnRange), mobId)
         }
     }
 

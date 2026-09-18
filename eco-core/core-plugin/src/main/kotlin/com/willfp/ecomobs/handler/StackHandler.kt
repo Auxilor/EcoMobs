@@ -1,11 +1,14 @@
 package com.willfp.ecomobs.handler
 
+import com.willfp.ecomobs.event.EcoMobStackDeathEvent
+import com.willfp.ecomobs.event.EcoMobStackSplitEvent
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.stacking.MobStacks
 import com.willfp.ecomobs.stacking.StackSettings
 import com.willfp.ecomobs.stacking.stack
+import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -38,7 +41,10 @@ object StackHandler : Listener {
             return
         }
 
-        if (StackSettings.killWholeStack) {
+        val deathEvent = EcoMobStackDeathEvent(mob, size, StackSettings.killWholeStack)
+        Bukkit.getPluginManager().callEvent(deathEvent)
+
+        if (deathEvent.killWholeStack) {
             multiplyRewards(event, mob, size)
             return
         }
@@ -80,6 +86,19 @@ object StackHandler : Listener {
         val ecoMob = mob.ecoMob
         val type = mob.type
 
+        val splitEvent = EcoMobStackSplitEvent(mob, location, remaining)
+        Bukkit.getPluginManager().callEvent(splitEvent)
+
+        if (splitEvent.isCancelled) {
+            return
+        }
+
+        val left = splitEvent.remaining
+
+        if (left <= 0) {
+            return
+        }
+
         plugin.scheduler.at(location).run {
             val spawned = if (ecoMob != null) {
                 ecoMob.spawn(location, SpawnReason.NATURAL)?.entity
@@ -88,7 +107,7 @@ object StackHandler : Listener {
             }
 
             if (spawned != null) {
-                spawned.stack.size = remaining
+                spawned.stack.size = left
             }
         }
     }

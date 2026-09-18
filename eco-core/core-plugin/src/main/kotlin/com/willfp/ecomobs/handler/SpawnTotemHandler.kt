@@ -1,10 +1,12 @@
 package com.willfp.ecomobs.handler
 
+import com.willfp.ecomobs.event.EcoMobTotemBuildEvent
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.SpawnTotem
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
+import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
@@ -44,7 +46,14 @@ object SpawnTotemHandler : Listener {
                     continue
                 }
 
-                mob.spawn(location, SpawnReason.TOTEM)
+                val buildEvent = EcoMobTotemBuildEvent(mob, totem, location, player)
+                Bukkit.getPluginManager().callEvent(buildEvent)
+
+                if (buildEvent.isCancelled) {
+                    continue
+                }
+
+                mob.spawn(buildEvent.location, SpawnReason.TOTEM)
             }
         }
     }

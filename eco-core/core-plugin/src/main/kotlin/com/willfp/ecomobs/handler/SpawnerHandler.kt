@@ -2,6 +2,11 @@ package com.willfp.ecomobs.handler
 
 import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.fast.fast
+import com.willfp.ecomobs.event.EcoMobSpawnerBreakEvent
+import com.willfp.ecomobs.event.EcoMobSpawnerExplodeEvent
+import com.willfp.ecomobs.event.EcoMobSpawnerPickBlockEvent
+import com.willfp.ecomobs.event.EcoMobSpawnerPlaceEvent
+import com.willfp.ecomobs.event.EcoMobSpawnerUnstackEvent
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.PlacedSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
@@ -15,9 +20,11 @@ import com.willfp.ecomobs.spawner.spawnFromSpawner
 import com.willfp.ecomobs.spawner.spawner
 import com.willfp.ecomobs.spawner.toSpawnerItem
 import io.papermc.paper.event.player.PlayerPickItemEvent
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.Block
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -54,6 +61,14 @@ object SpawnerHandler : Listener {
 
         val mobId = placed.spawner.mob ?: return
         val animId = placed.spawner.particleAnim
+
+        val placeEvent = EcoMobSpawnerPlaceEvent(event.player, location, mobId, placed.spawner.stackSize)
+        Bukkit.getPluginManager().callEvent(placeEvent)
+
+        if (placeEvent.isCancelled) {
+            event.isCancelled = true
+            return
+        }
 
         plugin.scheduler.at(location).run {
             val state = location.block.state as? CreatureSpawner ?: return@run
@@ -101,7 +116,7 @@ object SpawnerHandler : Listener {
         val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
 
         repeat(stackSize) {
-            spawnFromSpawner(event.location, mobId)
+            spawnFromSpawner(state.location, event.location, mobId)
         }
     }
 
@@ -131,18 +146,51 @@ object SpawnerHandler : Listener {
         if (SpawnerStackSettings.enabled && stackSize > 1 && !player.isSneaking) {
             event.isCancelled = true
 
-            state.spawner.stackSize = stackSize - 1
+            val unstackEvent = EcoMobSpawnerUnstackEvent(
+                player,
+                block.location,
+                state.spawner.mob,
+                stackSize,
+                1,
+                dropsItem
+            )
+
+            Bukkit.getPluginManager().callEvent(unstackEvent)
+
+            if (unstackEvent.isCancelled) {
+                return
+            }
+
+            // The block stays put on this path, so the stack always keeps at least one.
+            val taken = unstackEvent.amount.coerceIn(1, stackSize - 1)
+
+            state.spawner.stackSize = stackSize - taken
             state.update()
 
-            if (dropsItem) {
-                block.world.dropItemNaturally(block.location, state.toSpawnerItem(1))
+            if (unstackEvent.dropsItem) {
+                block.world.dropItemNaturally(block.location, state.toSpawnerItem(taken))
             }
 
             SpawnerHolograms.refresh(block.location)
             return
         }
 
-        if (dropsItem) {
+        val breakEvent = EcoMobSpawnerBreakEvent(
+            player,
+            block.location,
+            state.spawner.mob,
+            stackSize,
+            dropsItem
+        )
+
+        Bukkit.getPluginManager().callEvent(breakEvent)
+
+        if (breakEvent.isCancelled) {
+            event.isCancelled = true
+            return
+        }
+
+        if (breakEvent.dropsItem) {
             event.isDropItems = false
             block.world.dropItemNaturally(block.location, state.toSpawnerItem())
         }
@@ -188,6 +236,15 @@ object SpawnerHandler : Listener {
         val state = target.state as? CreatureSpawner ?: return
         if (!state.spawner.isCustomSpawner) return
         val item = state.toSpawnerItem()
+
+        val pickEvent = EcoMobSpawnerPickBlockEvent(player, target.location, state.spawner.mob, item)
+        Bukkit.getPluginManager().callEvent(pickEvent)
+
+        if (pickEvent.isCancelled) {
+            event.isCancelled = true
+            return
+        }
+
         Display.display(item, player)
         plugin.scheduler.on(player).run {
             player.inventory.setItem(player.inventory.heldItemSlot, item)
@@ -241,25 +298,39 @@ object SpawnerHandler : Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun handleEntityExplosion(event: EntityExplodeEvent) {
-        event.blockList().removeIf { block ->
-            if (block.type != Material.SPAWNER) return@removeIf false
-            val state = block.state as? CreatureSpawner ?: return@removeIf false
-            if (state.spawner.isCustomSpawner && state.spawner.explosionProof) return@removeIf true
-            PlacedSpawners.remove(block.location)
-            SpawnerHolograms.refresh(block.location)
-            false
-        }
+        event.blockList().removeIf(::survivesExplosion)
     }
 
     @EventHandler(ignoreCancelled = true)
     fun handleBlockExplosion(event: BlockExplodeEvent) {
-        event.blockList().removeIf { block ->
-            if (block.type != Material.SPAWNER) return@removeIf false
-            val state = block.state as? CreatureSpawner ?: return@removeIf false
-            if (state.spawner.isCustomSpawner && state.spawner.explosionProof) return@removeIf true
-            PlacedSpawners.remove(block.location)
-            SpawnerHolograms.refresh(block.location)
-            false
+        event.blockList().removeIf(::survivesExplosion)
+    }
+
+    /**
+     * Whether [block] is taken out of the explosion's block list, which is how a spawner
+     * is left standing. Anything that does go up stops being tracked here.
+     */
+    private fun survivesExplosion(block: Block): Boolean {
+        if (block.type != Material.SPAWNER) return false
+        val state = block.state as? CreatureSpawner ?: return false
+
+        if (state.spawner.isCustomSpawner) {
+            val explodeEvent = EcoMobSpawnerExplodeEvent(
+                block.location,
+                state.spawner.mob,
+                state.spawner.stackSize,
+                state.spawner.explosionProof
+            )
+
+            Bukkit.getPluginManager().callEvent(explodeEvent)
+
+            if (explodeEvent.isProtected) {
+                return true
+            }
         }
+
+        PlacedSpawners.remove(block.location)
+        SpawnerHolograms.refresh(block.location)
+        return false
     }
 }

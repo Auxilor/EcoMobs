@@ -1,6 +1,8 @@
 package com.willfp.ecomobs.spawner
 
 import com.willfp.eco.core.fast.FastItemStack
+import com.willfp.ecomobs.event.EcoMobSpawnerStackEvent
+import org.bukkit.Bukkit
 import org.bukkit.block.CreatureSpawner
 
 object SpawnerStacks {
@@ -28,7 +30,25 @@ object SpawnerStacks {
             return 0
         }
 
-        val taken = minOf(amount, space)
+        val stackEvent = EcoMobSpawnerStackEvent(
+            state.location,
+            state.spawner.mob,
+            current,
+            minOf(amount, space)
+        )
+
+        Bukkit.getPluginManager().callEvent(stackEvent)
+
+        if (stackEvent.isCancelled) {
+            return 0
+        }
+
+        // Capped again, as a listener is free to raise the amount past what fits.
+        val taken = stackEvent.amount.coerceIn(0, space)
+
+        if (taken <= 0) {
+            return 0
+        }
 
         state.spawner.stackSize = current + taken
         state.update()

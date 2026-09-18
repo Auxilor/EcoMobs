@@ -25,6 +25,7 @@ import com.willfp.ecomobs.config.toConfigKey
 import com.willfp.ecomobs.config.validate
 import com.willfp.ecomobs.config.validateNotNull
 import com.willfp.ecomobs.display.BaseItem
+import com.willfp.ecomobs.event.EcoMobDropsEvent
 import com.willfp.ecomobs.event.EcoMobPreSpawnEvent
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
@@ -392,7 +393,14 @@ internal class ConfigDrivenEcoMob(
     }
 
     override fun spawnDrops(location: Location, player: Player?) {
-        drops.drop(location, player)
+        val dropsEvent = EcoMobDropsEvent(this, location, player, drops.roll(player), drops.experience)
+        Bukkit.getPluginManager().callEvent(dropsEvent)
+
+        if (dropsEvent.isCancelled) {
+            return
+        }
+
+        drops.give(location, player, dropsEvent.drops, dropsEvent.experience)
     }
 
     override fun handleEvent(event: MobEvent, trigger: DispatchedTrigger) {
