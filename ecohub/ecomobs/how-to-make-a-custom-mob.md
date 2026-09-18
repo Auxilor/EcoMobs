@@ -320,7 +320,59 @@ defence:
     entity_explosion: 1
 ```
 
-The full list of damage causes is on the Spigot `EntityDamageEvent.DamageCause` javadoc.
+#### Damage modifiers
+
+Each key is a damage cause, and each value multiplies the damage the mob takes from that cause. `1` is vanilla damage, `0.5` is half, `2` is double, and `0` makes the mob immune to it. Any cause you leave out stays at `1`, so you only need to list the ones you want to change.
+
+Keys are the lowercase name of a Spigot `EntityDamageEvent.DamageCause` value — `FIRE_TICK` is written `fire_tick`. The full list is on the [`DamageCause` javadoc](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html), and every value on it works here, not only the ones in the example file.
+
+The ones worth reaching for:
+
+| Cause | Damage from |
+| --- | --- |
+| `entity_attack` | A melee hit from a player or mob |
+| `entity_sweep_attack` | A sword sweep hitting the mob as a secondary target |
+| `projectile` | Arrows, tridents, snowballs, and other thrown or fired projectiles |
+| `magic` | Potions of Harming, Instant Damage arrows, evoker fangs |
+| `entity_explosion` | Creepers, ghast fireballs, end crystals, other mobs |
+| `block_explosion` | TNT and beds |
+| `fire` | Standing in fire |
+| `fire_tick` | Burning, once alight |
+| `lava` | Standing in lava |
+| `hot_floor` | Magma blocks |
+| `fall` | Falling |
+| `drowning` | Being underwater without air |
+| `suffocation` | Being inside a solid block |
+| `lightning` | A lightning strike |
+| `thorns` | The Thorns enchantment on whoever the mob hit |
+| `void` | Falling out of the world |
+| `custom` | Damage another plugin dealt with no vanilla cause |
+
+A boss that should ignore its own arena hazards is a few lines:
+
+```yaml
+defence:
+  can-mount: false
+  damage-modifiers:
+    fire: 0 # Immune to its own fire
+    fire_tick: 0
+    lava: 0
+    hot_floor: 0
+    projectile: 0.25 # Bows barely scratch it - melee or nothing
+    magic: 2 # But splash potions hurt twice as much
+```
+
+:::info
+The multiplier applies to the base damage, before armour, resistance, and enchantment protection are taken off, so the reductions scale with it and a `0.5` modifier really does halve the damage that lands.
+
+It only affects damage the mob **takes**. To change the damage it **deals**, set `attack-damage` in the `mob` lookup string, or use the `melee_attack` trigger under `effects`.
+:::
+
+:::warning
+On a mob with damage stages, a modifier only changes how fast a `mode: health` stage drains. A `mode: hits` stage counts the hit whatever the multiplier is, including `0` — the whole point of a hits stage is that the weapon and the damage do not matter. Use `player-only: true` on the stage if you want hazards to stop counting.
+
+Do not use negative values. Set `0` for immunity.
+:::
 
 ### Drops
 
