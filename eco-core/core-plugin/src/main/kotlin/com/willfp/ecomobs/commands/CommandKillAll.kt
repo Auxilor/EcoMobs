@@ -1,13 +1,10 @@
 package com.willfp.ecomobs.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
+import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMobs
-import com.willfp.ecomobs.mob.impl.mobKey
 import com.willfp.ecomobs.plugin
-import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Mob
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.util.StringUtil
 
 object CommandKillAll : Subcommand(
@@ -36,23 +33,18 @@ object CommandKillAll : Subcommand(
 
         var killed = 0
 
-        for (world in Bukkit.getWorlds()) {
-            for (entity in world.entities.filterIsInstance<Mob>()) {
-                // Read the ID from the entity itself rather than from tracking, so that mobs
-                // spawned before a restart or reload are still killed.
-                val id = entity.persistentDataContainer.get(mobKey, PersistentDataType.STRING)
-                    ?: continue
+        // Walked over what EcoMobs tracks rather than over world.entities: no thread
+        // owns every region, so there is no thread that can iterate a whole world.
+        // Mobs loaded before the plugin enabled are picked up by ChunkHandler, so a
+        // loaded mob of ours is a tracked mob of ours.
+        for (ecoMob in EcoMobs.values()) {
+            if (filter != null && ecoMob.id != filter) {
+                continue
+            }
 
-                if (filter != null && id != filter) {
-                    continue
-                }
-
-                val livingMob = EcoMobs[id]?.getLivingMob(entity)
-
-                if (livingMob != null) {
-                    livingMob.despawn()
-                } else {
-                    entity.remove()
+            for (living in ecoMob.livingMobs.toList()) {
+                onEntity(living.entity) {
+                    living.despawn()
                 }
 
                 killed++

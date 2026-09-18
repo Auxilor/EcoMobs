@@ -24,6 +24,8 @@ val spawnerMaxNearbyKey = namespacedKeyOf("ecomobs", "spawner_max_nearby")
 val spawnerPickupKey = namespacedKeyOf("ecomobs", "spawner_pickup")
 val spawnerParticleAnimKey = namespacedKeyOf("ecomobs", "spawner_particle_anim")
 val spawnerExplosionProofKey = namespacedKeyOf("ecomobs", "spawner_explosion_proof")
+val spawnerStackSizeKey = namespacedKeyOf("ecomobs", "spawner_stack_size")
+val spawnerNoAIKey = namespacedKeyOf("ecomobs", "spawner_no_ai")
 
 /**
  * The values a spawner falls back to when its data has never been written.
@@ -103,6 +105,45 @@ value class SpawnerData(val pdc: PersistentDataContainer) {
             pdc.set(spawnerExplosionProofKey, PersistentDataType.BYTE, if (value) 1 else 0)
         }
 
+    /**
+     * Whether the mobs this spawner spawns have their AI stripped.
+     */
+    var noAI: Boolean
+        get() = pdc.get(spawnerNoAIKey, PersistentDataType.BYTE) == 1.toByte()
+        set(value) {
+            pdc.set(spawnerNoAIKey, PersistentDataType.BYTE, if (value) 1 else 0)
+        }
+
+    /**
+     * How many spawners this one stands in for.
+     */
+    var stackSize: Int
+        get() = pdc.getInt(spawnerStackSizeKey, 1)
+        set(value) {
+            // A stack of one is just a spawner, so it carries no data at all.
+            if (value <= 1) {
+                pdc.remove(spawnerStackSizeKey)
+            } else {
+                pdc.setInt(spawnerStackSizeKey, value)
+            }
+        }
+
+    /**
+     * Whether two spawners are identical in everything but stack size, and so can merge.
+     */
+    fun matches(other: SpawnerData): Boolean =
+        mob == other.mob &&
+                delayMin == other.delayMin &&
+                delayMax == other.delayMax &&
+                spawnCount == other.spawnCount &&
+                spawnRange == other.spawnRange &&
+                playerRange == other.playerRange &&
+                maxNearby == other.maxNearby &&
+                pickup == other.pickup &&
+                particleAnim == other.particleAnim &&
+                explosionProof == other.explosionProof &&
+                noAI == other.noAI
+
     fun copyTo(other: SpawnerData) {
         other.mob = mob
         other.delayMin = delayMin
@@ -114,6 +155,8 @@ value class SpawnerData(val pdc: PersistentDataContainer) {
         other.pickup = pickup
         other.particleAnim = particleAnim
         other.explosionProof = explosionProof
+        other.noAI = noAI
+        other.stackSize = stackSize
     }
 }
 
@@ -151,9 +194,20 @@ fun resolveEntityType(mobId: String): EntityType? {
     return entityTypeOrNull(baseMobId)
 }
 
-fun CreatureSpawner.toSpawnerItem(): ItemStack {
+/**
+ * The spawner as it is tracked in [PlacedSpawners], taken from the block state so the
+ * index carries the same data the block does.
+ */
+fun CreatureSpawner.toPlacedSpawner(): PlacedSpawner =
+    PlacedSpawner(location, spawner.particleAnim, spawner.mob, spawner.stackSize)
+
+/**
+ * The spawner as an item, carrying its whole stack unless [stackSize] says otherwise.
+ */
+fun CreatureSpawner.toSpawnerItem(stackSize: Int = spawner.stackSize): ItemStack {
     val item = ItemStack(Material.SPAWNER)
     val fis = item.fast()
     spawner.copyTo(fis.spawner)
+    fis.spawner.stackSize = stackSize
     return fis.unwrap()
 }

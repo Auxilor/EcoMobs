@@ -2,6 +2,7 @@ package com.willfp.ecomobs.tick
 
 import com.willfp.eco.util.asAudience
 import com.willfp.eco.util.toComponent
+import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.options.BossBarOptions
 import net.kyori.adventure.bossbar.BossBar
@@ -30,22 +31,36 @@ class TickHandlerBossBar(
             return
         }
 
-        for (player in Bukkit.getOnlinePlayers()) {
-            player.asAudience().hideBossBar(bar)
-        }
+        hideFromEveryone()
 
+        // Nearby entities are in the mob's own region, so these dispatches resolve
+        // inline. They go through onEntity anyway for the players on the far side of a
+        // region border.
         entity.getNearbyEntities(
             options.radius,
             options.radius,
             options.radius
         ).filterIsInstance<Player>()
-            .map { it.asAudience() }
-            .forEach { it.showBossBar(bar) }
+            .forEach { player ->
+                onEntity(player) {
+                    player.asAudience().showBossBar(bar)
+                }
+            }
     }
 
     override fun onRemove(mob: LivingMob, tick: Int) {
+        hideFromEveryone()
+    }
+
+    /**
+     * The player list itself is safe to read from anywhere, but each player belongs to
+     * whichever region is ticking them, so the bar is hidden on their own thread.
+     */
+    private fun hideFromEveryone() {
         for (player in Bukkit.getOnlinePlayers()) {
-            player.asAudience().hideBossBar(bar)
+            onEntity(player) {
+                player.asAudience().hideBossBar(bar)
+            }
         }
     }
 }

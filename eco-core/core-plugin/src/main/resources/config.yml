@@ -41,6 +41,11 @@ stacking:
   # mob in it. When false, each kill takes a single mob off the stack.
   kill-whole-stack: false
 
+  # Whether the death animation is hidden when a stacked mob is killed, for both
+  # whole-stack kills and single kills off the stack. The corpse is taken away right
+  # after the kill instead of lying there for a second; drops and XP are unaffected.
+  hide-death-animation: false
+
   # Whether babies and adults are kept in separate stacks.
   # Set to false to let babies stack into adult stacks, and vice versa.
   match-age: true
@@ -89,6 +94,34 @@ spawners:
   # true  - every spawner in the world is ticked by EcoMobs
   all-spawners: false
 
+spawner-stacking:
+  enabled: true
+
+  # The most spawners a single stack can hold.
+  max-size: 64
+
+  hologram:
+    enabled: true
+
+    # Only show the hologram to a player looking directly at the spawner, instead of
+    # to everyone nearby.
+    look-at-only: false
+
+    # How far away a player can be and still have the spawner count as looked at.
+    # Only used when look-at-only is true.
+    look-at-distance: 5
+
+    # Blocks above the spawner to float the text.
+    height: 1.5
+
+    # Spawners stacked directly on top of each other share one hologram, with a line
+    # per distinct mob and their stack sizes summed.
+    # %size% is the combined size, %mob% and %mob_formatted% are the mob.
+    line: "&f%size%x &7%mob_formatted% Spawner"
+
+    # Shown above the lines. Leave empty for none.
+    header: ""
+
 spawner-display:
   title: "&f%mob% Spawner"
   lore:
@@ -101,6 +134,11 @@ spawner-display:
     - "&8Pickup: &f%pickup%"
     - "&8Particle: &f%particle%"
     - "&8Explosion-Proof: &f%explosion_proof%"
+    - "&8No AI: &f%no_ai%"
+
+  # Added to the lore only when the spawner item holds more than one spawner.
+  stacked-lore:
+    - "&8Stack: &f%size%&8/&f%max_stack_size%"
 
 animations:
   circle:
