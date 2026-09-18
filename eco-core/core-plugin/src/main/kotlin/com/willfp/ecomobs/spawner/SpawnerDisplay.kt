@@ -13,9 +13,14 @@ object SpawnerDisplay {
         task = plugin.scheduler.global().runTimer(1, 1) { tickSpawners() }
     }
 
+    fun stop() {
+        task?.cancel()
+        task = null
+    }
+
     private fun tickSpawners() {
         for (spawner in PlacedSpawners.values()) {
-            if (!spawner.location.isChunkLoaded) {
+            if (!spawner.location.isWorldLoaded || !spawner.location.isChunkLoaded) {
                 continue
             }
 

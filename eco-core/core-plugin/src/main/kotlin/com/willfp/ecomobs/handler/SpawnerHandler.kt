@@ -37,6 +37,7 @@ import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.entity.SpawnerSpawnEvent
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
+import org.bukkit.event.world.WorldUnloadEvent
 import org.bukkit.persistence.PersistentDataType
 
 object SpawnerHandler : Listener {
@@ -179,6 +180,11 @@ object SpawnerHandler : Listener {
             if (!blockState.isCustomSpawner) continue
             PlacedSpawners.remove(blockState.location)
         }
+    }
+
+    @EventHandler
+    fun handleWorldUnload(event: WorldUnloadEvent) {
+        PlacedSpawners.removeWorld(event.world)
     }
 
     @EventHandler(ignoreCancelled = true)

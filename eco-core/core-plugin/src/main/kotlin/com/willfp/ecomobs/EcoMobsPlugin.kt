@@ -73,6 +73,11 @@ class EcoMobsPlugin : LibreforgePlugin() {
         SpawnerDisplay.start()
     }
 
+    override fun handleDisable() {
+        SpawnerDisplay.stop()
+        PlacedSpawners.clear()
+    }
+
     override fun loadListeners(): List<Listener> {
         return listOf(
             DamageModifierHandler,
