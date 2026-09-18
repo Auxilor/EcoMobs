@@ -6,11 +6,11 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 /**
- * Called when a spawner ticked by EcoMobs is about to run a spawn cycle, after its
- * nearby-mob cap has been checked.
+ * Called when a spawner is about to run a spawn cycle, after its nearby-mob cap has
+ * been checked.
  *
- * Only fired in [com.willfp.ecomobs.spawner.SpawnerMode.ECOMOBS]; the server runs the
- * cycle itself in the vanilla mode.
+ * EcoMobs ticks every spawner, so this is fired for vanilla spawners - dungeon spawners
+ * and the rest - as well as its own.
  */
 class EcoMobSpawnerTickEvent(
     override val location: Location,

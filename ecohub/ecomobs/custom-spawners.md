@@ -59,47 +59,50 @@ drops:
 
 Vanilla entity types work the same way, so `ecomobs:zombie_spawner` is a plain zombie spawner. The item comes with every attribute at its default; a spawner matches the lookup on its mob alone, so one that has since had its delay or particle changed still counts as that spawner.
 
-## Spawn methods
+## How spawners tick
 
-`spawners.mode` in `config.yml` decides who ticks spawners. The attributes above mean the same thing in both modes — what changes is which vanilla requirements still apply.
+EcoMobs ticks every spawner itself — its own and vanilla's, dungeon spawners included — and applies the spawn requirements the server used to apply. Each one is a toggle, and every default is what vanilla does, so a spawner left alone behaves like a vanilla spawner.
 
 ```yaml
 spawners:
-  mode: vanilla # or ecomobs
-  tick-rate: 5 # Ticks between loop runs; only used when mode is ecomobs
-  all-spawners: false # Whether the ecomobs loop takes over vanilla spawners too
+  tick-rate: 5 # Ticks between loop runs
+  redstone-deactivates: true # Whether a powered spawner stops spawning
+  checks:
+    spawn-space: true
+    solid-ground: false
+    max-nearby: true
+    player-range: true
+    light-level: true
+    max-light-level: 0
 ```
 
-### `vanilla` (default)
+What the loop does every cycle:
 
-The server ticks the spawner exactly as it always has. When it decides to spawn, EcoMobs cancels the vanilla mob and puts its own at the same spot.
-
-Everything vanilla checks still applies: light level, block space, the spawner needing a valid surface, and the usual spawn cycle timing. A spawner set to a mob that only spawns in the dark will sit idle in daylight, and one buried in solid blocks will not fire.
-
-Pick this if you want spawners to feel like vanilla spawners.
-
-### `ecomobs`
-
-EcoMobs runs its own loop every `tick-rate` ticks and cancels vanilla's attempt entirely.
-
-Light level and block space are **ignored**. A mob will happily appear at midday, on any surface, inside a 1x1 hole. What the loop still honours:
-
-- A player has to be within `player-radius`, same as vanilla.
-- The countdown is rolled from the `delay` range each cycle.
-- `count` mobs are spawned per cycle, scattered within `radius` horizontally and one block either side vertically.
+- The countdown only runs while a player is inside `player-radius`, and is rolled from the `delay` range each cycle.
+- `count` mobs are spawned per cycle, scattered within `radius` horizontally and one block either side vertically. A stack of spawners spawns that many mobs per spawner in the stack, on the one cycle.
 - The spawner holds off while `max-nearby` or more of that mob are already around — counted in a box of double `radius` across and 4 blocks tall, and only mobs of that exact kind count. Two EcoMobs built on the same base entity do not block each other.
 
-Pick this for grinders, arenas, or anywhere a spawner needs to fire regardless of the light.
+### `checks`
 
-### `all-spawners`
+| Check | Default | What it does |
+| --- | --- | --- |
+| `spawn-space` | `true` | A mob needs room where it would spawn, rather than appearing inside blocks. |
+| `solid-ground` | `false` | A mob needs solid ground under it. Vanilla spawners do **not** require this — unlike natural spawning, they let mobs appear mid-air and fall. Turn it on to keep spawns on the floor. |
+| `max-nearby` | `true` | The `max-nearby` cap applies. A stacked mob counts as every mob it stands in for, so a stack of sixty reads as sixty. |
+| `player-range` | `true` | A player has to be within `player-radius` for the spawner to count down. Off makes spawners run whether anyone is there or not. |
+| `light-level` | `true` | Mobs that need darkness are held to it, so a torch beside a zombie spawner switches it off, as in vanilla. Blazes and silverfish need light 12 rather than darkness. Animals, villagers and nether mobs ignore light either way. |
+| `max-light-level` | `0` | The most block light a darkness-spawning mob tolerates. Vanilla is `0`; raising it lets spawners keep working in dim rooms. |
 
-Only read when the mode is `ecomobs`.
+For a grinder or an arena that should fire regardless of the light, set `light-level: false`. To let mobs spawn inside a 1x1 hole as well, add `spawn-space: false`.
 
-- `false` — the loop only drives EcoMobs spawners. Dungeon spawners and anything else vanilla are left completely alone.
-- `true` — every spawner in the world is ticked by EcoMobs, including vanilla ones, which lose their light and block-space requirements along with everything else.
+### `redstone-deactivates`
+
+`true` stops a powered spawner from spawning, directly or through a block next to it — a lever, a redstone torch, a comparator line. The cycle still counts down while it is off, so cutting the power doesn't hand back a spawn that was held.
+
+Vanilla spawners ignore redstone entirely, so set this to `false` if you want that.
 
 :::warning
-`all-spawners: true` makes every dungeon spawner on the server fire in daylight. It changes the balance of existing worlds, so turn it on deliberately.
+EcoMobs now drives dungeon spawners too. The defaults match vanilla, but turning `light-level` or `spawn-space` off changes every spawner on the server, not only the ones you placed.
 :::
 
 ## Picking spawners back up

@@ -81,18 +81,41 @@ stacking:
     named: true
 
 spawners:
-  # How spawners tick.
-  # vanilla - the server ticks spawners, respecting light levels and block space
-  # ecomobs - EcoMobs ticks spawners itself, ignoring light levels and block space
-  mode: vanilla
+  # EcoMobs ticks every spawner itself, EcoMobs spawners and vanilla ones alike, so the
+  # requirements the server used to apply are the checks below.
 
-  # How often (in ticks) the EcoMobs spawner loop runs. Only used when mode is ecomobs.
+  # How often (in ticks) the spawner loop runs.
   tick-rate: 5
 
-  # Whether the EcoMobs loop takes over every spawner, or only EcoMobs spawners.
-  # false - vanilla spawners (dungeon spawners, etc) are left completely alone
-  # true  - every spawner in the world is ticked by EcoMobs
-  all-spawners: false
+  # Whether a powered spawner stops spawning. Vanilla spawners ignore redstone, so set
+  # this to false to keep that.
+  redstone-deactivates: true
+
+  # The spawn requirements. Every default here is what vanilla does, so leaving them
+  # alone leaves spawners feeling like vanilla spawners.
+  checks:
+    # Whether a mob needs room where it would spawn, instead of appearing inside blocks.
+    spawn-space: true
+
+    # Whether a mob needs solid ground under it.
+    # Vanilla spawners do NOT require this: unlike natural spawning, they let mobs
+    # appear in mid-air and fall. Set to true to keep spawns on the floor.
+    solid-ground: false
+
+    # Whether a spawner holds off while max-nearby or more of its mob are already
+    # around it. Stacked mobs count as every mob they stand in for.
+    max-nearby: true
+
+    # Whether a spawner only counts down while a player is within its player-radius.
+    player-range: true
+
+    # Whether mobs that need darkness are held to it, so a torch next to a zombie
+    # spawner switches it off, as in vanilla. Blazes and silverfish need light 12
+    # rather than darkness; animals, villagers and nether mobs ignore light entirely.
+    light-level: true
+
+    # The most block light a darkness-spawning mob tolerates. Vanilla is 0.
+    max-light-level: 0
 
 spawner-stacking:
   enabled: true

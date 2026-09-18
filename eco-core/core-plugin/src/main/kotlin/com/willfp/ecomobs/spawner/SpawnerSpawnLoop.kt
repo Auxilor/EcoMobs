@@ -5,17 +5,16 @@ import com.willfp.ecomobs.folia.atRegion
 import com.willfp.ecomobs.plugin
 
 /**
- * Ticks spawners in place of the server, when the mode is [SpawnerMode.ECOMOBS].
+ * Ticks every spawner in place of the server.
+ *
+ * The requirements the server used to apply - light, room, the nearby cap - are applied
+ * by [SpawnerChecks] instead, so one loop covers EcoMobs spawners and vanilla ones alike.
  */
 object SpawnerSpawnLoop {
     private var task: EcoTask? = null
 
     fun start() {
         stop()
-
-        if (SpawnerSettings.mode != SpawnerMode.ECOMOBS) {
-            return
-        }
 
         val rate = SpawnerSettings.tickRate
 

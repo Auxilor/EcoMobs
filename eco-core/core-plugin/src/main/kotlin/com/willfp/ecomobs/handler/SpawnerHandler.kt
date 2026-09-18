@@ -12,10 +12,7 @@ import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerHolograms
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.applyVanillaSettings
-import com.willfp.ecomobs.spawner.isHandledByEcoMobs
-import com.willfp.ecomobs.spawner.isTrackedByEcoMobs
 import com.willfp.ecomobs.spawner.resolveEntityType
-import com.willfp.ecomobs.spawner.spawnFromSpawner
 import com.willfp.ecomobs.spawner.spawner
 import com.willfp.ecomobs.spawner.toPlacedSpawner
 import com.willfp.ecomobs.spawner.toSpawnerItem
@@ -28,7 +25,6 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -50,13 +46,12 @@ object SpawnerHandler : Listener {
         val location = event.block.location
 
         if (!placed.spawner.isCustomSpawner) {
-            // A vanilla spawner still needs tracking when EcoMobs ticks every spawner.
+            // A vanilla spawner still needs tracking, as EcoMobs ticks every spawner.
             plugin.scheduler.at(location).run {
                 val state = location.block.state as? CreatureSpawner ?: return@run
-                if (state.isTrackedByEcoMobs) {
-                    PlacedSpawners.sync(state)
-                    SpawnerHolograms.refresh(location)
-                }
+
+                PlacedSpawners.sync(state)
+                SpawnerHolograms.refresh(location)
             }
             return
         }
@@ -135,48 +130,27 @@ object SpawnerHandler : Listener {
     fun handleSpawn(event: SpawnerSpawnEvent) {
         val state = event.spawner ?: return
 
+        // Trial spawners are their own block with their own rules, and EcoMobs has
+        // nothing to do with them.
+        if (state.block.type != Material.SPAWNER) {
+            return
+        }
+
         // Spawners that never fired a place event (/setblock, world edits, pastes) are
         // otherwise only picked up on chunk load, so register them the first time they tick.
-        if (state.isTrackedByEcoMobs) {
-            val spawnerLocation = state.location
+        val spawnerLocation = state.location
 
-            val added = PlacedSpawners.setIfAbsent(
-                spawnerLocation,
-                state.toPlacedSpawner()
-            )
+        val added = PlacedSpawners.setIfAbsent(
+            spawnerLocation,
+            state.toPlacedSpawner()
+        )
 
-            if (added) {
-                SpawnerHolograms.refresh(spawnerLocation)
-            }
+        if (added) {
+            SpawnerHolograms.refresh(spawnerLocation)
         }
 
-        // EcoMobs runs its own loop for this spawner, so vanilla's attempt is dropped.
-        if (state.isHandledByEcoMobs) {
-            event.isCancelled = true
-            return
-        }
-
-        val noAI = state.spawner.noAI
-        val mobId = state.spawner.mob
-
-        // Vanilla spawns the entity itself, so a spawner with no custom mob still has
-        // its AI stripped here, before the mob is added to the world.
-        if (mobId == null) {
-            if (noAI) {
-                (event.entity as? LivingEntity)?.setAI(false)
-            }
-
-            return
-        }
-
+        // EcoMobs runs the loop for every spawner, so vanilla's attempt is dropped.
         event.isCancelled = true
-
-        // Vanilla fires this once per mob it wanted to spawn, so the stack multiplies it.
-        val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
-
-        repeat(stackSize) {
-            spawnFromSpawner(state.location, event.location, mobId, noAI)
-        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -329,8 +303,8 @@ object SpawnerHandler : Listener {
         val loaded = mutableListOf<Location>()
 
         for (blockState in chunk.tileEntities) {
+            // Every spawner is tracked, not only EcoMobs' own, as the loop ticks them all.
             if (blockState !is CreatureSpawner) continue
-            if (!blockState.isTrackedByEcoMobs) continue
 
             PlacedSpawners.set(
                 blockState.location,

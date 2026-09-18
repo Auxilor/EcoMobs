@@ -177,6 +177,35 @@ fun CreatureSpawner.applyVanillaSettings() {
     maxNearbyEntities = data.maxNearby
 }
 
+/**
+ * A spawner's settings as the spawn loop applies them: EcoMobs' own data where it has
+ * been written, and the block's own values otherwise.
+ *
+ * EcoMobs ticks every spawner, including the ones it never placed - dungeon spawners,
+ * `/setblock`, world edits - and those carry their settings in the block state alone,
+ * so they have to tick as themselves rather than as the EcoMobs defaults.
+ */
+val CreatureSpawner.effectiveMob: String?
+    get() = spawner.mob ?: spawnedType?.name?.lowercase()
+
+val CreatureSpawner.effectiveDelayMin: Int
+    get() = if (spawner.isCustomSpawner) spawner.delayMin else minSpawnDelay
+
+val CreatureSpawner.effectiveDelayMax: Int
+    get() = if (spawner.isCustomSpawner) spawner.delayMax else maxSpawnDelay
+
+val CreatureSpawner.effectiveSpawnCount: Int
+    get() = if (spawner.isCustomSpawner) spawner.spawnCount else spawnCount
+
+val CreatureSpawner.effectiveSpawnRange: Int
+    get() = if (spawner.isCustomSpawner) spawner.spawnRange else spawnRange
+
+val CreatureSpawner.effectivePlayerRange: Int
+    get() = if (spawner.isCustomSpawner) spawner.playerRange else requiredPlayerRange
+
+val CreatureSpawner.effectiveMaxNearby: Int
+    get() = if (spawner.isCustomSpawner) spawner.maxNearby else maxNearbyEntities
+
 fun entityTypeOrNull(name: String): EntityType? =
     EntityType.entries.firstOrNull { it.name.equals(name, ignoreCase = true) }
 
@@ -199,7 +228,7 @@ fun resolveEntityType(mobId: String): EntityType? {
  * index carries the same data the block does.
  */
 fun CreatureSpawner.toPlacedSpawner(): PlacedSpawner =
-    PlacedSpawner(location, spawner.particleAnim, spawner.mob, spawner.stackSize)
+    PlacedSpawner(location, spawner.particleAnim, effectiveMob, spawner.stackSize)
 
 /**
  * The spawner as an item, carrying its whole stack unless [stackSize] says otherwise.

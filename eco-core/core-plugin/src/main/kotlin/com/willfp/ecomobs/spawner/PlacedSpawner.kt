@@ -1,13 +1,16 @@
 package com.willfp.ecomobs.spawner
 
 import com.willfp.ecomobs.event.EcoMobSpawnerTickEvent
-import com.willfp.ecomobs.mob.EcoMobs
-import com.willfp.ecomobs.mob.impl.ecoMob
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.CreatureSpawner
-import org.bukkit.entity.Mob
+import org.bukkit.entity.EntityType
 import kotlin.random.Random
+
+/**
+ * How many places are tried for a single mob before it is given up on.
+ */
+private const val SPAWN_ATTEMPTS = 5
 
 /**
  * A spawner EcoMobs tracks.
@@ -31,7 +34,7 @@ class PlacedSpawner(
     val stackSize: Int = 1
 ) {
     /**
-     * Ticks left until the next spawn attempt. Only used in [SpawnerMode.ECOMOBS].
+     * Ticks left until the next spawn attempt.
      */
     private var spawnCooldown = Random.nextInt(SpawnerDefaults.DELAY_MIN, SpawnerDefaults.DELAY_MAX + 1)
 
@@ -52,11 +55,11 @@ class PlacedSpawner(
     }
 
     /**
-     * Runs the EcoMobs spawner loop, [elapsed] ticks on from the last run.
+     * Runs the spawner loop, [elapsed] ticks on from the last run.
      */
     fun tickSpawning(elapsed: Int) {
         // Like vanilla, a spawner only counts down while a player is close enough.
-        if (!isPlayerInRange()) {
+        if (SpawnerSettings.checkPlayerRange && !isPlayerInRange()) {
             return
         }
 
@@ -68,11 +71,12 @@ class PlacedSpawner(
 
         val state = location.block.state as? CreatureSpawner ?: return
 
-        playerRange = state.requiredPlayerRange
+        playerRange = state.effectivePlayerRange
         spawnCooldown = randomDelay(state)
 
-        // A tracked spawner can stop being ours if the config is reloaded under it.
-        if (!state.isHandledByEcoMobs) {
+        // The cycle still runs down while the spawner is switched off, so cutting the
+        // power doesn't hand back a spawn that was held.
+        if (SpawnerChecks.isDeactivatedByRedstone(location.block)) {
             return
         }
 
@@ -91,16 +95,19 @@ class PlacedSpawner(
     }
 
     private fun randomDelay(state: CreatureSpawner): Int {
-        val min = state.minSpawnDelay.coerceAtLeast(1)
-        val max = state.maxSpawnDelay
+        val min = state.effectiveDelayMin.coerceAtLeast(1)
+        val max = state.effectiveDelayMax
 
         return if (max <= min) min else Random.nextInt(min, max + 1)
     }
 
     private fun attemptSpawns(state: CreatureSpawner) {
-        val mobId = state.spawner.mob ?: state.spawnedType?.name?.lowercase() ?: return
+        val mobId = state.effectiveMob ?: return
+        val spawnRange = state.effectiveSpawnRange
 
-        if (countNearby(state, mobId) >= state.maxNearbyEntities) {
+        if (SpawnerSettings.checkMaxNearby &&
+            SpawnerChecks.countNearby(location, spawnRange, mobId) >= state.effectiveMaxNearby
+        ) {
             return
         }
 
@@ -108,7 +115,7 @@ class PlacedSpawner(
         val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
         val noAI = state.spawner.noAI
 
-        val tickEvent = EcoMobSpawnerTickEvent(location, mobId, state.spawnCount, stackSize)
+        val tickEvent = EcoMobSpawnerTickEvent(location, mobId, state.effectiveSpawnCount, stackSize)
         Bukkit.getPluginManager().callEvent(tickEvent)
 
         if (tickEvent.isCancelled) {
@@ -116,14 +123,35 @@ class PlacedSpawner(
         }
 
         val toSpawn = tickEvent.spawnCount.coerceAtLeast(0) * tickEvent.stackSize.coerceAtLeast(0)
+        val type = resolveEntityType(mobId)
 
         repeat(toSpawn) {
-            spawnFromSpawner(location, randomSpawnLocation(state.spawnRange), mobId, noAI)
+            // A mob with nowhere to go is lost rather than retried elsewhere, which is
+            // what vanilla does with a failed attempt.
+            val spawnLocation = findSpawnLocation(spawnRange, type) ?: return@repeat
+
+            spawnFromSpawner(location, spawnLocation, mobId, noAI)
         }
     }
 
     /**
-     * Vanilla's spawn offset, without its light level and block space requirements.
+     * Somewhere within [spawnRange] that [type] can spawn, or null if nothing tried works.
+     */
+    private fun findSpawnLocation(spawnRange: Int, type: EntityType?): Location? {
+        repeat(SPAWN_ATTEMPTS) {
+            val candidate = randomSpawnLocation(spawnRange)
+
+            if (SpawnerChecks.canSpawnAt(candidate, type)) {
+                return candidate
+            }
+        }
+
+        return null
+    }
+
+    /**
+     * Vanilla's spawn offset: anywhere in the spawn range horizontally, and a block
+     * either side of the spawner vertically.
      */
     private fun randomSpawnLocation(spawnRange: Int): Location {
         val x = location.x + 0.5 + (Random.nextDouble() - Random.nextDouble()) * spawnRange
@@ -131,23 +159,5 @@ class PlacedSpawner(
         val z = location.z + 0.5 + (Random.nextDouble() - Random.nextDouble()) * spawnRange
 
         return Location(location.world, x, y, z)
-    }
-
-    private fun countNearby(state: CreatureSpawner, mobId: String): Int {
-        val world = location.world ?: return Int.MAX_VALUE
-
-        // Roughly vanilla's check box: the spawn range doubled outwards, a few blocks tall.
-        val range = state.spawnRange.toDouble() * 2
-        val nearby = world.getNearbyEntities(location, range, 4.0, range)
-
-        val ecoMob = EcoMobs[mobId]
-
-        if (ecoMob != null) {
-            return nearby.count { (it as? Mob)?.ecoMob == ecoMob }
-        }
-
-        val type = entityTypeOrNull(mobId) ?: return 0
-
-        return nearby.count { it.type == type }
     }
 }

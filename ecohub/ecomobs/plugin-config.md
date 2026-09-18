@@ -43,9 +43,15 @@ stacking: # Merges nearby mobs of the same kind into one entity; see Mob Stackin
     named: true # Mobs already named, by a name tag or another plugin
 
 spawners: # How spawners tick; see Custom Spawners
-  mode: vanilla # vanilla respects light and block space, ecomobs ignores both
-  tick-rate: 5 # Ticks between loop runs; only used when mode is ecomobs
-  all-spawners: false # true lets the ecomobs loop take over vanilla spawners too
+  tick-rate: 5 # Ticks between spawner loop runs
+  redstone-deactivates: true # Whether a powered spawner stops spawning
+  checks: # The spawn requirements; every default is what vanilla does
+    spawn-space: true # Whether a mob needs room where it would spawn
+    solid-ground: false # Whether a mob needs solid ground; vanilla spawners do not require it
+    max-nearby: true # Whether the nearby-mob cap applies
+    player-range: true # Whether a player has to be in range for the spawner to count down
+    light-level: true # Whether mobs that need darkness are held to it
+    max-light-level: 0 # The most block light a darkness-spawning mob tolerates
 
 spawner-stacking: # Merges identical spawners into one block; see Spawner Stacking
   enabled: true
