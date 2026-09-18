@@ -72,7 +72,8 @@ damage-stages:
       - trigger: mine_block
         value: 1
         filters:
-          blocks: [ coal_ore ]
+          blocks:
+            - coal_ore
     start-effects: [ ]
     end-effects: [ ]
 
@@ -285,7 +286,8 @@ damage-stages:
       - trigger: mine_block
         value: 1
         filters:
-          blocks: [ coal_ore ]
+          blocks:
+            - coal_ore
     start-effects: [ ]
     end-effects: [ ]
 ```
@@ -331,13 +333,15 @@ damage-stages:
       - trigger: mine_block
         value: 1
         filters:
-          blocks: [ soul_sand ]
+          blocks:
+            - soul_sand
           player_placed: false
       # Every wither skeleton killed near the boss counts for twenty-five
       - trigger: kill
         value: 25
         filters:
-          entities: [ wither_skeleton ]
+          entities:
+            - wither_skeleton
     start-effects:
       - id: send_message
         args:

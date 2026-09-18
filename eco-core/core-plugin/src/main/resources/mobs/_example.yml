@@ -134,15 +134,16 @@ damage-stages: { }
 #    start-effects: [ ]
 #    end-effects: [ ]
 #  3:
-#    mode: trigger        # This stage is drained by counting, not by damage. Nothing a
-#                         # player hits it with moves it, so give it a count it can reach.
-#    required-count: 30   # The count it takes before it ends
-#    radius: 32           # How far from the mob a player has to be for their count to land
-#    count-methods:       # What counts; the same counters EcoJobs and EcoSkills use
+#    mode: trigger # This stage is drained by counting, not by damage. Nothing a
+#                  # player hits it with moves it, so give it a count it can reach.
+#    required-count: 30 # The count it takes before it ends
+#    radius: 32 # How far from the mob a player has to be for their count to land
+#    count-methods: # What counts; the same counters EcoJobs and EcoSkills use
 #      - trigger: mine_block
 #        value: 1
 #        filters:
-#          blocks: [ coal_ore ]
+#          blocks:
+#            - coal_ore
 #    start-effects: [ ]
 #    end-effects: [ ]
 
