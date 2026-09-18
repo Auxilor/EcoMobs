@@ -42,6 +42,7 @@ Each attribute is gated by its own permission, `ecomobs.command.spawner.modify.<
 | `pickup` | `allow` \| `silk_touch` \| `deny` | `deny` | Whether breaking it gives the spawner back |
 | `particle` | `none` \| `<animation>` | `none` | The particle animation drawn above it |
 | `explosion-proof` | `true` \| `false` | `false` | Whether it survives creepers and TNT |
+| `no-ai` | `true` \| `false` | `false` | Whether spawned mobs have their AI taken away — see [No AI](#no-ai) |
 | `stack-size` | `<number>` | `1` | How many spawners it stands in for — see [Spawner Stacking](spawner-stacking) |
 
 Particle animations are defined in `config.yml` under `spawner-animations`; see the [Plugin Config](plugin-config) reference.
@@ -134,6 +135,20 @@ Vanilla spawners ignore redstone entirely, so set this to `false` if you want th
 EcoMobs now drives dungeon spawners too. The defaults match vanilla, but turning `light-level` or `spawn-space` off changes every spawner on the server, not only the ones you placed.
 :::
 
+### `no-ai`
+
+`no-ai: true` spawns mobs that don't think: they never move on their own, never path, never attack.
+
+They are still mobs in every other way. They fall, take fall damage, take knockback, get pushed around, despawn, and can be hit about — which is the difference from vanilla's NoAI tag, where the mob is frozen in place and ignores gravity entirely. Only the thinking is switched off.
+
+### `adopt-vanilla-spawners`
+
+Spawners the world generated carry no EcoMobs data, which is what stacking, holograms, pickup rules and the attribute commands all read. `adopt-vanilla-spawners: true` (the default) writes a spawner's own settings into that data as its chunk comes into reach, so a dungeon spawner becomes a full EcoMobs spawner without changing what it spawns or how fast.
+
+It is written once per spawner and skipped on every chunk load after that.
+
+Spawners are ticked either way, so turning this off costs nothing but the extras: dungeon spawners stay exactly as they generated.
+
 ## Picking spawners back up
 
 The `pickup` attribute decides what a break gives you, and each mode has a permission behind it:
@@ -148,7 +163,7 @@ Without the matching permission the block cannot be broken at all, and the playe
 
 The dropped item carries every setting the block had, so a spawner keeps its delay, particle, and the rest across the move.
 
-In creative, pick-block on a custom spawner gives you a copy of it, stack size included.
+In creative, pick-block on a spawner gives you a copy of it, stack size included. This works on world-generated spawners too: instead of vanilla's empty spawner block, you get a replica carrying that spawner's mob, delay, count and ranges, which stacks like any EcoMobs spawner.
 
 ## Explosion immunity
 

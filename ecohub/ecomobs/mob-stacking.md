@@ -101,13 +101,17 @@ This is the setting worth thinking about.
 
 One mob comes off the stack. The dead mob drops its own loot and XP as normal, and the remainder comes back immediately as a fresh mob at full health, carrying the new size.
 
+The replacement is spawned, not healed, so what the stack was is carried onto it: whether its AI was taken away, whether it was a baby, and whether it came from a spawner. A no-ai stack stays a no-ai stack all the way down.
+
 Every mob has to be killed one at a time. Best for survival servers, where a stack should be no more rewarding than the mobs in it.
 
 ### `kill-whole-stack: true`
 
 The whole stack dies at once, and pays out for every mob in it. A stack of 32 killed with one hit drops 32 mobs' worth.
 
-For EcoMobs, the drop table is rolled again per mob, so chance-based drops stay chance-based — a stack of 32 does not guarantee a 10% drop, it gets 32 rolls at it. For vanilla mobs the drops are copied and the XP is multiplied.
+Drops are rolled per mob rather than copied, for EcoMobs and vanilla mobs alike, so chance-based drops stay chance-based — a stack of 32 does not guarantee a 10% drop, it gets 32 rolls at it.
+
+XP is the exception: vanilla hands out a fixed amount per mob, so the stack pays that amount per mob in it. Equipment the dead mob was wearing isn't handed out again either — armour and weapons aren't part of a loot table, and there is no knowing what the rest of the stack had on.
 
 Best for grinders and arenas, where clearing a stack in one hit is the point.
 
