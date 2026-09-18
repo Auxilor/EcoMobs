@@ -218,6 +218,7 @@ object SpawnerHolograms {
             .map { (mob, size) ->
                 SpawnerStackSettings.hologramLine
                     .replace("%size%", size.toString())
+                    .replace("%max_stack_size%", SpawnerStackSettings.maxSize.toString())
                     .replace("%mob%", mob)
                     .replace("%mob_formatted%", mob.replace("_", " ").titlecase())
                     .formatEco()

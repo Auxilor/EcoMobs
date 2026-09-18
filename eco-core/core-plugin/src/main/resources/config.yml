@@ -133,7 +133,7 @@ spawner-display:
 
   # Added to the lore only when the spawner item holds more than one spawner.
   stacked-lore:
-    - "&8Stack: &f%size%"
+    - "&8Stack: &f%size%&8/&f%max_stack_size%"
 
 animations:
   circle:
