@@ -41,6 +41,11 @@ stacking:
   # mob in it. When false, each kill takes a single mob off the stack.
   kill-whole-stack: false
 
+  # Whether the death animation is hidden when a stacked mob is killed, for both
+  # whole-stack kills and single kills off the stack. The corpse is taken away right
+  # after the kill instead of lying there for a second; drops and XP are unaffected.
+  hide-death-animation: false
+
   # Whether babies and adults are kept in separate stacks.
   # Set to false to let babies stack into adult stacks, and vice versa.
   match-age: true
@@ -129,10 +134,11 @@ spawner-display:
     - "&8Pickup: &f%pickup%"
     - "&8Particle: &f%particle%"
     - "&8Explosion-Proof: &f%explosion_proof%"
+    - "&8No AI: &f%no_ai%"
 
   # Added to the lore only when the spawner item holds more than one spawner.
   stacked-lore:
-    - "&8Stack: &f%size%"
+    - "&8Stack: &f%size%&8/&f%max_stack_size%"
 
 animations:
   circle:

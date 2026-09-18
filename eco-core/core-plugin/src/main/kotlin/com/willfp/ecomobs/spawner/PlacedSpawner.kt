@@ -9,9 +9,26 @@ import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.Mob
 import kotlin.random.Random
 
+/**
+ * A spawner EcoMobs tracks.
+ *
+ * Everything needed to describe the spawner is mirrored here, so anything that only
+ * has to name it - holograms, the API - can do that without loading its chunk to read
+ * the block state back.
+ */
 class PlacedSpawner(
     val location: Location,
-    val animationId: String?
+    val animationId: String?,
+
+    /**
+     * The mob the spawner spawns, mirrored from its block state.
+     */
+    val mobId: String? = null,
+
+    /**
+     * How many spawners it stands in for, mirrored from its block state.
+     */
+    val stackSize: Int = 1
 ) {
     /**
      * Ticks left until the next spawn attempt. Only used in [SpawnerMode.ECOMOBS].
@@ -89,6 +106,7 @@ class PlacedSpawner(
 
         // A stack of spawners spawns as many mobs as it holds, on the one cycle.
         val stackSize = if (SpawnerStackSettings.enabled) state.spawner.stackSize else 1
+        val noAI = state.spawner.noAI
 
         val tickEvent = EcoMobSpawnerTickEvent(location, mobId, state.spawnCount, stackSize)
         Bukkit.getPluginManager().callEvent(tickEvent)
@@ -100,7 +118,7 @@ class PlacedSpawner(
         val toSpawn = tickEvent.spawnCount.coerceAtLeast(0) * tickEvent.stackSize.coerceAtLeast(0)
 
         repeat(toSpawn) {
-            spawnFromSpawner(location, randomSpawnLocation(state.spawnRange), mobId)
+            spawnFromSpawner(location, randomSpawnLocation(state.spawnRange), mobId, noAI)
         }
     }
 

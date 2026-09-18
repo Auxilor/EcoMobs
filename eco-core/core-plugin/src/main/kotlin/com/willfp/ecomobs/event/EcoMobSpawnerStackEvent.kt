@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.event
 
 import org.bukkit.Location
+import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
@@ -12,6 +13,10 @@ import org.bukkit.event.HandlerList
 class EcoMobSpawnerStackEvent(
     override val location: Location,
     override val mobId: String?,
+    /**
+     * The player stacking the spawners, or null if something else did it.
+     */
+    val player: Player?,
     /**
      * The stack size before the merge.
      */

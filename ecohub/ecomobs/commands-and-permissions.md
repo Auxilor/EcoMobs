@@ -40,6 +40,7 @@ Both the `give` and `modify` commands accept the following attributes:
 | `pickup`           | `allow` \| `silk_touch` \| `deny`              | How players can pick up the spawner                  | `ecomobs.command.spawner.modify.pickup`            |
 | `particle`         | `none` \| `<animation_name>`                   | Particle animation displayed by the spawner          | `ecomobs.command.spawner.modify.particle`          |
 | `explosion-proof`  | `true` \| `false`                              | Whether the spawner survives explosions              | `ecomobs.command.spawner.modify.explosion-proof`   |
+| `no-ai`            | `true` | `false`                              | Whether spawned mobs have their AI disabled          | `ecomobs.command.spawner.modify.no-ai`             |
 | `stack-size`       | `<value>`                                      | How many spawners the spawner stands in for (min 1)  | `ecomobs.command.spawner.modify.stack-size`        |
 
 ### Additional Permissions

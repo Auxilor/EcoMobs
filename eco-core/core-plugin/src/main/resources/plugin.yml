@@ -13,6 +13,7 @@ softdepend:
   - ModelEngine
   - LibsDisguises
   - BetterModel
+  - CoreProtect
 
 commands:
   ecomobs:
@@ -86,6 +87,8 @@ permissions:
       ecomobs.command.spawner.modify.pickup: true
       ecomobs.command.spawner.modify.particle: true
       ecomobs.command.spawner.modify.explosion-proof: true
+      ecomobs.command.spawner.modify.no-ai: true
+      ecomobs.command.spawner.modify.stack-size: true
 
   ecomobs.command.spawner.modify.mob:
     description: Modify spawner mob type
@@ -121,6 +124,14 @@ permissions:
 
   ecomobs.command.spawner.modify.explosion-proof:
     description: Modify spawner explosion-proof setting
+    default: op
+
+  ecomobs.command.spawner.modify.no-ai:
+    description: Modify whether spawned mobs have their AI disabled
+    default: op
+
+  ecomobs.command.spawner.modify.stack-size:
+    description: Modify how many spawners the spawner stands in for
     default: op
 
   ecomobs.spawner.*:
