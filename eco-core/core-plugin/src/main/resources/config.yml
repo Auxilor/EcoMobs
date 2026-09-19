@@ -25,6 +25,159 @@ custom-spawning:
   # The max amount of attempts to generate a spawn point per player
   max-attempts: 64
 
+stacking:
+  enabled: true
+
+  # The radius, in blocks, to look for a stack to merge into.
+  radius: 8
+
+  # The most mobs a single stack can hold.
+  max-size: 64
+
+  # How often (in ticks) to sweep for mobs that have drifted together since spawning.
+  sweep-rate: 100
+
+  # The most merges the server will do in a single tick.
+  #
+  # Merging a mob means looking around it for a stack to join, so the work grows with
+  # how many mobs are standing there. This is the ceiling on it: anything left over is
+  # merged on later ticks instead of holding the server up. The stacks end up the same,
+  # just a moment later.
+  #
+  # Set to 0 for no limit.
+  max-merges-per-tick: 20
+
+  # Whether killing a stacked mob kills the whole stack, dropping loot and XP for every
+  # mob in it. When false, each kill takes a single mob off the stack.
+  kill-whole-stack: false
+
+  # Whether the death animation is hidden when a stacked mob is killed, for both
+  # whole-stack kills and single kills off the stack. The corpse is taken away right
+  # after the kill instead of lying there for a second; drops and XP are unaffected.
+  hide-death-animation: false
+
+  # Whether babies and adults are kept in separate stacks.
+  # Set to false to let babies stack into adult stacks, and vice versa.
+  match-age: true
+
+  # The nameplate shown above a stack.
+  # %size% is the stack size, %name% is the mob name.
+  nameplate: "&f%name% &7x%size%"
+
+  # What never stacks. EcoMob IDs and vanilla entity types are both valid.
+  # Only mobs stack in the first place, so items, projectiles, armour stands and
+  # players are already excluded.
+  blacklist:
+    - villager
+    - wandering_trader
+    - ender_dragon
+    - wither
+
+  # Mobs that never stack. Set any of these to false to let them stack anyway.
+  exclude:
+    # Pets and other tamed mobs
+    tamed: true
+
+    # Mobs on a lead
+    leashed: true
+
+    # Mobs riding something else
+    mounted: true
+
+    # Mobs carrying passengers
+    ridden: true
+
+    # Mobs already named, by a name tag or another plugin
+    named: true
+
+spawners:
+  # EcoMobs ticks every spawner itself, EcoMobs spawners and vanilla ones alike, so the
+  # requirements the server used to apply are the checks below.
+
+  # How often (in ticks) the spawner loop runs.
+  tick-rate: 5
+
+  # Whether a powered spawner stops spawning. Vanilla spawners ignore redstone, so set
+  # this to false to keep that.
+  redstone-deactivates: true
+
+  # Whether a spawner the world generated - a dungeon spawner, or one from /setblock or
+  # a world edit - has its own settings written into it, so it can be stacked, show a
+  # hologram and be picked up like any EcoMobs spawner.
+  #
+  # Spawners are ticked either way, so turning this off only means dungeon spawners stay
+  # exactly as they generated, with none of the EcoMobs extras.
+  #
+  # Written once per spawner, as its chunk loads, and skipped on every load after that.
+  adopt-vanilla-spawners: true
+
+  # The most things a chunk can hold before the spawners in it stop.
+  #
+  # This counts ENTITIES, not mobs. It does NOT add up stack sizes.
+  # One stacked mob is one entity, even if it stands for 60 mobs. So a stack of 60
+  # counts as 1, the same as a single mob on its own.
+  # That means 50 here can be thousands of mobs when mob stacking is on.
+  #
+  # The limit is about how much work the server has to do, and one stack is one thing
+  # for the server to tick, however many mobs it holds.
+  #
+  # Set to 0 to turn the limit off.
+  max-mobs-per-chunk: 50
+
+  # The spawn requirements. Every default here is what vanilla does, so leaving them
+  # alone leaves spawners feeling like vanilla spawners.
+  checks:
+    # Whether a mob needs room where it would spawn, instead of appearing inside blocks.
+    spawn-space: true
+
+    # Whether a mob needs solid ground under it.
+    # Vanilla spawners do NOT require this: unlike natural spawning, they let mobs
+    # appear in mid-air and fall. Set to true to keep spawns on the floor.
+    solid-ground: false
+
+    # Whether a spawner holds off while max-nearby or more of its mob are already
+    # around it. Stacked mobs count as every mob they stand in for.
+    max-nearby: true
+
+    # Whether a spawner only counts down while a player is within its player-radius.
+    player-range: true
+
+    # Whether mobs that need darkness are held to it, so a torch next to a zombie
+    # spawner switches it off, as in vanilla. Blazes and silverfish need light 12
+    # rather than darkness; animals, villagers and nether mobs ignore light entirely.
+    light-level: true
+
+    # The most block light a darkness-spawning mob tolerates. Vanilla is 0.
+    max-light-level: 0
+
+spawner-stacking:
+  enabled: true
+
+  # The most spawners a single stack can hold.
+  max-size: 64
+
+  hologram:
+    enabled: true
+
+    # Only show the hologram to a player looking directly at the spawner, instead of
+    # to everyone nearby.
+    look-at-only: false
+
+    # How far away a player can be and still have the spawner count as looked at.
+    # Only used when look-at-only is true.
+    look-at-distance: 5
+
+    # Blocks above the spawner to float the text.
+    height: 1.5
+
+    # Spawners stacked directly on top of each other share one hologram, with a line
+    # per distinct mob and their stack sizes summed.
+    # %size% is the combined size, %mob% and %mob_formatted% are the mob.
+    line: "&f%size%x &7%mob_formatted% Spawner"
+
+    # Shown above the lines. Leave empty for none.
+    header: ""
+
 spawner-display:
   title: "&f%mob% Spawner"
   lore:
@@ -37,6 +190,11 @@ spawner-display:
     - "&8Pickup: &f%pickup%"
     - "&8Particle: &f%particle%"
     - "&8Explosion-Proof: &f%explosion_proof%"
+    - "&8No AI: &f%no_ai%"
+
+  # Added to the lore only when the spawner item holds more than one spawner.
+  stacked-lore:
+    - "&8Stack: &f%size%&8/&f%max_stack_size%"
 
 animations:
   circle:

@@ -3,7 +3,7 @@ package com.willfp.ecomobs.handler
 import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.mob.impl.LivingMobImpl
 import com.willfp.ecomobs.mob.impl.ecoMob
-import com.willfp.ecomobs.mob.stage.DamageStageMode
+import com.willfp.ecomobs.mob.stage.DamageResponse
 import com.willfp.ecomobs.plugin
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -38,17 +38,41 @@ object DamageStageHandler : Listener {
 
         val player = event.attributedPlayer()
 
-        val cost = when (tracker.stage.mode) {
-            DamageStageMode.HEALTH -> event.finalDamage
-            // Flat 1.0 regardless of finalDamage, so a hits stage with player-only: false
-            // burns down just as fast from repeated fire/lava ticks as from player hits.
-            DamageStageMode.HITS -> if (!tracker.stage.playerOnly || player != null) 1.0 else 0.0
+        // A finished tracker takes the killing blow whatever its last stage's mode says,
+        // so the mode is only asked while there is still a stage left to drain.
+        val response = if (tracker.isFinished) {
+            DamageResponse.Drain(event.finalDamage)
+        } else {
+            tracker.stage.mode.respondTo(event, player)
         }
 
-        if (cost <= 0.0) {
-            event.isCancelled = true
-            return
+        when (response) {
+            is DamageResponse.Block -> {
+                event.isCancelled = true
+                return
+            }
+
+            is DamageResponse.Ignore -> {
+                // Not cancelled: the hurt animation, knockback, and vanilla
+                // invulnerability ticks all still apply on a zero-damage event.
+                event.damage = 0.0
+                return
+            }
+
+            is DamageResponse.Drain -> {
+                drain(event, living, player, response.amount)
+            }
         }
+    }
+
+    private fun drain(
+        event: EntityDamageEvent,
+        living: LivingMobImpl,
+        player: Player?,
+        cost: Double
+    ) {
+        val bukkitMob = living.entity
+        val tracker = living.stageTracker ?: return
 
         if (player != null) {
             plugin.topDamagerHandler.credit(bukkitMob, player, cost)
