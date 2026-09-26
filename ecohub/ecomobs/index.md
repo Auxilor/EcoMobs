@@ -16,6 +16,8 @@ EcoMobs lets you build fully custom mobs from simple config files. You control e
 - **Built for grinders.** Mob and spawner stacking keep a thousand-mob farm down to a handful of entities.
 - **Yours forever.** One purchase, no subscription, no paid extras.
 
+EcoMobs runs on **Paper**, **Folia** and **Spigot**. A few extras work more precisely on Paper, and each page says where. With **CoreProtect** installed, spawner changes are logged to it — see [Custom Spawners](custom-spawners#logging-with-coreprotect).
+
 <hr/>
 
 ## Where to go next
@@ -25,4 +27,6 @@ EcoMobs lets you build fully custom mobs from simple config files. You control e
 - **Spawners:** [Custom Spawners](custom-spawners) for attributes, pickup rules, and how spawners tick.
 - **Stacking:** [Mob Stacking](mob-stacking) and [Spawner Stacking](spawner-stacking).
 - **Commands:** [Commands and Permissions](commands-and-permissions) for spawning, giving, and importing mobs.
+- **Mob behaviour:** [Mob Behaviour](mob-behaviour) for water sensitivity and daylight burning.
 - **Server settings:** the [Plugin Config](plugin-config) reference.
+- **Developers:** [API and Triggers](api-and-triggers) for libreforge triggers and Bukkit events.

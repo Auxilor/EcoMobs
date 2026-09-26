@@ -62,12 +62,14 @@ Vanilla entity types work the same way, so `ecomobs:zombie_spawner` is a plain z
 
 ## How spawners tick
 
-EcoMobs ticks every spawner itself — its own and vanilla's, dungeon spawners included — and applies the spawn requirements the server used to apply. Each check is a toggle, and every check default is what vanilla does. The one deliberate difference is `vanilla-spawners`, whose delay defaults are half vanilla's.
+EcoMobs ticks every spawner itself — its own and vanilla's, dungeon spawners included — and applies the spawn requirements the server used to apply. Each check is a toggle, and every check default is what vanilla does. A few other defaults deliberately differ from vanilla: `vanilla-spawners` fires twice as often, `redstone-deactivates` is on, `allow-jockeys` is off, and `spawn-attempts` gives each mob 10 tries at finding a spot rather than vanilla's one.
 
 ```yaml
 spawners:
   tick-rate: 5 # Ticks between loop runs
   redstone-deactivates: true # Whether a powered spawner stops spawning
+  allow-jockeys: false # Whether spawner mobs keep vanilla's random mounts and riders
+  adopt-vanilla-spawners: true # Whether world-generated spawners become EcoMobs spawners
   max-mobs-per-chunk: 50 # Entities of the spawner's mob a chunk can hold before its spawners stop
   spawn-attempts: 10 # Random spots tried per mob
   vertical-range: 1 # Blocks above and below the spawner a mob can be placed
@@ -126,7 +128,7 @@ Growing a stack this way spawns nothing, so no merge event is fired for it.
 | `player-range` | `true` | A player has to be within `player-radius` for the spawner to count down. Off makes spawners run whether anyone is there or not. |
 | `light-level` | `true` | Mobs that need darkness are held to it, so a torch beside a zombie spawner switches it off, as in vanilla. Blazes and silverfish need light 12 rather than darkness. Animals, villagers and nether mobs ignore light either way. |
 | `max-light-level` | `0` | The most block light a darkness-spawning mob tolerates. Vanilla is `0`; raising it lets spawners keep working in dim rooms. |
-| `max-sky-light` | `7` | The most sky light a darkness-spawning mob tolerates. |
+| `max-sky-light` | `7` | The most overall light a darkness-spawning mob tolerates: sky light dimmed for the time of day, or block light, whichever is higher. Under open sky that is about 4 at night and 15 at noon, so outdoor spawners work at night, as in vanilla. |
 | `light-dimensions` | `[normal]` | The dimensions darkness is enforced in (`normal`, `nether`, `the_end`, `custom`). Nether and end monsters spawn in any light in vanilla. |
 | `dim-light-mobs` | `[blaze, silverfish]` | Mobs held to dim light instead of darkness. |
 | `dim-light-max` | `11` | The most light, block and sky together, `dim-light-mobs` tolerate. |
@@ -179,7 +181,13 @@ Each time a spawn cycle comes round, the spawner puffs `amount` of `particle` to
 
 A cycle cancelled by another plugin shows nothing. Puffs happen once per cycle, so a powered spawner shows its red dust each time its delay runs out, not constantly.
 
+### `allow-jockeys`
+
+Vanilla's spawn randomisation sometimes gives a spawned mob a mount or a rider: a baby zombie on a chicken, a skeleton on a spider. Vanilla spawners do this too. `allow-jockeys: false` (the default) takes the extra mob away, so a zombie spawner only ever makes zombies. A chicken that was already standing nearby and got claimed as a mount is left alone, just without its rider.
+
 ### `redstone-deactivates`
+
+![A redstone block beside a zombie spawner, switching it off](images/redstone_off.png)
 
 `true` stops a powered spawner from spawning, directly or through a block next to it — a lever, a redstone torch, a comparator line. The cycle still counts down while it is off, so cutting the power doesn't hand back a spawn that was held.
 
@@ -219,6 +227,8 @@ The dropped item carries every setting the block had, so a spawner keeps its del
 
 In creative, pick-block on a spawner gives you a copy of it, stack size included. This works on world-generated spawners too: instead of vanilla's empty spawner block, you get a replica carrying that spawner's mob, delay, count and ranges, which stacks like any EcoMobs spawner.
 
+On Spigot, which has no pick-block event, EcoMobs spots the creative client asking for a plain spawner while you look at one. Taking a blank spawner out of the creative menu while looking at a spawner therefore gives the copy too.
+
 ## Explosion immunity
 
 `explosion-proof: true` removes the spawner from the blast list of creepers, TNT, ghasts, end crystals, and anything else that explodes. It is left standing rather than dropped.
@@ -239,13 +249,23 @@ The name and lore of a spawner item are built from `spawner-display` in `config.
 | `%pickup%` | The pickup mode |
 | `%particle%` | The particle animation, or `none` |
 | `%explosion_proof%` | `true` or `false` |
+| `%no_ai%` | `true` or `false` |
 | `%size%` | The stack size |
+| `%max_stack_size%` | `spawner-stacking.max-size` |
 
 PlaceholderAPI placeholders work in these lines too.
 
 :::info
 EcoMobs picks up spawners placed by hand, loaded in a chunk, or first seen when they tick. A spawner pasted in with WorldEdit or set with `/setblock` is registered the first time it tries to spawn, so it needs no extra step.
 :::
+
+## Logging with CoreProtect
+
+With [CoreProtect](https://www.spigotmc.org/resources/coreprotect.8631/) installed, EcoMobs logs every spawner change to it: placing, breaking, stacking, unstacking, and explosions.
+
+CoreProtect has no idea of a stacked block, so a stack is logged as **one row per spawner**. A stack of eight placed at once is eight placements, so a lookup shows the real count and a rollback leaves nothing behind. Stacking and unstacking change no block, but are logged the same way. Explosions, and stacking done by something other than a player, are logged under the user `#ecomobs`.
+
+Nothing needs turning on; it is picked up whenever CoreProtect is installed.
 
 <hr/>
 

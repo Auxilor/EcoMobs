@@ -1,6 +1,6 @@
 ---
 title: "Plugin Config"
-sidebar_position: 7
+sidebar_position: 8
 ---
 
 The main settings for EcoMobs live in `config.yml`, found at `/plugins/EcoMobs/config.yml`. It controls the custom spawning loop, mob and spawner stacking, how spawners tick, the spawner item display, and the particle animations spawners can use. Edit the file and run `/ecomobs reload` to apply your changes.
@@ -46,6 +46,7 @@ stacking: # Merges nearby mobs of the same kind into one entity; see Mob Stackin
 spawners: # How spawners tick; see Custom Spawners
   tick-rate: 5 # Ticks between spawner loop runs
   redstone-deactivates: true # Whether a powered spawner stops spawning
+  allow-jockeys: false # Whether spawner mobs keep vanilla's random mounts/riders (chicken and spider jockeys)
   adopt-vanilla-spawners: true # Whether world-generated spawners get EcoMobs data, so they can stack and be picked up
   max-mobs-per-chunk: 50 # Entities of the spawner's own mob a chunk can hold before its spawners stop; same type only; counts entities, NOT summed stack sizes; 0 is off
   spawn-attempts: 10 # Random spots tried per mob before it is given up on
@@ -68,11 +69,19 @@ spawners: # How spawners tick; see Custom Spawners
     player-range: true # Whether a player has to be in range for the spawner to count down
     light-level: true # Whether mobs that need darkness are held to it
     max-light-level: 0 # The most block light a darkness-spawning mob tolerates
-    max-sky-light: 7 # The most sky light a darkness-spawning mob tolerates
+    max-sky-light: 7 # The most overall light (sky dimmed for time of day, or block light) a darkness-spawning mob tolerates
     light-dimensions: [normal] # Dimensions darkness is enforced in
     dim-light-mobs: [blaze, silverfish] # Mobs held to dim light instead of darkness
     dim-light-max: 11 # The most light dim-light-mobs tolerate
     short-mobs: [cave_spider, silverfish, ...] # Mobs that fit in one block, so only need that block clear
+
+water-sensitivity: # Stops water hurting mobs and endermen teleporting from it; see Mob Behaviour
+  enabled: false
+  mobs: [enderman, blaze]
+
+sunlight-burning: # Stops mobs burning in daylight; see Mob Behaviour
+  enabled: false
+  mobs: [zombie, zombie_villager, skeleton, stray, bogged, drowned, phantom]
 
 spawner-stacking: # Merges identical spawners into one block; see Spawner Stacking
   enabled: true
@@ -99,7 +108,7 @@ spawner-display: # The held/placed spawner item's name and lore; supports the pl
     - "&8Explosion-Proof: &f%explosion_proof%"
     - "&8No AI: &f%no_ai%"
   stacked-lore: # Added only when the item holds more than one spawner
-    - "&8Stack: &f%size%"
+    - "&8Stack: &f%size%&8/&f%max_stack_size%"
 
 animations: # Reusable particle motion shapes, referenced by spawner-animations below
   circle:

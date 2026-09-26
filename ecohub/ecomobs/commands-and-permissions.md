@@ -1,6 +1,6 @@
 ---
 title: "Commands and Permissions"
-sidebar_position: 6
+sidebar_position: 7
 ---
 
 Every EcoMobs command and the permission that gates it. The base commands cover reloading, spawning, giving, killing, and importing or exporting mobs; the spawner commands hand out and edit spawner items and blocks. Grant the permission alongside each command you want a role to use.
@@ -40,8 +40,10 @@ Both the `give` and `modify` commands accept the following attributes:
 | `pickup`           | `allow` \| `silk_touch` \| `deny`              | How players can pick up the spawner                  | `ecomobs.command.spawner.modify.pickup`            |
 | `particle`         | `none` \| `<animation_name>`                   | Particle animation displayed by the spawner          | `ecomobs.command.spawner.modify.particle`          |
 | `explosion-proof`  | `true` \| `false`                              | Whether the spawner survives explosions              | `ecomobs.command.spawner.modify.explosion-proof`   |
-| `no-ai`            | `true` | `false`                              | Whether spawned mobs have their AI disabled          | `ecomobs.command.spawner.modify.no-ai`             |
-| `stack-size`       | `<value>`                                      | How many spawners the spawner stands in for (min 1)  | `ecomobs.command.spawner.modify.stack-size`        |
+| `no-ai`            | `true` \| `false`                             | Whether spawned mobs have their AI disabled          | `ecomobs.command.spawner.modify.no-ai`             |
+| `stack-size`       | `<value>`                                      | How many spawners it stands in for (min 1, not capped by `max-size`) | `ecomobs.command.spawner.modify.stack-size`        |
+
+Leaving out an attribute's value, or giving one that isn't valid, replies with what it takes, for example `delay needs a value! Usage: delay <min ticks> <max ticks>`. The messages are `spawner-missing-value` and `spawner-invalid-value` in `lang.yml`.
 
 ### Additional Permissions
 

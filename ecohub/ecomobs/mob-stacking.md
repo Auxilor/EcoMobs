@@ -85,6 +85,8 @@ Raise it if mobs visibly take too long to stack on a busy server; `0` removes th
 
 Stacks are labelled with `nameplate`, drawn above the mob:
 
+![A stack of 32 zombies labelled "Zombie x32" beside a spawner with its hologram](images/stacked_spawner_and_zombie.png)
+
 ```yaml
 nameplate: "&f%name% &7x%size%"
 ```
@@ -92,6 +94,8 @@ nameplate: "&f%name% &7x%size%"
 `%size%` is the stack size and `%name%` is the mob's name — an EcoMob's `display-name` with its own placeholders already filled in, or the vanilla name otherwise. PlaceholderAPI placeholders work here, and are filled per viewer.
 
 Nameplates are drawn clientside, so they do not touch the mob's real name and nothing else on the server sees them. An unstacked mob shows nothing.
+
+A nameplate is only shown to a player who can see the mob. Behind a wall or underground it is hidden, and it comes back once the mob is in view again, updated every quarter of a second.
 
 ## What happens on death
 

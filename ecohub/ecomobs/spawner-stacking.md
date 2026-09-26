@@ -5,7 +5,7 @@ sidebar_position: 5
 
 Spawner stacking lets players merge identical spawners into one block that spawns for all of them. Sixty-four spawners in a grinder become one block spawning sixty-four times a cycle, instead of sixty-four blocks fighting for space.
 
-It applies to EcoMobs spawners — see [Custom Spawners](custom-spawners) for how to make one. Vanilla dungeon spawners do not stack.
+It applies to EcoMobs spawners — see [Custom Spawners](custom-spawners) for how to make one. Vanilla spawners — dungeon spawners, `/setblock` and world edits — stack too once EcoMobs has adopted them, which it does by default; see [`adopt-vanilla-spawners`](custom-spawners#adopt-vanilla-spawners).
 
 ## Config
 
@@ -35,13 +35,15 @@ Run `/ecomobs reload` to apply changes.
 
 **Right-click** a placed spawner while holding a matching one to add it to the stack. **Sneak** and right-click to add every spawner in your hand at once. Placing a spawner against a matching one does the same thing.
 
+**Sneak-placing** a stack of spawner items on open ground places the whole held stack as one stacked block, up to `max-size`, rather than one spawner.
+
 Only what fits is taken. Sneak right-clicking a stack of 60 with 16 spawners in hand, at `max-size: 64`, adds 4 and leaves 12 in your inventory.
 
 Creative mode consumes nothing.
 
 ### What counts as matching
 
-Two spawners merge only when every attribute is identical — mob, delay, radius, player radius, count, max nearby, pickup, particle, and explosion-proof. Stack size itself is not compared.
+Two spawners merge only when every attribute is identical — mob, delay, radius, player radius, count, max nearby, pickup, particle, explosion-proof, and no-ai. Stack size itself is not compared.
 
 Two spawners for the same mob will not stack if one was given a different delay or a different particle. If players are ending up with spawners that refuse to merge, check that whatever hands them out sets the same attributes every time.
 
@@ -65,7 +67,9 @@ It fires on the same schedule a single spawner would — stacking multiplies the
 
 ## Holograms
 
-A stacked spawner floats a hologram showing what it holds.
+Every spawner floats a hologram showing what it holds, a lone spawner as a stack of one included.
+
+![A zombie spawner with its hologram, and the stack of 32 zombies it has spawned](images/stacked_spawner_and_zombie.png)
 
 Spawners stacked **directly on top of each other** share a single hologram at the top of the column, with one line per distinct mob and their sizes summed, largest first. A tower of zombie and skeleton spawners reads as two lines, not one per block.
 
@@ -77,10 +81,11 @@ header: "&8&m---------"
 | Placeholder | Value |
 | --- | --- |
 | `%size%` | The combined size of that mob in the column |
+| `%max_stack_size%` | `spawner-stacking.max-size` |
 | `%mob%` | The mob ID |
 | `%mob_formatted%` | The mob ID as a title, so `hollow_king` reads `Hollow King` |
 
-`header` is optional and prints once above the lines. A lone unstacked spawner shows no hologram.
+`header` is optional and prints once above the lines.
 
 Set `look-at-only: true` to hide holograms until a player aims at the column, within `look-at-distance` blocks. Useful on servers with dense spawner rooms where a wall of floating text gets in the way.
 
@@ -98,12 +103,14 @@ Holograms need a supported hologram plugin installed. Without one, stacking stil
 
 That hands over one item that places as a stack of 16.
 
+`stack-size` given this way is **not** capped by `max-size`, so an admin can hand out a stack larger than players could build by hand. Adding to it by hand is still capped.
+
 The item's lore gains the `spawner-display.stacked-lore` lines from `config.yml` whenever it holds more than one:
 
 ```yaml
 spawner-display:
   stacked-lore:
-    - "&8Stack: &f%size%"
+    - "&8Stack: &f%size%&8/&f%max_stack_size%"
 ```
 
 <hr/>
