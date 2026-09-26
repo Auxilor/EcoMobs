@@ -256,6 +256,15 @@ spawners:
       - tropical_fish
       - pufferfish
 
+# Stops water hurting the mobs that can't normally stand it, and stops endermen
+# teleporting away from it. Covers standing in water, rain and bubble columns.
+# Applies to every mob of these types, not only ones from spawners.
+water-sensitivity:
+  enabled: false
+  mobs:
+    - enderman
+    - blaze
+
 spawner-stacking:
   enabled: true
 

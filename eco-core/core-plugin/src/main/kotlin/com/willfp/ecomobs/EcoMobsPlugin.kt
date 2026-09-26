@@ -18,7 +18,11 @@ import com.willfp.ecomobs.handler.ChunkHandler
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.DamageStageHandler
 import com.willfp.ecomobs.handler.PaperSpawnerPickBlockHandler
+import com.willfp.ecomobs.handler.PaperWaterTeleportHandler
 import com.willfp.ecomobs.handler.SpigotSpawnerPickBlockHandler
+import com.willfp.ecomobs.handler.SpigotWaterTeleportHandler
+import com.willfp.ecomobs.handler.WaterSensitivityHandler
+import com.willfp.ecomobs.handler.WaterSensitivitySettings
 import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
@@ -95,6 +99,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
         SpawnerDisplay.start()
         SpawnerSpawnLoop.start()
         StackSettings.reload()
+        WaterSensitivitySettings.reload()
         MobStackTicker.start()
         SpawnerHolograms.reloadAll()
     }
@@ -118,6 +123,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
             SpawnTotemHandler,
             topDamagerHandler,
             SpawnerHandler,
+            WaterSensitivityHandler,
             SpawnerStackHandler,
             StackHandler,
             ChunkHandler
@@ -133,10 +139,12 @@ class EcoMobsPlugin : LibreforgePlugin() {
         if (Prerequisite.HAS_PAPER.isMet) {
             listOf(
                 PaperSpawnerPickBlockHandler,
+                PaperWaterTeleportHandler
             )
         } else {
             listOf(
                 SpigotSpawnerPickBlockHandler,
+                SpigotWaterTeleportHandler
             )
         }
 
