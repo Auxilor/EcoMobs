@@ -81,7 +81,7 @@ object SpawnerHolograms {
         for (spawner in PlacedSpawners.values()) {
             val location = spawner.location
 
-            if (!location.isWorldLoaded || !location.isChunkLoaded) {
+            if (!location.isWorldLoaded || !location.isInLoadedChunk) {
                 continue
             }
 
@@ -162,7 +162,7 @@ object SpawnerHolograms {
 
         // The hologram is a real entity, so it can only exist while the chunk it sits
         // in is loaded. The lines themselves come from the index, not the block states.
-        if (!top.isWorldLoaded || !top.isChunkLoaded) {
+        if (!top.isWorldLoaded || !top.isInLoadedChunk) {
             return
         }
 

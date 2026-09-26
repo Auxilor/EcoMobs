@@ -1,10 +1,8 @@
 package com.willfp.ecomobs.handler
 
-import com.willfp.eco.core.display.Display
 import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.event.EcoMobSpawnerBreakEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerExplodeEvent
-import com.willfp.ecomobs.event.EcoMobSpawnerPickBlockEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerPlaceEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerUnstackEvent
 import com.willfp.ecomobs.plugin
@@ -17,9 +15,7 @@ import com.willfp.ecomobs.spawner.applyVanillaSettings
 import com.willfp.ecomobs.spawner.resolveEntityType
 import com.willfp.ecomobs.spawner.spawner
 import com.willfp.ecomobs.spawner.toPlacedSpawner
-import com.willfp.ecomobs.spawner.toReplicaSpawnerItem
 import com.willfp.ecomobs.spawner.toSpawnerItem
-import io.papermc.paper.event.player.PlayerPickItemEvent
 import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.GameMode
@@ -264,33 +260,6 @@ object SpawnerHandler : Listener {
 
             else -> false
         }
-
-    @EventHandler(ignoreCancelled = true)
-    fun handlePickBlock(event: PlayerPickItemEvent) {
-        val player = event.player
-        if (player.gameMode != GameMode.CREATIVE) return
-        val target = player.getTargetBlockExact(5) ?: return
-        if (target.type != Material.SPAWNER) return
-        val state = target.state as? CreatureSpawner ?: return
-
-        // A vanilla spawner gives back a replica of itself rather than the empty block
-        // vanilla would hand over, so what you pick up is what you were looking at - and
-        // stacks like the spawners EcoMobs gives out.
-        val item = state.toReplicaSpawnerItem()
-
-        val pickEvent = EcoMobSpawnerPickBlockEvent(player, target.location, state.spawner.mob, item)
-        Bukkit.getPluginManager().callEvent(pickEvent)
-
-        if (pickEvent.isCancelled) {
-            event.isCancelled = true
-            return
-        }
-
-        Display.display(item, player)
-        plugin.scheduler.on(player).run {
-            player.inventory.setItem(player.inventory.heldItemSlot, item)
-        }
-    }
 
     @EventHandler
     fun handleChunkLoad(event: ChunkLoadEvent) {

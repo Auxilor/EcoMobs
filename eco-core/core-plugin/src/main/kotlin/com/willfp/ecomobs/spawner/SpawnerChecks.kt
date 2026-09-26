@@ -19,6 +19,14 @@ import org.bukkit.entity.Monster
  * needs room and still has to obey its own light rule, but the surface requirement that
  * natural spawning has is dropped, which is why spawner mobs can appear mid-air.
  */
+/**
+ * Whether the chunk this location is in is loaded, without loading it to find out.
+ *
+ * Paper has this as Location.isChunkLoaded; Spigot doesn't, so it is read from the world.
+ */
+val Location.isInLoadedChunk: Boolean
+    get() = world?.isChunkLoaded(blockX shr 4, blockZ shr 4) == true
+
 object SpawnerChecks {
     /**
      * Whether the spawner at [block] is switched off by redstone.
@@ -46,6 +54,7 @@ object SpawnerChecks {
         if (SpawnerSettings.checkLightLevel && !isDarkEnoughFor(block, type)) {
             return false
         }
+
 
         return true
     }
@@ -147,8 +156,12 @@ object SpawnerChecks {
             return true
         }
 
+        // lightLevel is the brightness vanilla's darkness check reads: sky light dimmed
+        // for the time of day, and block light, whichever is higher. lightFromSky is
+        // the raw sky light, which is 15 under open sky at midnight as well as noon, and
+        // so would hold every outdoor spawner off forever.
         return block.lightFromBlocks <= SpawnerSettings.maxLightLevel &&
-                block.lightFromSky <= SpawnerSettings.maxSkyLight
+                block.lightLevel <= SpawnerSettings.maxSkyLight
     }
 
     /**

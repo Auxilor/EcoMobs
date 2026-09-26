@@ -31,7 +31,7 @@ object SpawnerDisplay {
         PlacedSpawners.forEachChunk { world, chunkX, chunkZ, spawners ->
             atRegion(world, chunkX, chunkZ) {
                 for (spawner in spawners) {
-                    if (!spawner.location.isChunkLoaded) {
+                    if (!spawner.location.isInLoadedChunk) {
                         continue
                     }
 

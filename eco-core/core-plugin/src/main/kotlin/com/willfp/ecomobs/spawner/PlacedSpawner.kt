@@ -7,6 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
 import kotlin.random.Random
 
 /**
@@ -71,6 +72,7 @@ class PlacedSpawner(
         playerRange = state.effectivePlayerRange
         spawnCooldown = randomDelay(state)
 
+
         // The cycle still runs down while the spawner is switched off, so cutting the
         // power doesn't hand back a spawn that was held.
         if (SpawnerChecks.isDeactivatedByRedstone(location.block)) {
@@ -88,7 +90,7 @@ class PlacedSpawner(
 
         // Only the players near the spawner, whose region this tick already owns.
         // world.players would reach players being ticked on other regions.
-        return world.getNearbyPlayers(location, range)
+        return world.getNearbyEntities(location, range, range, range) { it is Player }
             .any { it.location.distanceSquared(location) <= rangeSquared }
     }
 

@@ -6,8 +6,11 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 /**
- * Called for every mob a spawner is about to spawn, in both spawner modes and once per
- * mob in a stacked spawner's cycle.
+ * Called for every entity a spawner is about to spawn, vanilla spawners included.
+ *
+ * With mob stacking off, that is once per mob. With it on, a cycle goes in as one
+ * stacked entity, so this is called once for it, and not at all when the cycle only
+ * grows a stack that is already there.
  */
 class EcoMobSpawnerSpawnEvent(
     override val location: Location,

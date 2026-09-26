@@ -8,8 +8,9 @@ import org.bukkit.event.player.PlayerEvent
 import org.bukkit.inventory.ItemStack
 
 /**
- * Called when a creative player middle-clicks a custom spawner, before the spawner item
- * is put in their hand.
+ * Called when a creative player middle-clicks a spawner, before the spawner item is put
+ * in their hand. Vanilla spawners give a replica of themselves, so this is called for
+ * those too.
  */
 class EcoMobSpawnerPickBlockEvent(
     player: Player,
