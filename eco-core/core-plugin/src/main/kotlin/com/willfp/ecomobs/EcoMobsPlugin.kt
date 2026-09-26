@@ -21,6 +21,8 @@ import com.willfp.ecomobs.handler.PaperSpawnerPickBlockHandler
 import com.willfp.ecomobs.handler.PaperWaterTeleportHandler
 import com.willfp.ecomobs.handler.SpigotSpawnerPickBlockHandler
 import com.willfp.ecomobs.handler.SpigotWaterTeleportHandler
+import com.willfp.ecomobs.handler.SunlightBurningHandler
+import com.willfp.ecomobs.handler.SunlightBurningSettings
 import com.willfp.ecomobs.handler.WaterSensitivityHandler
 import com.willfp.ecomobs.handler.WaterSensitivitySettings
 import com.willfp.ecomobs.handler.MountHandler
@@ -100,6 +102,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
         SpawnerSpawnLoop.start()
         StackSettings.reload()
         WaterSensitivitySettings.reload()
+        SunlightBurningSettings.reload()
         MobStackTicker.start()
         SpawnerHolograms.reloadAll()
     }
@@ -124,6 +127,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
             topDamagerHandler,
             SpawnerHandler,
             WaterSensitivityHandler,
+            SunlightBurningHandler,
             SpawnerStackHandler,
             StackHandler,
             ChunkHandler

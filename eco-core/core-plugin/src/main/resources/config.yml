@@ -265,6 +265,20 @@ water-sensitivity:
     - enderman
     - blaze
 
+# Stops mobs catching fire in daylight. They still burn in lava, fire and from fire
+# aspect or flaming arrows. Applies to every mob of these types, not only ones from
+# spawners.
+sunlight-burning:
+  enabled: false
+  mobs:
+    - zombie
+    - zombie_villager
+    - skeleton
+    - stray
+    - bogged
+    - drowned
+    - phantom
+
 spawner-stacking:
   enabled: true
 
