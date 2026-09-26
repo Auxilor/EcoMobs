@@ -1,5 +1,6 @@
 package com.willfp.ecomobs
 
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.display.DisplayModule
@@ -16,6 +17,8 @@ import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
 import com.willfp.ecomobs.handler.ChunkHandler
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.DamageStageHandler
+import com.willfp.ecomobs.handler.PaperSpawnerPickBlockHandler
+import com.willfp.ecomobs.handler.SpigotSpawnerPickBlockHandler
 import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
@@ -118,8 +121,24 @@ class EcoMobsPlugin : LibreforgePlugin() {
             SpawnerStackHandler,
             StackHandler,
             ChunkHandler
-        )
+        ) + platformListeners()
     }
+
+    /**
+     * The listeners that differ between Paper and Spigot. Paper's own events don't exist
+     * on Spigot, so a listener naming one can only be registered on Paper; Spigot gets a
+     * workaround built from Bukkit's events instead.
+     */
+    private fun platformListeners(): List<Listener> =
+        if (Prerequisite.HAS_PAPER.isMet) {
+            listOf(
+                PaperSpawnerPickBlockHandler,
+            )
+        } else {
+            listOf(
+                SpigotSpawnerPickBlockHandler,
+            )
+        }
 
     override fun loadDisplayModules(): List<DisplayModule> {
         return listOf(SpawnEggDisplay, SpawnerItemDisplay)
