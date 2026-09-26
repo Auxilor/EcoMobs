@@ -72,7 +72,11 @@ object MobStackTicker {
                 continue
             }
 
-            mob.setClientsideDisplayName(player, nameplateFor(mob, player).toComponent(), true)
+            // An always-visible name renders through blocks, so it is only shown to a
+            // player who can actually see the mob, and hidden again once they can't.
+            val visible = player.hasLineOfSight(mob)
+
+            mob.setClientsideDisplayName(player, nameplateFor(mob, player).toComponent(), visible)
         }
     }
 
