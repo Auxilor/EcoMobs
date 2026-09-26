@@ -47,7 +47,20 @@ spawners: # How spawners tick; see Custom Spawners
   tick-rate: 5 # Ticks between spawner loop runs
   redstone-deactivates: true # Whether a powered spawner stops spawning
   adopt-vanilla-spawners: true # Whether world-generated spawners get EcoMobs data, so they can stack and be picked up
-  max-mobs-per-chunk: 50 # Entities a chunk can hold before its spawners stop; counts entities, NOT summed stack sizes; 0 is off
+  max-mobs-per-chunk: 50 # Entities of the spawner's own mob a chunk can hold before its spawners stop; same type only; counts entities, NOT summed stack sizes; 0 is off
+  spawn-attempts: 10 # Random spots tried per mob before it is given up on
+  vertical-range: 1 # Blocks above and below the spawner a mob can be placed
+  cycle-particles: # A puff on the spawner each cycle; any eco particle
+    spawn: { enabled: true, particle: flame, amount: 10 } # Mobs were spawned
+    blocked: { enabled: true, particle: smoke, amount: 10 } # Spawn requirements stopped the cycle
+    redstone: { enabled: true, particle: "rgb:ff0000", amount: 10 } # Switched off by redstone
+  vanilla-spawners: # Settings vanilla and adopted spawners tick with, where they still have vanilla's stock values
+    delay-min: 100
+    delay-max: 400
+    spawn-count: 4
+    spawn-range: 4
+    player-range: 16
+    max-nearby: 6
   checks: # The spawn requirements; every default is what vanilla does
     spawn-space: true # Whether a mob needs room where it would spawn
     solid-ground: false # Whether a mob needs solid ground; vanilla spawners do not require it
@@ -55,6 +68,11 @@ spawners: # How spawners tick; see Custom Spawners
     player-range: true # Whether a player has to be in range for the spawner to count down
     light-level: true # Whether mobs that need darkness are held to it
     max-light-level: 0 # The most block light a darkness-spawning mob tolerates
+    max-sky-light: 7 # The most sky light a darkness-spawning mob tolerates
+    light-dimensions: [normal] # Dimensions darkness is enforced in
+    dim-light-mobs: [blaze, silverfish] # Mobs held to dim light instead of darkness
+    dim-light-max: 11 # The most light dim-light-mobs tolerate
+    short-mobs: [cave_spider, silverfish, ...] # Mobs that fit in one block, so only need that block clear
 
 spawner-stacking: # Merges identical spawners into one block; see Spawner Stacking
   enabled: true

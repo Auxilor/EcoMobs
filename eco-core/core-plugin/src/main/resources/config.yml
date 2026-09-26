@@ -111,7 +111,12 @@ spawners:
   # Written once per spawner, as its chunk loads, and skipped on every load after that.
   adopt-vanilla-spawners: true
 
-  # The most things a chunk can hold before the spawners in it stop.
+  # The most of one spawner's mob a chunk can hold before the spawners for that mob in
+  # it stop.
+  #
+  # Only mobs of the SAME TYPE as the spawner's count: the same EcoMob, or for a
+  # vanilla spawner the same entity type. A chunk full of zombies doesn't stop the
+  # skeleton spawner next to them, and pets, villagers and other mobs never count.
   #
   # This counts ENTITIES, not mobs. It does NOT add up stack sizes.
   # One stacked mob is one entity, even if it stands for 60 mobs. So a stack of 60
@@ -123,6 +128,61 @@ spawners:
   #
   # Set to 0 to turn the limit off.
   max-mobs-per-chunk: 50
+
+  # How many random spots are tried for each mob before it is given up on. Vanilla
+  # effectively gets one try; more tries mean fewer lost spawns in cramped rooms.
+  # Each try is a couple of block reads in an already loaded chunk, so this is cheap,
+  # but it is paid per mob per cycle.
+  spawn-attempts: 10
+
+  # How many blocks above and below the spawner a mob can be placed. Vanilla is 1.
+  vertical-range: 1
+
+  # Puffs of particles on the spawner each time a spawn cycle comes round, so players
+  # can see what it did. Each can be turned off on its own, and each particle can be
+  # any eco particle: a bukkit particle name, or a factory key such as rgb:ff0000.
+  # amount is how many particles per puff, scattered around the spawner block.
+  cycle-particles:
+    # The cycle spawned mobs.
+    spawn:
+      enabled: true
+      particle: flame
+      amount: 10
+    # The cycle was held up - too many mobs nearby, the chunk is full, or nowhere had
+    # room or the right light. A cycle another plugin cancels shows nothing.
+    blocked:
+      enabled: true
+      particle: smoke
+      amount: 10
+    # The spawner is switched off by redstone (see redstone-deactivates).
+    redstone:
+      enabled: true
+      particle: rgb:ff0000
+      amount: 10
+
+  # The settings vanilla spawners tick with - dungeon spawners, /setblock and world
+  # edits, and spawners adopted by adopt-vanilla-spawners. EcoMobs spawners use their
+  # own settings instead, set per spawner.
+  #
+  # Only applies where a spawner still has vanilla's stock value. A spawner given its
+  # own values - a map maker's custom NBT - keeps them.
+  #
+  # Read live, so /ecomobs reload reaches every vanilla spawner, adopted ones included.
+  # A setting changed on one spawner with /ecomobs spawner modify stays on that spawner.
+  #
+  # Vanilla's own values are 200, 800, 4, 4, 16, 6.
+  vanilla-spawners:
+    # The tick range between spawn cycles, rolled fresh each cycle. 20 ticks = 1 second.
+    delay-min: 100
+    delay-max: 400
+    # Mobs spawned per cycle.
+    spawn-count: 4
+    # How far from the spawner, horizontally, mobs are placed.
+    spawn-range: 4
+    # How close a player has to be for the spawner to count down.
+    player-range: 16
+    # The spawner holds off while this many of its mob are nearby.
+    max-nearby: 6
 
   # The spawn requirements. Every default here is what vanilla does, so leaving them
   # alone leaves spawners feeling like vanilla spawners.
@@ -149,6 +209,45 @@ spawners:
 
     # The most block light a darkness-spawning mob tolerates. Vanilla is 0.
     max-light-level: 0
+
+    # The most sky light a darkness-spawning mob tolerates. Vanilla is about 7.
+    max-sky-light: 7
+
+    # The dimensions darkness-spawning mobs are held to darkness in: normal, nether,
+    # the_end, custom. Nether and end monsters spawn in any light in vanilla.
+    light-dimensions:
+      - normal
+
+    # Mobs that need light kept low rather than darkness, and the most light (block and
+    # sky together) they tolerate. Vanilla stops these at light 12.
+    dim-light-mobs:
+      - blaze
+      - silverfish
+    dim-light-max: 11
+
+    # Mobs small enough to fit in one block, so spawn-space doesn't need the block above
+    # them to be clear as well. Keeps the cramped spots these spawn in working.
+    short-mobs:
+      - cave_spider
+      - silverfish
+      - endermite
+      - slime
+      - magma_cube
+      - bat
+      - chicken
+      - rabbit
+      - bee
+      - parrot
+      - vex
+      - allay
+      - frog
+      - tadpole
+      - turtle
+      - axolotl
+      - cod
+      - salmon
+      - tropical_fish
+      - pufferfish
 
 spawner-stacking:
   enabled: true

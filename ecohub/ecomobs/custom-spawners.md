@@ -62,13 +62,26 @@ Vanilla entity types work the same way, so `ecomobs:zombie_spawner` is a plain z
 
 ## How spawners tick
 
-EcoMobs ticks every spawner itself — its own and vanilla's, dungeon spawners included — and applies the spawn requirements the server used to apply. Each one is a toggle, and every default is what vanilla does, so a spawner left alone behaves like a vanilla spawner.
+EcoMobs ticks every spawner itself — its own and vanilla's, dungeon spawners included — and applies the spawn requirements the server used to apply. Each check is a toggle, and every check default is what vanilla does. The one deliberate difference is `vanilla-spawners`, whose delay defaults are half vanilla's.
 
 ```yaml
 spawners:
   tick-rate: 5 # Ticks between loop runs
   redstone-deactivates: true # Whether a powered spawner stops spawning
-  max-mobs-per-chunk: 50 # Entities a chunk can hold before its spawners stop
+  max-mobs-per-chunk: 50 # Entities of the spawner's mob a chunk can hold before its spawners stop
+  spawn-attempts: 10 # Random spots tried per mob
+  vertical-range: 1 # Blocks above and below the spawner a mob can be placed
+  cycle-particles:
+    spawn: { enabled: true, particle: flame, amount: 10 }
+    blocked: { enabled: true, particle: smoke, amount: 10 }
+    redstone: { enabled: true, particle: "rgb:ff0000", amount: 10 }
+  vanilla-spawners:
+    delay-min: 100
+    delay-max: 400
+    spawn-count: 4
+    spawn-range: 4
+    player-range: 16
+    max-nearby: 6
   checks:
     spawn-space: true
     solid-ground: false
@@ -76,12 +89,17 @@ spawners:
     player-range: true
     light-level: true
     max-light-level: 0
+    max-sky-light: 7
+    light-dimensions: [normal]
+    dim-light-mobs: [blaze, silverfish]
+    dim-light-max: 11
+    short-mobs: [cave_spider, silverfish, endermite, slime, ...]
 ```
 
 What the loop does every cycle:
 
 - The countdown only runs while a player is inside `player-radius`, and is rolled from the `delay` range each cycle.
-- `count` mobs are spawned per cycle, scattered within `radius` horizontally and one block either side vertically. A stack of spawners spawns that many mobs per spawner in the stack, on the one cycle.
+- `count` mobs are spawned per cycle, scattered within `radius` horizontally and `vertical-range` blocks either side vertically. Each mob gets `spawn-attempts` random spots to find one that passes the checks, and is dropped if none do. A stack of spawners spawns that many mobs per spawner in the stack, on the one cycle.
 - The spawner holds off while `max-nearby` or more of that mob are already around — counted in a box of double `radius` across and 4 blocks tall, and only mobs of that exact kind count. Two EcoMobs built on the same base entity do not block each other.
 
 ### Spawners with mob stacking on
@@ -108,12 +126,19 @@ Growing a stack this way spawns nothing, so no merge event is fired for it.
 | `player-range` | `true` | A player has to be within `player-radius` for the spawner to count down. Off makes spawners run whether anyone is there or not. |
 | `light-level` | `true` | Mobs that need darkness are held to it, so a torch beside a zombie spawner switches it off, as in vanilla. Blazes and silverfish need light 12 rather than darkness. Animals, villagers and nether mobs ignore light either way. |
 | `max-light-level` | `0` | The most block light a darkness-spawning mob tolerates. Vanilla is `0`; raising it lets spawners keep working in dim rooms. |
+| `max-sky-light` | `7` | The most sky light a darkness-spawning mob tolerates. |
+| `light-dimensions` | `[normal]` | The dimensions darkness is enforced in (`normal`, `nether`, `the_end`, `custom`). Nether and end monsters spawn in any light in vanilla. |
+| `dim-light-mobs` | `[blaze, silverfish]` | Mobs held to dim light instead of darkness. |
+| `dim-light-max` | `11` | The most light, block and sky together, `dim-light-mobs` tolerate. |
+| `short-mobs` | cave spiders, slimes, fish, … | Mobs that fit in one block, so `spawn-space` only needs that block clear, not the one above. |
 
 For a grinder or an arena that should fire regardless of the light, set `light-level: false`. To let mobs spawn inside a 1x1 hole as well, add `spawn-space: false`.
 
 ### `max-mobs-per-chunk`
 
-How many things a chunk can hold before the spawners in it stop for that cycle. `0` turns it off.
+How many of a spawner's own mob a chunk can hold before the spawners for that mob in it stop for that cycle. `0` turns it off.
+
+Only mobs of the **same type** count: the same EcoMob, or for a vanilla spawner the same entity type. A chunk full of zombies doesn't stop the skeleton spawner beside them, and pets and villagers never count.
 
 :::info
 **This counts entities, not mobs. It does not add up stack sizes.**
@@ -124,6 +149,35 @@ The limit exists because of the work the server has to do, and one stack is one 
 :::
 
 With mob stacking off, a cycle spawns at most as many mobs as the chunk has room for, and the rest of the cycle is dropped.
+
+### `vanilla-spawners`
+
+The settings vanilla spawners tick with — dungeon spawners, `/setblock` and world edits, and spawners picked up by `adopt-vanilla-spawners`. EcoMobs spawners use their own per-spawner settings instead.
+
+| Setting | Default | Vanilla |
+| --- | --- | --- |
+| `delay-min` | `100` | `200` |
+| `delay-max` | `400` | `800` |
+| `spawn-count` | `4` | `4` |
+| `spawn-range` | `4` | `4` |
+| `player-range` | `16` | `16` |
+| `max-nearby` | `6` | `6` |
+
+The delay defaults are half vanilla's, so dungeon spawners fire twice as often. Set them to `200` and `800` for vanilla timing.
+
+These only apply where a spawner still has vanilla's stock value. A spawner given its own values, such as a map maker's custom NBT, keeps them. They are read live, so `/ecomobs reload` reaches every vanilla spawner, adopted ones included, and a value set on one spawner with `/ecomobs spawner modify` stays on that spawner.
+
+### `cycle-particles`
+
+Each time a spawn cycle comes round, the spawner puffs `amount` of `particle` to show what happened. Each particle can be any eco particle, and each puff has its own `enabled` toggle.
+
+| Puff | Default | When |
+| --- | --- | --- |
+| `spawn` | `flame` | The cycle spawned mobs, or grew a nearby stack |
+| `blocked` | `smoke` | Nothing could be spawned: too many mobs nearby, the chunk is full, or no spot had room or the right light |
+| `redstone` | `rgb:ff0000` | The spawner is switched off by redstone |
+
+A cycle cancelled by another plugin shows nothing. Puffs happen once per cycle, so a powered spawner shows its red dust each time its delay runs out, not constantly.
 
 ### `redstone-deactivates`
 
@@ -143,7 +197,7 @@ They are still mobs in every other way. They fall, take fall damage, take knockb
 
 ### `adopt-vanilla-spawners`
 
-Spawners the world generated carry no EcoMobs data, which is what stacking, holograms, pickup rules and the attribute commands all read. `adopt-vanilla-spawners: true` (the default) writes a spawner's own settings into that data as its chunk comes into reach, so a dungeon spawner becomes a full EcoMobs spawner without changing what it spawns or how fast.
+Spawners the world generated carry no EcoMobs data, which is what stacking, holograms, pickup rules and the attribute commands all read. `adopt-vanilla-spawners: true` (the default) marks a spawner as adopted as its chunk comes into reach, so a dungeon spawner becomes a full EcoMobs spawner without changing what it spawns. Its timing and ranges keep following `vanilla-spawners`; only values someone changed on the block are written into it.
 
 It is written once per spawner and skipped on every chunk load after that.
 
