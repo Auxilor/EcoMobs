@@ -215,7 +215,9 @@ spawners:
     # The most block light a darkness-spawning mob tolerates. Vanilla is 0.
     max-light-level: 0
 
-    # The most sky light a darkness-spawning mob tolerates. Vanilla is about 7.
+    # The most overall light a darkness-spawning mob tolerates: sky light dimmed for the
+    # time of day, or block light, whichever is higher. Under open sky that is about 4
+    # at night and 15 at noon. Vanilla is about 7.
     max-sky-light: 7
 
     # The dimensions darkness-spawning mobs are held to darkness in: normal, nether,
