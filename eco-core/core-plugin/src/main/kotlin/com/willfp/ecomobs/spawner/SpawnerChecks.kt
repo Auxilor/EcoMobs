@@ -4,9 +4,9 @@ import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.stacking.stack
 import org.bukkit.Location
-import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
+import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Monster
@@ -20,48 +20,6 @@ import org.bukkit.entity.Monster
  * natural spawning has is dropped, which is why spawner mobs can appear mid-air.
  */
 object SpawnerChecks {
-    /**
-     * The mobs that need light kept low rather than kept out. Vanilla stops a blaze or
-     * silverfish spawner at light 12, not at light 1.
-     */
-    private val DIM_LIGHT_MOBS = setOf(EntityType.BLAZE, EntityType.SILVERFISH)
-
-    private const val DIM_LIGHT_MAX = 11
-
-    /**
-     * How much sky light counts as dark. Vanilla rolls this against a random threshold
-     * each attempt; a flat value is close enough and doesn't make spawns flicker.
-     */
-    private const val MAX_SKY_LIGHT = 7
-
-    /**
-     * Mobs short enough to fit in a single block, so the block above them being solid
-     * doesn't stop them. An approximation of vanilla's hitbox check, which is why the
-     * cramped places these spawn in - mineshaft webs, stronghold crawlspaces - still work.
-     */
-    private val SHORT_MOBS = setOf(
-        EntityType.CAVE_SPIDER,
-        EntityType.SILVERFISH,
-        EntityType.ENDERMITE,
-        EntityType.SLIME,
-        EntityType.MAGMA_CUBE,
-        EntityType.BAT,
-        EntityType.CHICKEN,
-        EntityType.RABBIT,
-        EntityType.BEE,
-        EntityType.PARROT,
-        EntityType.VEX,
-        EntityType.ALLAY,
-        EntityType.FROG,
-        EntityType.TADPOLE,
-        EntityType.TURTLE,
-        EntityType.AXOLOTL,
-        EntityType.COD,
-        EntityType.SALMON,
-        EntityType.TROPICAL_FISH,
-        EntityType.PUFFERFISH
-    )
-
     /**
      * Whether the spawner at [block] is switched off by redstone.
      */
@@ -105,22 +63,20 @@ object SpawnerChecks {
         val range = spawnRange.toDouble() * 2
         val nearby = world.getNearbyEntities(location, range, 4.0, range)
 
-        val ecoMob = EcoMobs[mobId]
+        val matches = mobMatcher(mobId) ?: return 0
 
-        if (ecoMob != null) {
-            return nearby.filterIsInstance<Mob>()
-                .filter { it.ecoMob == ecoMob }
-                .sumOf { it.stack.size }
-        }
-
-        val type = entityTypeOrNull(mobId) ?: return 0
-
-        return nearby.filter { it.type == type }
+        return nearby.filter(matches)
             .sumOf { (it as? Mob)?.stack?.size ?: 1 }
     }
 
     /**
-     * How many more entities the chunk at [location] can take before its spawners stop.
+     * How many more of [mobId] the chunk at [location] can take before the spawners for
+     * that mob in it stop.
+     *
+     * Only mobs of the spawner's own kind count, matched the same way as [countNearby]:
+     * the same EcoMob, or for a vanilla spawner the same entity type. A zombie farm
+     * filling a chunk doesn't hold up the skeleton spawner next to it, and a player's
+     * pets and villagers never stop a spawner at all.
      *
      * This counts entities, not mobs. One stacked mob is one entity, however many mobs
      * it stands for: a stack of 60 counts as 1, the same as a single mob on its own. So
@@ -130,16 +86,34 @@ object SpawnerChecks {
      * The limit is about how much the server has to tick, and a stack is one thing to
      * tick, which is why it is counted the way it is.
      */
-    fun entityBudget(location: Location): Int {
+    fun entityBudget(location: Location, mobId: String): Int {
         val max = SpawnerSettings.maxMobsPerChunk
 
         if (max <= 0) {
             return Int.MAX_VALUE
         }
 
-        val current = location.chunk.entities.count { it is Mob }
+        val matches = mobMatcher(mobId) ?: return max
+
+        val current = location.chunk.entities.count { it is Mob && matches(it) }
 
         return (max - current).coerceAtLeast(0)
+    }
+
+    /**
+     * Whether an entity is what a spawner set to [mobId] spawns: that EcoMob, or for a
+     * plain entity type, any entity of that type. Null when [mobId] is neither.
+     */
+    private fun mobMatcher(mobId: String): ((Entity) -> Boolean)? {
+        val ecoMob = EcoMobs[mobId]
+
+        if (ecoMob != null) {
+            return { it is Mob && it.ecoMob == ecoMob }
+        }
+
+        val type = entityTypeOrNull(mobId) ?: return null
+
+        return { it.type == type }
     }
 
     private fun hasRoomFor(block: Block, type: EntityType?): Boolean {
@@ -147,7 +121,7 @@ object SpawnerChecks {
             return false
         }
 
-        if (type in SHORT_MOBS) {
+        if (type in SpawnerSettings.shortMobs) {
             return true
         }
 
@@ -159,13 +133,13 @@ object SpawnerChecks {
             return true
         }
 
-        if (type in DIM_LIGHT_MOBS) {
-            return block.lightLevel <= DIM_LIGHT_MAX
+        if (type in SpawnerSettings.dimLightMobs) {
+            return block.lightLevel <= SpawnerSettings.dimLightMax
         }
 
-        // Nether and end monsters spawn in any light, so only the overworld's mobs are
-        // held to darkness.
-        if (block.world.environment != World.Environment.NORMAL) {
+        // Nether and end monsters spawn in any light, so by default only the overworld's
+        // mobs are held to darkness.
+        if (block.world.environment !in SpawnerSettings.lightEnvironments) {
             return true
         }
 
@@ -174,7 +148,7 @@ object SpawnerChecks {
         }
 
         return block.lightFromBlocks <= SpawnerSettings.maxLightLevel &&
-                block.lightFromSky <= MAX_SKY_LIGHT
+                block.lightFromSky <= SpawnerSettings.maxSkyLight
     }
 
     /**

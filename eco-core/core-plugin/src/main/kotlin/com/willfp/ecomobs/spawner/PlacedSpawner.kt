@@ -10,11 +10,6 @@ import org.bukkit.entity.EntityType
 import kotlin.random.Random
 
 /**
- * How many places are tried for a single mob before it is given up on.
- */
-private const val SPAWN_ATTEMPTS = 5
-
-/**
  * A spawner EcoMobs tracks.
  *
  * Everything needed to describe the spawner is mirrored here, so anything that only
@@ -38,13 +33,13 @@ class PlacedSpawner(
     /**
      * Ticks left until the next spawn attempt.
      */
-    private var spawnCooldown = Random.nextInt(SpawnerDefaults.DELAY_MIN, SpawnerDefaults.DELAY_MAX + 1)
+    private var spawnCooldown = Random.nextInt(VanillaSpawnerDefaults.delayMin, VanillaSpawnerDefaults.delayMax + 1)
 
     /**
      * The player range from the last spawn cycle, so the countdown doesn't have to read
      * the block state on every tick.
      */
-    private var playerRange = SpawnerDefaults.PLAYER_RANGE
+    private var playerRange = VanillaSpawnerDefaults.playerRange
 
     fun tick(tick: Int) {
         val id = animationId?.takeIf { it != "none" } ?: return
@@ -79,6 +74,7 @@ class PlacedSpawner(
         // The cycle still runs down while the spawner is switched off, so cutting the
         // power doesn't hand back a spawn that was held.
         if (SpawnerChecks.isDeactivatedByRedstone(location.block)) {
+            showParticles(SpawnerSettings.redstoneParticles)
             return
         }
 
@@ -104,13 +100,26 @@ class PlacedSpawner(
     }
 
     private fun attemptSpawns(state: CreatureSpawner) {
-        val mobId = state.effectiveMob ?: return
+        when (spawnCycle(state)) {
+            CycleResult.SPAWNED -> showParticles(SpawnerSettings.spawnParticles)
+            CycleResult.BLOCKED -> showParticles(SpawnerSettings.blockedParticles)
+            CycleResult.SKIPPED -> Unit
+        }
+    }
+
+    /**
+     * Runs one spawn cycle. BLOCKED is a cycle the spawn requirements stopped - the
+     * nearby cap, the chunk's budget, nowhere to stand - and SKIPPED one that had
+     * nothing to spawn or was cancelled by another plugin, which isn't a failure.
+     */
+    private fun spawnCycle(state: CreatureSpawner): CycleResult {
+        val mobId = state.effectiveMob ?: return CycleResult.SKIPPED
         val spawnRange = state.effectiveSpawnRange
 
         if (SpawnerSettings.checkMaxNearby &&
             SpawnerChecks.countNearby(location, spawnRange, mobId) >= state.effectiveMaxNearby
         ) {
-            return
+            return CycleResult.BLOCKED
         }
 
         // A stack of spawners spawns as many mobs as it holds, on the one cycle.
@@ -121,21 +130,21 @@ class PlacedSpawner(
         Bukkit.getPluginManager().callEvent(tickEvent)
 
         if (tickEvent.isCancelled) {
-            return
+            return CycleResult.SKIPPED
         }
 
         val toSpawn = tickEvent.spawnCount.coerceAtLeast(0) * tickEvent.stackSize.coerceAtLeast(0)
 
         if (toSpawn <= 0) {
-            return
+            return CycleResult.SKIPPED
         }
 
-        // How much room the chunk has left. Counts entities, not mobs, so a stack of
-        // sixty is one.
-        val budget = SpawnerChecks.entityBudget(location)
+        // How much room the chunk has left for this spawner's mob. Only mobs of the same
+        // kind count, and it counts entities, not mobs, so a stack of sixty is one.
+        val budget = SpawnerChecks.entityBudget(location, mobId)
 
         if (budget <= 0) {
-            return
+            return CycleResult.BLOCKED
         }
 
         val type = resolveEntityType(mobId)
@@ -143,9 +152,10 @@ class PlacedSpawner(
         // With mob stacking on, the cycle goes in as stack size rather than as an entity
         // per mob, which is what keeps a wall of spawners from filling the world.
         if (StackSettings.enabled) {
-            spawnStacked(mobId, toSpawn, noAI, spawnRange, type)
-            return
+            return spawnStacked(mobId, toSpawn, noAI, spawnRange, type)
         }
+
+        var spawnedAny = false
 
         repeat(minOf(toSpawn, budget)) {
             // A mob with nowhere to go is lost rather than retried elsewhere, which is
@@ -153,6 +163,26 @@ class PlacedSpawner(
             val spawnLocation = findSpawnLocation(spawnRange, type) ?: return@repeat
 
             spawnFromSpawner(location, spawnLocation, mobId, noAI)
+            spawnedAny = true
+        }
+
+        return if (spawnedAny) CycleResult.SPAWNED else CycleResult.BLOCKED
+    }
+
+    /**
+     * A puff of [particles] around the spawner, so a player can see what the cycle did
+     * rather than wondering whether the spawner is ticking at all.
+     *
+     * Each particle goes at its own random point in the block, as eco's particles spawn
+     * with no spread of their own and would otherwise all land on the one spot.
+     */
+    private fun showParticles(particles: CycleParticles) {
+        val particle = particles.particle
+
+        repeat(particles.amount) {
+            particle.spawn(
+                location.clone().add(Random.nextDouble(), Random.nextDouble(), Random.nextDouble())
+            )
         }
     }
 
@@ -170,12 +200,12 @@ class PlacedSpawner(
         noAI: Boolean,
         spawnRange: Int,
         type: EntityType?
-    ) {
+    ): CycleResult {
         if (MobStacks.addToNearbyStack(location, mobId, toSpawn) > 0) {
-            return
+            return CycleResult.SPAWNED
         }
 
-        val spawnLocation = findSpawnLocation(spawnRange, type) ?: return
+        val spawnLocation = findSpawnLocation(spawnRange, type) ?: return CycleResult.BLOCKED
 
         spawnFromSpawner(
             location,
@@ -184,14 +214,24 @@ class PlacedSpawner(
             noAI,
             toSpawn.coerceAtMost(StackSettings.maxSize)
         )
+
+        return CycleResult.SPAWNED
     }
 
     /**
      * Somewhere within [spawnRange] that [type] can spawn, or null if nothing tried works.
      */
     private fun findSpawnLocation(spawnRange: Int, type: EntityType?): Location? {
-        repeat(SPAWN_ATTEMPTS) {
+        val world = location.world ?: return null
+
+        repeat(SpawnerSettings.spawnAttempts) {
             val candidate = randomSpawnLocation(spawnRange)
+
+            // A spawner on a chunk border can pick a spot in the unloaded chunk next
+            // door, and reading its block would load it on the spot.
+            if (!world.isChunkLoaded(candidate.blockX shr 4, candidate.blockZ shr 4)) {
+                return@repeat
+            }
 
             if (SpawnerChecks.canSpawnAt(candidate, type)) {
                 return candidate
@@ -202,14 +242,22 @@ class PlacedSpawner(
     }
 
     /**
-     * Vanilla's spawn offset: anywhere in the spawn range horizontally, and a block
-     * either side of the spawner vertically.
+     * Vanilla's spawn offset: anywhere in the spawn range horizontally, and up to
+     * [SpawnerSettings.verticalRange] blocks either side of the spawner vertically.
      */
     private fun randomSpawnLocation(spawnRange: Int): Location {
+        val vertical = SpawnerSettings.verticalRange
+
         val x = location.x + 0.5 + (Random.nextDouble() - Random.nextDouble()) * spawnRange
-        val y = location.y + Random.nextInt(3) - 1
+        val y = location.y + Random.nextInt(-vertical, vertical + 1)
         val z = location.z + 0.5 + (Random.nextDouble() - Random.nextDouble()) * spawnRange
 
         return Location(location.world, x, y, z)
     }
+}
+
+private enum class CycleResult {
+    SPAWNED,
+    BLOCKED,
+    SKIPPED
 }

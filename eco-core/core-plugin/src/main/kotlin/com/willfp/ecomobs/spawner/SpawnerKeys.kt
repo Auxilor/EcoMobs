@@ -26,6 +26,20 @@ val spawnerParticleAnimKey = namespacedKeyOf("ecomobs", "spawner_particle_anim")
 val spawnerExplosionProofKey = namespacedKeyOf("ecomobs", "spawner_explosion_proof")
 val spawnerStackSizeKey = namespacedKeyOf("ecomobs", "spawner_stack_size")
 val spawnerNoAIKey = namespacedKeyOf("ecomobs", "spawner_no_ai")
+val spawnerAdoptedKey = namespacedKeyOf("ecomobs", "spawner_adopted")
+
+/**
+ * The per-spawner settings that are numbers, which are the ones an adopted spawner can
+ * leave unwritten to follow [VanillaSpawnerDefaults] instead.
+ */
+private val intKeys = listOf(
+    spawnerDelayMinKey,
+    spawnerDelayMaxKey,
+    spawnerSpawnCountKey,
+    spawnerSpawnRangeKey,
+    spawnerPlayerRangeKey,
+    spawnerMaxNearbyKey
+)
 
 /**
  * The values a spawner falls back to when its data has never been written.
@@ -61,32 +75,42 @@ value class SpawnerData(val pdc: PersistentDataContainer) {
     val isCustomSpawner: Boolean
         get() = pdc.has(spawnerMobKey, PersistentDataType.STRING)
 
+    /**
+     * Whether this is a vanilla spawner EcoMobs adopted, whose unwritten settings follow
+     * [VanillaSpawnerDefaults] rather than [SpawnerDefaults].
+     */
+    var isAdopted: Boolean
+        get() = pdc.get(spawnerAdoptedKey, PersistentDataType.BYTE) == 1.toByte()
+        set(value) {
+            if (value) pdc.set(spawnerAdoptedKey, PersistentDataType.BYTE, 1) else pdc.remove(spawnerAdoptedKey)
+        }
+
     var mob: String?
         get() = pdc.get(spawnerMobKey, PersistentDataType.STRING)
         set(value) = pdc.setOrRemove(spawnerMobKey, value)
 
     var delayMin: Int
-        get() = pdc.getInt(spawnerDelayMinKey, SpawnerDefaults.DELAY_MIN)
+        get() = pdc.getInt(spawnerDelayMinKey, if (isAdopted) VanillaSpawnerDefaults.delayMin else SpawnerDefaults.DELAY_MIN)
         set(value) = pdc.setInt(spawnerDelayMinKey, value)
 
     var delayMax: Int
-        get() = pdc.getInt(spawnerDelayMaxKey, SpawnerDefaults.DELAY_MAX)
+        get() = pdc.getInt(spawnerDelayMaxKey, if (isAdopted) VanillaSpawnerDefaults.delayMax else SpawnerDefaults.DELAY_MAX)
         set(value) = pdc.setInt(spawnerDelayMaxKey, value)
 
     var spawnCount: Int
-        get() = pdc.getInt(spawnerSpawnCountKey, SpawnerDefaults.SPAWN_COUNT)
+        get() = pdc.getInt(spawnerSpawnCountKey, if (isAdopted) VanillaSpawnerDefaults.spawnCount else SpawnerDefaults.SPAWN_COUNT)
         set(value) = pdc.setInt(spawnerSpawnCountKey, value)
 
     var spawnRange: Int
-        get() = pdc.getInt(spawnerSpawnRangeKey, SpawnerDefaults.SPAWN_RANGE)
+        get() = pdc.getInt(spawnerSpawnRangeKey, if (isAdopted) VanillaSpawnerDefaults.spawnRange else SpawnerDefaults.SPAWN_RANGE)
         set(value) = pdc.setInt(spawnerSpawnRangeKey, value)
 
     var playerRange: Int
-        get() = pdc.getInt(spawnerPlayerRangeKey, SpawnerDefaults.PLAYER_RANGE)
+        get() = pdc.getInt(spawnerPlayerRangeKey, if (isAdopted) VanillaSpawnerDefaults.playerRange else SpawnerDefaults.PLAYER_RANGE)
         set(value) = pdc.setInt(spawnerPlayerRangeKey, value)
 
     var maxNearby: Int
-        get() = pdc.getInt(spawnerMaxNearbyKey, SpawnerDefaults.MAX_NEARBY)
+        get() = pdc.getInt(spawnerMaxNearbyKey, if (isAdopted) VanillaSpawnerDefaults.maxNearby else SpawnerDefaults.MAX_NEARBY)
         set(value) = pdc.setInt(spawnerMaxNearbyKey, value)
 
     var pickup: String
@@ -146,12 +170,15 @@ value class SpawnerData(val pdc: PersistentDataContainer) {
 
     fun copyTo(other: SpawnerData) {
         other.mob = mob
-        other.delayMin = delayMin
-        other.delayMax = delayMax
-        other.spawnCount = spawnCount
-        other.spawnRange = spawnRange
-        other.playerRange = playerRange
-        other.maxNearby = maxNearby
+        other.isAdopted = isAdopted
+
+        // Only what was written is copied, so a replica of an adopted spawner carries on
+        // following the vanilla defaults rather than freezing them at the time of copying.
+        for (key in intKeys) {
+            val value = pdc.get(key, PersistentDataType.INTEGER)
+            if (value == null) other.pdc.remove(key) else other.pdc.setInt(key, value)
+        }
+
         other.pickup = pickup
         other.particleAnim = particleAnim
         other.explosionProof = explosionProof
@@ -189,22 +216,35 @@ val CreatureSpawner.effectiveMob: String?
     get() = spawner.mob ?: spawnedType?.name?.lowercase()
 
 val CreatureSpawner.effectiveDelayMin: Int
-    get() = if (spawner.isCustomSpawner) spawner.delayMin else minSpawnDelay
+    get() = if (spawner.isCustomSpawner) spawner.delayMin else
+        orVanillaDefault(minSpawnDelay, VanillaSpawnerDefaults.Stock.DELAY_MIN, VanillaSpawnerDefaults.delayMin)
 
 val CreatureSpawner.effectiveDelayMax: Int
-    get() = if (spawner.isCustomSpawner) spawner.delayMax else maxSpawnDelay
+    get() = if (spawner.isCustomSpawner) spawner.delayMax else
+        orVanillaDefault(maxSpawnDelay, VanillaSpawnerDefaults.Stock.DELAY_MAX, VanillaSpawnerDefaults.delayMax)
 
 val CreatureSpawner.effectiveSpawnCount: Int
-    get() = if (spawner.isCustomSpawner) spawner.spawnCount else spawnCount
+    get() = if (spawner.isCustomSpawner) spawner.spawnCount else
+        orVanillaDefault(spawnCount, VanillaSpawnerDefaults.Stock.SPAWN_COUNT, VanillaSpawnerDefaults.spawnCount)
 
 val CreatureSpawner.effectiveSpawnRange: Int
-    get() = if (spawner.isCustomSpawner) spawner.spawnRange else spawnRange
+    get() = if (spawner.isCustomSpawner) spawner.spawnRange else
+        orVanillaDefault(spawnRange, VanillaSpawnerDefaults.Stock.SPAWN_RANGE, VanillaSpawnerDefaults.spawnRange)
 
 val CreatureSpawner.effectivePlayerRange: Int
-    get() = if (spawner.isCustomSpawner) spawner.playerRange else requiredPlayerRange
+    get() = if (spawner.isCustomSpawner) spawner.playerRange else
+        orVanillaDefault(requiredPlayerRange, VanillaSpawnerDefaults.Stock.PLAYER_RANGE, VanillaSpawnerDefaults.playerRange)
 
 val CreatureSpawner.effectiveMaxNearby: Int
-    get() = if (spawner.isCustomSpawner) spawner.maxNearby else maxNearbyEntities
+    get() = if (spawner.isCustomSpawner) spawner.maxNearby else
+        orVanillaDefault(maxNearbyEntities, VanillaSpawnerDefaults.Stock.MAX_NEARBY, VanillaSpawnerDefaults.maxNearby)
+
+/**
+ * A block's own spawner value, or the configured vanilla default when the block still
+ * has what the server gives every spawner. A value someone changed is theirs to keep.
+ */
+private fun orVanillaDefault(blockValue: Int, stock: Int, configured: Int): Int =
+    if (blockValue == stock) configured else blockValue
 
 fun entityTypeOrNull(name: String): EntityType? =
     EntityType.entries.firstOrNull { it.name.equals(name, ignoreCase = true) }
@@ -251,17 +291,25 @@ fun CreatureSpawner.adoptVanillaSettings(): Boolean {
 }
 
 /**
- * Copies the block's own spawner settings into [data], as the settings EcoMobs would
- * have written for the same spawner. False when there is no mob to copy.
+ * Marks [data] as an adopted copy of this block's spawner. False when there is no mob
+ * to copy.
+ *
+ * Values the block still has at the server's stock are left unwritten, so they follow
+ * `spawners.vanilla-spawners` and pick up any change to it on reload. Only the values
+ * someone changed on the block - a map maker's custom NBT - are written, and kept.
  */
 private fun CreatureSpawner.copyVanillaSettingsInto(data: SpawnerData): Boolean {
     data.mob = effectiveMob ?: return false
-    data.delayMin = minSpawnDelay
-    data.delayMax = maxSpawnDelay
-    data.spawnCount = spawnCount
-    data.spawnRange = spawnRange
-    data.playerRange = requiredPlayerRange
-    data.maxNearby = maxNearbyEntities
+    data.isAdopted = true
+
+    val stock = VanillaSpawnerDefaults.Stock
+
+    if (minSpawnDelay != stock.DELAY_MIN) data.delayMin = minSpawnDelay
+    if (maxSpawnDelay != stock.DELAY_MAX) data.delayMax = maxSpawnDelay
+    if (spawnCount != stock.SPAWN_COUNT) data.spawnCount = spawnCount
+    if (spawnRange != stock.SPAWN_RANGE) data.spawnRange = spawnRange
+    if (requiredPlayerRange != stock.PLAYER_RANGE) data.playerRange = requiredPlayerRange
+    if (maxNearbyEntities != stock.MAX_NEARBY) data.maxNearby = maxNearbyEntities
 
     return true
 }
