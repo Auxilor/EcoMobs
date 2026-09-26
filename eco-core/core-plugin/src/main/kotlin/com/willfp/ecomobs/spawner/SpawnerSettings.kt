@@ -125,6 +125,13 @@ object SpawnerSettings {
         private set
 
     /**
+     * Whether a spawner mob keeps the mount or rider vanilla's spawn randomisation can
+     * give it: the chicken under a baby zombie, the skeleton on a spider.
+     */
+    var allowJockeys = false
+        private set
+
+    /**
      * Whether a powered spawner stops spawning.
      */
     var redstoneDeactivates = true
@@ -182,6 +189,7 @@ object SpawnerSettings {
         VanillaSpawnerDefaults.reload(config)
 
         redstoneDeactivates = config.getBool("spawners.redstone-deactivates")
+        allowJockeys = config.getBool("spawners.allow-jockeys")
         maxMobsPerChunk = config.getInt("spawners.max-mobs-per-chunk").coerceAtLeast(0)
         adoptVanillaSpawners = config.getBool("spawners.adopt-vanilla-spawners")
 

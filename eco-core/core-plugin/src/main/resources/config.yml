@@ -101,6 +101,11 @@ spawners:
   # this to false to keep that.
   redstone-deactivates: true
 
+  # Whether spawner mobs keep the mount or rider vanilla sometimes gives them as they
+  # spawn - a baby zombie on a chicken (chicken jockey), a skeleton on a spider (spider
+  # jockey). Vanilla spawners do make these; false spawns the mob on its own.
+  allow-jockeys: false
+
   # Whether a spawner the world generated - a dungeon spawner, or one from /setblock or
   # a world edit - has its own settings written into it, so it can be stacked, show a
   # hologram and be picked up like any EcoMobs spawner.

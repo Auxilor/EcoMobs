@@ -7,6 +7,7 @@ import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.stacking.stack
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Mob
 import org.bukkit.persistence.PersistentDataType
 
@@ -51,6 +52,41 @@ fun spawnFromSpawner(
 
     if (noAI) {
         (entity as? Mob)?.applySpawnerNoAI()
+    }
+
+    if (!SpawnerSettings.allowJockeys) {
+        entity?.removeJockeyParts()
+    }
+}
+
+/**
+ * Takes away the mount or riders a mob was given as it spawned: vanilla's spawn
+ * randomisation puts some baby zombies on a chicken and some skeletons on a spider,
+ * from a spawner the same as anywhere else.
+ *
+ * Done after the spawn rather than by cancelling the extra mob's spawn, as vanilla
+ * seats the rider before the mount is added to the world, and cancelling the mount
+ * would leave the rider sat on something that doesn't exist.
+ *
+ * Only a mount or rider spawned alongside it is removed. A baby zombie can also claim a
+ * chicken that was already standing there, and that chicken is left alone, just
+ * without its rider.
+ */
+private fun Entity.removeJockeyParts() {
+    vehicle?.let { mount ->
+        leaveVehicle()
+
+        if (mount.ticksLived <= 1) {
+            mount.remove()
+        }
+    }
+
+    for (rider in passengers) {
+        removePassenger(rider)
+
+        if (rider.ticksLived <= 1) {
+            rider.remove()
+        }
     }
 }
 
