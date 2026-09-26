@@ -14,6 +14,20 @@ object SpawnerAttributes {
 
     fun valueCount(attribute: String): Int = if (attribute == "delay") 2 else 1
 
+    /**
+     * The values [attribute] takes, as shown to a player who left them out.
+     */
+    fun usage(attribute: String): String = when (attribute) {
+        "mob" -> "<mob>"
+        "delay" -> "<min ticks> <max ticks>"
+        "radius", "player-radius" -> "<blocks>"
+        "count", "max-nearby", "stack-size" -> "<amount>"
+        "pickup" -> "<${PICKUP_VALUES.joinToString("|")}>"
+        "particle" -> "<animation|none>"
+        "explosion-proof", "no-ai" -> "<true|false>"
+        else -> "<value>"
+    }
+
     fun isValidMob(mobId: String): Boolean =
         EcoMobs[mobId] != null || entityTypeOrNull(mobId) != null
 

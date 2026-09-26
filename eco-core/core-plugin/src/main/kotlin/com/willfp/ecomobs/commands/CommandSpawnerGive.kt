@@ -59,12 +59,18 @@ object CommandSpawnerGive : Subcommand(
             val value = SpawnerAttributes.valueCount(attribute)
             val valueArgs = tail.subList(i + 1, minOf(i + 1 + value, tail.size))
             if (valueArgs.size < value) {
-                sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
+                sender.sendMessage(
+                    plugin.langYml.getMessage("spawner-missing-value")
+                        .replace("%attribute%", attribute)
+                        .replace("%usage%", SpawnerAttributes.usage(attribute))
+                )
                 return
             }
             if (!SpawnerAttributes.apply(fis.spawner, attribute, valueArgs)) {
                 sender.sendMessage(
-                    plugin.langYml.getMessage("spawner-invalid-value").replace("%attribute%", attribute)
+                    plugin.langYml.getMessage("spawner-invalid-value")
+                        .replace("%attribute%", attribute)
+                        .replace("%usage%", SpawnerAttributes.usage(attribute))
                 )
                 return
             }

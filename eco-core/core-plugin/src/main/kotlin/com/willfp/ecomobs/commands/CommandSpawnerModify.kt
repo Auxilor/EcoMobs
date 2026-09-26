@@ -39,11 +39,22 @@ object CommandSpawnerModify : Subcommand(
 
         val values = args.drop(1)
 
+        if (values.size < SpawnerAttributes.valueCount(attribute)) {
+            sender.sendMessage(
+                plugin.langYml.getMessage("spawner-missing-value")
+                    .replace("%attribute%", attribute)
+                    .replace("%usage%", SpawnerAttributes.usage(attribute))
+            )
+            return
+        }
+
         fun rejectValue() {
             val message = if (attribute == "mob") {
                 plugin.langYml.getMessage("spawner-invalid-mob")
             } else {
-                plugin.langYml.getMessage("spawner-invalid-value").replace("%attribute%", attribute)
+                plugin.langYml.getMessage("spawner-invalid-value")
+                    .replace("%attribute%", attribute)
+                    .replace("%usage%", SpawnerAttributes.usage(attribute))
             }
 
             sender.sendMessage(message)
