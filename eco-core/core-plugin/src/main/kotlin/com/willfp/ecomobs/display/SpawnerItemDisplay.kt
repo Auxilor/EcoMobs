@@ -1,12 +1,12 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.core.display.Display
+import com.willfp.eco.core.display.DisplayContext
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
 import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.eco.core.fast.fast
-import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
+import com.willfp.eco.util.formatEcoRich
 import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.isCustomSpawner
@@ -20,8 +20,6 @@ import com.willfp.ecomobs.spawner.spawnerPickup
 import com.willfp.ecomobs.spawner.spawnerPlayerRange
 import com.willfp.ecomobs.spawner.spawnerSpawnCount
 import com.willfp.ecomobs.spawner.spawnerSpawnRange
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 private fun FastItemStack.applySpawnerPlaceholders(text: String): String =
     text
@@ -38,21 +36,20 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String =
         .replace("%explosion_proof%", spawnerExplosionProof.toString())
 
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
-    override fun display(itemStack: ItemStack, player: Player?, vararg args: Any) {
-        if (player == null) return
-        val fis = itemStack.fast()
+    override fun display(context: DisplayContext) {
+        if (context.player == null) return
+        val fis = context.itemStack.fast()
         if (!fis.isCustomSpawner) return
-
-        val context = placeholderContext(player = player, item = itemStack)
 
         val rawTitle = plugin.configYml.getString("spawner-display.title")
         if (rawTitle.isNotEmpty()) {
-            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context))
+            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context.placeholderContext))
         }
 
-        val lore = plugin.configYml.getStrings("spawner-display.lore")
-            .map { Display.PREFIX + fis.applySpawnerPlaceholders(it).formatEco(context) }
-
-        fis.lore = lore + fis.lore
+        context.lore.prepend(
+            plugin.configYml.getStrings("spawner-display.lore")
+                .map { fis.applySpawnerPlaceholders(it) }
+                .formatEcoRich(context.placeholderContext)
+        )
     }
 }
