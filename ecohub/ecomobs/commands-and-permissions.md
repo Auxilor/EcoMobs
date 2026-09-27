@@ -1,6 +1,6 @@
 ---
 title: "Commands and Permissions"
-sidebar_position: 3
+sidebar_position: 7
 ---
 
 Every EcoMobs command and the permission that gates it. The base commands cover reloading, spawning, giving, killing, and importing or exporting mobs; the spawner commands hand out and edit spawner items and blocks. Grant the permission alongside each command you want a role to use.
@@ -40,6 +40,10 @@ Both the `give` and `modify` commands accept the following attributes:
 | `pickup`           | `allow` \| `silk_touch` \| `deny`              | How players can pick up the spawner                  | `ecomobs.command.spawner.modify.pickup`            |
 | `particle`         | `none` \| `<animation_name>`                   | Particle animation displayed by the spawner          | `ecomobs.command.spawner.modify.particle`          |
 | `explosion-proof`  | `true` \| `false`                              | Whether the spawner survives explosions              | `ecomobs.command.spawner.modify.explosion-proof`   |
+| `no-ai`            | `true` \| `false`                             | Whether spawned mobs have their AI disabled          | `ecomobs.command.spawner.modify.no-ai`             |
+| `stack-size`       | `<value>`                                      | How many spawners it stands in for (min 1, not capped by `max-size`) | `ecomobs.command.spawner.modify.stack-size`        |
+
+Leaving out an attribute's value, or giving one that isn't valid, replies with what it takes, for example `delay needs a value! Usage: delay <min ticks> <max ticks>`. The messages are `spawner-missing-value` and `spawner-invalid-value` in `lang.yml`.
 
 ### Additional Permissions
 
@@ -55,5 +59,7 @@ These permissions are not tied to commands but control player interactions with 
 ## Where to go next
 
 - **Make a mob:** [How to Make a Custom Mob](how-to-make-a-custom-mob) to give spawn and give commands something to summon.
+- **Spawners:** [Custom Spawners](custom-spawners) for what each attribute does and how spawners tick.
+- **Stacking:** [Spawner Stacking](spawner-stacking) for what `stack-size` does in the world.
 - **Spawner settings:** the [Plugin Config](plugin-config) reference for spawner display and animations.
 - **Import mobs:** browse community configs on [lrcdb](https://lrcdb.auxilor.io/).

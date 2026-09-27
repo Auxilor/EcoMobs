@@ -17,7 +17,8 @@ messages:
   spawner-invalid-mob: "&cInvalid mob! Specify a valid EcoMob ID or vanilla entity type."
   spawner-no-target: "&cYou must be holding a spawner or looking at one within 5 blocks!"
   spawner-modified: "&aSet &c%attribute%&a to &c%value%&a!"
-  spawner-invalid-value: "&cInvalid value for &c%attribute%&c!"
+  spawner-invalid-value: "&cInvalid value for &c%attribute%&c! Usage: &f%attribute% %usage%"
+  spawner-missing-value: "&c%attribute% needs a value! Usage: &f%attribute% %usage%"
   spawner-cannot-pickup: "&cYou don't have permission to pick up this spawner!"
 
 na: "N/A"

@@ -2,6 +2,7 @@ package com.willfp.ecomobs.mob
 
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.stage.DamageStage
+import com.willfp.ecomobs.mob.stage.impl.DamageStageModeFactoryHits
 import com.willfp.libreforge.triggers.DispatchedTrigger
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -36,9 +37,20 @@ interface LivingMob {
     val damageStageProgress: Double
 
     /**
+     * What is left of the current stage, in whatever its mode counts. Zero if the mob
+     * does not use stages.
+     */
+    val stageRemaining: Double
+
+    /**
      * Hits remaining in the current stage. Zero unless the current stage is in hits mode.
      */
+    @Deprecated(
+        "Stage modes are no longer a fixed set. Use stageRemaining.",
+        ReplaceWith("stageRemaining")
+    )
     val hitsRemaining: Double
+        get() = if (damageStage?.mode?.factory === DamageStageModeFactoryHits) stageRemaining else 0.0
 
     /**
      * Handle an event.
