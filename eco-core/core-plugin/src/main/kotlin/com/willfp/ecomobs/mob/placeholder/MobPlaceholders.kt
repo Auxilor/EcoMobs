@@ -4,14 +4,13 @@ import com.willfp.eco.core.registry.Registry
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHealth
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHealthPercent
-import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHits
-import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHitsPercent
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderMaxHealth
-import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderMaxHits
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderMaxStages
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderStage
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderStagePercent
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderTime
+import com.willfp.ecomobs.mob.placeholder.impl.progressPlaceholders
+import com.willfp.ecomobs.mob.stage.DamageStageModes
 
 object MobPlaceholders : Registry<MobPlaceholder>() {
     init {
@@ -21,10 +20,15 @@ object MobPlaceholders : Registry<MobPlaceholder>() {
         register(MobPlaceholderStage)
         register(MobPlaceholderMaxStages)
         register(MobPlaceholderStagePercent)
-        register(MobPlaceholderHits)
-        register(MobPlaceholderMaxHits)
-        register(MobPlaceholderHitsPercent)
         register(MobPlaceholderTime)
+
+        // Every damage stage mode brings its own progress placeholders, so adding a mode
+        // never means touching this list.
+        for (factory in DamageStageModes.values()) {
+            for (placeholder in factory.progressPlaceholders()) {
+                register(placeholder)
+            }
+        }
     }
 }
 

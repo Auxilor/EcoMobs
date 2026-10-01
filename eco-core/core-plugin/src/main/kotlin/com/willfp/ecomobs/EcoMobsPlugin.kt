@@ -1,10 +1,12 @@
 package com.willfp.ecomobs
 
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.entities.ai.EntityGoals
 import com.willfp.eco.core.integrations.IntegrationLoader
+import com.willfp.eco.core.items.Items
 import com.willfp.eco.util.toSingletonList
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
@@ -15,12 +17,23 @@ import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
 import com.willfp.ecomobs.handler.ChunkHandler
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.DamageStageHandler
+import com.willfp.ecomobs.handler.PaperSpawnerPickBlockHandler
+import com.willfp.ecomobs.handler.PaperWaterTeleportHandler
+import com.willfp.ecomobs.handler.SpigotSpawnerPickBlockHandler
+import com.willfp.ecomobs.handler.SpigotWaterTeleportHandler
+import com.willfp.ecomobs.handler.SunlightBurningHandler
+import com.willfp.ecomobs.handler.SunlightBurningSettings
+import com.willfp.ecomobs.handler.WaterSensitivityHandler
+import com.willfp.ecomobs.handler.WaterSensitivitySettings
 import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
 import com.willfp.ecomobs.handler.SpawnerHandler
+import com.willfp.ecomobs.handler.SpawnerStackHandler
+import com.willfp.ecomobs.handler.StackHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
 import com.willfp.ecomobs.integrations.bettermodel.IntegrationBetterModel
+import com.willfp.ecomobs.integrations.coreprotect.IntegrationCoreProtect
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
 import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
@@ -30,6 +43,14 @@ import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
+import com.willfp.ecomobs.spawner.SpawnerHolograms
+import com.willfp.ecomobs.spawner.SpawnerItems
+import com.willfp.ecomobs.spawner.SpawnerStackSettings
+import com.willfp.ecomobs.spawner.SpawnerSettings
+import com.willfp.ecomobs.spawner.SpawnerSpawnLoop
+import com.willfp.ecomobs.stacking.MobStackTicker
+import com.willfp.ecomobs.stacking.StackSettings
+import com.willfp.ecomobs.trigger.EcoMobsTriggers
 import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
 import com.willfp.libreforge.EntityProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
@@ -59,6 +80,8 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleLoad() {
         EntityGoals.register(EntityGoalRandomTeleport.Deserializer)
+        Items.registerItemProvider(SpawnerItems)
+        EcoMobsTriggers.registerAll()
     }
 
     override fun loadConfigCategories(): List<ConfigCategory> {
@@ -70,7 +93,26 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleReload() {
         SpawnerAnimations.reload()
+        SpawnerStackSettings.reload()
+        SpawnerSettings.reload()
+        // Chunks loaded before the plugin enabled never fire a ChunkLoadEvent, and a
+        // config change can flip which spawners are tracked, so the index is rebuilt here.
+        SpawnerHandler.indexLoadedChunks()
         SpawnerDisplay.start()
+        SpawnerSpawnLoop.start()
+        StackSettings.reload()
+        WaterSensitivitySettings.reload()
+        SunlightBurningSettings.reload()
+        MobStackTicker.start()
+        SpawnerHolograms.reloadAll()
+    }
+
+    override fun handleDisable() {
+        SpawnerDisplay.stop()
+        SpawnerSpawnLoop.stop()
+        MobStackTicker.stop()
+        SpawnerHolograms.clear()
+        PlacedSpawners.clear()
     }
 
     override fun loadListeners(): List<Listener> {
@@ -84,9 +126,31 @@ class EcoMobsPlugin : LibreforgePlugin() {
             SpawnTotemHandler,
             topDamagerHandler,
             SpawnerHandler,
+            WaterSensitivityHandler,
+            SunlightBurningHandler,
+            SpawnerStackHandler,
+            StackHandler,
             ChunkHandler
-        )
+        ) + platformListeners()
     }
+
+    /**
+     * The listeners that differ between Paper and Spigot. Paper's own events don't exist
+     * on Spigot, so a listener naming one can only be registered on Paper; Spigot gets a
+     * workaround built from Bukkit's events instead.
+     */
+    private fun platformListeners(): List<Listener> =
+        if (Prerequisite.HAS_PAPER.isMet) {
+            listOf(
+                PaperSpawnerPickBlockHandler,
+                PaperWaterTeleportHandler
+            )
+        } else {
+            listOf(
+                SpigotSpawnerPickBlockHandler,
+                SpigotWaterTeleportHandler
+            )
+        }
 
     override fun loadDisplayModules(): List<DisplayModule> {
         return listOf(SpawnEggDisplay, SpawnerItemDisplay)
@@ -98,6 +162,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
             IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine) },
             IntegrationLoader("BetterModel") { this.eventManager.registerListener(IntegrationBetterModel) },
             IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
+            IntegrationLoader("CoreProtect") { this.eventManager.registerListener(IntegrationCoreProtect) },
         )
     }
 

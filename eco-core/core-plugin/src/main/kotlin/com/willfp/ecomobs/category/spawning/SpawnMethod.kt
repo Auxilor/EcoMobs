@@ -14,10 +14,18 @@ abstract class SpawnMethod(
             throw IllegalStateException("Already started!")
         }
 
+        isStarted = true
+
         onStart()
     }
 
     fun stop() {
+        if (!isStarted) {
+            return
+        }
+
+        isStarted = false
+
         onStop()
     }
 

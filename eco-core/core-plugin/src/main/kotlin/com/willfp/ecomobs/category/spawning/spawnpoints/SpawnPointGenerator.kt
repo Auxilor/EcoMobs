@@ -81,7 +81,7 @@ class SpawnPointGenerator(plugin: EcoMobsPlugin) {
             val blockAbove = world.getBlockAt(x, y + 1, z)
             val blockBelow = world.getBlockAt(x, y - 1, z)
 
-            if (blockAbove.isSolid) {
+            if (blockAbove.type.isSolid) {
                 continue
             }
 

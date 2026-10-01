@@ -96,6 +96,7 @@ allprojects {
         maven("https://repo.auxilor.io/repository/maven-public/")
         maven("https://mvn.lib.co.nz/public")
         maven("https://mvn.lumine.io/repository/maven-public/")
+        maven("https://maven.playpro.com")
     }
 
     dependencies {
