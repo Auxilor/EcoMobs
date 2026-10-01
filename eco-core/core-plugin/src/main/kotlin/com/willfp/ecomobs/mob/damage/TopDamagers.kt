@@ -37,6 +37,11 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
      */
     private val damagers = ConcurrentHashMap<UUID, List<Damager>>()
 
+    /**
+     * The last player to damage each mob, keyed by the mob's UUID.
+     */
+    private val lastDamagers = ConcurrentHashMap<UUID, UUID>()
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     fun handle(event: EntityDamageByEntityEvent) {
         val player = event.damager.tryAsPlayer() ?: return
@@ -73,6 +78,19 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
             updated.add(Damager(uuid, previous + amount))
             updated.sortedByDescending { it.damage }
         }
+
+        lastDamagers[victim.uniqueId] = uuid
+    }
+
+    /**
+     * The players who have damaged a mob, most damage first.
+     */
+    fun getDamagers(mob: Mob): List<Damager> {
+        return damagers[mob.uniqueId] ?: emptyList()
+    }
+
+    fun getLastDamager(mob: Mob): UUID? {
+        return lastDamagers[mob.uniqueId]
     }
 
     /**
@@ -80,6 +98,7 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
      */
     fun forget(uuid: UUID) {
         damagers.remove(uuid)
+        lastDamagers.remove(uuid)
     }
 
     fun generatePlaceholders(mob: Mob): List<NamedValue> {

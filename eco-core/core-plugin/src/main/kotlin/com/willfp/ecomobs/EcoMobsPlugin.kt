@@ -14,6 +14,7 @@ import com.willfp.ecomobs.commands.CommandEcoMobs
 import com.willfp.ecomobs.display.SpawnEggDisplay
 import com.willfp.ecomobs.display.SpawnerItemDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
+import com.willfp.ecomobs.goals.target.PlayerTargetGoals
 import com.willfp.ecomobs.handler.ChunkHandler
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.DamageStageHandler
@@ -80,6 +81,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleLoad() {
         EntityGoals.register(EntityGoalRandomTeleport.Deserializer)
+        PlayerTargetGoals.registerAll()
         Items.registerItemProvider(SpawnerItems)
         EcoMobsTriggers.registerAll()
     }
