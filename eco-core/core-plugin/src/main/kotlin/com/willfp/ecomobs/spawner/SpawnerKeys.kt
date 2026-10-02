@@ -257,7 +257,7 @@ fun resolveEntityType(mobId: String): EntityType? {
     // Plain vanilla entity type (e.g. "zombie", "ZOMBIE")
     entityTypeOrNull(mobId)?.let { return it }
 
-    // EcoMob — fall back to the entity its base mob is built from
+    // EcoMob: fall back to the entity its base mob is built from
     val baseMobId = (EcoMobs[mobId] as? ConfigDrivenEcoMob)?.baseMobId ?: return null
 
     return entityTypeOrNull(baseMobId)
