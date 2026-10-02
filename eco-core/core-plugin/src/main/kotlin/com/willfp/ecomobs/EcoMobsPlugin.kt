@@ -5,6 +5,7 @@ import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.entities.ai.EntityGoals
+import com.willfp.eco.core.entities.ai.TargetGoals
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.util.toSingletonList
@@ -14,7 +15,16 @@ import com.willfp.ecomobs.commands.CommandEcoMobs
 import com.willfp.ecomobs.display.SpawnEggDisplay
 import com.willfp.ecomobs.display.SpawnerItemDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
-import com.willfp.ecomobs.goals.target.PlayerTargetGoals
+import com.willfp.ecomobs.goals.target.TargetGoalClosestPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalHighestArmorPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalHighestHealthPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalLastDamagerPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalLowestArmorPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalLowestHealthPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalMostCrowdedPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalNotLookingPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalRandomPlayer
+import com.willfp.ecomobs.goals.target.TargetGoalTopDamagerPlayer
 import com.willfp.ecomobs.handler.ChunkHandler
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.DamageStageHandler
@@ -81,7 +91,16 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleLoad() {
         EntityGoals.register(EntityGoalRandomTeleport.Deserializer)
-        PlayerTargetGoals.registerAll()
+        TargetGoals.register(TargetGoalClosestPlayer.Deserializer)
+        TargetGoals.register(TargetGoalHighestArmorPlayer.Deserializer)
+        TargetGoals.register(TargetGoalHighestHealthPlayer.Deserializer)
+        TargetGoals.register(TargetGoalLastDamagerPlayer.Deserializer)
+        TargetGoals.register(TargetGoalLowestArmorPlayer.Deserializer)
+        TargetGoals.register(TargetGoalLowestHealthPlayer.Deserializer)
+        TargetGoals.register(TargetGoalMostCrowdedPlayer.Deserializer)
+        TargetGoals.register(TargetGoalNotLookingPlayer.Deserializer)
+        TargetGoals.register(TargetGoalRandomPlayer.Deserializer)
+        TargetGoals.register(TargetGoalTopDamagerPlayer.Deserializer)
         Items.registerItemProvider(SpawnerItems)
         EcoMobsTriggers.registerAll()
     }
