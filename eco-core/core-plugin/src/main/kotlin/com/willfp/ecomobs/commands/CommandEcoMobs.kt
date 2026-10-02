@@ -23,5 +23,6 @@ object CommandEcoMobs : PluginCommand(
             .addSubcommand(CommandGive)
             .addSubcommand(CommandKillAll)
             .addSubcommand(CommandSpawner)
+            .addSubcommand(CommandSchedule)
     }
 }

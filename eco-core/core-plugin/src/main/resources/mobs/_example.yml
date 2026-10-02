@@ -9,6 +9,7 @@
 mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200
 
 # The ID of the mob category, handles spawning.
+# Leave category out if the mob should never spawn naturally.
 category: common
 
 # Supported placeholders:
@@ -254,3 +255,32 @@ spawn:
       - netherite_block
       - iron_block
 
+  # Options for spawning the mob at fixed points on a timer
+  scheduled:
+    # If scheduled spawning should be enabled
+    enabled: false
+
+    # The places the mob spawns at, a point only spawns while its chunk is loaded
+    points:
+      - id: arena
+        world: world
+        x: 0.5
+        y: 64
+        z: 0.5
+        # Optional, overrides max-alive for this point
+        max-alive: 1
+
+    # The most mobs from one point that can be alive at once
+    max-alive: 1
+
+    # The seconds to wait after a spawn or a death before the next spawn, picked at random between min and max
+    interval:
+      min: 1800
+      max: 3600
+
+    # The conditions the point must meet when a spawn is due
+    conditions: [ ]
+
+    # The lines sent to all players when the mob spawns at a point
+    # Placeholders: %mob%, %point%, %world%, %x%, %y%, %z%
+    broadcast: [ ]

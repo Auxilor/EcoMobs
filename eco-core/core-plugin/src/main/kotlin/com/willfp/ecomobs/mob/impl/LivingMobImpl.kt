@@ -219,6 +219,14 @@ internal class LivingMobImpl(
         )
     }
 
+    /**
+     * Remove the mob without a death or despawn: no drops, no despawn event, no effects.
+     */
+    fun discard() {
+        entity.remove()
+        handleRemove()
+    }
+
     private fun handleRemove(removeTracking: Boolean = true) {
         ticker?.cancel()
 

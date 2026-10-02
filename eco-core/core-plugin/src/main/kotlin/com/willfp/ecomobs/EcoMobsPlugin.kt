@@ -40,6 +40,8 @@ import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.damage.TopDamagerHandler
 import com.willfp.ecomobs.mob.impl.ecoMob
+import com.willfp.ecomobs.scheduled.ScheduledSpawnHandler
+import com.willfp.ecomobs.scheduled.ScheduledSpawner
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
@@ -104,15 +106,21 @@ class EcoMobsPlugin : LibreforgePlugin() {
         WaterSensitivitySettings.reload()
         SunlightBurningSettings.reload()
         MobStackTicker.start()
+        ScheduledSpawner.start()
         SpawnerHolograms.reloadAll()
     }
 
     override fun handleDisable() {
-        SpawnerDisplay.stop()
-        SpawnerSpawnLoop.stop()
-        MobStackTicker.stop()
-        SpawnerHolograms.clear()
-        PlacedSpawners.clear()
+        try {
+            SpawnerDisplay.stop()
+            SpawnerSpawnLoop.stop()
+            MobStackTicker.stop()
+            ScheduledSpawner.stop()
+            SpawnerHolograms.clear()
+            PlacedSpawners.clear()
+        } finally {
+            ScheduledSpawnHandler.saveOnDisable()
+        }
     }
 
     override fun loadListeners(): List<Listener> {
@@ -130,7 +138,8 @@ class EcoMobsPlugin : LibreforgePlugin() {
             SunlightBurningHandler,
             SpawnerStackHandler,
             StackHandler,
-            ChunkHandler
+            ChunkHandler,
+            ScheduledSpawnHandler
         ) + platformListeners()
     }
 
