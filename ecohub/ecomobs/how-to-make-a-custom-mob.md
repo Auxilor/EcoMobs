@@ -237,6 +237,20 @@ custom-ai:
 
 See the [Custom Entity AI](https://plugins.auxilor.io/all-plugins/custom-entity-ai) docs for the full list of goals.
 
+:::tip EcoBosses target modes
+The EcoBosses `target` modes are target goals now, such as `ecomobs:closest_player`, `ecomobs:random_player` and `ecomobs:top_damager_player`. Give one a lower priority number than the vanilla target goals, or set `clear: true`, so the mob always uses it.
+
+```yaml
+custom-ai:
+  target-goals:
+    - key: ecomobs:closest_player
+      priority: 0
+      args:
+        range: 40 # The distance to scan for players.
+        interval: 10 # The time to wait between choosing a target, in ticks.
+```
+:::
+
 ### Effects
 
 Each key is a trigger; the effects you list under it fire when that trigger happens. Some run from the perspective of the entity, others from the player, marked per line.
