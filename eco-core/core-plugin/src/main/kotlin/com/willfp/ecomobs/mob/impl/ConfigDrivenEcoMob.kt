@@ -144,7 +144,9 @@ internal class ConfigDrivenEcoMob(
             ctx.with("target goals").with(deserializer.key.toString())
         }
 
-        ConfiguredGoal(it.getInt("priority"), goal)
+        ConfiguredGoal(it.getInt("priority"), goal) {
+            deserializer.deserialize(it.getSubsection("args"))
+        }
     }
 
     val entityGoals = config.getSubsections("custom-ai.entity-goals").mapNotNull {
@@ -175,7 +177,9 @@ internal class ConfigDrivenEcoMob(
             ctx.with("entity goals").with(deserializer.key.toString())
         }
 
-        ConfiguredGoal(it.getInt("priority"), goal)
+        ConfiguredGoal(it.getInt("priority"), goal) {
+            deserializer.deserialize(it.getSubsection("args"))
+        }
     }
 
     val eventEffects = MobEvents.associateWith {
