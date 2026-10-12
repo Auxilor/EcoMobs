@@ -4,7 +4,7 @@ import com.willfp.eco.util.setClientsideDisplayName
 import com.willfp.eco.util.toComponent
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.stacking.stack
-import org.bukkit.entity.Player
+import kotlin.math.abs
 
 class TickHandlerDisplayName : TickHandler {
     override fun tick(mob: LivingMob, tick: Int) {
@@ -18,8 +18,20 @@ class TickHandlerDisplayName : TickHandler {
             return
         }
 
-        mob.entity.getNearbyEntities(20.0, 20.0, 20.0)
-            .filterIsInstance<Player>()
-            .forEach { mob.entity.setClientsideDisplayName(it, mob.displayName.toComponent(), false) }
+        val location = mob.entity.location
+        val players = mob.entity.trackedBy.filter {
+            val playerLocation = it.location
+            abs(playerLocation.x - location.x) <= 20 &&
+                abs(playerLocation.y - location.y) <= 20 &&
+                abs(playerLocation.z - location.z) <= 20
+        }
+        if (players.isEmpty()) {
+            return
+        }
+
+        val name = mob.displayName.toComponent()
+        for (player in players) {
+            mob.entity.setClientsideDisplayName(player, name, false)
+        }
     }
 }
