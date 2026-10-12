@@ -6,14 +6,17 @@ import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.options.BossBarOptions
 import net.kyori.adventure.bossbar.BossBar
-import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 class TickHandlerBossBar(
     private val bar: BossBar,
     private val options: BossBarOptions
 ) : TickHandler {
+    private val viewers = ConcurrentHashMap<UUID, Player>()
+
     override fun tick(mob: LivingMob, tick: Int) {
         if (tick % 5 != 0) {
             return
@@ -31,36 +34,50 @@ class TickHandlerBossBar(
             return
         }
 
-        hideFromEveryone()
-
-        // Nearby entities are in the mob's own region, so these dispatches resolve
-        // inline. They go through onEntity anyway for the players on the far side of a
-        // region border.
-        entity.getNearbyEntities(
+        val nearby = entity.getNearbyEntities(
             options.radius,
             options.radius,
             options.radius
         ).filterIsInstance<Player>()
-            .forEach { player ->
+            .associateBy { it.uniqueId }
+
+        for ((uuid, player) in viewers) {
+            if (uuid !in nearby) {
+                viewers.remove(uuid)
+                hide(player)
+            }
+        }
+
+        // Nearby entities are in the mob's own region, so these dispatches resolve
+        // inline. They go through onEntity anyway for the players on the far side of a
+        // region border.
+        for ((uuid, player) in nearby) {
+            if (viewers.put(uuid, player) !== player) {
                 onEntity(player) {
                     player.asAudience().showBossBar(bar)
                 }
             }
+        }
     }
 
     override fun onRemove(mob: LivingMob, tick: Int) {
-        hideFromEveryone()
+        for (player in viewers.values) {
+            hide(player)
+        }
+        viewers.clear()
     }
 
     /**
-     * The player list itself is safe to read from anywhere, but each player belongs to
-     * whichever region is ticking them, so the bar is hidden on their own thread.
+     * Each player belongs to whichever region is ticking them, so the bar is hidden on
+     * their own thread.
      */
-    private fun hideFromEveryone() {
-        for (player in Bukkit.getOnlinePlayers()) {
-            onEntity(player) {
-                player.asAudience().hideBossBar(bar)
-            }
+    private fun hide(player: Player) {
+        if (!player.isOnline) {
+            return
+        }
+
+        onEntity(player) {
+            player.asAudience().hideBossBar(bar)
         }
     }
 }
