@@ -8,7 +8,7 @@ import com.willfp.ecomobs.mob.LivingMob
 
 interface MobCategory : KRegistrable {
     val mobs: List<EcoMob>
-        get() = EcoMobs.values().filter { it.category == this }
+        get() = EcoMobs.inCategory(this)
 
     val spawnMethod: SpawnMethod
 
