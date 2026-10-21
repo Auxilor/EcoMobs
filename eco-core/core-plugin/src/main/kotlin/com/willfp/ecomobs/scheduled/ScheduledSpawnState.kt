@@ -135,8 +135,8 @@ object ScheduledSpawnState {
     }
 
     /**
-     * Called when a tagged mob loads. Retired: drop from retired, REMOVE. Tracked: update position,
-     * TRACKED. Room: add, ADOPTED. Full: REMOVE.
+     * Called when a tagged mob loads. Retired: drop from retired, REMOVE. Tracked above maxAlive: drop
+     * from mobs, REMOVE. Tracked: update position, TRACKED. Room: add, ADOPTED. Full: REMOVE.
      */
     fun onLoad(key: String, uuid: UUID, position: MobPosition, maxAlive: Int): LoadOutcome {
         var outcome = LoadOutcome.REMOVE
@@ -149,6 +149,11 @@ object ScheduledSpawnState {
                 uuid in current.retired -> {
                     changed = true
                     cleaned(current.copy(retired = current.retired - uuid))
+                }
+
+                uuid in current.mobs && current.mobs.size > maxAlive -> {
+                    changed = true
+                    cleaned(current.copy(mobs = current.mobs - uuid))
                 }
 
                 uuid in current.mobs -> {
