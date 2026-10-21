@@ -22,12 +22,12 @@ messages:
   spawner-cannot-pickup: "&cYou don't have permission to pick up this spawner!"
 
   schedule-none: "&cThere are no scheduled spawn points!"
-  schedule-status-alive: "&f%category%:%point% &8- &aalive: %mob%"
-  schedule-status-due-in: "&f%category%:%point% &8- &edue in %time%"
-  schedule-status-due: "&f%category%:%point% &8- &edue, waiting for chunk or conditions"
-  schedule-status-no-world: "&f%category%:%point% &8- &cworld not loaded"
-  schedule-invalid-category: "&cYou must specify a category that uses scheduled spawning!"
+  schedule-invalid-mob: "&cYou must specify a mob that has scheduled spawning!"
   schedule-invalid-point: "&cYou must specify a valid point, or all!"
+  schedule-status: "&f%mob%:%point% &8- &falive &a%alive%/%max% &8- %next%"
+  schedule-next-in: "&enext in %time%"
+  schedule-due: "&edue"
+  schedule-no-world: "&cworld not loaded"
   schedule-reset: "Reset &c%quantity%&f scheduled spawn points!"
 
 na: "N/A"
