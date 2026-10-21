@@ -44,19 +44,23 @@ internal inline fun atRegion(
     chunkZ: Int,
     crossinline block: () -> Unit
 ) {
-    if (!Prerequisite.HAS_FOLIA.isMet) {
-        block()
-        return
-    }
-
-    // The centre of the chunk, only to ask which region owns it.
-    val probe = Location(world, chunkX * 16.0 + 8.0, 0.0, chunkZ * 16.0 + 8.0)
-
-    if (Eco.get().isOwnedByCurrentRegion(probe)) {
+    if (isChunkOwnedByCurrentRegion(world, chunkX, chunkZ)) {
         block()
     } else {
         plugin.scheduler.at(world, chunkX, chunkZ).run { block() }
     }
+}
+
+/**
+ * If the calling thread owns the region containing a chunk. Always true off Folia.
+ */
+internal fun isChunkOwnedByCurrentRegion(world: World, chunkX: Int, chunkZ: Int): Boolean {
+    if (!Prerequisite.HAS_FOLIA.isMet) {
+        return true
+    }
+
+    // The centre of the chunk, only to ask which region owns it.
+    return Eco.get().isOwnedByCurrentRegion(Location(world, chunkX * 16.0 + 8.0, 0.0, chunkZ * 16.0 + 8.0))
 }
 
 /**

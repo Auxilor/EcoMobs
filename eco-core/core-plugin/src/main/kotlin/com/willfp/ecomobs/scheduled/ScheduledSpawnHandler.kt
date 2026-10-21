@@ -2,8 +2,7 @@ package com.willfp.ecomobs.scheduled
 
 import com.willfp.eco.core.Prerequisite
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
-import com.willfp.ecomobs.mob.EcoMobs
-import com.willfp.ecomobs.mob.impl.LivingMobImpl
+import com.willfp.ecomobs.mob.impl.discard
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
 import org.bukkit.entity.Mob
@@ -49,22 +48,13 @@ object ScheduledSpawnHandler : Listener {
             val mob = entity as? Mob ?: continue
             val key = mob.scheduledPoint ?: continue
             val ecoMob = mob.ecoMob ?: continue
-            val point = EcoMobs[key.substringBefore(':')]?.scheduledSpawn?.points?.firstOrNull { it.key == key }
-                ?: continue
+            val point = ecoMob.scheduledSpawn?.points?.firstOrNull { it.key == key } ?: continue
 
-            val outcome = ScheduledSpawnState.onLoad(key, mob.uniqueId, mob.location.toMobPosition(), point.maxAlive)
-
-            if (outcome != LoadOutcome.REMOVE) {
+            if (ScheduledSpawnState.onLoad(key, mob.uniqueId, mob.location.toMobPosition(), point.maxAlive)) {
                 continue
             }
 
-            val living = ecoMob.getLivingMob(mob) as? LivingMobImpl
-
-            if (living == null) {
-                mob.remove()
-            } else {
-                living.discard()
-            }
+            ecoMob.getLivingMob(mob)?.discard() ?: mob.remove()
         }
     }
 
@@ -72,7 +62,7 @@ object ScheduledSpawnHandler : Listener {
         try {
             if (!Prerequisite.HAS_FOLIA.isMet) {
                 for ((key, mobs) in ScheduledSpawnState.tracked()) {
-                    val ecoMob = EcoMobs[key.substringBefore(':')] ?: continue
+                    val ecoMob = scheduledPointOwner(key) ?: continue
 
                     for (uuid in mobs.keys) {
                         val living = ecoMob.getLivingMob(uuid) ?: continue
@@ -89,6 +79,6 @@ object ScheduledSpawnHandler : Listener {
     }
 
     private fun free(key: String, uuid: UUID) {
-        ScheduledSpawnState.free(key, uuid, EcoMobs[key.substringBefore(':')]?.scheduledSpawn?.nextDue() ?: 0L)
+        ScheduledSpawnState.free(key, uuid, scheduledPointOwner(key)?.scheduledSpawn?.nextDue() ?: 0L)
     }
 }

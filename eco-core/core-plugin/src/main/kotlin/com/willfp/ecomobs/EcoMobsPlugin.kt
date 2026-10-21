@@ -71,6 +71,7 @@ import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.registerSpecificHolderProvider
 import org.bukkit.entity.Mob
 import org.bukkit.event.Listener
+import java.util.logging.Level
 
 internal lateinit var plugin: EcoMobsPlugin
     private set
@@ -139,9 +140,11 @@ class EcoMobsPlugin : LibreforgePlugin() {
             ScheduledSpawner.stop()
             SpawnerHolograms.clear()
             PlacedSpawners.clear()
-        } finally {
-            ScheduledSpawnHandler.saveOnDisable()
+        } catch (exception: Exception) {
+            logger.log(Level.SEVERE, "Could not clean up on disable", exception)
         }
+
+        ScheduledSpawnHandler.saveOnDisable()
     }
 
     override fun loadListeners(): List<Listener> {

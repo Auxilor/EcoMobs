@@ -2,6 +2,7 @@ package com.willfp.ecomobs.mob
 
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.category.MobCategory
+import com.willfp.ecomobs.category.impl.UncategorisedMobCategory
 import com.willfp.ecomobs.config.ConfigViolationException
 import com.willfp.ecomobs.mob.impl.ConfigDrivenEcoMob
 import com.willfp.ecomobs.scheduled.ScheduledSpawnState
@@ -14,6 +15,12 @@ object EcoMobs : RegistrableCategory<EcoMob>("mob", "mobs") {
     private val byCategory = ConcurrentHashMap<String, List<EcoMob>>()
 
     fun inCategory(category: MobCategory): List<EcoMob> = byCategory[category.id].orEmpty()
+
+    /**
+     * Every mob with scheduled spawning.
+     */
+    val scheduled: List<EcoMob>
+        get() = values().filter { it.scheduledSpawn != null }
 
     override fun clear(plugin: LibreforgePlugin) {
         registry.clear()
@@ -37,7 +44,10 @@ object EcoMobs : RegistrableCategory<EcoMob>("mob", "mobs") {
             )
 
             registry.register(mob)
-            byCategory.merge(mob.category.id, listOf(mob)) { existing, added -> existing + added }
+
+            if (mob.category !== UncategorisedMobCategory) {
+                byCategory.merge(mob.category.id, listOf(mob)) { existing, added -> existing + added }
+            }
         } catch (e: ConfigViolationException) {
             context.log(e.violation)
         }

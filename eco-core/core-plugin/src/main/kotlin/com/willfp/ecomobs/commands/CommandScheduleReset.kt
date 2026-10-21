@@ -1,13 +1,17 @@
 package com.willfp.ecomobs.commands
 
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMobs
-import com.willfp.ecomobs.mob.impl.LivingMobImpl
+import com.willfp.ecomobs.mob.impl.discard
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.scheduled.ScheduledSpawnState
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Entity
 import org.bukkit.util.StringUtil
+import java.util.UUID
 
 object CommandScheduleReset : Subcommand(
     plugin,
@@ -39,16 +43,14 @@ object CommandScheduleReset : Subcommand(
         }
 
         for (point in points) {
-            val loaded = ScheduledSpawnState[point.key].mobs.keys
-                .mapNotNull { mob.getLivingMob(it) }
+            for (uuid in ScheduledSpawnState.reset(point.key)) {
+                val entity = mob.getLivingMob(uuid)?.entity ?: findEntity(uuid) ?: continue
 
-            for (living in loaded) {
-                onEntity(living.entity) {
-                    (living as? LivingMobImpl)?.discard()
+                onEntity(entity) {
+                    mob.getLivingMob(uuid)?.discard() ?: entity.remove()
+                    ScheduledSpawnState.forgetRetired(point.key, uuid)
                 }
             }
-
-            ScheduledSpawnState.reset(point.key, loaded.map { it.entity.uniqueId }.toSet())
         }
 
         sender.sendMessage(
@@ -56,6 +58,13 @@ object CommandScheduleReset : Subcommand(
                 .replace("%quantity%", points.size.toString())
         )
     }
+
+    /**
+     * A loaded entity EcoMobs may not be tracking yet, e.g. just after a reload. Off Folia only:
+     * on Folia it is removed silently when its chunk next loads.
+     */
+    private fun findEntity(uuid: UUID): Entity? =
+        if (Prerequisite.HAS_FOLIA.isMet) null else Bukkit.getEntity(uuid)
 
     override fun tabComplete(
         sender: CommandSender,
@@ -66,7 +75,7 @@ object CommandScheduleReset : Subcommand(
         if (args.size == 1) {
             StringUtil.copyPartialMatches(
                 args[0],
-                EcoMobs.values().filter { it.scheduledSpawn != null }.map { it.id },
+                EcoMobs.scheduled.map { it.id },
                 completions
             )
         }

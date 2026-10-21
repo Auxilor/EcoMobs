@@ -1,6 +1,9 @@
 package com.willfp.ecomobs.scheduled
 
 import com.willfp.eco.util.namespacedKeyOf
+import com.willfp.ecomobs.mob.EcoMob
+import com.willfp.ecomobs.mob.EcoMobs
+import com.willfp.ecomobs.spawner.setOrRemove
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
@@ -37,11 +40,9 @@ class ScheduledPoint(
  */
 var Mob.scheduledPoint: String?
     get() = persistentDataContainer.get(scheduledPointKey, PersistentDataType.STRING)
-    set(value) {
-        if (value == null) {
-            persistentDataContainer.remove(scheduledPointKey)
-            return
-        }
+    set(value) = persistentDataContainer.setOrRemove(scheduledPointKey, value)
 
-        persistentDataContainer.set(scheduledPointKey, PersistentDataType.STRING, value)
-    }
+/**
+ * The mob that owns the scheduled point [key], or null if no loaded mob does.
+ */
+internal fun scheduledPointOwner(key: String): EcoMob? = EcoMobs[key.substringBefore(':')]

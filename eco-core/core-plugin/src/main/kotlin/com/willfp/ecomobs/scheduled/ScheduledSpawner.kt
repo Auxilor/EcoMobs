@@ -1,14 +1,14 @@
 package com.willfp.ecomobs.scheduled
 
-import com.willfp.eco.core.Eco
 import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
 import com.willfp.ecomobs.folia.atRegion
+import com.willfp.ecomobs.folia.isChunkOwnedByCurrentRegion
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
-import com.willfp.ecomobs.mob.impl.LivingMobImpl
+import com.willfp.ecomobs.mob.impl.discard
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.mob.options.ScheduledSpawn
 import com.willfp.ecomobs.plugin
@@ -20,6 +20,7 @@ import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.entity.Mob
 import java.util.UUID
+import java.util.logging.Level
 
 /**
  * Spawns every mob's scheduled points from one timer on the global thread.
@@ -43,12 +44,27 @@ object ScheduledSpawner {
     }
 
     private fun tick() {
-        for (mob in EcoMobs.values()) {
+        for (mob in EcoMobs.scheduled) {
             val scheduledSpawn = mob.scheduledSpawn ?: continue
 
             for (point in scheduledSpawn.points) {
-                tickPoint(mob, scheduledSpawn, point)
+                guarded(scheduledSpawn, point) {
+                    tickPoint(mob, scheduledSpawn, point)
+                }
             }
+        }
+    }
+
+    /**
+     * Runs [block] for one point; a failure is logged and the point waits one interval, so it
+     * cannot stop the other points or retry every second.
+     */
+    private inline fun guarded(scheduledSpawn: ScheduledSpawn, point: ScheduledPoint, block: () -> Unit) {
+        try {
+            block()
+        } catch (exception: Exception) {
+            plugin.logger.log(Level.SEVERE, "Scheduled spawn ${point.key} failed, retrying after one interval", exception)
+            ScheduledSpawnState.delay(point.key, scheduledSpawn.nextDue())
         }
     }
 
@@ -67,7 +83,7 @@ object ScheduledSpawner {
             }
         }
 
-        if (state.mobs.size >= point.maxAlive || System.currentTimeMillis() < state.nextDue) {
+        if (!state.canSpawn(point.maxAlive)) {
             return
         }
 
@@ -78,7 +94,9 @@ object ScheduledSpawner {
         }
 
         atRegion(location) {
-            trySpawn(mob, scheduledSpawn, point, location)
+            guarded(scheduledSpawn, point) {
+                trySpawn(mob, scheduledSpawn, point, location)
+            }
         }
     }
 
@@ -106,9 +124,7 @@ object ScheduledSpawner {
                 for (offsetZ in -1..1) {
                     val chunkX = position.chunkX + offsetX
                     val chunkZ = position.chunkZ + offsetZ
-                    val probe = Location(world, chunkX * 16.0 + 8.0, 0.0, chunkZ * 16.0 + 8.0)
-
-                    if (!Eco.get().isOwnedByCurrentRegion(probe) || !world.isChunkLoaded(chunkX, chunkZ)) {
+                    if (!isChunkOwnedByCurrentRegion(world, chunkX, chunkZ) || !world.isChunkLoaded(chunkX, chunkZ)) {
                         return@atRegion
                     }
 
@@ -126,10 +142,7 @@ object ScheduledSpawner {
                 chunk.entities.firstOrNull { it.uniqueId == uuid }
             } as? Mob
 
-            val ecoMob = entity?.ecoMob
-
-            if (entity != null && ecoMob != null) {
-                ecoMob.getLivingMob(entity)
+            if (entity != null && entity.ecoMob?.getLivingMob(entity) != null) {
                 ScheduledSpawnState.moved(point.key, uuid, entity.location.toMobPosition())
                 return@atRegion
             }
@@ -147,9 +160,7 @@ object ScheduledSpawner {
             return
         }
 
-        val state = ScheduledSpawnState[point.key]
-
-        if (state.mobs.size >= point.maxAlive || System.currentTimeMillis() < state.nextDue) {
+        if (!ScheduledSpawnState[point.key].canSpawn(point.maxAlive)) {
             return
         }
 
@@ -177,7 +188,7 @@ object ScheduledSpawner {
         )
 
         if (!added) {
-            (living as? LivingMobImpl)?.discard()
+            living.discard()
             return
         }
 

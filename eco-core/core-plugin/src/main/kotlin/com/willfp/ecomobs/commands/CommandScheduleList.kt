@@ -20,7 +20,7 @@ object CommandScheduleList : Subcommand(
         args: List<String>
     ) {
         val mobs = if (args.isEmpty()) {
-            EcoMobs.values().filter { it.scheduledSpawn != null }
+            EcoMobs.scheduled
         } else {
             val mob = EcoMobs[args[0].lowercase()]
 
@@ -88,7 +88,7 @@ object CommandScheduleList : Subcommand(
         if (args.size == 1) {
             StringUtil.copyPartialMatches(
                 args[0],
-                EcoMobs.values().filter { it.scheduledSpawn != null }.map { it.id },
+                EcoMobs.scheduled.map { it.id },
                 completions
             )
         }

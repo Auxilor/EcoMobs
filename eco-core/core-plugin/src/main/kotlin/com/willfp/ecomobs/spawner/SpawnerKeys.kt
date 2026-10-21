@@ -60,7 +60,7 @@ private fun PersistentDataContainer.getInt(key: NamespacedKey, default: Int) =
 private fun PersistentDataContainer.setInt(key: NamespacedKey, value: Int) =
     set(key, PersistentDataType.INTEGER, value)
 
-private fun PersistentDataContainer.setOrRemove(key: NamespacedKey, value: String?) {
+internal fun PersistentDataContainer.setOrRemove(key: NamespacedKey, value: String?) {
     if (value == null) remove(key) else set(key, PersistentDataType.STRING, value)
 }
 

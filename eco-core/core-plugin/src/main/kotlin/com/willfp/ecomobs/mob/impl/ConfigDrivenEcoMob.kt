@@ -444,7 +444,11 @@ internal class ConfigDrivenEcoMob(
         }
 
         // Spawn bukkit mob
-        val entity = mob.spawn(location) as? Mob ?: throw IllegalStateException("Base entity must be a mob!")
+        val spawned = mob.spawn(location)
+        val entity = spawned as? Mob ?: run {
+            spawned.remove()
+            throw IllegalStateException("Base entity must be a mob!")
+        }
 
         if (!entity.isValid) {
             entity.remove()
