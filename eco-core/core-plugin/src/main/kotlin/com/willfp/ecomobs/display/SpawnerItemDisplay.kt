@@ -1,18 +1,16 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.core.display.Display
+import com.willfp.eco.core.display.DisplayContext
 import com.willfp.eco.core.display.DisplayModule
 import com.willfp.eco.core.display.DisplayPriority
 import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.eco.core.fast.fast
-import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
+import com.willfp.eco.util.formatEcoRich
 import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.spawner
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
     val data = spawner
@@ -35,28 +33,25 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
 }
 
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
-    override fun display(itemStack: ItemStack, player: Player?, vararg args: Any) {
-        if (player == null) return
-        val fis = itemStack.fast()
+    override fun display(context: DisplayContext) {
+        if (context.player == null) return
+        val fis = context.itemStack.fast()
         if (!fis.spawner.isCustomSpawner) return
-
-        val context = placeholderContext(player = player, item = itemStack)
 
         val rawTitle = plugin.configYml.getString("spawner-display.title")
         if (rawTitle.isNotEmpty()) {
-            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context))
+            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context.placeholderContext))
         }
 
-        val rawLore = plugin.configYml.getStrings("spawner-display.lore") +
-                if (fis.spawner.stackSize > 1) {
-                    plugin.configYml.getStrings("spawner-display.stacked-lore")
-                } else {
-                    emptyList()
-                }
-
-        val lore = rawLore
-            .map { Display.PREFIX + fis.applySpawnerPlaceholders(it).formatEco(context) }
-
-        fis.lore = lore + fis.lore
+        context.lore.prepend(
+            (plugin.configYml.getStrings("spawner-display.lore") +
+                    if (fis.spawner.stackSize > 1) {
+                        plugin.configYml.getStrings("spawner-display.stacked-lore")
+                    } else {
+                        emptyList()
+                    })
+                .map { fis.applySpawnerPlaceholders(it) }
+                .formatEcoRich(context.placeholderContext)
+        )
     }
 }

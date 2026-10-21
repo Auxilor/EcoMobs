@@ -1,11 +1,14 @@
 package com.willfp.ecomobs.display
 
 import com.willfp.eco.core.display.Display
+import com.willfp.eco.core.display.DisplayContext
 import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
+import com.willfp.eco.util.formatEcoRich
 import com.willfp.libreforge.EmptyProvidedHolder
 import com.willfp.libreforge.ProvidedHolder
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -49,5 +52,23 @@ class BaseItem(
         fis.addItemFlags(*itemFlags.toTypedArray())
 
         return fis.unwrap()
+    }
+
+    fun display(context: DisplayContext, player: Player, holder: ProvidedHolder) {
+        val fis = context.itemStack.fast()
+
+        val lore = rawLore.formatEcoRich(context.placeholderContext).toMutableList()
+        val lines = holder.getNotMetLineComponents(player)
+
+        if (lines.isNotEmpty()) {
+            lore.add(Component.empty())
+            lore.addAll(lines)
+        }
+
+        context.lore.prepend(lore)
+
+        fis.displayName = rawDisplayName.formatEco(context.placeholderContext)
+
+        fis.addItemFlags(*itemFlags.toTypedArray())
     }
 }

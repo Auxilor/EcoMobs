@@ -71,15 +71,15 @@ object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
 
         private fun tickPlayer(player: Player) {
             for (point in player.spawnPoints.filter { it.type in spawnTypes }) {
-                val mob = category.mobs.randomOrNull() ?: continue
+                if (randDouble(0.0, 100.0) > chance) {
+                    continue
+                }
 
                 if (!conditions.areMet(point.location.toDispatcher(), EmptyProvidedHolder)) {
                     continue
                 }
 
-                if (randDouble(0.0, 100.0) > chance) {
-                    continue
-                }
+                val mob = category.mobs.randomOrNull() ?: continue
 
                 point.spawn(mob, SpawnReason.NATURAL)
             }
