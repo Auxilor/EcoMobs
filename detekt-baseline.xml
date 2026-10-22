@@ -1,0 +1,636 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>AbstractClassCanBeConcreteClass:MobEvent.kt:MobEvent$MobEvent</ID>
+    <ID>BracesOnIfStatements:CommandSpawnerGive.kt:CommandSpawnerGive$if</ID>
+    <ID>BracesOnIfStatements:SpawnerKeys.kt:else</ID>
+    <ID>BracesOnIfStatements:SpawnerKeys.kt:if</ID>
+    <ID>BracesOnWhenStatements:SpawnerAttributes.kt:SpawnerAttributes$when</ID>
+    <ID>BracesOnWhenStatements:SpawnerHandler.kt:SpawnerHandler$when</ID>
+    <ID>C002:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$mob.teleportAsync(validLocations.random())</ID>
+    <ID>CascadingCallWrapping:DiscoverRecipeListener.kt:DiscoverRecipeListener$map { it.key }</ID>
+    <ID>CascadingCallWrapping:SpawnerHandler.kt:SpawnerHandler$enchants</ID>
+    <ID>CognitiveComplexMethod:CommandSpawn.kt:CommandSpawn$override fun onExecute</ID>
+    <ID>CognitiveComplexMethod:CommandSpawnerGive.kt:CommandSpawnerGive$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>CognitiveComplexMethod:CommandSpawnerModify.kt:CommandSpawnerModify$override fun onExecute</ID>
+    <ID>CognitiveComplexMethod:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$override fun tick</ID>
+    <ID>CognitiveComplexMethod:SpawnerAttributes.kt:SpawnerAttributes$fun apply: Boolean</ID>
+    <ID>ComplexCondition:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$block.type == Material.AIR &amp;&amp; block.getRelative(BlockFace.UP).type == Material.AIR &amp;&amp; !(block.getRelative( BlockFace.DOWN ).isLiquid || block.getRelative(BlockFace.DOWN).type == Material.AIR)</ID>
+    <ID>ComplexCondition:SpawnPointGenerator.kt:SpawnPointGenerator$block.isPassable &amp;&amp; !block.isLiquid &amp;&amp; block.blockData !is Waterlogged &amp;&amp; blockAbove.isPassable &amp;&amp; !blockAbove.isLiquid &amp;&amp; blockAbove.blockData !is Waterlogged &amp;&amp; blockBelow.type.isSolid</ID>
+    <ID>ComplexCondition:SpawnerAttributes.kt:SpawnerAttributes$min == null || max == null || min &lt; 0 || min &gt; max</ID>
+    <ID>ComplexInterface:EcoMob.kt:EcoMob : KRegistrable</ID>
+    <ID>ComplexInterface:LivingMob.kt:LivingMob</ID>
+    <ID>CouldBeSequence:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$mapNotNull { it.toIntOrNull() }</ID>
+    <ID>CouldBeSequence:DiscoverRecipeListener.kt:DiscoverRecipeListener$filterIsInstance&lt;Keyed&gt;()</ID>
+    <ID>CouldBeSequence:TargetGoalPlayer.kt:TargetGoalPlayer$filterIsInstance&lt;Player&gt;()</ID>
+    <ID>CyclomaticComplexMethod:CommandSpawn.kt:CommandSpawn$override fun onExecute</ID>
+    <ID>CyclomaticComplexMethod:CommandSpawnerGive.kt:CommandSpawnerGive$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>CyclomaticComplexMethod:MobStacks.kt:MobStacks$fun canStack: Boolean</ID>
+    <ID>CyclomaticComplexMethod:SpawnerAttributes.kt:SpawnerAttributes$fun apply: Boolean</ID>
+    <ID>DocumentationOverPrivateFunction:EcoMobsPlugin.kt:EcoMobsPlugin$private fun platformListeners: List&lt;Listener&gt;</ID>
+    <ID>DocumentationOverPrivateFunction:IntegrationCoreProtect.kt:IntegrationCoreProtect$private inline fun afterTick</ID>
+    <ID>DocumentationOverPrivateFunction:MobStacks.kt:MobStacks$private fun isAdult: Boolean</ID>
+    <ID>DocumentationOverPrivateFunction:MobStacks.kt:MobStacks$private fun isKind: Boolean</ID>
+    <ID>DocumentationOverPrivateFunction:MobStacks.kt:MobStacks$private fun remove</ID>
+    <ID>DocumentationOverPrivateFunction:PlacedSpawner.kt:PlacedSpawner$private fun findSpawnLocation: Location?</ID>
+    <ID>DocumentationOverPrivateFunction:PlacedSpawner.kt:PlacedSpawner$private fun randomSpawnLocation: Location</ID>
+    <ID>DocumentationOverPrivateFunction:PlacedSpawner.kt:PlacedSpawner$private fun showParticles</ID>
+    <ID>DocumentationOverPrivateFunction:PlacedSpawner.kt:PlacedSpawner$private fun spawnCycle: CycleResult</ID>
+    <ID>DocumentationOverPrivateFunction:PlacedSpawner.kt:PlacedSpawner$private fun spawnStacked: CycleResult</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerChecks.kt:SpawnerChecks$private fun mobMatcher: ((Entity) -&gt; Boolean)?</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerChecks.kt:SpawnerChecks$private fun needsDarkness: Boolean</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerDisplay.kt:SpawnerDisplay$private fun tickLookAt</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerHandler.kt:SpawnerHandler$private fun consumeExtra</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerHandler.kt:SpawnerHandler$private fun resolvePickup: Boolean?</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerHandler.kt:SpawnerHandler$private fun survivesExplosion: Boolean</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerHolograms.kt:SpawnerHolograms$private fun linesFor: List&lt;String&gt;?</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerHolograms.kt:SpawnerHolograms$private fun topOf: Location?</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerKeys.kt:private fun CreatureSpawner.copyVanillaSettingsInto: Boolean</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerKeys.kt:private fun orVanillaDefault: Int</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerPickBlockHandler.kt:private fun pickSpawner: PickResult?</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerSettings.kt:SpawnerSettings$private fun warnAboutLegacyKeys</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerSpawning.kt:private fun Entity.removeJockeyParts</ID>
+    <ID>DocumentationOverPrivateFunction:SpawnerStackHandler.kt:SpawnerStackHandler$private fun tryAdd: Int</ID>
+    <ID>DocumentationOverPrivateFunction:StackHandler.kt:StackHandler$private fun hideCorpse</ID>
+    <ID>DocumentationOverPrivateFunction:StackHandler.kt:StackHandler$private fun respawnRemainder</ID>
+    <ID>DocumentationOverPrivateFunction:StackHandler.kt:StackHandler$private fun rollLoot: List&lt;ItemStack&gt;?</ID>
+    <ID>DocumentationOverPrivateFunction:TickHandlerBossBar.kt:TickHandlerBossBar$private fun hide</ID>
+    <ID>DocumentationOverPrivateFunction:WaterSensitivityHandler.kt:SpigotWaterTeleportHandler$private fun isInRain: Boolean</ID>
+    <ID>DocumentationOverPrivateProperty:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger$/** * How far the stage reaches from the player who earned a count, in blocks, when the * stage doesn't set a radius of its own. */ private const val DEFAULT_RADIUS = 32.0</ID>
+    <ID>DocumentationOverPrivateProperty:IntegrationCoreProtect.kt:IntegrationCoreProtect$/** * Logged for a spawner that goes up in an explosion, where there is no player. * CoreProtect shows a name starting with # as a non-player source. */ private const val NON_PLAYER_USER = "#ecomobs"</ID>
+    <ID>DocumentationOverPrivateProperty:IntegrationCoreProtect.kt:IntegrationCoreProtect$/** * Null when CoreProtect's database failed to come up, in which case it drops * everything logged to it anyway. */ private val api: CoreProtectAPI? get() = coreProtect?.api?.takeIf { it.isEnabled }</ID>
+    <ID>DocumentationOverPrivateProperty:IntegrationCoreProtect.kt:IntegrationCoreProtect$/** * Only ever used to tell CoreProtect what the block was. A spawner has no block * state worth recording, so one instance serves every row. */ private val spawnerData: BlockData by lazy { Material.SPAWNER.createBlockData() }</ID>
+    <ID>DocumentationOverPrivateProperty:PlacedSpawner.kt:PlacedSpawner$/** * The player range from the last spawn cycle, so the countdown doesn't have to read * the block state on every tick. */ private var playerRange = VanillaSpawnerDefaults.playerRange</ID>
+    <ID>DocumentationOverPrivateProperty:PlacedSpawner.kt:PlacedSpawner$/** * Ticks left until the next spawn attempt. */ private var spawnCooldown = Random.nextInt(VanillaSpawnerDefaults.delayMin, VanillaSpawnerDefaults.delayMax + 1)</ID>
+    <ID>DocumentationOverPrivateProperty:PlacedSpawners.kt:PlacedSpawners$/** * The tracked locations in each chunk, so a chunk can be rebuilt without walking * every spawner on the server, and so the tick loops can dispatch one task per * occupied chunk instead of one per spawner. */ private val byChunk = ConcurrentHashMap&lt;ChunkPos, MutableSet&lt;Location&gt;&gt;()</ID>
+    <ID>DocumentationOverPrivateProperty:SpawnerKeys.kt:/** * The per-spawner settings that are numbers, which are the ones an adopted spawner can * leave unwritten to follow [VanillaSpawnerDefaults] instead. */ private val intKeys = listOf( spawnerDelayMinKey, spawnerDelayMaxKey, spawnerSpawnCountKey, spawnerSpawnRangeKey, spawnerPlayerRangeKey, spawnerMaxNearbyKey )</ID>
+    <ID>DocumentationOverPrivateProperty:TopDamagers.kt:TopDamagerHandler$/** * Damage per mob, keyed by the mob's UUID. * * Held here rather than in Bukkit metadata, whose backing store is one server-wide * HashMap that every region thread would be writing to at once. Entries are dropped * in [forget] when the mob is removed. */ private val damagers = ConcurrentHashMap&lt;UUID, List&lt;Damager&gt;&gt;()</ID>
+    <ID>DocumentationOverPrivateProperty:TopDamagers.kt:TopDamagerHandler$/** * The last player to damage each mob, keyed by the mob's UUID. */ private val lastDamagers = ConcurrentHashMap&lt;UUID, UUID&gt;()</ID>
+    <ID>EmptyFunctionBlock:SpawnMethodFactoryNone.kt:SpawnMethodFactoryNone.SpawnMethodNone${ }</ID>
+    <ID>ExpressionBodySyntax:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$return config.getSubsection("integrations.${integration.configKey}")</ID>
+    <ID>ExpressionBodySyntax:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$return damageModifiers[cause] ?: 1.0</ID>
+    <ID>ExpressionBodySyntax:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$return getLivingMob(mob.uniqueId) ?: if (!mob.isDead &amp;&amp; mob.ecoMob == this) restore(mob) else null</ID>
+    <ID>ExpressionBodySyntax:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$return trackedMobs[uuid]</ID>
+    <ID>ExpressionBodySyntax:ConfigDrivenMobCategory.kt:ConfigDrivenMobCategory$return id.hashCode()</ID>
+    <ID>ExpressionBodySyntax:ConfigDrivenMobCategory.kt:ConfigDrivenMobCategory$return other is ConfigDrivenMobCategory &amp;&amp; other.id == this.id</ID>
+    <ID>ExpressionBodySyntax:ConfigHelpers.kt:return ValidationScope(this, !predicate(this))</ID>
+    <ID>ExpressionBodySyntax:ConfigHelpers.kt:return this ?: throw ConfigViolationException(violation)</ID>
+    <ID>ExpressionBodySyntax:ConfigHelpers.kt:return this.name.lowercase().replace("_", "-")</ID>
+    <ID>ExpressionBodySyntax:ConfiguredGoal.kt:ConfiguredGoal$return if (goal is CustomGoal&lt;*&gt;) createGoal() ?: goal else goal</ID>
+    <ID>ExpressionBodySyntax:EcoMob.kt:EcoMob$return getLivingMob(mob.uniqueId)</ID>
+    <ID>ExpressionBodySyntax:EcoMobDamageEvent.kt:EcoMobDamageEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobDamageEvent.kt:EcoMobDamageEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobDamageEvent.kt:EcoMobDamageEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobDeathEvent.kt:EcoMobDeathEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobDeathEvent.kt:EcoMobDeathEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobDespawnEvent.kt:EcoMobDespawnEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobDespawnEvent.kt:EcoMobDespawnEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobDropsEvent.kt:EcoMobDropsEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobDropsEvent.kt:EcoMobDropsEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobDropsEvent.kt:EcoMobDropsEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobEggUseEvent.kt:EcoMobEggUseEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobEggUseEvent.kt:EcoMobEggUseEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobEggUseEvent.kt:EcoMobEggUseEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobKillEvent.kt:EcoMobKillEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobKillEvent.kt:EcoMobKillEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobKillPlayerEvent.kt:EcoMobKillPlayerEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobKillPlayerEvent.kt:EcoMobKillPlayerEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobLifespanExpireEvent.kt:EcoMobLifespanExpireEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobLifespanExpireEvent.kt:EcoMobLifespanExpireEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobLifespanExpireEvent.kt:EcoMobLifespanExpireEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobPreSpawnEvent.kt:EcoMobPreSpawnEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobPreSpawnEvent.kt:EcoMobPreSpawnEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobPreSpawnEvent.kt:EcoMobPreSpawnEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnEvent.kt:EcoMobSpawnEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnEvent.kt:EcoMobSpawnEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerBreakEvent.kt:EcoMobSpawnerBreakEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerBreakEvent.kt:EcoMobSpawnerBreakEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerBreakEvent.kt:EcoMobSpawnerBreakEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerExplodeEvent.kt:EcoMobSpawnerExplodeEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerExplodeEvent.kt:EcoMobSpawnerExplodeEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerPickBlockEvent.kt:EcoMobSpawnerPickBlockEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerPickBlockEvent.kt:EcoMobSpawnerPickBlockEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerPickBlockEvent.kt:EcoMobSpawnerPickBlockEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerPlaceEvent.kt:EcoMobSpawnerPlaceEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerPlaceEvent.kt:EcoMobSpawnerPlaceEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerPlaceEvent.kt:EcoMobSpawnerPlaceEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerSpawnEvent.kt:EcoMobSpawnerSpawnEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerSpawnEvent.kt:EcoMobSpawnerSpawnEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerSpawnEvent.kt:EcoMobSpawnerSpawnEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerStackEvent.kt:EcoMobSpawnerStackEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerStackEvent.kt:EcoMobSpawnerStackEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerStackEvent.kt:EcoMobSpawnerStackEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerTickEvent.kt:EcoMobSpawnerTickEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerTickEvent.kt:EcoMobSpawnerTickEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerTickEvent.kt:EcoMobSpawnerTickEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerUnstackEvent.kt:EcoMobSpawnerUnstackEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerUnstackEvent.kt:EcoMobSpawnerUnstackEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobSpawnerUnstackEvent.kt:EcoMobSpawnerUnstackEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackDeathEvent.kt:EcoMobStackDeathEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackDeathEvent.kt:EcoMobStackDeathEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackMergeEvent.kt:EcoMobStackMergeEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackMergeEvent.kt:EcoMobStackMergeEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackMergeEvent.kt:EcoMobStackMergeEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackSplitEvent.kt:EcoMobStackSplitEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackSplitEvent.kt:EcoMobStackSplitEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobStackSplitEvent.kt:EcoMobStackSplitEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStageChangeEvent.kt:EcoMobStageChangeEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobStageChangeEvent.kt:EcoMobStageChangeEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobTotemBuildEvent.kt:EcoMobTotemBuildEvent$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobTotemBuildEvent.kt:EcoMobTotemBuildEvent$return isCancelled</ID>
+    <ID>ExpressionBodySyntax:EcoMobTotemBuildEvent.kt:EcoMobTotemBuildEvent.Companion$return HANDLERS</ID>
+    <ID>ExpressionBodySyntax:EcoMobsPlugin.kt:EcoMobsPlugin$return listOf(SpawnEggDisplay, SpawnerItemDisplay)</ID>
+    <ID>ExpressionBodySyntax:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$return EnumSet.of(GoalFlag.MOVE)</ID>
+    <ID>ExpressionBodySyntax:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$return true</ID>
+    <ID>ExpressionBodySyntax:Int3.kt:Int3$return Int3Range(this, other)</ID>
+    <ID>ExpressionBodySyntax:Int3.kt:Int3Range$return Int3Iterator(this)</ID>
+    <ID>ExpressionBodySyntax:Int3.kt:Int3Range$return RandomInt3Iterator(this)</ID>
+    <ID>ExpressionBodySyntax:Int3.kt:RandomInt3Iterator$return true</ID>
+    <ID>ExpressionBodySyntax:IntegrationBetterModel.kt:IntegrationBetterModel$return "BetterModel"</ID>
+    <ID>ExpressionBodySyntax:IntegrationCoreProtect.kt:IntegrationCoreProtect$return "CoreProtect"</ID>
+    <ID>ExpressionBodySyntax:IntegrationLevelledMobs.kt:IntegrationLevelledMobs$return "LevelledMobs"</ID>
+    <ID>ExpressionBodySyntax:IntegrationLibsDisguises.kt:IntegrationLibsDisguises$return "LibsDisguises"</ID>
+    <ID>ExpressionBodySyntax:IntegrationModelEngine.kt:IntegrationModelEngine$return "ModelEngine"</ID>
+    <ID>ExpressionBodySyntax:MobPlaceholderHealth.kt:MobPlaceholderHealth$return mob.entity.health.toNiceString()</ID>
+    <ID>ExpressionBodySyntax:MobPlaceholderMaxHealth.kt:MobPlaceholderMaxHealth$return mob.entity.getAttribute(Attribute.MAX_HEALTH)?.value.toNiceString()</ID>
+    <ID>ExpressionBodySyntax:MobPlaceholderMaxStages.kt:MobPlaceholderMaxStages$return mob.mob.damageStages.size.toString()</ID>
+    <ID>ExpressionBodySyntax:MobPlaceholderStage.kt:MobPlaceholderStage$return mob.damageStageNumber.toString()</ID>
+    <ID>ExpressionBodySyntax:MobPlaceholderStagePercent.kt:MobPlaceholderStagePercent$return (mob.damageStageProgress * 100).toNiceString()</ID>
+    <ID>ExpressionBodySyntax:SpawnMethodFactoryCustom.kt:SpawnMethodFactoryCustom$return SpawnMethodCustom(category, config, context)</ID>
+    <ID>ExpressionBodySyntax:SpawnMethodFactoryNone.kt:SpawnMethodFactoryNone$return SpawnMethodNone(category, config)</ID>
+    <ID>ExpressionBodySyntax:SpawnMethodFactoryReplace.kt:SpawnMethodFactoryReplace$return SpawnMethodReplace(category, config)</ID>
+    <ID>ExpressionBodySyntax:TargetGoalClosestPlayer.kt:TargetGoalClosestPlayer$return players.minByOrNull { it.location.distanceSquared(mob.location) }</ID>
+    <ID>ExpressionBodySyntax:TargetGoalHighestArmorPlayer.kt:TargetGoalHighestArmorPlayer$return players.maxByOrNull { it.armor }</ID>
+    <ID>ExpressionBodySyntax:TargetGoalHighestHealthPlayer.kt:TargetGoalHighestHealthPlayer$return players.maxByOrNull { it.health }</ID>
+    <ID>ExpressionBodySyntax:TargetGoalLowestArmorPlayer.kt:TargetGoalLowestArmorPlayer$return players.minByOrNull { it.armor }</ID>
+    <ID>ExpressionBodySyntax:TargetGoalLowestHealthPlayer.kt:TargetGoalLowestHealthPlayer$return players.minByOrNull { it.health }</ID>
+    <ID>ExpressionBodySyntax:TargetGoalPlayer.kt:TargetGoalPlayer$return EnumSet.of(GoalFlag.TARGET)</ID>
+    <ID>ExpressionBodySyntax:TargetGoalPlayer.kt:TargetGoalPlayer$return mob.ticksLived &lt; nextSelectTick || selectTarget()</ID>
+    <ID>ExpressionBodySyntax:TargetGoalPlayer.kt:TargetGoalPlayer$return selectTarget()</ID>
+    <ID>ExpressionBodySyntax:TargetGoalRandomPlayer.kt:TargetGoalRandomPlayer$return players.random()</ID>
+    <ID>ExpressionBodySyntax:TopDamagers.kt:TopDamagerHandler$return damagers[mob.uniqueId] ?: emptyList()</ID>
+    <ID>ExpressionBodySyntax:TopDamagers.kt:TopDamagerHandler$return lastDamagers[mob.uniqueId]</ID>
+    <ID>F001:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$mutableListOf&lt;(LivingMobImpl) -&gt; Unit&gt;()</ID>
+    <ID>F001:LivingMobImpl.kt:LivingMobImpl$mutableListOf&lt;TickHandler&gt;()</ID>
+    <ID>F004:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$teleport(validLocations.random())</ID>
+    <ID>F008:CircleParticleAnimation.kt:CircleParticleAnimation$height</ID>
+    <ID>F008:CircleParticleAnimation.kt:CircleParticleAnimation$radius</ID>
+    <ID>F008:CircleParticleAnimation.kt:CircleParticleAnimation$spiralsPerSecond</ID>
+    <ID>F008:DoubleSpiralParticleAnimation.kt:DoubleSpiralParticleAnimation$height</ID>
+    <ID>F008:DoubleSpiralParticleAnimation.kt:DoubleSpiralParticleAnimation$radius</ID>
+    <ID>F008:DoubleSpiralParticleAnimation.kt:DoubleSpiralParticleAnimation$risesPerSecond</ID>
+    <ID>F008:DoubleSpiralParticleAnimation.kt:DoubleSpiralParticleAnimation$spiralsPerSecond</ID>
+    <ID>F008:MobStackTicker.kt:MobStackTicker$tick</ID>
+    <ID>F008:SpawnerDisplay.kt:SpawnerDisplay$tick</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$adoptVanillaSpawners</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$allowJockeys</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$checkLightLevel</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$checkMaxNearby</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$checkPlayerRange</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$checkSpawnSpace</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$dimLightMax</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$maxLightLevel</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$maxMobsPerChunk</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$maxSkyLight</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$redstoneDeactivates</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$requireSolidGround</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$spawnAttempts</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$tickRate</ID>
+    <ID>F008:SpawnerSettings.kt:SpawnerSettings$verticalRange</ID>
+    <ID>F008:SpawnerStackSettings.kt:SpawnerStackSettings$enabled</ID>
+    <ID>F008:SpawnerStackSettings.kt:SpawnerStackSettings$hologramEnabled</ID>
+    <ID>F008:SpawnerStackSettings.kt:SpawnerStackSettings$hologramHeight</ID>
+    <ID>F008:SpawnerStackSettings.kt:SpawnerStackSettings$lookAtDistance</ID>
+    <ID>F008:SpawnerStackSettings.kt:SpawnerStackSettings$lookAtOnly</ID>
+    <ID>F008:SpawnerStackSettings.kt:SpawnerStackSettings$maxSize</ID>
+    <ID>F008:SpiralParticleAnimation.kt:SpiralParticleAnimation$height</ID>
+    <ID>F008:SpiralParticleAnimation.kt:SpiralParticleAnimation$radius</ID>
+    <ID>F008:SpiralParticleAnimation.kt:SpiralParticleAnimation$risesPerSecond</ID>
+    <ID>F008:SpiralParticleAnimation.kt:SpiralParticleAnimation$spiralsPerSecond</ID>
+    <ID>F008:StackSettings.kt:StackSettings$enabled</ID>
+    <ID>F008:StackSettings.kt:StackSettings$excludeLeashed</ID>
+    <ID>F008:StackSettings.kt:StackSettings$excludeMounted</ID>
+    <ID>F008:StackSettings.kt:StackSettings$excludeNamed</ID>
+    <ID>F008:StackSettings.kt:StackSettings$excludeRidden</ID>
+    <ID>F008:StackSettings.kt:StackSettings$excludeTamed</ID>
+    <ID>F008:StackSettings.kt:StackSettings$hideDeathAnimation</ID>
+    <ID>F008:StackSettings.kt:StackSettings$killWholeStack</ID>
+    <ID>F008:StackSettings.kt:StackSettings$matchAge</ID>
+    <ID>F008:StackSettings.kt:StackSettings$maxMergesPerTick</ID>
+    <ID>F008:StackSettings.kt:StackSettings$maxSize</ID>
+    <ID>F008:StackSettings.kt:StackSettings$radius</ID>
+    <ID>F008:StackSettings.kt:StackSettings$sweepRate</ID>
+    <ID>F008:SunlightBurningHandler.kt:SunlightBurningSettings$enabled</ID>
+    <ID>F008:TiltedRingsParticleAnimation.kt:TiltedRingsParticleAnimation$radius</ID>
+    <ID>F008:TiltedRingsParticleAnimation.kt:TiltedRingsParticleAnimation$spiralsPerSecond</ID>
+    <ID>F008:TiltedRingsParticleAnimation.kt:TiltedRingsParticleAnimation$xOffset</ID>
+    <ID>F008:TiltedRingsParticleAnimation.kt:TiltedRingsParticleAnimation$yOffset</ID>
+    <ID>F008:TwirlParticleAnimation.kt:TwirlParticleAnimation$endHeight</ID>
+    <ID>F008:TwirlParticleAnimation.kt:TwirlParticleAnimation$largeRadius</ID>
+    <ID>F008:TwirlParticleAnimation.kt:TwirlParticleAnimation$smallRadius</ID>
+    <ID>F008:TwirlParticleAnimation.kt:TwirlParticleAnimation$spiralsPerSecond</ID>
+    <ID>F008:TwirlParticleAnimation.kt:TwirlParticleAnimation$startHeight</ID>
+    <ID>F008:TwirlParticleAnimation.kt:TwirlParticleAnimation$ticks</ID>
+    <ID>F008:WaterSensitivityHandler.kt:WaterSensitivitySettings$enabled</ID>
+    <ID>IC002:BaseItem.kt:BaseItem$// Handle display name</ID>
+    <ID>IC002:BaseItem.kt:BaseItem$// Handle flags</ID>
+    <ID>IC002:BaseItem.kt:BaseItem$// Handle lore</ID>
+    <ID>IC002:ChunkHandler.kt:ChunkHandler$// Restores the mob if it isn't already tracked.</ID>
+    <ID>IC002:CommandKillAll.kt:CommandKillAll$// If a mob is specified, only mobs of that type are killed.</ID>
+    <ID>IC002:CommandKillAll.kt:CommandKillAll$// Walked over what EcoMobs tracks rather than over world.entities: no thread</ID>
+    <ID>IC002:CommandSpawnerModify.kt:CommandSpawnerModify$// Modifies a held spawner item if there is one, otherwise the spawner being looked at.</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Add base tickets</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Apply category</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Bound per mob type, not per spawned mob: a mode that feeds on something other</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Call bukkit event</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Call spawn event</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Create living mob</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Every mob can be put in a spawner, so the spawner item exists for all of them.</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Mark as custom mob</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Only remove this instance, in case the mob has since been restored.</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Restore mobs that missed their load event, e.g. chunks loaded before the plugin enabled.</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Run on-spawn actions</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Set custom AI</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Spawn bukkit mob</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Track mob and start ticking</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Tracking outlived the old entity, e.g. an unload was missed.</ID>
+    <ID>IC002:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$// Two region threads can reach here for the same entity, e.g. a chunk load on</ID>
+    <ID>IC002:DamageModifierHandler.kt:DamageModifierHandler$// Called here rather than from its own listener so it lands after the mob's own</ID>
+    <ID>IC002:DamageStageHandler.kt:DamageStageHandler$// A finished tracker takes the killing blow whatever its last stage's mode says,</ID>
+    <ID>IC002:DamageStageHandler.kt:DamageStageHandler$// Not cancelled: the hurt animation, knockback, and vanilla</ID>
+    <ID>IC002:DamageStageHandler.kt:DamageStageHandler$// Not cancelled: the hurt animation, knockback, and vanilla invulnerability</ID>
+    <ID>IC002:DamageStageHandler.kt:DamageStageHandler$// Zero the reductions so exactly the remaining health lands. Never use overkill</ID>
+    <ID>IC002:DamageStageMode.kt:DamageStageMode$// Override when the mode has a source of progress other than damage</ID>
+    <ID>IC002:DamageStageModeFactoryHits.kt:DamageStageModeFactoryHits.HitsStageMode$// Flat 1.0 regardless of finalDamage, so a hits stage with player-only: false</ID>
+    <ID>IC002:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger.StageCountAccumulator$// Credited before the stage is drained, so the count that ends it still</ID>
+    <ID>IC002:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger.StageCountAccumulator$// Draining the stage and running its effects belong to the mob's</ID>
+    <ID>IC002:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger.StageCountAccumulator$// Identity, not equality: two stages configured the same way are still</ID>
+    <ID>IC002:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger.StageCountAccumulator$// Killed through a damage event so the player is credited as the killer, and</ID>
+    <ID>IC002:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger.StageCountAccumulator$// Nearby lookups belong to the player's own region.</ID>
+    <ID>IC002:DamageStageTracker.kt:DamageStageTracker$// Floored, so the overshoot from a large count can't be read back as a</ID>
+    <ID>IC002:DamageStageTracker.kt:DamageStageTracker$// Overflow is discarded so a stage never starts partly drained.</ID>
+    <ID>IC002:EcoMobsPlugin.kt:EcoMobsPlugin$// Chunks loaded before the plugin enabled never fire a ChunkLoadEvent, and a</ID>
+    <ID>IC002:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$// From old EcoBosses code</ID>
+    <ID>IC002:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$// teleportAsync where there is one: Folia removed the synchronous form, and the</ID>
+    <ID>IC002:Int3.kt:RandomInt3Iterator$// Generate a random Int3 within the bounds</ID>
+    <ID>IC002:IntegrationCoreProtect.kt:IntegrationCoreProtect$// A later listener can still cancel the block placement and stack the spawner</ID>
+    <ID>IC002:IntegrationCoreProtect.kt:IntegrationCoreProtect$// Another plugin can still cancel the block break, leaving the stack standing.</ID>
+    <ID>IC002:IntegrationCoreProtect.kt:IntegrationCoreProtect$// Mirrors the cap SpawnerHandler applies after the event: the block stays put</ID>
+    <ID>IC002:IntegrationCoreProtect.kt:IntegrationCoreProtect$// Mirrors the cap SpawnerStacks applies after the event, as a listener is free</ID>
+    <ID>IC002:IntegrationCoreProtect.kt:IntegrationCoreProtect$// The explosion itself has not happened yet, and can still be cancelled.</ID>
+    <ID>IC002:LivingMobImpl.kt:LivingMobImpl$// A freshly loaded entity may not be valid until the server starts tracking it.</ID>
+    <ID>IC002:LivingMobImpl.kt:LivingMobImpl$// Dead also covers unloaded, which is handled by ChunkHandler before this runs.</ID>
+    <ID>IC002:LivingMobImpl.kt:LivingMobImpl$// On Folia the entity's task can retire on one thread while another cancels it,</ID>
+    <ID>IC002:LivingMobImpl.kt:LivingMobImpl$// Untracking stays outside the guard: kill(removeTracking = false) leaves the</ID>
+    <ID>IC002:MergeBudget.kt:MergeBudget$// Zero is no limit at all, for anyone who would rather have the old behaviour.</ID>
+    <ID>IC002:MobEventDeath.kt:MobEventDeath$// Clear default drops</ID>
+    <ID>IC002:MobEventKill.kt:MobEventKill$// Clear vanilla drops</ID>
+    <ID>IC002:MobEventKill.kt:MobEventKill$// Tracking isn't removed here because it's removed in MobEventDeath, which is called after this one.</ID>
+    <ID>IC002:MobEventRangedAttack.kt:MobEventRangedAttack$// If the damager is a player, it's a melee attack</ID>
+    <ID>IC002:MobPlaceholders.kt:MobPlaceholders$// Every damage stage mode brings its own progress placeholders, so adding a mode</ID>
+    <ID>IC002:MobStackTicker.kt:MobStackTicker$// An always-visible name renders through blocks, so it is only shown to a</ID>
+    <ID>IC002:MobStackTicker.kt:MobStackTicker$// Refilled from the global region, spent from whichever region does the merging.</ID>
+    <ID>IC002:MobStackTicker.kt:MobStackTicker$// Stopping here rather than letting every mob ask and be turned down, as</ID>
+    <ID>IC002:MobStackTicker.kt:MobStackTicker$// The work touches entities, so it runs on the player's own region rather</ID>
+    <ID>IC002:MobStacks.kt:MobStacks$// EcoMobs paint their names clientside, so a real one always came from elsewhere.</ID>
+    <ID>IC002:MobStacks.kt:MobStacks$// Taken before the search, as the search is the expensive part and the whole</ID>
+    <ID>IC002:MobStacks.kt:MobStacks$// The first stack that fits rather than the nearest one, as picking the nearest</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// A mob with nowhere to go is lost rather than retried elsewhere, which is</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// A spawner on a chunk border can pick a spot in the unloaded chunk next</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// A stack of spawners spawns as many mobs as it holds, on the one cycle.</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// How much room the chunk has left for this spawner's mob. Only mobs of the same</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// Like vanilla, a spawner only counts down while a player is close enough.</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// Only the players near the spawner, whose region this tick already owns.</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// The cycle still runs down while the spawner is switched off, so cutting the</ID>
+    <ID>IC002:PlacedSpawner.kt:PlacedSpawner$// With mob stacking on, the cycle goes in as stack size rather than as an entity</ID>
+    <ID>IC002:PlacedSpawners.kt:PlacedSpawners$// Dropped wholesale once empty, so the index doesn't grow a key per chunk</ID>
+    <ID>IC002:PlacedSpawners.kt:PlacedSpawners$// Removed from the index first, so the locations are still reachable even</ID>
+    <ID>IC002:RegionDispatch.kt:// The centre of the chunk, only to ask which region owns it.</ID>
+    <ID>IC002:SpawnEggHandler.kt:SpawnEggHandler$// This is needed as the event must finish first,</ID>
+    <ID>IC002:SpawnEggHandler.kt:SpawnEggHandler$// What does the 1.7 do? I don't know, this is from old EcoBosses code.</ID>
+    <ID>IC002:SpawnMethodFactoryCustom.kt:SpawnMethodFactoryCustom.SpawnMethodCustom$// Spawn points are found by scanning the blocks around the player, and</ID>
+    <ID>IC002:SpawnMethodFactoryReplace.kt:SpawnMethodFactoryReplace.SpawnMethodReplace$// Ignore custom spawns</ID>
+    <ID>IC002:SpawnPointGenerator.kt:SpawnPointGenerator$// Handle land with a massive boolean expression</ID>
+    <ID>IC002:SpawnPointGenerator.kt:SpawnPointGenerator$// Handle water</ID>
+    <ID>IC002:SpawnerChecks.kt:SpawnerChecks$// Nether and end monsters spawn in any light, so by default only the overworld's</ID>
+    <ID>IC002:SpawnerChecks.kt:SpawnerChecks$// lightLevel is the brightness vanilla's darkness check reads: sky light dimmed</ID>
+    <ID>IC002:SpawnerDisplay.kt:SpawnerDisplay$// Particles touch the world, so each chunk's spawners are ticked on the region</ID>
+    <ID>IC002:SpawnerDisplay.kt:SpawnerDisplay$// The ray trace touches the world around the player, so it's run on their</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// A snapshot, as the placed item is gone by the time the block state exists.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// A stacked spawner gives up one spawner per break, or the whole stack on sneak.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// A vanilla spawner still needs tracking, as EcoMobs ticks every spawner.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Each chunk is read from the thread that owns it, for Folia.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// EcoMobs runs the loop for every spawner, so vanilla's attempt is dropped.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Every spawner is tracked, not only EcoMobs' own, as the loop ticks them all.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Held until the whole chunk is tracked, so columns are seen as complete.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// It can have gone away again before this runs, and reading its block</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Null means the player cannot break it at all, and has been told why.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Sneaking places the whole held stack at once, mirroring sneak-break taking it all.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Spawners that never fired a place event (/setblock, world edits, pastes) are</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Spawners the world generated carry no EcoMobs data, so they are given</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// The block stays put on this path, so the stack always keeps at least one.</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// The index deliberately survives the unload; only the holograms, which are real</ID>
+    <ID>IC002:SpawnerHandler.kt:SpawnerHandler$// Trial spawners are their own block with their own rules, and EcoMobs has</ID>
+    <ID>IC002:SpawnerHolograms.kt:SpawnerHolograms$// Called on reload, from the global region. Rebuilding a column reads the</ID>
+    <ID>IC002:SpawnerHolograms.kt:SpawnerHolograms$// The hologram is a real entity, so it can only exist while the chunk it sits</ID>
+    <ID>IC002:SpawnerHolograms.kt:SpawnerHolograms$// The span is cleared wholesale, because a removal can split one column in two.</ID>
+    <ID>IC002:SpawnerItems.kt:SpawnerItems$// Not a spawner lookup at all, or a mob that doesn't exist.</ID>
+    <ID>IC002:SpawnerKeys.kt:// A spawner with nothing in it gives back the plain block, as there is nothing to</ID>
+    <ID>IC002:SpawnerKeys.kt:// EcoMob — fall back to the entity its base mob is built from</ID>
+    <ID>IC002:SpawnerKeys.kt:// Plain vanilla entity type (e.g. "zombie", "ZOMBIE")</ID>
+    <ID>IC002:SpawnerKeys.kt:SpawnerData$// A stack of one is just a spawner, so it carries no data at all.</ID>
+    <ID>IC002:SpawnerKeys.kt:SpawnerData$// Only what was written is copied, so a replica of an adopted spawner carries on</ID>
+    <ID>IC002:SpawnerPickBlockHandler.kt:SpigotSpawnerPickBlockHandler$// Already carrying EcoMobs data, so it is an EcoMobs spawner item, not a pick.</ID>
+    <ID>IC002:SpawnerSpawnLoop.kt:SpawnerSpawnLoop$// Spawning reads the spawner's block state and puts mobs into the world, so each</ID>
+    <ID>IC002:SpawnerStackHandler.kt:SpawnerStackHandler$// Capped, as a listener on EcoMobSpawnerStackEvent can raise the amount taken</ID>
+    <ID>IC002:SpawnerStacks.kt:SpawnerStacks$// Capped again, as a listener is free to raise the amount past what fits.</ID>
+    <ID>IC002:StackData.kt:StackData$// A stack of one is just a mob, so it carries no data at all.</ID>
+    <ID>IC002:StackHandler.kt:StackHandler$// A tick later, so whatever spawned the mob has finished setting it up. EcoMobs</ID>
+    <ID>IC002:StackHandler.kt:StackHandler$// Each mob in the stack is paid out by rolling its loot table for itself, so a</ID>
+    <ID>IC002:StackHandler.kt:StackHandler$// EcoMobs clear the vanilla drops and spawn their own, so the rest of the stack</ID>
+    <ID>IC002:StackHandler.kt:StackHandler$// Experience isn't rolled - vanilla hands out a fixed amount per mob - so the</ID>
+    <ID>IC002:StackHandler.kt:StackHandler$// Nothing to roll: a mob without a loot table, or one whose drops another</ID>
+    <ID>IC002:StackHandler.kt:StackHandler$// Read off the dying mob, as it is gone by the time the replacement is spawned.</ID>
+    <ID>IC002:TargetGoalPlayer.kt:TargetGoalPlayer$// The goal selector doesn't run every tick, so this counts lived ticks instead.</ID>
+    <ID>IC002:TickHandler.kt:TickHandler$// Override when needed</ID>
+    <ID>IC002:TickHandlerBossBar.kt:TickHandlerBossBar$// Nearby entities are in the mob's own region, so these dispatches resolve</ID>
+    <ID>IC002:TickHandlerBossBar.kt:TickHandlerBossBar$// Only run every 2 seconds to save CPU</ID>
+    <ID>IC002:TickHandlerDamageStages.kt:TickHandlerDamageStages$// Safety net for a lethal hit that was absorbed anyway, e.g. Resistance V.</ID>
+    <ID>IC002:TickHandlerDamageStages.kt:TickHandlerDamageStages$// The 0.01 floor stops floating-point drift from killing the mob a hit early; the</ID>
+    <ID>IC002:TickHandlerDisplayName.kt:TickHandlerDisplayName$// A stacked mob's nameplate comes from the stacking loop instead, so the two</ID>
+    <ID>IC002:TopDamagers.kt:TopDamagerHandler$// A single atomic rebuild, so two players damaging the same mob from either side</ID>
+    <ID>IC002:TopDamagers.kt:TopDamagerHandler$// Only our own mobs are credited: nothing reads the damage of anything else, and</ID>
+    <ID>IC002:TopDamagers.kt:TopDamagerHandler$// Staged mobs zero their damage before this runs, so DamageStageHandler credits them.</ID>
+    <ID>IC002:TriggerMobDrops.kt:TriggerMobDrops$// The drop location stands in when the drops fall on the ground.</ID>
+    <ID>ImplicitDefaultLocale:MobPlaceholderTime.kt:MobPlaceholderTime$String.format("%d:%02d", secondsLeft / 60, secondsLeft % 60)</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:Int3.kt:Int3Iterator : Iterator</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:Int3.kt:RandomInt3Iterator : Iterator</ID>
+    <ID>LabeledExpression:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$@let</ID>
+    <ID>LabeledExpression:IntegrationCoreProtect.kt:IntegrationCoreProtect$@afterTick</ID>
+    <ID>LabeledExpression:LivingMobImpl.kt:LivingMobImpl$@runTimer</ID>
+    <ID>LabeledExpression:PlacedSpawner.kt:PlacedSpawner$@repeat</ID>
+    <ID>LabeledExpression:SpawnEggHandler.kt:SpawnEggHandler$@run</ID>
+    <ID>LabeledExpression:SpawnerHandler.kt:SpawnerHandler$@run</ID>
+    <ID>LongMethod:CommandSpawn.kt:CommandSpawn$override fun onExecute</ID>
+    <ID>LongMethod:CommandSpawnerGive.kt:CommandSpawnerGive$override fun onExecute</ID>
+    <ID>LoopWithTooManyJumpStatements:ChunkHandler.kt:ChunkHandler$for</ID>
+    <ID>LoopWithTooManyJumpStatements:CommandSpawnerGive.kt:CommandSpawnerGive$while</ID>
+    <ID>LoopWithTooManyJumpStatements:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger.StageCountAccumulator$for</ID>
+    <ID>LoopWithTooManyJumpStatements:PlacedSpawners.kt:PlacedSpawners$for</ID>
+    <ID>LoopWithTooManyJumpStatements:SpawnMethodFactoryCustom.kt:SpawnMethodFactoryCustom.SpawnMethodCustom$for</ID>
+    <ID>LoopWithTooManyJumpStatements:SpawnTotemHandler.kt:SpawnTotemHandler$for</ID>
+    <ID>LoopWithTooManyJumpStatements:SpawnerHolograms.kt:SpawnerHolograms$for</ID>
+    <ID>MagicNumber:CircleParticleAnimation.kt:CircleParticleAnimation$20</ID>
+    <ID>MagicNumber:CommandGive.kt:CommandGive$3</ID>
+    <ID>MagicNumber:CommandSpawn.kt:CommandSpawn$3</ID>
+    <ID>MagicNumber:CommandSpawn.kt:CommandSpawn$4</ID>
+    <ID>MagicNumber:CommandSpawn.kt:CommandSpawn$5</ID>
+    <ID>MagicNumber:CommandSpawn.kt:CommandSpawn$6</ID>
+    <ID>MagicNumber:CommandSpawnerGive.kt:CommandSpawnerGive$3</ID>
+    <ID>MagicNumber:CommandSpawnerGive.kt:CommandSpawnerGive$4</ID>
+    <ID>MagicNumber:CommandSpawnerModify.kt:CommandSpawnerModify$3</ID>
+    <ID>MagicNumber:DoubleSpiralParticleAnimation.kt:DoubleSpiralParticleAnimation$20</ID>
+    <ID>MagicNumber:LivingMobImpl.kt:LivingMobImpl$20</ID>
+    <ID>MagicNumber:MobDrops.kt:MobDrops$100.0</ID>
+    <ID>MagicNumber:MobPlaceholderHealthPercent.kt:MobPlaceholderHealthPercent$100</ID>
+    <ID>MagicNumber:MobPlaceholderStagePercent.kt:MobPlaceholderStagePercent$100</ID>
+    <ID>MagicNumber:MobPlaceholderTime.kt:MobPlaceholderTime$60</ID>
+    <ID>MagicNumber:ModeProgressPlaceholders.kt:100</ID>
+    <ID>MagicNumber:PlacedSpawner.kt:PlacedSpawner$0.5</ID>
+    <ID>MagicNumber:PlacedSpawner.kt:PlacedSpawner$4</ID>
+    <ID>MagicNumber:PlacedSpawners.kt:PlacedSpawners$4</ID>
+    <ID>MagicNumber:SpawnMethodFactoryCustom.kt:SpawnMethodFactoryCustom.SpawnMethodCustom$100.0</ID>
+    <ID>MagicNumber:SpawnMethodFactoryReplace.kt:SpawnMethodFactoryReplace.SpawnMethodReplace$100.0</ID>
+    <ID>MagicNumber:SpawnPointGenerator.kt:SpawnPointGenerator$0.5</ID>
+    <ID>MagicNumber:SpawnerHolograms.kt:SpawnerHolograms$4</ID>
+    <ID>MagicNumber:SpiralParticleAnimation.kt:SpiralParticleAnimation$20</ID>
+    <ID>MagicNumber:TargetGoalClosestPlayer.kt:TargetGoalClosestPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalClosestPlayer.kt:TargetGoalClosestPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalHighestArmorPlayer.kt:TargetGoalHighestArmorPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalHighestArmorPlayer.kt:TargetGoalHighestArmorPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalHighestHealthPlayer.kt:TargetGoalHighestHealthPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalHighestHealthPlayer.kt:TargetGoalHighestHealthPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalLastDamagerPlayer.kt:TargetGoalLastDamagerPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalLastDamagerPlayer.kt:TargetGoalLastDamagerPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalLowestArmorPlayer.kt:TargetGoalLowestArmorPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalLowestArmorPlayer.kt:TargetGoalLowestArmorPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalLowestHealthPlayer.kt:TargetGoalLowestHealthPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalLowestHealthPlayer.kt:TargetGoalLowestHealthPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalMostCrowdedPlayer.kt:TargetGoalMostCrowdedPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalMostCrowdedPlayer.kt:TargetGoalMostCrowdedPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalMostCrowdedPlayer.kt:TargetGoalMostCrowdedPlayer.Deserializer$5.0</ID>
+    <ID>MagicNumber:TargetGoalNotLookingPlayer.kt:TargetGoalNotLookingPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalNotLookingPlayer.kt:TargetGoalNotLookingPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalRandomPlayer.kt:TargetGoalRandomPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalRandomPlayer.kt:TargetGoalRandomPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TargetGoalTopDamagerPlayer.kt:TargetGoalTopDamagerPlayer.Deserializer$10</ID>
+    <ID>MagicNumber:TargetGoalTopDamagerPlayer.kt:TargetGoalTopDamagerPlayer.Deserializer$40.0</ID>
+    <ID>MagicNumber:TickHandlerBossBar.kt:TickHandlerBossBar$40</ID>
+    <ID>MagicNumber:TickHandlerBossBar.kt:TickHandlerBossBar$5</ID>
+    <ID>MagicNumber:TickHandlerDamageStages.kt:TickHandlerDamageStages$0.01</ID>
+    <ID>MagicNumber:TickHandlerDisplayName.kt:TickHandlerDisplayName$5</ID>
+    <ID>MatchingDeclarationName:ConfigHelpers.kt:ValidationScope&lt;T&gt;</ID>
+    <ID>MaxLineLength:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport$if</ID>
+    <ID>MaxLineLength:SpawnerAttributes.kt:SpawnerAttributes$val ATTRIBUTES = listOf("mob", "delay", "radius", "player-radius", "count", "max-nearby", "pickup", "particle", "explosion-proof", "no-ai", "stack-size")</ID>
+    <ID>MaxLineLength:SpawnerKeys.kt:SpawnerData$get() = pdc.getInt(spawnerDelayMaxKey, if (isAdopted) VanillaSpawnerDefaults.delayMax else SpawnerDefaults.DELAY_MAX)</ID>
+    <ID>MaxLineLength:SpawnerKeys.kt:SpawnerData$get() = pdc.getInt(spawnerDelayMinKey, if (isAdopted) VanillaSpawnerDefaults.delayMin else SpawnerDefaults.DELAY_MIN)</ID>
+    <ID>MaxLineLength:SpawnerKeys.kt:SpawnerData$get() = pdc.getInt(spawnerMaxNearbyKey, if (isAdopted) VanillaSpawnerDefaults.maxNearby else SpawnerDefaults.MAX_NEARBY)</ID>
+    <ID>MaxLineLength:SpawnerKeys.kt:SpawnerData$get() = pdc.getInt(spawnerPlayerRangeKey, if (isAdopted) VanillaSpawnerDefaults.playerRange else SpawnerDefaults.PLAYER_RANGE)</ID>
+    <ID>MaxLineLength:SpawnerKeys.kt:SpawnerData$get() = pdc.getInt(spawnerSpawnCountKey, if (isAdopted) VanillaSpawnerDefaults.spawnCount else SpawnerDefaults.SPAWN_COUNT)</ID>
+    <ID>MaxLineLength:SpawnerKeys.kt:SpawnerData$get() = pdc.getInt(spawnerSpawnRangeKey, if (isAdopted) VanillaSpawnerDefaults.spawnRange else SpawnerDefaults.SPAWN_RANGE)</ID>
+    <ID>MaxLineLength:SpawnerKeys.kt:orVanillaDefault(requiredPlayerRange, VanillaSpawnerDefaults.Stock.PLAYER_RANGE, VanillaSpawnerDefaults.playerRange)</ID>
+    <ID>MissingUseCall:IntegrationBetterModel.kt:IntegrationBetterModel$getOrCreate(BukkitAdapter.adapt(entity))</ID>
+    <ID>MultilineLambdaItParameter:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob${ Effects.compileChain( config.getSubsections("effects.${it.configKey}"), context.with("effects").with(it.configKey) ) }</ID>
+    <ID>MultilineLambdaItParameter:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob${ config.getStringOrNull("equipment.${it.toConfigKey()}") ?.let { lookup -&gt; Items.lookup(lookup) } }</ID>
+    <ID>MultilineLambdaItParameter:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob${ for ((slot, item) in it) { @Suppress("UNNECESSARY_SAFE_CALL") this.entity.equipment?.setItem(slot, item?.item) } }</ID>
+    <ID>MultilineLambdaItParameter:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob${ val bar = BossBar.bossBar( rawDisplayName.toComponent(), 1f, it.color, it.style ) this.addTickHandler(TickHandlerBossBar(bar, it)) }</ID>
+    <ID>MultilineLambdaItParameter:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob${ val key = safeNamespacedKeyOf(it.getString("key")) ?: throw ConfigViolationException( ConfigViolation( "key", "Invalid goal key" ) ) { ctx -&gt; ctx.with("entity goals") } val deserializer = EntityGoals.getByKey(key) ?: throw ConfigViolationException( ConfigViolation( "key", "Invalid entity goal" ) ) { ctx -&gt; ctx.with("entity goals") } val goal = deserializer.deserialize(it.getSubsection("args")) ?: throw ConfigViolationException( ConfigViolation( "args", "Invalid entity goal args" ) ) { ctx -&gt; ctx.with("entity goals").with(deserializer.key.toString()) } ConfiguredGoal(it.getInt("priority"), goal) { deserializer.deserialize(it.getSubsection("args")) } }</ID>
+    <ID>MultilineLambdaItParameter:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob${ val key = safeNamespacedKeyOf(it.getString("key")) ?: throw ConfigViolationException( ConfigViolation( "key", "Invalid goal key" ) ) { ctx -&gt; ctx.with("target goals") } val deserializer = TargetGoals.getByKey(key) ?: throw ConfigViolationException( ConfigViolation( "key", "Invalid target goal" ) ) { ctx -&gt; ctx.with("target goals") } val goal = deserializer.deserialize(it.getSubsection("args")) ?: throw ConfigViolationException( ConfigViolation( "args", "Invalid target goal args" ) ) { ctx -&gt; ctx.with("target goals").with(deserializer.key.toString()) } ConfiguredGoal(it.getInt("priority"), goal) { deserializer.deserialize(it.getSubsection("args")) } }</ID>
+    <ID>MultilineLambdaItParameter:EcoMobsPlugin.kt:EcoMobsPlugin${ it.ecoMob?.entityHolder.toSingletonList().map { holder -&gt; EntityProvidedHolder(holder, it) } }</ID>
+    <ID>MultilineLambdaItParameter:MobStacks.kt:MobStacks${ it is Mob &amp;&amp; it.stack.size &lt; maxSize &amp;&amp; isKind(it, mobId) &amp;&amp; canStack(it) }</ID>
+    <ID>MultilineLambdaItParameter:MobStacks.kt:MobStacks${ it is Mob &amp;&amp; it.type == type &amp;&amp; it.uniqueId != mob.uniqueId &amp;&amp; it.stack.size + size &lt;= maxSize &amp;&amp; (!StackSettings.matchAge || isAdult(it) == isAdult) &amp;&amp; it.ecoMobId == ecoMobId &amp;&amp; canStack(it) }</ID>
+    <ID>MultilineLambdaItParameter:TickHandlerDisplayName.kt:TickHandlerDisplayName${ val playerLocation = it.location abs(playerLocation.x - location.x) &lt;= 20 &amp;&amp; abs(playerLocation.y - location.y) &lt;= 20 &amp;&amp; abs(playerLocation.z - location.z) &lt;= 20 }</ID>
+    <ID>NestedScopeFunctions:CommandSpawnerModify.kt:CommandSpawnerModify$let { state.spawnedType = it }</ID>
+    <ID>NewLineAtEndOfFile:CommandReload.kt:com.willfp.ecomobs.commands.CommandReload.kt</ID>
+    <ID>NewLineAtEndOfFile:MobEvent.kt:com.willfp.ecomobs.event.MobEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:SpawnEgg.kt:com.willfp.ecomobs.mob.options.SpawnEgg.kt</ID>
+    <ID>NoNameShadowing:StackHandler.kt:StackHandler${ it.clone() }</ID>
+    <ID>NullableBooleanCheck:MobStacks.kt:MobStacks$(mob as? Ageable)?.isAdult ?: true</ID>
+    <ID>NullableBooleanCheck:StackHandler.kt:StackHandler$(mob as? Ageable)?.isAdult ?: true</ID>
+    <ID>PF011:CommandSpawnerGive.kt:CommandSpawnerGive$attribute !in SpawnerAttributes.ATTRIBUTES</ID>
+    <ID>PF011:CommandSpawnerGive.kt:CommandSpawnerGive$token !in SpawnerAttributes.ATTRIBUTES</ID>
+    <ID>PF012:CommandKillAll.kt:CommandKillAll$values()</ID>
+    <ID>PF012:LivingMobImpl.kt:LivingMobImpl$values()</ID>
+    <ID>PF012:MobPlaceholders.kt:MobPlaceholders$values()</ID>
+    <ID>PF012:SpawnTotemHandler.kt:SpawnTotemHandler$values()</ID>
+    <ID>PF012:SpawnerHolograms.kt:SpawnerHolograms$values()</ID>
+    <ID>ReplaceSafeCallChainWithRun:DamageStageHandler.kt:(this as? EntityDamageByEntityEvent)?.damager?.tryAsPlayer()</ID>
+    <ID>ReplaceSafeCallChainWithRun:LivingMob.kt:LivingMob$damageStage?.mode?.factory</ID>
+    <ID>ReplaceSafeCallChainWithRun:SpawnEggHandler.kt:SpawnEggHandler$event.clickedBlock?.location?.add(0.0, 1.5, 0.0)</ID>
+    <ID>ReplaceSafeCallChainWithRun:SpawnerChecks.kt:SpawnerChecks$(it as? Mob)?.stack?.size</ID>
+    <ID>ReplaceSafeCallChainWithRun:SpawnerHandler.kt:SpawnerHandler$player.inventory.itemInMainHand .itemMeta?.enchants?.containsKey(Enchantment.SILK_TOUCH)</ID>
+    <ID>ReplaceSafeCallChainWithRun:SpawnerHolograms.kt:SpawnerHolograms$player.getTargetBlockExact(SpawnerStackSettings.lookAtDistance) ?.location ?.let { topOf(it) }</ID>
+    <ID>ReplaceSafeCallChainWithRun:SpawnerItemDisplay.kt:data.mob?.replace("_", " ")?.titlecase()</ID>
+    <ID>ReplaceSafeCallChainWithRun:SpawnerKeys.kt:spawnedType?.name?.lowercase()</ID>
+    <ID>ReplaceSafeCallChainWithRun:SpawnerSpawning.kt:entity?.persistentDataContainer?.set(entityFromSpawnerKey, PersistentDataType.BYTE, 1)</ID>
+    <ID>ReplaceSafeCallChainWithRun:TopDamagers.kt:TopDamagerHandler$damager?.damage?.toNiceString()</ID>
+    <ID>ReturnCount:CommandGive.kt:CommandGive$override fun onExecute</ID>
+    <ID>ReturnCount:CommandSpawn.kt:CommandSpawn$override fun onExecute</ID>
+    <ID>ReturnCount:CommandSpawnerGive.kt:CommandSpawnerGive$override fun onExecute</ID>
+    <ID>ReturnCount:CommandSpawnerModify.kt:CommandSpawnerModify$override fun onExecute</ID>
+    <ID>ReturnCount:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$fun restore: LivingMob</ID>
+    <ID>ReturnCount:DamageModifierHandler.kt:DamageModifierHandler$@EventHandler fun handle</ID>
+    <ID>ReturnCount:DamageStageHandler.kt:DamageStageHandler$@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH) fun handle</ID>
+    <ID>ReturnCount:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger.StageCountAccumulator$private fun drain</ID>
+    <ID>ReturnCount:DamageStageTracker.kt:DamageStageTracker$fun consume: Boolean</ID>
+    <ID>ReturnCount:MergeBudget.kt:MergeBudget$fun take: Boolean</ID>
+    <ID>ReturnCount:MobEventDamagePlayer.kt:MobEventDamagePlayer$@EventHandler fun handle</ID>
+    <ID>ReturnCount:MobEventDeath.kt:MobEventDeath$@EventHandler(priority = EventPriority.HIGHEST) fun handle</ID>
+    <ID>ReturnCount:MobEventInteract.kt:MobEventInteract$@EventHandler fun handle</ID>
+    <ID>ReturnCount:MobEventKill.kt:MobEventKill$@EventHandler fun handle</ID>
+    <ID>ReturnCount:MobEventKillPlayer.kt:MobEventKillPlayer$@EventHandler fun handle</ID>
+    <ID>ReturnCount:MobEventMeleeAttack.kt:MobEventMeleeAttack$@EventHandler fun handle</ID>
+    <ID>ReturnCount:MobEventRangedAttack.kt:MobEventRangedAttack$@EventHandler fun handle</ID>
+    <ID>ReturnCount:MobEventTakeDamage.kt:MobEventTakeDamage$@EventHandler fun handle</ID>
+    <ID>ReturnCount:MobStacks.kt:MobStacks$fun addToNearbyStack: Int</ID>
+    <ID>ReturnCount:MobStacks.kt:MobStacks$fun canStack: Boolean</ID>
+    <ID>ReturnCount:MobStacks.kt:MobStacks$fun tryMerge: Boolean</ID>
+    <ID>ReturnCount:MobStacks.kt:MobStacks$private fun isBlacklisted: Boolean</ID>
+    <ID>ReturnCount:MobStacks.kt:MobStacks$private fun isKind: Boolean</ID>
+    <ID>ReturnCount:ModeProgressPlaceholders.kt:ModeProgressPlaceholder$override fun getValue: String</ID>
+    <ID>ReturnCount:PlacedSpawner.kt:PlacedSpawner$fun tickSpawning</ID>
+    <ID>ReturnCount:PlacedSpawner.kt:PlacedSpawner$private fun findSpawnLocation: Location?</ID>
+    <ID>ReturnCount:PlacedSpawner.kt:PlacedSpawner$private fun spawnCycle: CycleResult</ID>
+    <ID>ReturnCount:PlacedSpawner.kt:PlacedSpawner$private fun spawnStacked: CycleResult</ID>
+    <ID>ReturnCount:PlacedSpawners.kt:PlacedSpawners$private fun chunkPosOf: ChunkPos?</ID>
+    <ID>ReturnCount:SpawnEggHandler.kt:SpawnEggHandler$@EventHandler(ignoreCancelled = true) fun handle</ID>
+    <ID>ReturnCount:SpawnEggHandler.kt:SpawnEggHandler$private fun handleSpawnEgg: Boolean</ID>
+    <ID>ReturnCount:SpawnMethodFactoryReplace.kt:SpawnMethodFactoryReplace.SpawnMethodReplace$@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) fun handle</ID>
+    <ID>ReturnCount:SpawnPointGenerator.kt:SpawnPointGenerator$private fun generateInBox: SpawnPoint?</ID>
+    <ID>ReturnCount:SpawnerAttributes.kt:SpawnerAttributes$fun apply: Boolean</ID>
+    <ID>ReturnCount:SpawnerChecks.kt:SpawnerChecks$fun canSpawnAt: Boolean</ID>
+    <ID>ReturnCount:SpawnerChecks.kt:SpawnerChecks$fun countNearby: Int</ID>
+    <ID>ReturnCount:SpawnerChecks.kt:SpawnerChecks$fun entityBudget: Int</ID>
+    <ID>ReturnCount:SpawnerChecks.kt:SpawnerChecks$private fun hasRoomFor: Boolean</ID>
+    <ID>ReturnCount:SpawnerChecks.kt:SpawnerChecks$private fun isDarkEnoughFor: Boolean</ID>
+    <ID>ReturnCount:SpawnerChecks.kt:SpawnerChecks$private fun mobMatcher: ((Entity) -&gt; Boolean)?</ID>
+    <ID>ReturnCount:SpawnerHandler.kt:SpawnerHandler$@EventHandler(ignoreCancelled = true) fun handleBreak</ID>
+    <ID>ReturnCount:SpawnerHandler.kt:SpawnerHandler$@EventHandler(ignoreCancelled = true) fun handlePlace</ID>
+    <ID>ReturnCount:SpawnerHandler.kt:SpawnerHandler$private fun survivesExplosion: Boolean</ID>
+    <ID>ReturnCount:SpawnerHolograms.kt:SpawnerHolograms$private fun linesFor: List&lt;String&gt;?</ID>
+    <ID>ReturnCount:SpawnerHolograms.kt:SpawnerHolograms$private fun render</ID>
+    <ID>ReturnCount:SpawnerHolograms.kt:SpawnerHolograms$private fun topOf: Location?</ID>
+    <ID>ReturnCount:SpawnerKeys.kt:fun CreatureSpawner.toReplicaSpawnerItem: ItemStack</ID>
+    <ID>ReturnCount:SpawnerKeys.kt:fun resolveEntityType: EntityType?</ID>
+    <ID>ReturnCount:SpawnerPickBlockHandler.kt:SpigotSpawnerPickBlockHandler$@EventHandler(ignoreCancelled = true) fun handle</ID>
+    <ID>ReturnCount:SpawnerPickBlockHandler.kt:private fun pickSpawner: PickResult?</ID>
+    <ID>ReturnCount:SpawnerStackHandler.kt:SpawnerStackHandler$@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) fun handleInteract</ID>
+    <ID>ReturnCount:SpawnerStackHandler.kt:SpawnerStackHandler$@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) fun handlePlace</ID>
+    <ID>ReturnCount:SpawnerStackHandler.kt:SpawnerStackHandler$private fun tryAdd: Int</ID>
+    <ID>ReturnCount:SpawnerStacks.kt:SpawnerStacks$fun add: Int</ID>
+    <ID>ReturnCount:StackHandler.kt:StackHandler$private fun rollLoot: List&lt;ItemStack&gt;?</ID>
+    <ID>ReturnCount:SunlightBurningHandler.kt:SunlightBurningHandler$@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) fun handle</ID>
+    <ID>ReturnCount:TargetGoalPlayer.kt:TargetGoalPlayer$private fun selectTarget: Boolean</ID>
+    <ID>ReturnCount:TickHandlerDamageStages.kt:TickHandlerDamageStages$override fun tick</ID>
+    <ID>ReturnCount:TickHandlerDisplayName.kt:TickHandlerDisplayName$override fun tick</ID>
+    <ID>ReturnCount:TopDamagers.kt:TopDamagerHandler$@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR) fun handle</ID>
+    <ID>ReturnCount:WaterSensitivityHandler.kt:PaperWaterTeleportHandler$@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) fun handle</ID>
+    <ID>ReturnCount:WaterSensitivityHandler.kt:SpigotWaterTeleportHandler$@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) fun handle</ID>
+    <ID>ReturnCount:WaterSensitivityHandler.kt:SpigotWaterTeleportHandler$private fun isInRain: Boolean</ID>
+    <ID>ReturnCount:WaterSensitivityHandler.kt:WaterSensitivityHandler$@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) fun handleDamage</ID>
+    <ID>SpreadOperator:BaseItem.kt:BaseItem$(*itemFlags.toTypedArray())</ID>
+    <ID>TooManyFunctions:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob : EcoMob</ID>
+    <ID>TooManyFunctions:LivingMobImpl.kt:LivingMobImpl : LivingMob</ID>
+    <ID>TooManyFunctions:PlacedSpawners.kt:PlacedSpawners</ID>
+    <ID>TooManyFunctions:SpawnerHandler.kt:SpawnerHandler : Listener</ID>
+    <ID>TooManyFunctions:SpawnerHolograms.kt:SpawnerHolograms</ID>
+    <ID>TooManyFunctions:SpawnerKeys.kt:com.willfp.ecomobs.spawner.SpawnerKeys.kt</ID>
+    <ID>UnnamedParameterUse:CommandGive.kt:CommandGive$replace</ID>
+    <ID>UnnamedParameterUse:CommandKillAll.kt:CommandKillAll$replace</ID>
+    <ID>UnnamedParameterUse:CommandReload.kt:CommandReload$replace</ID>
+    <ID>UnnamedParameterUse:CommandSpawn.kt:CommandSpawn$replace</ID>
+    <ID>UnnamedParameterUse:CommandSpawnerGive.kt:CommandSpawnerGive$minOf</ID>
+    <ID>UnnamedParameterUse:CommandSpawnerGive.kt:CommandSpawnerGive$replace</ID>
+    <ID>UnnamedParameterUse:CommandSpawnerGive.kt:CommandSpawnerGive$subList</ID>
+    <ID>UnnamedParameterUse:CommandSpawnerModify.kt:CommandSpawnerModify$replace</ID>
+    <ID>UnnamedParameterUse:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$ConfigViolation</ID>
+    <ID>UnnamedParameterUse:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$SpawnTotem</ID>
+    <ID>UnnamedParameterUse:ConfigDrivenEcoMob.kt:namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:ConfigDrivenMobCategory.kt:ConfigDrivenMobCategory$ConfigViolation</ID>
+    <ID>UnnamedParameterUse:ConfigHelpers.kt:replace</ID>
+    <ID>UnnamedParameterUse:DamageStage.kt:ConfigViolation</ID>
+    <ID>UnnamedParameterUse:DamageStage.kt:DamageStage</ID>
+    <ID>UnnamedParameterUse:DamageStageModeFactoryHealth.kt:DamageStageModeFactoryHealth$ConfigViolation</ID>
+    <ID>UnnamedParameterUse:DamageStageModeFactoryHits.kt:DamageStageModeFactoryHits$ConfigViolation</ID>
+    <ID>UnnamedParameterUse:DamageStageModeFactoryTrigger.kt:DamageStageModeFactoryTrigger$ConfigViolation</ID>
+    <ID>UnnamedParameterUse:DamageStageTracker.kt:DamageStageTracker$coerceIn</ID>
+    <ID>UnnamedParameterUse:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport.Deserializer$EntityGoalRandomTeleport</ID>
+    <ID>UnnamedParameterUse:EntityGoalRandomTeleport.kt:EntityGoalRandomTeleport.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:Int3.kt:Int3$Int3Range</ID>
+    <ID>UnnamedParameterUse:Int3.kt:RandomInt3Iterator$Int3</ID>
+    <ID>UnnamedParameterUse:IntegrationCoreProtect.kt:IntegrationCoreProtect$coerceIn</ID>
+    <ID>UnnamedParameterUse:LivingMobImpl.kt:LivingMobImpl$NamedValue</ID>
+    <ID>UnnamedParameterUse:LivingMobImpl.kt:namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:MobDrops.kt:MobDrops$randDouble</ID>
+    <ID>UnnamedParameterUse:MobEvent.kt:MobEvent$replace</ID>
+    <ID>UnnamedParameterUse:MobPlaceholders.kt:replace</ID>
+    <ID>UnnamedParameterUse:MobStackTicker.kt:MobStackTicker$replace</ID>
+    <ID>UnnamedParameterUse:MobStacks.kt:MobStacks$minOf</ID>
+    <ID>UnnamedParameterUse:PlacedSpawner.kt:PlacedSpawner$minOf</ID>
+    <ID>UnnamedParameterUse:PlacedSpawner.kt:PlacedSpawner$nextInt</ID>
+    <ID>UnnamedParameterUse:PlacedSpawner.kt:PlacedSpawner$spawnFromSpawner</ID>
+    <ID>UnnamedParameterUse:PlacedSpawners.kt:PlacedSpawners$ChunkPos</ID>
+    <ID>UnnamedParameterUse:PlacedSpawners.kt:PlacedSpawners$inChunk</ID>
+    <ID>UnnamedParameterUse:SpawnEgg.kt:namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:SpawnMethodFactoryCustom.kt:SpawnMethodFactoryCustom.SpawnMethodCustom$randDouble</ID>
+    <ID>UnnamedParameterUse:SpawnMethodFactoryReplace.kt:SpawnMethodFactoryReplace.SpawnMethodReplace$randDouble</ID>
+    <ID>UnnamedParameterUse:SpawnPointGenerator.kt:SpawnPointGenerator$Int3</ID>
+    <ID>UnnamedParameterUse:SpawnPointGenerator.kt:SpawnPointGenerator$generateInBox</ID>
+    <ID>UnnamedParameterUse:SpawnTotemHandler.kt:SpawnTotemHandler$SpawnTotem</ID>
+    <ID>UnnamedParameterUse:SpawnerHandler.kt:SpawnerHandler$EcoMobSpawnerUnstackEvent</ID>
+    <ID>UnnamedParameterUse:SpawnerHandler.kt:SpawnerHandler$coerceIn</ID>
+    <ID>UnnamedParameterUse:SpawnerHolograms.kt:SpawnerHolograms$replace</ID>
+    <ID>UnnamedParameterUse:SpawnerItemDisplay.kt:replace</ID>
+    <ID>UnnamedParameterUse:SpawnerKeys.kt:PlacedSpawner</ID>
+    <ID>UnnamedParameterUse:SpawnerKeys.kt:namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:SpawnerKeys.kt:orVanillaDefault</ID>
+    <ID>UnnamedParameterUse:SpawnerStacks.kt:SpawnerStacks$EcoMobSpawnerStackEvent</ID>
+    <ID>UnnamedParameterUse:SpawnerStacks.kt:SpawnerStacks$coerceIn</ID>
+    <ID>UnnamedParameterUse:SpawnerStacks.kt:SpawnerStacks$minOf</ID>
+    <ID>UnnamedParameterUse:StackData.kt:namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalClosestPlayer.kt:TargetGoalClosestPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalHighestArmorPlayer.kt:TargetGoalHighestArmorPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalHighestHealthPlayer.kt:TargetGoalHighestHealthPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalLastDamagerPlayer.kt:TargetGoalLastDamagerPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalLowestArmorPlayer.kt:TargetGoalLowestArmorPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalLowestHealthPlayer.kt:TargetGoalLowestHealthPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalMostCrowdedPlayer.kt:TargetGoalMostCrowdedPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalNotLookingPlayer.kt:TargetGoalNotLookingPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalRandomPlayer.kt:TargetGoalRandomPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TargetGoalTopDamagerPlayer.kt:TargetGoalTopDamagerPlayer.Deserializer$namespacedKeyOf</ID>
+    <ID>UnnamedParameterUse:TickHandlerDamageStages.kt:TickHandlerDamageStages$coerceIn</ID>
+    <ID>UnnamedParameterUse:TopDamagers.kt:TopDamagerHandler$NamedValue</ID>
+    <ID>UnnamedParameterUse:TwirlParticleAnimation.kt:TwirlParticleAnimation$lerp</ID>
+    <ID>UnnecessaryApply:MobDrops.kt:MobDrops$apply { experience = xp }</ID>
+    <ID>UnnecessaryParentheses:TwirlParticleAnimation.kt:(end * fraction)</ID>
+    <ID>UnnecessaryParentheses:TwirlParticleAnimation.kt:(start * (1 - fraction))</ID>
+    <ID>UnnecessaryParentheses:TwirlParticleAnimation.kt:TwirlParticleAnimation$(tick % ticks)</ID>
+    <ID>UnreachableCode:SpawnerHandler.kt:SpawnerHandler$player.inventory.getItem(event.hand) ?: return@run</ID>
+    <ID>UnsafeCallOnNullableType:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$this.spawn(it, SpawnReason.COMMAND)!!</ID>
+    <ID>UnusedImport:ConfigDrivenEcoMob.kt:import com.willfp.ecomobs.EcoMobsPlugin</ID>
+    <ID>UnusedImport:ConfigDrivenEcoMob.kt:import com.willfp.libreforge.conditions.ConditionList</ID>
+    <ID>UnusedVariable:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$val recipe: CraftingRecipe? = config.getBool("spawn.egg.craftable") .takeIf { it } ?.let { val recipeStrings = config.getStrings("spawn.egg.recipe") if (recipeStrings.isEmpty()) return@let null Recipes.createAndRegisterRecipe( plugin, "${id}_spawn_egg", item, recipeStrings, config.getStringOrNull("spawn.egg.recipe-permission"), config.getBool("spawn.egg.shapeless") ) }</ID>
+    <ID>UnusedVariable:SpawnPointGenerator.kt:SpawnPointGenerator$i</ID>
+    <ID>UseCheckOrError:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$throw IllegalStateException("Base entity must be a mob!")</ID>
+    <ID>UseCheckOrError:LivingMobImpl.kt:LivingMobImpl$throw IllegalStateException("Ticking already started")</ID>
+    <ID>UseCheckOrError:MobDrops.kt:MobDrops$throw IllegalStateException("Location has no world")</ID>
+    <ID>UseCheckOrError:SpawnMethod.kt:SpawnMethod$throw IllegalStateException("Already started!")</ID>
+    <ID>UseCheckOrError:TickHandlerBossBar.kt:TickHandlerBossBar$throw IllegalStateException("Entity ${entity.type} has no max health attribute")</ID>
+    <ID>UseOrEmpty:SpawnerItemDisplay.kt:data.mob ?: ""</ID>
+    <ID>UseOrEmpty:SpawnerItemDisplay.kt:data.mob?.replace("_", " ")?.titlecase() ?: ""</ID>
+    <ID>UseOrEmpty:TopDamagers.kt:TopDamagerHandler$damagers[mob.uniqueId] ?: emptyList()</ID>
+    <ID>UseOrEmpty:TopDamagers.kt:TopDamagerHandler$existing ?: emptyList()</ID>
+    <ID>UseRequire:ConfigDrivenEcoMob.kt:ConfigDrivenEcoMob$throw IllegalArgumentException("Players cannot spawn mobs naturally")</ID>
+  </CurrentIssues>
+</SmellBaseline>
