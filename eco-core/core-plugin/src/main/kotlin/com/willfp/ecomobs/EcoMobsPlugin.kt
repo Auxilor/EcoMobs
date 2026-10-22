@@ -132,6 +132,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
         SpawnerHolograms.reloadAll()
     }
 
+    @Suppress("TooGenericExceptionCaught")
     override fun handleDisable() {
         try {
             SpawnerDisplay.stop()

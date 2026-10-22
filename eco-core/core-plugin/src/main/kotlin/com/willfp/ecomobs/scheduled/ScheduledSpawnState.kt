@@ -1,14 +1,10 @@
 package com.willfp.ecomobs.scheduled
 
-import com.willfp.ecomobs.plugin
 import org.bukkit.Location
-import org.bukkit.configuration.file.YamlConfiguration
-import java.nio.file.AtomicMoveNotSupportedException
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicBoolean
+
+private const val CHUNK_SHIFT = 4
 
 /**
  * The chunk a scheduled mob was last known to be in.
@@ -38,10 +34,13 @@ data class PointState(
  * The chunk position of [this] location.
  */
 fun Location.toMobPosition(): MobPosition = MobPosition(
-    world?.name.orEmpty(),
-    blockX shr 4,
-    blockZ shr 4
+    world = world?.name.orEmpty(),
+    chunkX = blockX shr CHUNK_SHIFT,
+    chunkZ = blockZ shr CHUNK_SHIFT
 )
+
+private fun PointState?.cleaned(): PointState? =
+    this?.takeUnless { it.mobs.isEmpty() && it.retired.isEmpty() && it.nextDue == 0L }
 
 /**
  * Every scheduled point's state, kept across reloads and saved to disk shortly after each change.
@@ -49,12 +48,13 @@ fun Location.toMobPosition(): MobPosition = MobPosition(
  * Points without an entry have no mobs and are due now.
  */
 object ScheduledSpawnState {
-    private val file
-        get() = plugin.dataFolder.resolve("data/scheduled-spawns.yml")
+    internal val states = ConcurrentHashMap<String, PointState>().apply { putAll(ScheduledSpawnStorage.read()) }
 
-    private val states = ConcurrentHashMap<String, PointState>().apply { putAll(read()) }
-
-    private val savePending = AtomicBoolean()
+    /**
+     * The mobs of every point that has any.
+     */
+    val tracked: Map<String, Map<UUID, MobPosition>>
+        get() = states.filterValues { it.mobs.isNotEmpty() }.mapValues { it.value.mobs }
 
     operator fun get(key: String): PointState = states[key] ?: PointState()
 
@@ -79,29 +79,35 @@ object ScheduledSpawnState {
     /**
      * Removes [uuid]; nextDue becomes max(nextDue, [nextDue]).
      */
-    fun free(key: String, uuid: UUID, nextDue: Long) = update(key) { current ->
-        if (uuid !in current.mobs) {
-            current
-        } else {
-            current.copy(mobs = current.mobs - uuid, nextDue = maxOf(current.nextDue, nextDue))
+    fun free(key: String, uuid: UUID, nextDue: Long) {
+        update(key) { current ->
+            if (uuid !in current.mobs) {
+                current
+            } else {
+                current.copy(mobs = current.mobs - uuid, nextDue = current.nextDue.coerceAtLeast(nextDue))
+            }
         }
     }
 
     /**
      * Records that the mob [uuid] of [key] is now at [position].
      */
-    fun moved(key: String, uuid: UUID, position: MobPosition) = update(key) { current ->
-        if (uuid !in current.mobs) {
-            current
-        } else {
-            current.copy(mobs = current.mobs + (uuid to position))
+    fun moved(key: String, uuid: UUID, position: MobPosition) {
+        update(key) { current ->
+            if (uuid !in current.mobs) {
+                current
+            } else {
+                current.copy(mobs = current.mobs + (uuid to position))
+            }
         }
     }
 
     /**
      * Sets nextDue (used after a cancelled or failed spawn).
      */
-    fun delay(key: String, nextDue: Long) = update(key) { it.copy(nextDue = nextDue) }
+    fun delay(key: String, nextDue: Long) {
+        update(key) { it.copy(nextDue = nextDue) }
+    }
 
     /**
      * Called when a tagged mob loads. Returns whether to keep it. Retired: drop from retired, remove.
@@ -112,16 +118,22 @@ object ScheduledSpawnState {
 
         update(key) { current ->
             when {
-                uuid in current.retired -> current.copy(retired = current.retired - uuid)
+                uuid in current.retired -> {
+                    current.copy(retired = current.retired - uuid)
+                }
 
-                uuid in current.mobs && current.mobs.size > maxAlive -> current.copy(mobs = current.mobs - uuid)
+                uuid in current.mobs && current.mobs.size > maxAlive -> {
+                    current.copy(mobs = current.mobs - uuid)
+                }
 
                 uuid in current.mobs || current.mobs.size < maxAlive -> {
                     keep = true
                     current.copy(mobs = current.mobs + (uuid to position))
                 }
 
-                else -> current
+                else -> {
+                    current
+                }
             }
         }
 
@@ -145,7 +157,9 @@ object ScheduledSpawnState {
     /**
      * Drops [uuid] from retired, once its entity has been removed.
      */
-    fun forgetRetired(key: String, uuid: UUID) = update(key) { it.copy(retired = it.retired - uuid) }
+    fun forgetRetired(key: String, uuid: UUID) {
+        update(key) { it.copy(retired = it.retired - uuid) }
+    }
 
     /**
      * Drops state for keys not in [keys] unless the state has mobs or retired entries.
@@ -162,91 +176,15 @@ object ScheduledSpawnState {
         }
     }
 
-    fun tracked(): Map<String, Map<UUID, MobPosition>> =
-        states.filterValues { it.mobs.isNotEmpty() }.mapValues { it.value.mobs }
-
     private inline fun update(key: String, crossinline transform: (PointState) -> PointState?) {
         var changed = false
 
         states.compute(key) { _, state ->
-            cleaned(transform(state ?: PointState())).also { changed = it != state }
+            transform(state ?: PointState()).cleaned().also { changed = it != state }
         }
 
         if (changed) {
-            saveAsync()
-        }
-    }
-
-    private fun cleaned(state: PointState?): PointState? =
-        state?.takeUnless { it.mobs.isEmpty() && it.retired.isEmpty() && it.nextDue == 0L }
-
-    private fun saveAsync() {
-        if (!plugin.isEnabled || !savePending.compareAndSet(false, true)) {
-            return
-        }
-
-        plugin.scheduler.async().run { save() }
-    }
-
-    @Synchronized
-    fun save() {
-        savePending.set(false)
-
-        val yaml = YamlConfiguration()
-
-        for ((key, state) in states) {
-            yaml.set("$key.next-due", state.nextDue)
-
-            for ((uuid, position) in state.mobs) {
-                yaml.set("$key.mobs.$uuid.world", position.world)
-                yaml.set("$key.mobs.$uuid.chunk-x", position.chunkX)
-                yaml.set("$key.mobs.$uuid.chunk-z", position.chunkZ)
-            }
-
-            if (state.retired.isNotEmpty()) {
-                yaml.set("$key.retired", state.retired.map { it.toString() })
-            }
-        }
-
-        file.parentFile.mkdirs()
-
-        val tempFile = file.resolveSibling("${file.name}.tmp")
-        yaml.save(tempFile)
-
-        try {
-            Files.move(
-                tempFile.toPath(),
-                file.toPath(),
-                StandardCopyOption.REPLACE_EXISTING,
-                StandardCopyOption.ATOMIC_MOVE
-            )
-        } catch (exception: AtomicMoveNotSupportedException) {
-            Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
-        }
-    }
-
-    private fun read(): Map<String, PointState> {
-        if (!file.exists()) {
-            return emptyMap()
-        }
-
-        val yaml = YamlConfiguration.loadConfiguration(file)
-
-        return yaml.getKeys(false).associateWith { key ->
-            PointState(
-                mobs = yaml.getConfigurationSection("$key.mobs")?.let { section ->
-                    section.getKeys(false).mapNotNull { id ->
-                        val uuid = runCatching { UUID.fromString(id) }.getOrNull() ?: return@mapNotNull null
-                        val world = section.getString("$id.world") ?: return@mapNotNull null
-
-                        uuid to MobPosition(world, section.getInt("$id.chunk-x"), section.getInt("$id.chunk-z"))
-                    }.toMap()
-                }.orEmpty(),
-                retired = yaml.getStringList("$key.retired").mapNotNull {
-                    runCatching { UUID.fromString(it) }.getOrNull()
-                }.toSet(),
-                nextDue = yaml.getLong("$key.next-due")
-            )
+            ScheduledSpawnStorage.saveAsync()
         }
     }
 }

@@ -8,6 +8,8 @@ import com.willfp.ecomobs.scheduled.ScheduledPoint
 import com.willfp.ecomobs.scheduled.ScheduledSpawnState
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 object CommandScheduleList : Subcommand(
     plugin,
@@ -44,37 +46,37 @@ object CommandScheduleList : Subcommand(
 
             sender.sendMessage(
                 plugin.langYml.getMessage("schedule-status", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%mob%", point.mobId)
-                    .replace("%point%", point.id)
-                    .replace("%alive%", state.mobs.size.toString())
-                    .replace("%max%", point.maxAlive.toString())
-                    .replace("%next%", next(point, state.nextDue))
+                    .replace(oldValue = "%mob%", newValue = point.mobId)
+                    .replace(oldValue = "%point%", newValue = point.id)
+                    .replace(oldValue = "%alive%", newValue = state.mobs.size.toString())
+                    .replace(oldValue = "%max%", newValue = point.maxAlive.toString())
+                    .replace(oldValue = "%next%", newValue = next(point, state.nextDue))
             )
         }
     }
 
     private fun next(point: ScheduledPoint, nextDue: Long): String {
-        if (point.world == null) {
-            return plugin.langYml.getFormattedString("messages.schedule-no-world")
-        }
-
         val remaining = nextDue - System.currentTimeMillis()
 
-        if (remaining <= 0) {
-            return plugin.langYml.getFormattedString("messages.schedule-due")
+        return when {
+            point.world == null -> plugin.langYml.getFormattedString("messages.schedule-no-world")
+            remaining <= 0 -> plugin.langYml.getFormattedString("messages.schedule-due")
+            else -> plugin.langYml.getFormattedString("messages.schedule-next-in")
+                .replace(
+                    oldValue = "%time%",
+                    newValue = formatDuration(TimeUnit.MILLISECONDS.toSeconds(remaining) + 1)
+                )
         }
-
-        return plugin.langYml.getFormattedString("messages.schedule-next-in")
-            .replace("%time%", formatDuration(remaining / 1000 + 1))
     }
 
     private fun formatDuration(seconds: Long): String {
-        val hours = seconds / 3600
-        val minutes = seconds % 3600 / 60
+        val duration = Duration.ofSeconds(seconds)
+        val hours = duration.toHours()
+        val minutes = duration.toMinutesPart()
 
         return when {
             hours > 0 -> "${hours}h ${minutes}m"
-            minutes > 0 -> "${minutes}m ${seconds % 60}s"
+            minutes > 0 -> "${minutes}m ${duration.toSecondsPart()}s"
             else -> "${seconds}s"
         }
     }

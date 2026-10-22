@@ -18,14 +18,48 @@ import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.Location
+import org.bukkit.World
 import org.bukkit.entity.Mob
 import java.util.UUID
 import java.util.logging.Level
+
+private const val TICK_INTERVAL = 20L
+
+@Suppress("F005")
+private fun getEntityLoadedChunksAround(world: World, centreX: Int, centreZ: Int): List<Chunk>? {
+    val chunks = mutableListOf<Chunk>()
+
+    for (offsetX in -1..1) {
+        for (offsetZ in -1..1) {
+            val chunkX = centreX + offsetX
+            val chunkZ = centreZ + offsetZ
+            val isReachable = isChunkOwnedByCurrentRegion(world, chunkX, chunkZ) &&
+                world.isChunkLoaded(chunkX, chunkZ)
+            val chunk = if (isReachable) world.getChunkAt(chunkX, chunkZ) else null
+
+            if (chunk == null || !chunk.isEntitiesLoaded) {
+                return null
+            }
+
+            chunks += chunk
+        }
+    }
+
+    return chunks
+}
+
+@Suppress("F005")
+private fun isEntityTicking(location: Location): Boolean =
+    location.isInLoadedChunk &&
+        location.world.getChunkAt(location).loadLevel == Chunk.LoadLevel.ENTITY_TICKING
 
 /**
  * Spawns every mob's scheduled points from one timer on the global thread.
  *
  * Nothing here loads a chunk: a point whose chunk is not loaded and entity-ticking waits.
+ *
+ * A failure on one point is logged and that point waits one interval, so it cannot stop the
+ * other points or retry every second.
  */
 object ScheduledSpawner {
     private var task: EcoTask? = null
@@ -33,7 +67,7 @@ object ScheduledSpawner {
     fun start() {
         stop()
 
-        task = plugin.scheduler.global().runTimer(20, 20) {
+        task = plugin.scheduler.global().runTimer(TICK_INTERVAL, TICK_INTERVAL) {
             tick()
         }
     }
@@ -55,15 +89,16 @@ object ScheduledSpawner {
         }
     }
 
-    /**
-     * Runs [block] for one point; a failure is logged and the point waits one interval, so it
-     * cannot stop the other points or retry every second.
-     */
+    @Suppress("TooGenericExceptionCaught")
     private inline fun guarded(scheduledSpawn: ScheduledSpawn, point: ScheduledPoint, block: () -> Unit) {
         try {
             block()
         } catch (exception: Exception) {
-            plugin.logger.log(Level.SEVERE, "Scheduled spawn ${point.key} failed, retrying after one interval", exception)
+            plugin.logger.log(
+                Level.SEVERE,
+                "Scheduled spawn ${point.key} failed, retrying after one interval",
+                exception
+            )
             ScheduledSpawnState.delay(point.key, scheduledSpawn.nextDue())
         }
     }
@@ -83,19 +118,13 @@ object ScheduledSpawner {
             }
         }
 
-        if (!state.canSpawn(point.maxAlive)) {
-            return
-        }
+        val location = if (state.canSpawn(point.maxAlive)) point.location else null
 
-        val location = point.location ?: return
-
-        if (!location.isInLoadedChunk) {
-            return
-        }
-
-        atRegion(location) {
-            guarded(scheduledSpawn, point) {
-                trySpawn(mob, scheduledSpawn, point, location)
+        if (location != null && location.isInLoadedChunk) {
+            atRegion(location) {
+                guarded(scheduledSpawn, point) {
+                    trySpawn(mob, scheduledSpawn, point, location)
+                }
             }
         }
     }
@@ -113,58 +142,44 @@ object ScheduledSpawner {
             return
         }
 
-        atRegion(world, position.chunkX, position.chunkZ) {
-            if (mob.getLivingMob(uuid) != null) {
-                return@atRegion
+        atRegion(world = world, chunkX = position.chunkX, chunkZ = position.chunkZ) {
+            if (mob.getLivingMob(uuid) == null) {
+                findOrFree(scheduledSpawn, point, uuid, world, position)
             }
+        }
+    }
 
-            val chunks = mutableListOf<Chunk>()
+    private fun findOrFree(
+        scheduledSpawn: ScheduledSpawn,
+        point: ScheduledPoint,
+        uuid: UUID,
+        world: World,
+        position: MobPosition
+    ) {
+        val chunks = getEntityLoadedChunksAround(
+            world = world,
+            centreX = position.chunkX,
+            centreZ = position.chunkZ
+        ) ?: return
 
-            for (offsetX in -1..1) {
-                for (offsetZ in -1..1) {
-                    val chunkX = position.chunkX + offsetX
-                    val chunkZ = position.chunkZ + offsetZ
-                    if (!isChunkOwnedByCurrentRegion(world, chunkX, chunkZ) || !world.isChunkLoaded(chunkX, chunkZ)) {
-                        return@atRegion
-                    }
+        val entity = chunks.firstNotNullOfOrNull { chunk ->
+            chunk.entities.firstOrNull { it.uniqueId == uuid }
+        } as? Mob
 
-                    val chunk = world.getChunkAt(chunkX, chunkZ)
-
-                    if (!chunk.isEntitiesLoaded) {
-                        return@atRegion
-                    }
-
-                    chunks += chunk
-                }
-            }
-
-            val entity = chunks.firstNotNullOfOrNull { chunk ->
-                chunk.entities.firstOrNull { it.uniqueId == uuid }
-            } as? Mob
-
-            if (entity != null && entity.ecoMob?.getLivingMob(entity) != null) {
-                ScheduledSpawnState.moved(point.key, uuid, entity.location.toMobPosition())
-                return@atRegion
-            }
-
+        if (entity != null && entity.ecoMob?.getLivingMob(entity) != null) {
+            ScheduledSpawnState.moved(point.key, uuid, entity.location.toMobPosition())
+        } else {
             ScheduledSpawnState.free(point.key, uuid, scheduledSpawn.nextDue())
         }
     }
 
+    private fun canSpawnAt(scheduledSpawn: ScheduledSpawn, point: ScheduledPoint, location: Location): Boolean =
+        isEntityTicking(location) &&
+            ScheduledSpawnState[point.key].canSpawn(point.maxAlive) &&
+            scheduledSpawn.conditions.areMet(location.toDispatcher(), EmptyProvidedHolder)
+
     private fun trySpawn(mob: EcoMob, scheduledSpawn: ScheduledSpawn, point: ScheduledPoint, location: Location) {
-        if (!location.isInLoadedChunk) {
-            return
-        }
-
-        if (location.world.getChunkAt(location).loadLevel != Chunk.LoadLevel.ENTITY_TICKING) {
-            return
-        }
-
-        if (!ScheduledSpawnState[point.key].canSpawn(point.maxAlive)) {
-            return
-        }
-
-        if (!scheduledSpawn.conditions.areMet(location.toDispatcher(), EmptyProvidedHolder)) {
+        if (!canSpawnAt(scheduledSpawn, point, location)) {
             return
         }
 
@@ -187,12 +202,11 @@ object ScheduledSpawner {
             scheduledSpawn.nextDue()
         )
 
-        if (!added) {
+        if (added) {
+            sendBroadcast(scheduledSpawn, point, living.displayName, location)
+        } else {
             living.discard()
-            return
         }
-
-        sendBroadcast(scheduledSpawn, point, living.displayName, location)
     }
 
     private fun sendBroadcast(
@@ -205,13 +219,13 @@ object ScheduledSpawner {
             return
         }
 
-        val lines = scheduledSpawn.broadcast.map {
-            it.replace("%mob%", name)
-                .replace("%point%", point.id)
-                .replace("%world%", point.worldName)
-                .replace("%x%", location.blockX.toString())
-                .replace("%y%", location.blockY.toString())
-                .replace("%z%", location.blockZ.toString())
+        val lines = scheduledSpawn.broadcast.map { line ->
+            line.replace(oldValue = "%mob%", newValue = name)
+                .replace(oldValue = "%point%", newValue = point.id)
+                .replace(oldValue = "%world%", newValue = point.worldName)
+                .replace(oldValue = "%x%", newValue = location.blockX.toString())
+                .replace(oldValue = "%y%", newValue = location.blockY.toString())
+                .replace(oldValue = "%z%", newValue = location.blockZ.toString())
                 .formatEco()
         }
 

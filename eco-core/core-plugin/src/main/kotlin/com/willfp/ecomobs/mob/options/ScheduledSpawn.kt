@@ -7,8 +7,12 @@ import com.willfp.libreforge.ConfigWarning
 import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.conditions.ConditionList
 import com.willfp.libreforge.conditions.Conditions
+import org.bukkit.util.Vector
+import java.util.concurrent.TimeUnit
 
 private val pointIdPattern = Regex("[a-z0-9_]+")
+
+private const val DEFAULT_INTERVAL_SECONDS = 1800
 
 /**
  * The options for spawning a mob at fixed points on a timer.
@@ -22,7 +26,7 @@ class ScheduledSpawn(
     /**
      * The epoch millisecond a spawn or death happening now should delay the next spawn until.
      */
-    fun nextDue(): Long = System.currentTimeMillis() + interval.random() * 1000L
+    fun nextDue(): Long = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(interval.random().toLong())
 
     companion object {
         /**
@@ -47,59 +51,77 @@ class ScheduledSpawn(
             config: Config,
             context: ViolationContext
         ): List<ScheduledPoint> {
-            val defaultMaxAlive = parseMaxAlive(config.getIntOrNull("spawn.scheduled.max-alive"), 1, context)
+            val defaultMaxAlive = parseMaxAlive(
+                value = config.getIntOrNull("spawn.scheduled.max-alive"),
+                default = 1,
+                context = context
+            )
             val points = mutableListOf<ScheduledPoint>()
 
             for (pointConfig in config.getSubsections("spawn.scheduled.points")) {
-                val id = pointConfig.getStringOrNull("id")
-                val world = pointConfig.getStringOrNull("world")
-                val x = pointConfig.getDoubleOrNull("x")
-                val y = pointConfig.getDoubleOrNull("y")
-                val z = pointConfig.getDoubleOrNull("z")
-
-                if (id == null || world == null || x == null || y == null || z == null) {
-                    context.log(ConfigViolation("points", "Point ${id ?: "without an id"} needs id, world, x, y and z"))
-                    continue
-                }
-
-                if (id == "all") {
-                    context.log(ConfigViolation("points", "Point id all is reserved"))
-                    continue
-                }
-
-                if (!id.matches(pointIdPattern)) {
-                    context.log(ConfigViolation("points", "Point id $id may only contain a-z, 0-9 and _"))
-                    continue
-                }
-
-                if (points.any { it.id == id }) {
-                    context.log(ConfigViolation("points", "Duplicate point id $id"))
-                    continue
-                }
-
-                val maxAlive = parseMaxAlive(pointConfig.getIntOrNull("max-alive"), defaultMaxAlive, context)
-
-                points += ScheduledPoint(mobId, id, world, x, y, z, maxAlive)
+                parsePoint(mobId, pointConfig, points, defaultMaxAlive, context)?.let { points += it }
             }
 
             if (points.isEmpty()) {
-                context.log(ConfigWarning("points", "No valid points, nothing will spawn"))
+                context.log(ConfigWarning(param = "points", message = "No valid points, nothing will spawn"))
             }
 
             return points
         }
 
-        private fun parseMaxAlive(value: Int?, default: Int, context: ViolationContext): Int {
-            if (value == null) {
-                return default
-            }
+        private fun parsePoint(
+            mobId: String,
+            pointConfig: Config,
+            existing: List<ScheduledPoint>,
+            defaultMaxAlive: Int,
+            context: ViolationContext
+        ): ScheduledPoint? {
+            val id = pointConfig.getStringOrNull("id")
+            val world = pointConfig.getStringOrNull("world")
+            val position = listOf("x", "y", "z").mapNotNull { pointConfig.getDoubleOrNull(it) }
+                .takeIf { it.size == 3 }
+                ?.let { (x, y, z) -> Vector(x, y, z) }
 
-            if (value < 1) {
-                context.log(ConfigViolation("max-alive", "Max alive must be at least 1, using 1"))
-                return 1
+            return when {
+                id == null || world == null || position == null -> {
+                    invalidPoint(context, "Point ${id ?: "without an id"} needs id, world, x, y and z")
+                }
+                id == "all" -> {
+                    invalidPoint(context, "Point id all is reserved")
+                }
+                !id.matches(pointIdPattern) -> {
+                    invalidPoint(context, "Point id $id may only contain a-z, 0-9 and _")
+                }
+                existing.any { it.id == id } -> {
+                    invalidPoint(context, "Duplicate point id $id")
+                }
+                else -> {
+                    val maxAlive = parseMaxAlive(
+                        value = pointConfig.getIntOrNull("max-alive"),
+                        default = defaultMaxAlive,
+                        context = context
+                    )
+                    ScheduledPoint(mobId, id, world, position, maxAlive)
+                }
             }
+        }
 
-            return value
+        private fun invalidPoint(context: ViolationContext, message: String): ScheduledPoint? {
+            context.log(ConfigViolation(param = "points", message = message))
+            return null
+        }
+
+        private fun parseMaxAlive(value: Int?, default: Int, context: ViolationContext): Int = when {
+            value == null -> {
+                default
+            }
+            value < 1 -> {
+                context.log(ConfigViolation(param = "max-alive", message = "Max alive must be at least 1, using 1"))
+                1
+            }
+            else -> {
+                value
+            }
         }
 
         private fun parseInterval(config: Config, context: ViolationContext): IntRange {
@@ -107,21 +129,27 @@ class ScheduledSpawn(
             val max = config.getIntOrNull("spawn.scheduled.interval.max")
 
             if (min == null && max == null) {
-                context.log(ConfigViolation("interval", "Interval needs min and max, using 1800 seconds"))
-                return 1800..1800
+                context.log(
+                    ConfigViolation(param = "interval", message = "Interval needs min and max, using 1800 seconds")
+                )
+                return DEFAULT_INTERVAL_SECONDS..DEFAULT_INTERVAL_SECONDS
             }
 
-            var low = min ?: max!!
-            var high = max ?: min!!
+            var low = min ?: max ?: DEFAULT_INTERVAL_SECONDS
+            var high = max ?: min ?: DEFAULT_INTERVAL_SECONDS
 
             if (low < 0 || high < 0) {
-                context.log(ConfigViolation("interval", "Interval cannot be negative, using 0 instead"))
+                context.log(
+                    ConfigViolation(param = "interval", message = "Interval cannot be negative, using 0 instead")
+                )
                 low = low.coerceAtLeast(0)
                 high = high.coerceAtLeast(0)
             }
 
             if (low > high) {
-                context.log(ConfigViolation("interval", "Interval min is above max, using min for both"))
+                context.log(
+                    ConfigViolation(param = "interval", message = "Interval min is above max, using min for both")
+                )
                 high = low
             }
 

@@ -2,6 +2,7 @@ package com.willfp.ecomobs.scheduled
 
 import com.willfp.eco.core.Prerequisite
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
+import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.impl.discard
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
@@ -34,8 +35,7 @@ object ScheduledSpawnHandler : Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     fun handleUnload(event: EntitiesUnloadEvent) {
-        for (entity in event.entities) {
-            val mob = entity as? Mob ?: continue
+        for (mob in event.entities.filterIsInstance<Mob>()) {
             val key = mob.scheduledPoint ?: continue
 
             ScheduledSpawnState.moved(key, mob.uniqueId, mob.location.toMobPosition())
@@ -44,24 +44,28 @@ object ScheduledSpawnHandler : Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun handleLoad(event: EntitiesLoadEvent) {
-        for (entity in event.entities) {
-            val mob = entity as? Mob ?: continue
-            val key = mob.scheduledPoint ?: continue
+        for (mob in event.entities.filterIsInstance<Mob>()) {
             val ecoMob = mob.ecoMob ?: continue
-            val point = ecoMob.scheduledSpawn?.points?.firstOrNull { it.key == key } ?: continue
+            val point = findPoint(mob, ecoMob)
+            val keep = point == null ||
+                ScheduledSpawnState.onLoad(point.key, mob.uniqueId, mob.location.toMobPosition(), point.maxAlive)
 
-            if (ScheduledSpawnState.onLoad(key, mob.uniqueId, mob.location.toMobPosition(), point.maxAlive)) {
-                continue
+            if (!keep) {
+                ecoMob.getLivingMob(mob)?.discard() ?: mob.remove()
             }
-
-            ecoMob.getLivingMob(mob)?.discard() ?: mob.remove()
         }
     }
 
+    private fun findPoint(mob: Mob, ecoMob: EcoMob): ScheduledPoint? {
+        val key = mob.scheduledPoint ?: return null
+        return ecoMob.scheduledSpawn?.run { points.firstOrNull { it.key == key } }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
     fun saveOnDisable() {
         try {
             if (!Prerequisite.HAS_FOLIA.isMet) {
-                for ((key, mobs) in ScheduledSpawnState.tracked()) {
+                for ((key, mobs) in ScheduledSpawnState.tracked) {
                     val ecoMob = scheduledPointOwner(key) ?: continue
 
                     for (uuid in mobs.keys) {
@@ -72,7 +76,7 @@ object ScheduledSpawnHandler : Listener {
                 }
             }
 
-            ScheduledSpawnState.save()
+            ScheduledSpawnStorage.save()
         } catch (exception: Exception) {
             plugin.logger.log(Level.WARNING, "Could not save scheduled spawns", exception)
         }

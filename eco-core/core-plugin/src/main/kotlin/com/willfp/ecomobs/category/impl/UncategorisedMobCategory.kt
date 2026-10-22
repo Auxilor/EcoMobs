@@ -17,6 +17,5 @@ object UncategorisedMobCategory : MobCategory {
 
     override val isPersistent = false
 
-    override fun applyToMob(mob: LivingMob) {
-    }
+    override fun applyToMob(mob: LivingMob) = Unit
 }

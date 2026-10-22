@@ -44,7 +44,7 @@ object CommandScheduleReset : Subcommand(
 
         for (point in points) {
             for (uuid in ScheduledSpawnState.reset(point.key)) {
-                val entity = mob.getLivingMob(uuid)?.entity ?: findEntity(uuid) ?: continue
+                val entity = mob.getLivingMob(uuid)?.entity ?: findUntrackedEntityOffFolia(uuid) ?: continue
 
                 onEntity(entity) {
                     mob.getLivingMob(uuid)?.discard() ?: entity.remove()
@@ -55,15 +55,11 @@ object CommandScheduleReset : Subcommand(
 
         sender.sendMessage(
             plugin.langYml.getMessage("schedule-reset")
-                .replace("%quantity%", points.size.toString())
+                .replace(oldValue = "%quantity%", newValue = points.size.toString())
         )
     }
 
-    /**
-     * A loaded entity EcoMobs may not be tracking yet, e.g. just after a reload. Off Folia only:
-     * on Folia it is removed silently when its chunk next loads.
-     */
-    private fun findEntity(uuid: UUID): Entity? =
+    private fun findUntrackedEntityOffFolia(uuid: UUID): Entity? =
         if (Prerequisite.HAS_FOLIA.isMet) null else Bukkit.getEntity(uuid)
 
     override fun tabComplete(
@@ -83,7 +79,7 @@ object CommandScheduleReset : Subcommand(
         if (args.size == 2) {
             StringUtil.copyPartialMatches(
                 args[1],
-                EcoMobs[args[0].lowercase()]?.scheduledSpawn?.points?.map { it.id }.orEmpty() + "all",
+                EcoMobs[args[0].lowercase()]?.scheduledSpawn?.points.orEmpty().map { it.id } + "all",
                 completions
             )
         }

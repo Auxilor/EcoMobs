@@ -9,8 +9,9 @@ import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Mob
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.util.Vector
 
-private val scheduledPointKey = namespacedKeyOf("ecomobs", "scheduled_point")
+private val scheduledPointKey = namespacedKeyOf(namespace = "ecomobs", key = "scheduled_point")
 
 /**
  * A fixed place a mob spawns at on a timer.
@@ -21,9 +22,7 @@ class ScheduledPoint(
     val mobId: String,
     val id: String,
     val worldName: String,
-    val x: Double,
-    val y: Double,
-    val z: Double,
+    val position: Vector,
     val maxAlive: Int
 ) {
     val key = "$mobId:$id"
@@ -32,7 +31,7 @@ class ScheduledPoint(
         get() = Bukkit.getWorld(worldName)
 
     val location: Location?
-        get() = world?.let { Location(it, x, y, z) }
+        get() = world?.let { position.toLocation(it) }
 }
 
 /**

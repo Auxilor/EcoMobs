@@ -51,16 +51,22 @@ internal inline fun atRegion(
     }
 }
 
+private const val CHUNK_SIZE = 16.0
+
+private const val CHUNK_CENTRE = 8.0
+
 /**
- * If the calling thread owns the region containing a chunk. Always true off Folia.
+ * If the calling thread owns the region containing a chunk, asked using the centre of the chunk.
+ * Always true off Folia.
  */
 internal fun isChunkOwnedByCurrentRegion(world: World, chunkX: Int, chunkZ: Int): Boolean {
     if (!Prerequisite.HAS_FOLIA.isMet) {
         return true
     }
 
-    // The centre of the chunk, only to ask which region owns it.
-    return Eco.get().isOwnedByCurrentRegion(Location(world, chunkX * 16.0 + 8.0, 0.0, chunkZ * 16.0 + 8.0))
+    return Eco.get().isOwnedByCurrentRegion(
+        Location(world, chunkX * CHUNK_SIZE + CHUNK_CENTRE, 0.0, chunkZ * CHUNK_SIZE + CHUNK_CENTRE)
+    )
 }
 
 /**

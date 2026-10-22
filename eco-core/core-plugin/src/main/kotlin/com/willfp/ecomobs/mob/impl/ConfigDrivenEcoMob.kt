@@ -346,7 +346,7 @@ internal class ConfigDrivenEcoMob(
         plugin.createNamespacedKey(this.id),
         { (it as? Mob)?.ecoMob == this }
     ) {
-        this.spawn(it, SpawnReason.COMMAND)?.entity ?: throw IllegalStateException("Spawning mob $id was cancelled")
+        this.spawn(it, SpawnReason.COMMAND)?.entity ?: error("Spawning mob $id was cancelled")
     }.apply { register() }
 
     override val entityHolder = object : Holder {
@@ -450,11 +450,15 @@ internal class ConfigDrivenEcoMob(
             throw IllegalStateException("Base entity must be a mob!")
         }
 
-        if (!entity.isValid) {
+        return if (entity.isValid) {
+            startTracking(entity, reason)
+        } else {
             entity.remove()
-            return null
+            null
         }
+    }
 
+    private fun startTracking(entity: Mob, reason: SpawnReason): LivingMob {
         // Mark as custom mob
         entity.ecoMob = this
 
