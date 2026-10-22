@@ -62,9 +62,9 @@ object SpawnMethodFactoryReplace : SpawnMethodFactory("replace") {
 
             val mob = category.mobs.randomOrNull() ?: return
 
-
-            event.entity.remove()
-            mob.spawn(event.entity.location, SpawnReason.NATURAL)
+            if (mob.spawn(event.entity.location, SpawnReason.NATURAL) != null) {
+                event.entity.remove()
+            }
         }
     }
 }

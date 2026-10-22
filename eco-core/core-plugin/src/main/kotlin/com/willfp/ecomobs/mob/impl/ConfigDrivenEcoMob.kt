@@ -335,7 +335,7 @@ internal class ConfigDrivenEcoMob(
         plugin.createNamespacedKey(this.id),
         { (it as? Mob)?.ecoMob == this }
     ) {
-        this.spawn(it, SpawnReason.COMMAND)!!.entity
+        this.spawn(it, SpawnReason.COMMAND)?.entity
     }.apply { register() }
 
     override val entityHolder = object : Holder {
