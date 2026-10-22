@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "findings": [
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/config/ConfigHelpers.kt",
+      "message": "Unused function `validate`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/entity/EntityGoalRandomTeleport.kt",
+      "message": "Unused class `EntityGoalRandomTeleport`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalClosestPlayer.kt",
+      "message": "Unused class `TargetGoalClosestPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalHighestArmorPlayer.kt",
+      "message": "Unused class `TargetGoalHighestArmorPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalHighestHealthPlayer.kt",
+      "message": "Unused class `TargetGoalHighestHealthPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalLastDamagerPlayer.kt",
+      "message": "Unused class `TargetGoalLastDamagerPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalLowestArmorPlayer.kt",
+      "message": "Unused class `TargetGoalLowestArmorPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalLowestHealthPlayer.kt",
+      "message": "Unused class `TargetGoalLowestHealthPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalMostCrowdedPlayer.kt",
+      "message": "Unused class `TargetGoalMostCrowdedPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalNotLookingPlayer.kt",
+      "message": "Unused class `TargetGoalNotLookingPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalRandomPlayer.kt",
+      "message": "Unused class `TargetGoalRandomPlayer`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/goals/target/TargetGoalTopDamagerPlayer.kt",
+      "message": "Unused class `TargetGoalTopDamagerPlayer`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/mob/EcoMob.kt",
+      "message": "Unused function `canPlayerSpawn`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/mob/EcoMob.kt",
+      "message": "Unused property `customEntity`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/mob/impl/ConfigDrivenEcoMob.kt",
+      "message": "Unused function `canPlayerSpawn`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/mob/impl/ConfigDrivenEcoMob.kt",
+      "message": "Unused property `bossBarOptions`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/mob/impl/ConfigDrivenEcoMob.kt",
+      "message": "Unused property `customEntity`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/mob/impl/ConfigDrivenEcoMob.kt",
+      "message": "Unused property `equipment`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/spawner/PlacedSpawners.kt",
+      "message": "Unused function `inChunk`"
+    },
+    {
+      "code": "U001",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/spawner/SpawnerKeys.kt",
+      "message": "Unused object `SpawnerDefaults`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/spawner/particle/SpawnerParticleAnimations.kt",
+      "message": "Unused property `CIRCLE`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/spawner/particle/SpawnerParticleAnimations.kt",
+      "message": "Unused property `DOUBLE_SPIRAL`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/spawner/particle/SpawnerParticleAnimations.kt",
+      "message": "Unused property `TILTED_RINGS`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/spawner/particle/SpawnerParticleAnimations.kt",
+      "message": "Unused property `TWIRL`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecomobs/stacking/MobStacks.kt",
+      "message": "Unused function `stackKey`"
+    }
+  ]
+}
