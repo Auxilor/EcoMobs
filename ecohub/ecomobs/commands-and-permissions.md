@@ -13,7 +13,7 @@ Every EcoMobs command and the permission that gates it. The base commands cover 
 | `/ecomobs spawn <mob> [x] [y] [z] [world] [amount]` | Spawns the EcoMobs, optionally spawning multiple at once | `ecomobs.command.spawn`  |
 | `/ecomobs give <player> <mob>`             | Give the player an EcoMob spawn egg                   | `ecomobs.command.give`   |
 | `/ecomobs killall [mob]`                 | Kills every EcoMob in loaded chunks, or only the given mob type | `ecomobs.command.killall` |
-| `/ecomobs schedule list [mob]` | Shows each scheduled spawn point's alive count and when it spawns next | `ecomobs.command.schedule.list` |
+| `/ecomobs schedule list [mob] [page]` | Shows each scheduled spawn point's alive count and when it spawns next, 10 per page | `ecomobs.command.schedule.list` |
 | `/ecomobs schedule reset <mob> <point\|all>` | Removes the point's mobs and spawns again as soon as it can | `ecomobs.command.schedule.reset` |
 | `/ecomobs import <id>`                     | Import a mob from [lrcdb](https://lrcdb.auxilor.io/) | `ecomobs.command.import` |
 | `/ecomobs export <id>`                     | Export a mob to [lrcdb](https://lrcdb.auxilor.io/)   | `ecomobs.command.export` |
