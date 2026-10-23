@@ -13,7 +13,7 @@ object MobCategories : RegistrableCategory<MobCategory>("category", "categories"
     }
 
     override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
-        val context = ViolationContext(plugin, "Mob $id")
+        val context = ViolationContext(plugin, "Category $id")
 
         try {
             val mob = ConfigDrivenMobCategory(
