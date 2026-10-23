@@ -103,9 +103,6 @@ allprojects {
         compileOnly("com.willfp:eco:$ecoVersion")
         compileOnly("org.jetbrains:annotations:26.0.2")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
-        compileOnly("io.github.toxicity188:bettermodel-bukkit-api:2.2.0") {
-            exclude("*", "kotlin-stdlib")
-        }
     }
 
     java {
