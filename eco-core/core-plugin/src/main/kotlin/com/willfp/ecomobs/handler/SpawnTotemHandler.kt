@@ -4,9 +4,11 @@ import com.willfp.ecomobs.event.EcoMobTotemBuildEvent
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.SpawnTotem
+import com.willfp.ecomobs.plugin
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
@@ -24,12 +26,15 @@ object SpawnTotemHandler : Listener {
         val location = block.location.add(0.0, 1.5, 0.0)
 
         val totemPositions = listOf(
-            SpawnTotem(block.type, blockBelow.type, blockTwoBelow.type),
-            SpawnTotem(blockTwoAbove.type, blockAbove.type, block.type),
-            SpawnTotem(blockAbove.type, block.type, blockBelow.type)
+            listOf(block, blockBelow, blockTwoBelow),
+            listOf(blockTwoAbove, blockAbove, block),
+            listOf(blockAbove, block, blockBelow)
         )
 
-        for (totem in totemPositions) {
+        for (totemBlocks in totemPositions) {
+            val (top, middle, bottom) = totemBlocks
+            val totem = SpawnTotem(top.type, middle.type, bottom.type)
+
             for (mob in EcoMobs.values()) {
                 val options = mob.totemOptions ?: continue
 
@@ -53,7 +58,15 @@ object SpawnTotemHandler : Listener {
                     continue
                 }
 
-                mob.spawn(buildEvent.location, SpawnReason.TOTEM)
+                if (mob.spawn(buildEvent.location, SpawnReason.TOTEM) == null) {
+                    continue
+                }
+
+                plugin.scheduler.at(block.location).run {
+                    totemBlocks.forEach { it.type = Material.AIR }
+                }
+
+                return
             }
         }
     }
