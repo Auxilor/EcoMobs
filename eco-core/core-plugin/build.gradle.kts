@@ -6,7 +6,6 @@ dependencies {
     compileOnly("io.github.arcaneplugins:levelledmobs-plugin:4.0.2")
     compileOnly("me.libraryaddict.disguises:libsdisguises:11.0.14")
     compileOnly("net.coreprotect:coreprotect:24.0")
-    implementation("com.willfp:ModelEngineBridge:1.4.0")
 }
 
 tasks {
