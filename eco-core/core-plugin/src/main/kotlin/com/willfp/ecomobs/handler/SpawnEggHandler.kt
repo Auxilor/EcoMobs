@@ -38,24 +38,29 @@ object SpawnEggHandler : Listener {
         item.amount -= 1
     }
 
+    /**
+     * Cancelled for every EcoMobs egg, even when nothing spawns, or vanilla fires the
+     * base spawn egg.
+     */
     @EventHandler(ignoreCancelled = true)
     fun handle(event: BlockDispenseEvent) {
-        val facing = (event.block.blockData as Directional).facing
-        val location = event.block.getRelative(facing).location.add(0.5, 0.0, 0.5)
-
-        if (!this.handleSpawnEgg(event.item, location, null, EcoMobEggUseEvent.Source.DISPENSER)) {
+        if (event.item.ecoMobEgg == null) {
             return
         }
 
         event.isCancelled = true
 
+        val facing = (event.block.blockData as Directional).facing
+        val location = event.block.getRelative(facing).location.add(0.5, 0.0, 0.5)
+
+        if (this.handleSpawnEgg(event.item, location, null, EcoMobEggUseEvent.Source.DISPENSER)) {
+            this.takeEggFromDispenserNextTick(event)
+        }
+    }
+
+    private fun takeEggFromDispenserNextTick(event: BlockDispenseEvent) {
         val dispenser = event.block.state as? Container ?: return
 
-        // This is needed as the event must finish first,
-        // Otherwise the dispenser/dropper thinks the item is already removed from this event.
-        // The dispenser's inventory is block state, so this goes to the block's region
-        // rather than the global one. Off Folia it is the same next-tick main thread run
-        // it has always been.
         plugin.scheduler.at(event.block.location).run {
             val item = dispenser.inventory.find { it?.isSimilar(event.item) == true } ?: return@run
             item.amount--
