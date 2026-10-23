@@ -73,7 +73,7 @@ object CommandSpawn : Subcommand(
                     sender.location.z
                 } else {
                     try {
-                        sender.location.z + yDiff.toDouble()
+                        sender.location.z + zDiff.toDouble()
                     } catch (e: NumberFormatException) {
                         sender.location.z
                     }
