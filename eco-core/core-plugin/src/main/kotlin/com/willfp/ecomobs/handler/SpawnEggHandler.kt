@@ -41,8 +41,7 @@ object SpawnEggHandler : Listener {
     @EventHandler(ignoreCancelled = true)
     fun handle(event: BlockDispenseEvent) {
         val facing = (event.block.blockData as Directional).facing
-        // What does the 1.7 do? I don't know, this is from old EcoBosses code.
-        val location = event.block.location.add(facing.direction.multiply(1.7))
+        val location = event.block.getRelative(facing).location.add(0.5, 0.0, 0.5)
 
         if (!this.handleSpawnEgg(event.item, location, null, EcoMobEggUseEvent.Source.DISPENSER)) {
             return
