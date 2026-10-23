@@ -73,7 +73,7 @@ internal fun warnUnknownMob(spawnerLocation: Location, mobId: String) {
     }
 
     plugin.logger.warning(
-        "Spawner at ${spawnerLocation.world?.name} ${spawnerLocation.blockX}, ${spawnerLocation.blockY}, " +
+        "Spawner at ${spawnerLocation.world?.name.orEmpty()} ${spawnerLocation.blockX}, ${spawnerLocation.blockY}, " +
             "${spawnerLocation.blockZ} is set to unknown mob '$mobId' and will not spawn anything"
     )
 }
