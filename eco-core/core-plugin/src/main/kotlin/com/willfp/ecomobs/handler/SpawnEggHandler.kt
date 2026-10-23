@@ -54,18 +54,11 @@ object SpawnEggHandler : Listener {
         val location = event.block.getRelative(facing).location.add(0.5, 0.0, 0.5)
 
         if (this.handleSpawnEgg(event.item, location, null, EcoMobEggUseEvent.Source.DISPENSER)) {
-            this.takeFromDispenser(event)
+            this.takeEggFromDispenserNextTick(event)
         }
     }
 
-    /**
-     * This is needed as the event must finish first,
-     * Otherwise the dispenser/dropper thinks the item is already removed from this event.
-     * The dispenser's inventory is block state, so this goes to the block's region
-     * rather than the global one. Off Folia it is the same next-tick main thread run
-     * it has always been.
-     */
-    private fun takeFromDispenser(event: BlockDispenseEvent) {
+    private fun takeEggFromDispenserNextTick(event: BlockDispenseEvent) {
         val dispenser = event.block.state as? Container ?: return
 
         plugin.scheduler.at(event.block.location).run {
