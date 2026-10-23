@@ -68,7 +68,7 @@ damage-stages:
               mutators:
                 - id: victim_as_player
               args:
-                message: "&8The ritual breaks — the tide answers his call!"
+                message: "&8The ritual breaks, and the tide answers his call!"
       - id: shockwave
         args:
           radius: 10
@@ -95,7 +95,7 @@ damage-stages:
               mutators:
                 - id: victim_as_player
               args:
-                message: "&8The Hollow King unravels — finish him!"
+                message: "&8The Hollow King unravels. Finish him!"
     end-effects:
       - id: aoe
         args:

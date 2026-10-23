@@ -19,7 +19,7 @@ A category is a config file that controls how a group of mobs spawns. Every mob 
 
 ## Naming and IDs
 
-The category's file name without `.yml` is its ID. This is the value you put under `category:` when [creating a mob](how-to-make-a-custom-mob).
+The category's file name without `.yml` is its ID. This is the value you put under `category:` when [creating a mob](how-to-make-a-custom-mob). A mob can also leave `category` out, and then it never spawns naturally.
 
 :::warning ID rules
 IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the category will not load.

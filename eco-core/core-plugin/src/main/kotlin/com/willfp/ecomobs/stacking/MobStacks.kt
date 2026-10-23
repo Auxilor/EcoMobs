@@ -3,6 +3,7 @@ package com.willfp.ecomobs.stacking
 import com.willfp.ecomobs.event.EcoMobStackMergeEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.mob.impl.ecoMobId
+import com.willfp.ecomobs.scheduled.scheduledPoint
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Ageable
@@ -26,6 +27,10 @@ object MobStacks {
         }
 
         if (isBlacklisted(mob)) {
+            return false
+        }
+
+        if (mob.scheduledPoint != null) {
             return false
         }
 

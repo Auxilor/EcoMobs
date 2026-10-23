@@ -29,7 +29,7 @@ damage-stages:
               mutators:
                 - id: victim_as_player
               args:
-                message: "&bThe Frost Warden roars — reinforcements emerge from the ice!"
+                message: "&bThe Frost Warden roars! Reinforcements emerge from the ice!"
       - id: spawn_mobs
         args:
           amount: 3
