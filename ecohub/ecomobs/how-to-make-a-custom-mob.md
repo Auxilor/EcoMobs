@@ -490,7 +490,7 @@ boss-bar:
 
 ### Spawn
 
-Let players summon the mob with a 3-block totem, a spawn egg, or both.
+Let players summon the mob with a 3-block totem, a spawn egg, or both. A totem is used up when it summons its mob: the three blocks are removed and only one mob spawns.
 
 ```yaml
 spawn:
