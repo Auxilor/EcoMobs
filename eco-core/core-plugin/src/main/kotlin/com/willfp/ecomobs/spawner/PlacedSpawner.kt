@@ -116,6 +116,11 @@ class PlacedSpawner(
      */
     private fun spawnCycle(state: CreatureSpawner): CycleResult {
         val mobId = state.effectiveMob ?: return CycleResult.SKIPPED
+
+        if (!SpawnerAttributes.isValidMob(mobId)) {
+            warnUnknownMob(location, mobId)
+            return CycleResult.BLOCKED
+        }
         val spawnRange = state.effectiveSpawnRange
 
         if (SpawnerSettings.checkMaxNearby &&
