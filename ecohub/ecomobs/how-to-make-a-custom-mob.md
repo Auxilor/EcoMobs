@@ -520,6 +520,8 @@ spawn:
       - iron_block
 ```
 
+A spawn egg fired from a dispenser checks its `conditions` against the nearest player within 5 blocks. If the egg has conditions and no player is that close, the egg stays in the dispenser.
+
 :::tip
 We support shaped and shapeless recipes. Check out [Recipes](https://plugins.auxilor.io/the-item-lookup-system/recipes) for more info on how to configure these.
 :::
