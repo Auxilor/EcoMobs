@@ -92,8 +92,24 @@ integrations:
     can-level: true # Allow LevelledMobs to level this mob
   model-engine:
     id: "" # ModelEngine model ID; leave blank for none
+    animations: # Optional; each takes one name or a list, picked at random each time
+      idle: [ ] # Loops while the mob stands still
+      move: [ ] # Loops while the mob moves
+      spawn: [ ] # Plays once when the mob spawns
+      melee-attack: [ ] # Plays once when the mob hits something in melee
+      ranged-attack: [ ] # Plays once when the mob shoots a projectile
+      take-damage: [ ] # Plays once when the mob is hurt
+      death: [ ] # Plays once when the mob dies
   better-model:
     id: "" # BetterModel model ID; leave blank for none
+    animations: # Optional; each takes one name or a list, picked at random each time
+      idle: [ ] # Loops while the mob stands still
+      move: [ ] # Loops while the mob moves
+      spawn: [ ] # Plays once when the mob spawns
+      melee-attack: [ ] # Plays once when the mob hits something in melee
+      ranged-attack: [ ] # Plays once when the mob shoots a projectile
+      take-damage: [ ] # Plays once when the mob is hurt
+      death: [ ] # Plays once when the mob dies
   libs-disguises:
     id: "" # LibsDisguises disguise ID; leave blank for none
 
@@ -218,11 +234,31 @@ integrations:
     can-level: true # Allow LevelledMobs to level this mob
   model-engine:
     id: "" # ModelEngine model ID
+    animations: # Optional; each takes one name or a list, picked at random each time
+      idle: [ ] # Loops while the mob stands still
+      move: [ ] # Loops while the mob moves
+      spawn: [ ] # Plays once when the mob spawns
+      melee-attack: [ ] # Plays once when the mob hits something in melee
+      ranged-attack: [ ] # Plays once when the mob shoots a projectile
+      take-damage: [ ] # Plays once when the mob is hurt
+      death: [ ] # Plays once when the mob dies
   better-model:
     id: "" # BetterModel model ID
+    animations: # Optional; each takes one name or a list, picked at random each time
+      idle: [ ] # Loops while the mob stands still
+      move: [ ] # Loops while the mob moves
+      spawn: [ ] # Plays once when the mob spawns
+      melee-attack: [ ] # Plays once when the mob hits something in melee
+      ranged-attack: [ ] # Plays once when the mob shoots a projectile
+      take-damage: [ ] # Plays once when the mob is hurt
+      death: [ ] # Plays once when the mob dies
   libs-disguises:
     id: "" # LibsDisguises disguise ID
 ```
+
+:::tip Model animations
+`model-engine` and `better-model` take the same `animations`. `idle`, `move` and `death` replace the model's own animations for those states, so the model switches between them and finishes its death animation by itself. The others play once on their event. Give a list, e.g. `melee-attack: [ swipe, slam ]`, to pick one at random each time. For anything else, such as a stage starting, use the `play_animation` effect in that stage's effects.
+:::
 
 ### Custom AI
 
