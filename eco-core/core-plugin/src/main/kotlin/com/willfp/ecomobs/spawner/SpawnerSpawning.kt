@@ -4,12 +4,14 @@ import com.willfp.eco.core.entities.Entities
 import com.willfp.ecomobs.event.EcoMobSpawnerSpawnEvent
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
+import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.stacking.stack
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Mob
 import org.bukkit.persistence.PersistentDataType
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Spawns [mobId] at [location] as the spawner at [spawnerLocation] would, marking the
@@ -57,6 +59,23 @@ fun spawnFromSpawner(
     if (!SpawnerSettings.allowJockeys) {
         entity?.removeJockeyParts()
     }
+}
+
+private val warnedUnknownMobs = ConcurrentHashMap.newKeySet<String>()
+
+/**
+ * Logs once per mob ID that a spawner is set to a mob that no longer exists, as such a
+ * spawner otherwise just stops spawning with nothing to say why.
+ */
+internal fun warnUnknownMob(spawnerLocation: Location, mobId: String) {
+    if (!warnedUnknownMobs.add(mobId)) {
+        return
+    }
+
+    plugin.logger.warning(
+        "Spawner at ${spawnerLocation.world?.name} ${spawnerLocation.blockX}, ${spawnerLocation.blockY}, " +
+            "${spawnerLocation.blockZ} is set to unknown mob '$mobId' and will not spawn anything"
+    )
 }
 
 /**
