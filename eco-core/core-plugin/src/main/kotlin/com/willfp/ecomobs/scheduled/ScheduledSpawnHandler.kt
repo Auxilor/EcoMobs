@@ -61,9 +61,8 @@ object ScheduledSpawnHandler : Listener {
         return ecoMob.scheduledSpawn?.run { points.firstOrNull { it.key == key } }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     fun saveOnDisable() {
-        try {
+        runCatching {
             if (!Prerequisite.HAS_FOLIA.isMet) {
                 for ((key, mobs) in ScheduledSpawnState.tracked) {
                     val ecoMob = scheduledPointOwner(key) ?: continue
@@ -77,7 +76,7 @@ object ScheduledSpawnHandler : Listener {
             }
 
             ScheduledSpawnStorage.save()
-        } catch (exception: Exception) {
+        }.onFailure { exception ->
             plugin.logger.log(Level.WARNING, "Could not save scheduled spawns", exception)
         }
     }

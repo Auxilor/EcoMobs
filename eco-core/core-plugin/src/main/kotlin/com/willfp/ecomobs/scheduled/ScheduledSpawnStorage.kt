@@ -8,6 +8,8 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * Reads and writes [ScheduledSpawnState] to disk.
@@ -18,6 +20,8 @@ internal object ScheduledSpawnStorage {
 
     private val savePending = AtomicBoolean()
 
+    private val saveLock = ReentrantLock()
+
     fun saveAsync() {
         if (!plugin.isEnabled || !savePending.compareAndSet(false, true)) {
             return
@@ -26,41 +30,41 @@ internal object ScheduledSpawnStorage {
         plugin.scheduler.async().run { save() }
     }
 
-    @Suppress("F009")
-    @Synchronized
     fun save() {
-        savePending.set(false)
+        saveLock.withLock {
+            savePending.set(false)
 
-        val yaml = YamlConfiguration()
+            val yaml = YamlConfiguration()
 
-        for ((key, state) in ScheduledSpawnState.states) {
-            yaml["$key.next-due"] = state.nextDue
+            for ((key, state) in ScheduledSpawnState.states) {
+                yaml["$key.next-due"] = state.nextDue
 
-            for ((uuid, position) in state.mobs) {
-                yaml["$key.mobs.$uuid.world"] = position.world
-                yaml["$key.mobs.$uuid.chunk-x"] = position.chunkX
-                yaml["$key.mobs.$uuid.chunk-z"] = position.chunkZ
+                for ((uuid, position) in state.mobs) {
+                    yaml["$key.mobs.$uuid.world"] = position.world
+                    yaml["$key.mobs.$uuid.chunk-x"] = position.chunkX
+                    yaml["$key.mobs.$uuid.chunk-z"] = position.chunkZ
+                }
+
+                if (state.retired.isNotEmpty()) {
+                    yaml["$key.retired"] = state.retired.map { it.toString() }
+                }
             }
 
-            if (state.retired.isNotEmpty()) {
-                yaml["$key.retired"] = state.retired.map { it.toString() }
+            file.parentFile.mkdirs()
+
+            val tempFile = file.resolveSibling("${file.name}.tmp")
+            yaml.save(tempFile)
+
+            try {
+                Files.move(
+                    tempFile.toPath(),
+                    file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.ATOMIC_MOVE
+                )
+            } catch (ignored: AtomicMoveNotSupportedException) {
+                Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
-        }
-
-        file.parentFile.mkdirs()
-
-        val tempFile = file.resolveSibling("${file.name}.tmp")
-        yaml.save(tempFile)
-
-        try {
-            Files.move(
-                tempFile.toPath(),
-                file.toPath(),
-                StandardCopyOption.REPLACE_EXISTING,
-                StandardCopyOption.ATOMIC_MOVE
-            )
-        } catch (ignored: AtomicMoveNotSupportedException) {
-            Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
         }
     }
 

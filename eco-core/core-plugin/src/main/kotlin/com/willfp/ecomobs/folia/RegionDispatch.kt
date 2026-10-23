@@ -56,6 +56,12 @@ private const val CHUNK_SIZE = 16.0
 private const val CHUNK_CENTRE = 8.0
 
 /**
+ * The centre of a chunk at y 0.
+ */
+internal fun chunkCentre(world: World, chunkX: Int, chunkZ: Int): Location =
+    Location(world, chunkX * CHUNK_SIZE + CHUNK_CENTRE, 0.0, chunkZ * CHUNK_SIZE + CHUNK_CENTRE)
+
+/**
  * If the calling thread owns the region containing a chunk, asked using the centre of the chunk.
  * Always true off Folia.
  */
@@ -64,9 +70,7 @@ internal fun isChunkOwnedByCurrentRegion(world: World, chunkX: Int, chunkZ: Int)
         return true
     }
 
-    return Eco.get().isOwnedByCurrentRegion(
-        Location(world, chunkX * CHUNK_SIZE + CHUNK_CENTRE, 0.0, chunkZ * CHUNK_SIZE + CHUNK_CENTRE)
-    )
+    return Eco.get().isOwnedByCurrentRegion(chunkCentre(world, chunkX, chunkZ))
 }
 
 /**

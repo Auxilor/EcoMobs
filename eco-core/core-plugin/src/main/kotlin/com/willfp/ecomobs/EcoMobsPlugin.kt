@@ -132,16 +132,15 @@ class EcoMobsPlugin : LibreforgePlugin() {
         SpawnerHolograms.reloadAll()
     }
 
-    @Suppress("TooGenericExceptionCaught")
     override fun handleDisable() {
-        try {
+        runCatching {
             SpawnerDisplay.stop()
             SpawnerSpawnLoop.stop()
             MobStackTicker.stop()
             ScheduledSpawner.stop()
             SpawnerHolograms.clear()
             PlacedSpawners.clear()
-        } catch (exception: Exception) {
+        }.onFailure { exception ->
             logger.log(Level.SEVERE, "Could not clean up on disable", exception)
         }
 

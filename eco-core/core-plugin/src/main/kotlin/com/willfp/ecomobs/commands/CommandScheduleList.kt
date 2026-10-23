@@ -17,14 +17,19 @@ object CommandScheduleList : Subcommand(
     "ecomobs.command.schedule.list",
     false
 ) {
+    private const val POINTS_PER_PAGE = 10
+
     override fun onExecute(
         sender: CommandSender,
         args: List<String>
     ) {
-        val mobs = if (args.isEmpty()) {
+        val mobArgument = args.getOrNull(0)?.takeIf { it.toIntOrNull() == null }
+        val pageArgument = args.getOrNull(if (mobArgument == null) 0 else 1)
+
+        val mobs = if (mobArgument == null) {
             EcoMobs.scheduled
         } else {
-            val mob = EcoMobs[args[0].lowercase()]
+            val mob = EcoMobs[mobArgument.lowercase()]
 
             if (mob?.scheduledSpawn == null) {
                 sender.sendMessage(plugin.langYml.getMessage("schedule-invalid-mob"))
@@ -41,7 +46,16 @@ object CommandScheduleList : Subcommand(
             return
         }
 
-        for (point in points) {
+        val pages = points.chunked(POINTS_PER_PAGE)
+        val page = (pageArgument?.toIntOrNull() ?: 1).coerceIn(minimumValue = 1, maximumValue = pages.size)
+
+        sender.sendMessage(
+            plugin.langYml.getMessage("schedule-list-header")
+                .replace(oldValue = "%page%", newValue = page.toString())
+                .replace(oldValue = "%pages%", newValue = pages.size.toString())
+        )
+
+        for (point in pages[page - 1]) {
             val state = ScheduledSpawnState[point.key]
 
             sender.sendMessage(

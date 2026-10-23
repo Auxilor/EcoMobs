@@ -44,7 +44,7 @@ object CommandScheduleReset : Subcommand(
 
         for (point in points) {
             for (uuid in ScheduledSpawnState.reset(point.key)) {
-                val entity = mob.getLivingMob(uuid)?.entity ?: findUntrackedEntityOffFolia(uuid) ?: continue
+                val entity = mob.getLivingMob(uuid)?.entity ?: findUntrackedEntity(uuid) ?: continue
 
                 onEntity(entity) {
                     mob.getLivingMob(uuid)?.discard() ?: entity.remove()
@@ -59,7 +59,7 @@ object CommandScheduleReset : Subcommand(
         )
     }
 
-    private fun findUntrackedEntityOffFolia(uuid: UUID): Entity? =
+    private fun findUntrackedEntity(uuid: UUID): Entity? =
         if (Prerequisite.HAS_FOLIA.isMet) null else Bukkit.getEntity(uuid)
 
     override fun tabComplete(

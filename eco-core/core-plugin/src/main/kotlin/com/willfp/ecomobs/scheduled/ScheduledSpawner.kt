@@ -3,6 +3,7 @@ package com.willfp.ecomobs.scheduled
 import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.eco.util.formatEco
 import com.willfp.ecomobs.folia.atRegion
+import com.willfp.ecomobs.folia.chunkCentre
 import com.willfp.ecomobs.folia.isChunkOwnedByCurrentRegion
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMob
@@ -25,7 +26,6 @@ import java.util.logging.Level
 
 private const val TICK_INTERVAL = 20L
 
-@Suppress("F005")
 private fun getEntityLoadedChunksAround(world: World, centreX: Int, centreZ: Int): List<Chunk>? {
     val chunks = mutableListOf<Chunk>()
 
@@ -33,9 +33,9 @@ private fun getEntityLoadedChunksAround(world: World, centreX: Int, centreZ: Int
         for (offsetZ in -1..1) {
             val chunkX = centreX + offsetX
             val chunkZ = centreZ + offsetZ
-            val isReachable = isChunkOwnedByCurrentRegion(world, chunkX, chunkZ) &&
-                world.isChunkLoaded(chunkX, chunkZ)
-            val chunk = if (isReachable) world.getChunkAt(chunkX, chunkZ) else null
+            val centre = chunkCentre(world, chunkX, chunkZ)
+            val isReachable = isChunkOwnedByCurrentRegion(world, chunkX, chunkZ) && centre.isInLoadedChunk
+            val chunk = if (isReachable) centre.chunk else null
 
             if (chunk == null || !chunk.isEntitiesLoaded) {
                 return null
@@ -48,10 +48,8 @@ private fun getEntityLoadedChunksAround(world: World, centreX: Int, centreZ: Int
     return chunks
 }
 
-@Suppress("F005")
 private fun isEntityTicking(location: Location): Boolean =
-    location.isInLoadedChunk &&
-        location.world.getChunkAt(location).loadLevel == Chunk.LoadLevel.ENTITY_TICKING
+    location.isInLoadedChunk && location.chunk.loadLevel == Chunk.LoadLevel.ENTITY_TICKING
 
 /**
  * Spawns every mob's scheduled points from one timer on the global thread.
@@ -89,11 +87,8 @@ object ScheduledSpawner {
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private inline fun guarded(scheduledSpawn: ScheduledSpawn, point: ScheduledPoint, block: () -> Unit) {
-        try {
-            block()
-        } catch (exception: Exception) {
+        runCatching(block).onFailure { exception ->
             plugin.logger.log(
                 Level.SEVERE,
                 "Scheduled spawn ${point.key} failed, retrying after one interval",

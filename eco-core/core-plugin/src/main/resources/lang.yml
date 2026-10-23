@@ -23,6 +23,7 @@ messages:
 
   schedule-none: "&cThere are no scheduled spawn points!"
   schedule-invalid-mob: "&cYou must specify a mob that has scheduled spawning!"
+  schedule-list-header: "&fScheduled spawn points &8- &fpage %page%/%pages%"
   schedule-invalid-point: "&cYou must specify a valid point, or all!"
   schedule-status: "&f%mob%:%point% &8- &falive &a%alive%/%max% &8- %next%"
   schedule-next-in: "&enext in %time%"
