@@ -21,21 +21,42 @@ class SpawnEgg internal constructor(
     val conditions: ConditionList,
     val item: BaseItem
 ) {
+    /**
+     * Spawns the mob if the egg's conditions are met.
+     *
+     * With no [player] (a dispenser), the conditions are checked against the nearest
+     * player within [DISPENSER_PLAYER_RANGE] blocks; an egg with conditions and no
+     * player nearby does not spawn.
+     */
     fun trySpawn(location: Location, player: Player?): LivingMob? {
-        if (player != null) {
-            val canSpawn = conditions.areMetAndTrigger(
-                TriggerData(
-                    player = player
-                ).dispatch(player.toDispatcher())
-            )
+        val conditionPlayer = player ?: location.nearestPlayer()
 
-            if (!canSpawn) {
-                return null
-            }
+        val canSpawn = if (conditionPlayer == null) {
+            conditions.isEmpty()
+        } else {
+            conditions.areMetAndTrigger(
+                TriggerData(
+                    player = conditionPlayer
+                ).dispatch(conditionPlayer.toDispatcher())
+            )
         }
 
-        return mob.spawn(location, SpawnReason.EGG)
+        return if (canSpawn) mob.spawn(location, SpawnReason.EGG) else null
     }
+}
+
+private const val DISPENSER_PLAYER_RANGE = 5.0
+
+private fun Location.nearestPlayer(): Player? {
+    val world = this.world ?: return null
+
+    return world.getNearbyEntities(
+        this,
+        DISPENSER_PLAYER_RANGE,
+        DISPENSER_PLAYER_RANGE,
+        DISPENSER_PLAYER_RANGE
+    ) { it is Player }
+        .minByOrNull { it.location.distanceSquared(this) } as? Player
 }
 
 private val spawnEggKey = namespacedKeyOf("ecomobs", "spawn_egg")
