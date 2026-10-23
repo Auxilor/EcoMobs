@@ -40,15 +40,22 @@ object SpawnEggHandler : Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun handle(event: BlockDispenseEvent) {
-        val facing = (event.block.blockData as Directional).facing
-        val location = event.block.getRelative(facing).location.add(0.5, 0.0, 0.5)
-
-        if (!this.handleSpawnEgg(event.item, location, null, EcoMobEggUseEvent.Source.DISPENSER)) {
+        if (event.item.ecoMobEgg == null) {
             return
         }
 
+        // Cancelled even when nothing spawns, or vanilla fires the base spawn egg.
         event.isCancelled = true
 
+        val facing = (event.block.blockData as Directional).facing
+        val location = event.block.getRelative(facing).location.add(0.5, 0.0, 0.5)
+
+        if (this.handleSpawnEgg(event.item, location, null, EcoMobEggUseEvent.Source.DISPENSER)) {
+            this.takeFromDispenser(event)
+        }
+    }
+
+    private fun takeFromDispenser(event: BlockDispenseEvent) {
         val dispenser = event.block.state as? Container ?: return
 
         // This is needed as the event must finish first,
