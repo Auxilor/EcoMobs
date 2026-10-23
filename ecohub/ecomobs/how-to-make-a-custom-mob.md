@@ -504,7 +504,7 @@ boss-bar:
 
 ### Spawn
 
-Let players summon the mob with a 3-block totem, a spawn egg, or both, and spawn it at fixed points on a timer with `scheduled`.
+Let players summon the mob with a 3-block totem, a spawn egg, or both, and spawn it at fixed points on a timer with `scheduled`. A totem is used up when it summons its mob: the three blocks are removed and only one mob spawns.
 
 ```yaml
 spawn:
