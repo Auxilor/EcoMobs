@@ -64,25 +64,23 @@ class IntegrationModel(
         play(event.mob.entity, "take-damage")
     }
 
-    /** Plays one of the mob's animations for [key] once, if it has any. */
     private fun play(entity: Mob, key: String) {
         val config = entity.ecoMob?.getIntegrationConfig(integration) ?: return
-        val modelId = config.getStringOrNull("id")?.takeIf { it.isNotBlank() } ?: return
-        val animation = config.pickAnimation(key) ?: return
+        val modelId = config.getStringOrNull("id")?.takeIf { it.isNotBlank() }
+        val animation = config.pickAnimation(key)
 
-        ModelManager.playAnimation(entity, modelId, animation, once)
+        if (modelId != null && animation != null) {
+            ModelManager.playAnimation(entity, modelId, animation, once)
+        }
     }
 
-    /** One name or a list of names under `animations.<key>`, picked at random. */
     private fun Config.pickAnimation(key: String): String? =
         getStrings("animations.$key")
             .ifEmpty { listOfNotNull(getStringOrNull("animations.$key")) }
             .filter { it.isNotBlank() }
             .randomOrNull()
 
-    override fun getPluginName(): String {
-        return pluginName
-    }
+    override fun getPluginName(): String = pluginName
 
     private companion object {
         val STATE_ANIMATIONS = mapOf(

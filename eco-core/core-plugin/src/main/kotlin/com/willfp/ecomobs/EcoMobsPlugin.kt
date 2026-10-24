@@ -179,8 +179,16 @@ class EcoMobsPlugin : LibreforgePlugin() {
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
             IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs) },
-            IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModel("model-engine", "ModelEngine")) },
-            IntegrationLoader("BetterModel") { this.eventManager.registerListener(IntegrationModel("better-model", "BetterModel")) },
+            IntegrationLoader("ModelEngine") {
+                this.eventManager.registerListener(
+                    IntegrationModel(configKey = "model-engine", pluginName = "ModelEngine")
+                )
+            },
+            IntegrationLoader("BetterModel") {
+                this.eventManager.registerListener(
+                    IntegrationModel(configKey = "better-model", pluginName = "BetterModel")
+                )
+            },
             IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
             IntegrationLoader("CoreProtect") { this.eventManager.registerListener(IntegrationCoreProtect) },
         )
