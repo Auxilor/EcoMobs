@@ -143,6 +143,7 @@ On top of that:
 - **`exclude.mounted`** — mobs riding something else, so a skeleton on a horse stays whole.
 - **`exclude.ridden`** — mobs carrying a passenger.
 - **`exclude.named`** — mobs given a name by a name tag or another plugin. EcoMobs' own names are drawn clientside and do not count, so a named EcoMob still stacks.
+- **Scheduled spawning.** Mobs spawned by [scheduled spawning](how-to-make-a-custom-mob#scheduled-spawning) never stack, so each one counts toward its point's `max-alive`.
 
 Set any of the `exclude` entries to `false` to let that group stack anyway.
 

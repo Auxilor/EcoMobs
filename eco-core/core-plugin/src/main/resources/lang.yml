@@ -21,4 +21,14 @@ messages:
   spawner-missing-value: "&c%attribute% needs a value! Usage: &f%attribute% %usage%"
   spawner-cannot-pickup: "&cYou don't have permission to pick up this spawner!"
 
+  schedule-none: "&cThere are no scheduled spawn points!"
+  schedule-invalid-mob: "&cYou must specify a mob that has scheduled spawning!"
+  schedule-list-header: "&fScheduled spawn points &8- &fpage %page%/%pages%"
+  schedule-invalid-point: "&cYou must specify a valid point, or all!"
+  schedule-status: "&f%mob%:%point% &8- &falive &a%alive%/%max% &8- %next%"
+  schedule-next-in: "&enext in %time%"
+  schedule-due: "&edue"
+  schedule-no-world: "&cworld not loaded"
+  schedule-reset: "Reset &c%quantity%&f scheduled spawn points!"
+
 na: "N/A"

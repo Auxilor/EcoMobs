@@ -37,6 +37,7 @@ permissions:
       ecomobs.command.killall: true
       ecomobs.command.give: true
       ecomobs.command.spawner.*: true
+      ecomobs.command.schedule: true
 
   ecomobs.command.ecomobs:
     description: Allows the use of /ecomobs
@@ -132,6 +133,21 @@ permissions:
 
   ecomobs.command.spawner.modify.stack-size:
     description: Modify how many spawners the spawner stands in for
+    default: op
+
+  ecomobs.command.schedule:
+    description: Allows the use of /ecomobs schedule list and reset
+    default: op
+    children:
+      ecomobs.command.schedule.list: true
+      ecomobs.command.schedule.reset: true
+
+  ecomobs.command.schedule.list:
+    description: Allows the use of /ecomobs schedule list
+    default: op
+
+  ecomobs.command.schedule.reset:
+    description: Allows the use of /ecomobs schedule reset
     default: op
 
   ecomobs.spawner.*:

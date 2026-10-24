@@ -18,6 +18,8 @@ import com.willfp.eco.util.safeNamespacedKeyOf
 import com.willfp.eco.util.toComponent
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategories
+import com.willfp.ecomobs.category.MobCategory
+import com.willfp.ecomobs.category.impl.UncategorisedMobCategory
 import com.willfp.ecomobs.config.ConfigViolationException
 import com.willfp.ecomobs.config.filterNotNullValues
 import com.willfp.ecomobs.config.ifTrue
@@ -42,6 +44,7 @@ import com.willfp.ecomobs.mob.event.MobEvents
 import com.willfp.ecomobs.mob.options.BossBarOptions
 import com.willfp.ecomobs.mob.options.Drop
 import com.willfp.ecomobs.mob.options.MobDrops
+import com.willfp.ecomobs.mob.options.ScheduledSpawn
 import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.options.ecoMobEgg
 import com.willfp.ecomobs.mob.stage.toDamageStage
@@ -96,13 +99,17 @@ internal class ConfigDrivenEcoMob(
     /** The first token of the mob lookup string, e.g. "zombie" from "zombie attack-damage:90". */
     val baseMobId: String = config.getString("mob").split(" ").first()
 
-    override val category = MobCategories[config.getString("category")]
-        .validateNotNull(
-            ConfigViolation(
-                "category",
-                "Invalid category"
+    override val category: MobCategory = if (config.has("category")) {
+        MobCategories[config.getString("category")]
+            .validateNotNull(
+                ConfigViolation(
+                    "category",
+                    "Invalid category"
+                )
             )
-        )
+    } else {
+        UncategorisedMobCategory
+    }
 
     val equipment = EquipmentSlot.values().associateWith {
         config.getStringOrNull("equipment.${it.toConfigKey()}")
@@ -331,6 +338,10 @@ internal class ConfigDrivenEcoMob(
         )
     }
 
+    override val scheduledSpawn = config.getBool("spawn.scheduled.enabled").ifTrue {
+        ScheduledSpawn.parse(id, config, context)
+    }
+
     override val customEntity = CustomEntity(
         plugin.createNamespacedKey(this.id),
         { (it as? Mob)?.ecoMob == this }
@@ -433,8 +444,21 @@ internal class ConfigDrivenEcoMob(
         }
 
         // Spawn bukkit mob
-        val entity = mob.spawn(location) as? Mob ?: throw IllegalStateException("Base entity must be a mob!")
+        val spawned = mob.spawn(location)
+        val entity = spawned as? Mob ?: run {
+            spawned.remove()
+            throw IllegalStateException("Base entity must be a mob!")
+        }
 
+        return if (entity.isValid) {
+            startTracking(entity, reason)
+        } else {
+            entity.remove()
+            null
+        }
+    }
+
+    private fun startTracking(entity: Mob, reason: SpawnReason): LivingMob {
         // Mark as custom mob
         entity.ecoMob = this
 

@@ -60,7 +60,7 @@ private fun PersistentDataContainer.getInt(key: NamespacedKey, default: Int) =
 private fun PersistentDataContainer.setInt(key: NamespacedKey, value: Int) =
     set(key, PersistentDataType.INTEGER, value)
 
-private fun PersistentDataContainer.setOrRemove(key: NamespacedKey, value: String?) {
+internal fun PersistentDataContainer.setOrRemove(key: NamespacedKey, value: String?) {
     if (value == null) remove(key) else set(key, PersistentDataType.STRING, value)
 }
 
@@ -251,13 +251,12 @@ fun entityTypeOrNull(name: String): EntityType? =
 
 /**
  * Resolves the EntityType for a mob ID so the vanilla spawner preview spins
- * the correct entity. Handles both plain vanilla IDs and EcoMob IDs.
+ * the correct entity. Handles both plain vanilla IDs (e.g. "zombie", "ZOMBIE") and EcoMob IDs,
+ * which fall back to the entity their base mob is built from.
  */
 fun resolveEntityType(mobId: String): EntityType? {
-    // Plain vanilla entity type (e.g. "zombie", "ZOMBIE")
     entityTypeOrNull(mobId)?.let { return it }
 
-    // EcoMob — fall back to the entity its base mob is built from
     val baseMobId = (EcoMobs[mobId] as? ConfigDrivenEcoMob)?.baseMobId ?: return null
 
     return entityTypeOrNull(baseMobId)

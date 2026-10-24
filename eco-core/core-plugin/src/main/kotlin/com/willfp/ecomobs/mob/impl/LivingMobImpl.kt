@@ -211,12 +211,19 @@ internal class LivingMobImpl(
     }
 
     override fun despawn() {
-        entity.remove()
-        handleRemove()
+        discard()
 
         Bukkit.getPluginManager().callEvent(
             EcoMobDespawnEvent(this)
         )
+    }
+
+    /**
+     * Remove the mob without a death or despawn: no drops, no despawn event, no effects.
+     */
+    fun discard() {
+        entity.remove()
+        handleRemove()
     }
 
     private fun handleRemove(removeTracking: Boolean = true) {
@@ -242,4 +249,11 @@ internal class LivingMobImpl(
             handler.onRemove(this, tick)
         }
     }
+}
+
+/**
+ * Remove [this] mob without a death or despawn: no drops, no despawn event, no effects.
+ */
+internal fun LivingMob.discard() {
+    (this as? LivingMobImpl)?.discard() ?: entity.remove()
 }

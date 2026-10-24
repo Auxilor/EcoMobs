@@ -6,6 +6,7 @@ import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.integrations.MobIntegration
 import com.willfp.ecomobs.mob.event.MobEvent
+import com.willfp.ecomobs.mob.options.ScheduledSpawn
 import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.stage.DamageStage
 import com.willfp.libreforge.Holder
@@ -57,6 +58,11 @@ interface EcoMob : KRegistrable {
      * The spawn totem options.
      */
     val totemOptions: SpawnTotemOptions?
+
+    /**
+     * The scheduled spawn options.
+     */
+    val scheduledSpawn: ScheduledSpawn?
 
     /**
      * The eco custom entity.
