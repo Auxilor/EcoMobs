@@ -103,9 +103,6 @@ allprojects {
         compileOnly("com.willfp:eco:$ecoVersion")
         compileOnly("org.jetbrains:annotations:26.0.2")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
-        compileOnly("io.github.toxicity188:bettermodel-bukkit-api:2.2.0") {
-            exclude("*", "kotlin-stdlib")
-        }
     }
 
     java {
@@ -116,7 +113,6 @@ allprojects {
         shadowJar {
             exclude("META-INF/**")
             relocate("com.willfp.libreforge.loader", "com.willfp.ecomobs.libreforge.loader")
-            relocate("com.willfp.modelenginebridge", "com.willfp.ecomobs.integrations.modelengine.bridge")
             relocate("kotlin", "com.willfp.eco.libs.kotlin")
             relocate("kotlin.jvm", "com.willfp.eco.libs.kotlin.jvm")
             relocate("kotlin.coroutines", "com.willfp.eco.libs.kotlin.coroutines")

@@ -43,11 +43,10 @@ import com.willfp.ecomobs.handler.SpawnerHandler
 import com.willfp.ecomobs.handler.SpawnerStackHandler
 import com.willfp.ecomobs.handler.StackHandler
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
-import com.willfp.ecomobs.integrations.bettermodel.IntegrationBetterModel
 import com.willfp.ecomobs.integrations.coreprotect.IntegrationCoreProtect
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
-import com.willfp.ecomobs.integrations.modelengine.IntegrationModelEngine
+import com.willfp.ecomobs.integrations.model.IntegrationModel
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.damage.TopDamagerHandler
 import com.willfp.ecomobs.mob.impl.ecoMob
@@ -180,8 +179,16 @@ class EcoMobsPlugin : LibreforgePlugin() {
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
             IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs) },
-            IntegrationLoader("ModelEngine") { this.eventManager.registerListener(IntegrationModelEngine) },
-            IntegrationLoader("BetterModel") { this.eventManager.registerListener(IntegrationBetterModel) },
+            IntegrationLoader("ModelEngine") {
+                this.eventManager.registerListener(
+                    IntegrationModel(configKey = "model-engine", pluginName = "ModelEngine")
+                )
+            },
+            IntegrationLoader("BetterModel") {
+                this.eventManager.registerListener(
+                    IntegrationModel(configKey = "better-model", pluginName = "BetterModel")
+                )
+            },
             IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
             IntegrationLoader("CoreProtect") { this.eventManager.registerListener(IntegrationCoreProtect) },
         )

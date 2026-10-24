@@ -35,10 +35,22 @@ integrations:
   # Options for ModelEngine
   model-engine:
     id: ""
+    # Optional animations. Each takes one animation name or a list of names; with
+    # a list, one is picked at random each time it plays.
+    animations:
+      idle: [ ] # Loops while the mob stands still
+      move: [ ] # Loops while the mob moves
+      spawn: [ ] # Plays once when the mob spawns
+      melee-attack: [ ] # Plays once when the mob hits something in melee
+      ranged-attack: [ ] # Plays once when the mob shoots a projectile
+      take-damage: [ ] # Plays once when the mob is hurt
+      death: [ ] # Plays once when the mob dies
 
   # Options for BetterModel
   better-model:
     id: ""
+    # The same animations as model-engine.
+    animations: { }
 
   # Options for LibsDisguises
   libs-disguises:
