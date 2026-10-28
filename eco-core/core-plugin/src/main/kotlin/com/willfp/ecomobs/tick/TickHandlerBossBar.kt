@@ -5,11 +5,16 @@ import com.willfp.eco.util.toComponent
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.options.BossBarOptions
+import com.willfp.ecomobs.plugin
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.attribute.Attribute
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+
+private val warnedTypes = ConcurrentHashMap.newKeySet<EntityType>()
 
 class TickHandlerBossBar(
     private val bar: BossBar,
@@ -24,16 +29,24 @@ class TickHandlerBossBar(
 
         val entity = mob.entity
         val maxHealth = entity.getAttribute(Attribute.MAX_HEALTH)?.value
-            ?: throw IllegalStateException("Entity ${entity.type} has no max health attribute")
+
+        if (maxHealth == null) {
+            if (warnedTypes.add(entity.type)) {
+                plugin.logger.warning("${entity.type} has no max health, so its boss bar is not shown")
+            }
+            return
+        }
 
         bar.name(mob.displayName.toComponent())
         bar.progress((entity.health / maxHealth).coerceAtMost(1.0).toFloat())
 
         // Only run every 2 seconds to save CPU
-        if (tick % 40 != 0) {
-            return
+        if (tick % 40 == 0) {
+            updateViewers(entity)
         }
+    }
 
+    private fun updateViewers(entity: LivingEntity) {
         val nearby = entity.getNearbyEntities(
             options.radius,
             options.radius,
