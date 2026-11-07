@@ -1,12 +1,12 @@
 ﻿import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "2.3.0"
+    kotlin("jvm") version "2.4.21"
     id("java")
     id("java-library")
     id("maven-publish")
-    id("com.gradleup.shadow") version "9.3.1"
-    id("com.willfp.libreforge-gradle-plugin") version "2.0.0"
+    id("com.gradleup.shadow") version "9.6.1"
+    id("com.willfp.libreforge-gradle-plugin") version "2.1.1"
 }
 
 group = "com.willfp"
@@ -101,8 +101,8 @@ allprojects {
 
     dependencies {
         compileOnly("com.willfp:eco:$ecoVersion")
-        compileOnly("org.jetbrains:annotations:26.0.2")
-        compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
+        compileOnly("org.jetbrains:annotations:26.1.0")
+        compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.4.21")
     }
 
     java {
