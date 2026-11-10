@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -94,16 +95,20 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
     }
 
     /**
+     * Drops the damage recorded against a mob that died, once every other handler of
+     * the death has run, so kill triggers in other plugins can still read it.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun handle(event: EntityDeathEvent) {
+        forget(event.entity.uniqueId)
+    }
+
+    /**
      * Drops the damage recorded against a mob, once it is gone.
-     *
-     * Held for a tick, so kill triggers in other plugins that run after EcoMobs in the
-     * same death event can still read the top damagers.
      */
     fun forget(uuid: UUID) {
-        plugin.scheduler.global().runLater(1) {
-            damagers.remove(uuid)
-            lastDamagers.remove(uuid)
-        }
+        damagers.remove(uuid)
+        lastDamagers.remove(uuid)
     }
 
     fun generatePlaceholders(mob: Mob): List<NamedValue> {
