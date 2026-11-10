@@ -1,6 +1,7 @@
 package com.willfp.ecomobs.trigger
 
 import com.willfp.libreforge.triggers.Triggers
+import com.willfp.libreforge.triggers.placeholders.TriggerPlaceholders
 
 /**
  * The triggers EcoMobs adds to libreforge, so effects in any libreforge plugin can
@@ -23,5 +24,6 @@ object EcoMobsTriggers {
         Triggers.register(TriggerStageChange)
         Triggers.register(TriggerUnstackSpawner)
         Triggers.register(TriggerUseSpawnEgg)
+        TriggerPlaceholders.register(TriggerPlaceholderTopDamagers)
     }
 }
