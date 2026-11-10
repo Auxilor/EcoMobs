@@ -95,10 +95,15 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
 
     /**
      * Drops the damage recorded against a mob, once it is gone.
+     *
+     * Held for a tick, so kill triggers in other plugins that run after EcoMobs in the
+     * same death event can still read the top damagers.
      */
     fun forget(uuid: UUID) {
-        damagers.remove(uuid)
-        lastDamagers.remove(uuid)
+        plugin.scheduler.global().runLater(1) {
+            damagers.remove(uuid)
+            lastDamagers.remove(uuid)
+        }
     }
 
     fun generatePlaceholders(mob: Mob): List<NamedValue> {
