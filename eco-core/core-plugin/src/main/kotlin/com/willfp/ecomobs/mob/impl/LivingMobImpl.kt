@@ -201,7 +201,7 @@ internal class LivingMobImpl(
     }
 
     override fun kill(player: Player?, removeTracking: Boolean) {
-        handleRemove(removeTracking = removeTracking, forgetDamagers = false)
+        handleRemove(removeTracking = removeTracking, forgetDamagers = !entity.isDead)
 
         if (!hasBeenKilled) {
             mob.spawnDrops(entity.location, player)
