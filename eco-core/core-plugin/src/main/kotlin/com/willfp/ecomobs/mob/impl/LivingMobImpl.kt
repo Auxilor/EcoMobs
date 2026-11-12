@@ -1,8 +1,5 @@
 package com.willfp.ecomobs.mob.impl
 
-import com.willfp.eco.core.scheduling.EcoTask
-import com.willfp.eco.util.formatEco
-import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
 import com.willfp.ecomobs.event.EcoMobStageChangeEvent
 import com.willfp.ecomobs.mob.EcoMob
@@ -14,15 +11,18 @@ import com.willfp.ecomobs.mob.stage.DamageStage
 import com.willfp.ecomobs.mob.stage.DamageStageTracker
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.tick.TickHandler
-import com.willfp.libreforge.NamedValue
-import com.willfp.libreforge.effects.Chain
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.DispatchedTrigger
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.core.platform.namespacedKeyOf
+import wiki.ecohub.core.scheduler.EcoTask
+import wiki.ecohub.core.stdlib.NamedValue
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.chain.Chain
+import wiki.ecohub.rules.trigger.DispatchedTrigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.ui.text.formatEco
 
 private val tickKey = namespacedKeyOf("ecomobs", "tick")
 private val stageIndexKey = namespacedKeyOf("ecomobs", "stage_index")

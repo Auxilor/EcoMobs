@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.integrations.coreprotect
 
-import com.willfp.eco.core.integrations.Integration
 import com.willfp.ecomobs.event.EcoMobSpawnerBreakEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerExplodeEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerPlaceEvent
@@ -19,6 +18,7 @@ import org.bukkit.block.data.BlockData
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import wiki.ecohub.provider.ExternalProvider
 
 /**
  * Logs custom spawner changes to CoreProtect.
@@ -31,7 +31,7 @@ import org.bukkit.event.Listener
  * so only the rest of the stack is logged here. Stacking and unstacking change no block
  * at all - unstacking cancels the break - so those are logged in full.
  */
-object IntegrationCoreProtect : Listener, Integration {
+object IntegrationCoreProtect : Listener, ExternalProvider {
     /**
      * Logged for a spawner that goes up in an explosion, where there is no player.
      * CoreProtect shows a name starting with # as a non-player source.

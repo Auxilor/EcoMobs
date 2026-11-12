@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.handler
 
-import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.event.EcoMobSpawnerBreakEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerExplodeEvent
 import com.willfp.ecomobs.event.EcoMobSpawnerPlaceEvent
@@ -35,6 +34,7 @@ import org.bukkit.event.entity.SpawnerSpawnEvent
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.event.world.WorldUnloadEvent
+import wiki.ecohub.game.item.fast
 
 object SpawnerHandler : Listener {
 

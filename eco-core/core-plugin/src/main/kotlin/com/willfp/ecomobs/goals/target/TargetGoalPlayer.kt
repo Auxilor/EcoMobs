@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.goals.target
 
-import com.willfp.eco.core.entities.ai.CustomGoal
-import com.willfp.eco.core.entities.ai.GoalFlag
 import org.bukkit.GameMode
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
+import wiki.ecohub.game.entity.ai.CustomGoal
+import wiki.ecohub.game.entity.ai.GoalFlag
 import java.util.EnumSet
 
 /**

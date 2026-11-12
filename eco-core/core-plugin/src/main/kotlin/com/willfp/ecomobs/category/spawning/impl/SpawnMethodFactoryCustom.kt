@@ -1,8 +1,5 @@
 package com.willfp.ecomobs.category.spawning.impl
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.scheduling.EcoTask
-import com.willfp.eco.util.randDouble
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
@@ -11,13 +8,16 @@ import com.willfp.ecomobs.category.spawning.spawnpoints.spawnPoints
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.plugin
-import com.willfp.libreforge.EmptyProvidedHolder
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.conditions.Conditions
-import com.willfp.libreforge.enumValueOfOrNull
-import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.core.enumValueOfOrNull
+import wiki.ecohub.core.scheduler.EcoTask
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.math.randDouble
+import wiki.ecohub.rules.condition.Conditions
+import wiki.ecohub.rules.holder.EmptyProvidedHolder
 
 object SpawnMethodFactoryCustom : SpawnMethodFactory("custom") {
     override fun create(

@@ -1,14 +1,14 @@
 package com.willfp.ecomobs.mob.stage.impl
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.config.validate
 import com.willfp.ecomobs.mob.stage.DamageResponse
 import com.willfp.ecomobs.mob.stage.DamageStageMode
 import com.willfp.ecomobs.mob.stage.DamageStageModeFactory
-import com.willfp.libreforge.ConfigViolation
-import com.willfp.libreforge.ViolationContext
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigViolation
+import wiki.ecohub.config.ViolationContext
 
 /**
  * A pool of damage. Every point of damage from any source drains it, whoever or

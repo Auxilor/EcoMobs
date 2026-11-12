@@ -1,16 +1,16 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.core.display.DisplayContext
-import com.willfp.eco.core.display.DisplayModule
-import com.willfp.eco.core.display.DisplayPriority
-import com.willfp.eco.core.fast.FastItemStack
-import com.willfp.eco.core.fast.fast
-import com.willfp.eco.util.formatEco
-import com.willfp.eco.util.formatEcoRich
 import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.spawner
+import wiki.ecohub.game.item.FastItemStack
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.ui.display.DisplayContext
+import wiki.ecohub.ui.display.DisplayModule
+import wiki.ecohub.ui.display.DisplayPriority
+import wiki.ecohub.ui.text.StringUtils
+import wiki.ecohub.ui.text.formatEco
 
 private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
     val data = spawner
@@ -51,7 +51,7 @@ object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
                         emptyList()
                     })
                 .map { fis.applySpawnerPlaceholders(it) }
-                .formatEcoRich(context.placeholderContext)
+                .map { StringUtils.formatToRichComponent(it, context.placeholderContext) }
         )
     }
 }

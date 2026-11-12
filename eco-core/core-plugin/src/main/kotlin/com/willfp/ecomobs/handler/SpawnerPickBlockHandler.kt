@@ -1,7 +1,5 @@
 package com.willfp.ecomobs.handler
 
-import com.willfp.eco.core.display.Display
-import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.event.EcoMobSpawnerPickBlockEvent
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.spawner
@@ -16,6 +14,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryCreativeEvent
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.ui.display.Display
 
 /**
  * What picking the spawner [player] is looking at gives them.

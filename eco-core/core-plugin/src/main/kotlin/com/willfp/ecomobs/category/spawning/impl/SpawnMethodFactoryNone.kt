@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.category.spawning.impl
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
-import com.willfp.libreforge.ViolationContext
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
 
 object SpawnMethodFactoryNone : SpawnMethodFactory("none") {
     override fun create(

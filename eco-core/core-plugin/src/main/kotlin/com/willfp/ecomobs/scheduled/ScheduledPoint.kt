@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.scheduled
 
-import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.spawner.setOrRemove
@@ -10,6 +9,7 @@ import org.bukkit.World
 import org.bukkit.entity.Mob
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.util.Vector
+import wiki.ecohub.core.platform.namespacedKeyOf
 
 private val scheduledPointKey = namespacedKeyOf(namespace = "ecomobs", key = "scheduled_point")
 

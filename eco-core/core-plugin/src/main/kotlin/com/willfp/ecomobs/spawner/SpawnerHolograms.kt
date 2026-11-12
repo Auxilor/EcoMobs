@@ -1,15 +1,15 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.integrations.hologram.Hologram
-import com.willfp.eco.core.integrations.hologram.HologramManager
-import com.willfp.eco.core.integrations.hologram.HologramOptions
-import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.folia.atRegion
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Player
+import wiki.ecohub.provider.hologram.Hologram
+import wiki.ecohub.provider.hologram.HologramManager
+import wiki.ecohub.provider.hologram.HologramOptions
+import wiki.ecohub.ui.text.formatEco
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 

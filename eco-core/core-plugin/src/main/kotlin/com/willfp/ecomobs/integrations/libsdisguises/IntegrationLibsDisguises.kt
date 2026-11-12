@@ -1,13 +1,13 @@
 package com.willfp.ecomobs.integrations.libsdisguises
 
-import com.willfp.eco.core.integrations.Integration
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
 import me.libraryaddict.disguise.DisguiseAPI
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import wiki.ecohub.provider.ExternalProvider
 
-object IntegrationLibsDisguises : Listener, Integration {
+object IntegrationLibsDisguises : Listener, ExternalProvider {
     private val integration = MobIntegration("libs-disguises")
 
     @EventHandler

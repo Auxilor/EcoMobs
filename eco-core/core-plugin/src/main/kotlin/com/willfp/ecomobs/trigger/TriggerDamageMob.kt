@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.trigger
 
 import com.willfp.ecomobs.event.EcoMobDamageEvent
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.Trigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object TriggerDamageMob : Trigger("ecomobs_damage_mob") {
     override val description = "Fires when an EcoMob takes damage, after the mob's own damage modifiers."

@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.trigger
 
 import com.willfp.ecomobs.event.EcoMobSpawnerSpawnEvent
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.Trigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object TriggerSpawnerSpawn : Trigger("ecomobs_spawner_spawn") {
     override val description = "Fires for every mob a spawner is about to spawn."

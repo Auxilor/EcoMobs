@@ -1,9 +1,9 @@
 package com.willfp.ecomobs.category.impl
 
-import com.willfp.eco.core.config.Configs
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.impl.SpawnMethodFactoryNone
 import com.willfp.ecomobs.mob.LivingMob
+import wiki.ecohub.config.Configs
 
 /**
  * The category of mobs that don't set one: they never spawn naturally and aren't persistent.

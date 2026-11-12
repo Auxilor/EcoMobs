@@ -1,12 +1,12 @@
 package com.willfp.ecomobs.mob.options
 
-import com.willfp.eco.core.drops.DropQueue
-import com.willfp.eco.core.items.TestableItem
-import com.willfp.eco.util.randDouble
 import org.bukkit.Location
 import org.bukkit.entity.ExperienceOrb
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.drop.DropQueue
+import wiki.ecohub.game.item.lookup.TestableItem
+import wiki.ecohub.math.randDouble
 
 data class Drop(
     val chance: Double,

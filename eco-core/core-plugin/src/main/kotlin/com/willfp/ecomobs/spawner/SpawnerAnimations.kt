@@ -1,9 +1,9 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.particle.Particles
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.particle.ParticleData
 import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
+import wiki.ecohub.game.particle.Particles
 
 object SpawnerAnimations {
     // Swapped whole on reload rather than cleared and refilled, so a spawner ticking on

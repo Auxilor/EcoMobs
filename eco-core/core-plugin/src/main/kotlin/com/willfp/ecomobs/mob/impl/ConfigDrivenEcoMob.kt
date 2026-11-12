@@ -1,21 +1,5 @@
 package com.willfp.ecomobs.mob.impl
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.entities.CustomEntity
-import com.willfp.eco.core.entities.Entities
-import com.willfp.eco.core.entities.ai.EntityGoals
-import com.willfp.eco.core.entities.ai.TargetGoals
-import com.willfp.eco.core.entities.controller
-import com.willfp.eco.core.entities.impl.EmptyTestableEntity
-import com.willfp.eco.core.fast.fast
-import com.willfp.eco.core.items.CustomItem
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.recipe.Recipes
-import com.willfp.eco.core.recipe.parts.EmptyTestableItem
-import com.willfp.eco.core.recipe.recipes.CraftingRecipe
-import com.willfp.eco.util.namespacedKeyOf
-import com.willfp.eco.util.safeNamespacedKeyOf
-import com.willfp.eco.util.toComponent
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.MobCategory
@@ -54,16 +38,6 @@ import com.willfp.ecomobs.tick.TickHandlerBossBar
 import com.willfp.ecomobs.tick.TickHandlerDamageStages
 import com.willfp.ecomobs.tick.TickHandlerDisplayName
 import com.willfp.ecomobs.tick.TickHandlerLifespan
-import com.willfp.libreforge.ConfigViolation
-import com.willfp.libreforge.Holder
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.conditions.ConditionList
-import com.willfp.libreforge.conditions.Conditions
-import com.willfp.libreforge.conditions.emptyConditionList
-import com.willfp.libreforge.effects.EffectList
-import com.willfp.libreforge.effects.Effects
-import com.willfp.libreforge.enumValueOfOrNull
-import com.willfp.libreforge.triggers.DispatchedTrigger
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -72,6 +46,32 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigViolation
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.core.enumValueOfOrNull
+import wiki.ecohub.core.platform.namespacedKeyOf
+import wiki.ecohub.core.platform.safeNamespacedKeyOf
+import wiki.ecohub.game.entity.CustomEntity
+import wiki.ecohub.game.entity.Entities
+import wiki.ecohub.game.entity.ai.EntityController
+import wiki.ecohub.game.entity.ai.EntityGoals
+import wiki.ecohub.game.entity.ai.TargetGoals
+import wiki.ecohub.game.entity.lookup.EmptyTestableEntity
+import wiki.ecohub.game.item.CustomItem
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.game.item.lookup.EmptyTestableItem
+import wiki.ecohub.modules.recipe.Recipes
+import wiki.ecohub.modules.recipe.crafting.CraftingRecipe
+import wiki.ecohub.rules.condition.ConditionList
+import wiki.ecohub.rules.condition.Conditions
+import wiki.ecohub.rules.condition.emptyConditionList
+import wiki.ecohub.rules.effect.EffectList
+import wiki.ecohub.rules.effect.Effects
+import wiki.ecohub.rules.holder.Holder
+import wiki.ecohub.rules.trigger.DispatchedTrigger
+import wiki.ecohub.ui.text.toComponent
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -509,7 +509,7 @@ internal class ConfigDrivenEcoMob(
 
     private fun createLivingMob(entity: Mob): LivingMobImpl {
         // Set custom AI
-        val controller = entity.controller
+        val controller = EntityController.getFor(entity)
 
         if (isOverridingAI) {
             controller.clearAllGoals()

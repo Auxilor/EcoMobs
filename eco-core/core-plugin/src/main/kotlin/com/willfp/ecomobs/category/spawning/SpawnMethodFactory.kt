@@ -1,9 +1,9 @@
 package com.willfp.ecomobs.category.spawning
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.category.MobCategory
-import com.willfp.libreforge.ViolationContext
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.core.registry.KRegistrable
 
 abstract class SpawnMethodFactory(override val id: String) : KRegistrable {
     abstract fun create(

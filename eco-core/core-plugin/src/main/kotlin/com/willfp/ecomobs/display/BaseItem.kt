@@ -1,16 +1,16 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.core.display.Display
-import com.willfp.eco.core.display.DisplayContext
-import com.willfp.eco.core.fast.fast
-import com.willfp.eco.core.placeholder.context.placeholderContext
-import com.willfp.eco.util.formatEco
-import com.willfp.eco.util.formatEcoRich
-import com.willfp.libreforge.EmptyProvidedHolder
-import com.willfp.libreforge.ProvidedHolder
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.rules.holder.EmptyProvidedHolder
+import wiki.ecohub.rules.holder.ProvidedHolder
+import wiki.ecohub.ui.display.Display
+import wiki.ecohub.ui.display.DisplayContext
+import wiki.ecohub.ui.placeholder.placeholderContext
+import wiki.ecohub.ui.text.StringUtils
+import wiki.ecohub.ui.text.formatEco
 
 class BaseItem(
     private val baseItem: ItemStack,
@@ -57,7 +57,7 @@ class BaseItem(
     fun display(context: DisplayContext, player: Player, holder: ProvidedHolder) {
         val fis = context.itemStack.fast()
 
-        val lore = rawLore.formatEcoRich(context.placeholderContext).toMutableList()
+        val lore = rawLore.map { StringUtils.formatToRichComponent(it, context.placeholderContext) }.toMutableList()
         val lines = holder.getNotMetLineComponents(player)
 
         if (lines.isNotEmpty()) {

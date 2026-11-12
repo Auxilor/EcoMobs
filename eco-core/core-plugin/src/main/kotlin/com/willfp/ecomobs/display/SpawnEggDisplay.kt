@@ -1,13 +1,13 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.core.display.DisplayContext
-import com.willfp.eco.core.display.DisplayModule
-import com.willfp.eco.core.display.DisplayPriority
-import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.mob.options.ecoMobEgg
 import com.willfp.ecomobs.plugin
-import com.willfp.libreforge.BlankHolder
-import com.willfp.libreforge.ItemProvidedHolder
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.rules.holder.BlankHolder
+import wiki.ecohub.rules.holder.ItemProvidedHolder
+import wiki.ecohub.ui.display.DisplayContext
+import wiki.ecohub.ui.display.DisplayModule
+import wiki.ecohub.ui.display.DisplayPriority
 
 object SpawnEggDisplay : DisplayModule(
     plugin,

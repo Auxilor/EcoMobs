@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.category
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.category.impl.ConfigDrivenMobCategory
 import com.willfp.ecomobs.config.ConfigViolationException
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.RegistrableCategory
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.config.category.RegistrableCategory
+import wiki.ecohub.core.plugin.EcoPlugin
 
 object MobCategories : RegistrableCategory<MobCategory>("category", "categories") {
     override fun clear(plugin: LibreforgePlugin) {

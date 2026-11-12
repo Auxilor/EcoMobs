@@ -1,8 +1,8 @@
 package com.willfp.ecomobs.mob.stage
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.registry.KRegistrable
-import com.willfp.libreforge.ViolationContext
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.core.registry.KRegistrable
 
 abstract class DamageStageModeFactory(override val id: String) : KRegistrable {
     /**

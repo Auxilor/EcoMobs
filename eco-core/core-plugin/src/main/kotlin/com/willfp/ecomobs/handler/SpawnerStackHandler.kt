@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.handler
 
-import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.SpawnerStacks
 import com.willfp.ecomobs.spawner.spawner
@@ -16,6 +15,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.fast
 
 object SpawnerStackHandler : Listener {
 

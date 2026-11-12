@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.category
 
-import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.LivingMob
+import wiki.ecohub.core.registry.KRegistrable
 
 interface MobCategory : KRegistrable {
     val mobs: List<EcoMob>

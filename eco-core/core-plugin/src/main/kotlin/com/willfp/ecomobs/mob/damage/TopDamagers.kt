@@ -1,11 +1,7 @@
 package com.willfp.ecomobs.mob.damage
 
-import com.willfp.eco.util.savedDisplayName
-import com.willfp.eco.util.toNiceString
-import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.mob.impl.ecoMob
-import com.willfp.libreforge.NamedValue
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -13,6 +9,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import wiki.ecohub.core.stdlib.NamedValue
+import wiki.ecohub.core.stdlib.toNiceString
+import wiki.ecohub.game.entity.player.PlayerUtils
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -44,7 +43,7 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     fun handle(event: EntityDamageByEntityEvent) {
-        val player = event.damager.tryAsPlayer() ?: return
+        val player = PlayerUtils.tryAsPlayer(event.damager) ?: return
         val victim = event.entity as? Mob ?: return
 
         // Only our own mobs are credited: nothing reads the damage of anything else, and
@@ -115,7 +114,7 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
                 ),
                 NamedValue(
                     "top_damager_${index + 1}_display",
-                    if (damager == null) "" else offlinePlayer?.savedDisplayName ?: "Unknown"
+                    if (damager == null) "" else offlinePlayer?.let { PlayerUtils.getSavedDisplayName(it) } ?: "Unknown"
                 ),
                 NamedValue(
                     "top_damager_${index + 1}_damage",

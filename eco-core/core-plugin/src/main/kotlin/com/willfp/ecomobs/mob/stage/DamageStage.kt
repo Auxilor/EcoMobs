@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.mob.stage
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.config.validateNotNull
-import com.willfp.libreforge.ConfigViolation
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.effects.Chain
-import com.willfp.libreforge.effects.Effects
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigViolation
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.rules.chain.Chain
+import wiki.ecohub.rules.effect.Effects
 
 /**
  * One phase of a staged fight.

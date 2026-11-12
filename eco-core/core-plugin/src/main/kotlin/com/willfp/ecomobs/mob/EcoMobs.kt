@@ -1,14 +1,14 @@
 package com.willfp.ecomobs.mob
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.impl.UncategorisedMobCategory
 import com.willfp.ecomobs.config.ConfigViolationException
 import com.willfp.ecomobs.mob.impl.ConfigDrivenEcoMob
 import com.willfp.ecomobs.scheduled.ScheduledSpawnState
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.RegistrableCategory
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.config.category.RegistrableCategory
+import wiki.ecohub.core.plugin.EcoPlugin
 import java.util.concurrent.ConcurrentHashMap
 
 object EcoMobs : RegistrableCategory<EcoMob>("mob", "mobs") {

@@ -1,9 +1,9 @@
 package com.willfp.ecomobs.tick
 
-import com.willfp.eco.util.setClientsideDisplayName
-import com.willfp.eco.util.toComponent
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.stacking.stack
+import wiki.ecohub.game.entity.setClientsideDisplayName
+import wiki.ecohub.ui.text.toComponent
 import kotlin.math.abs
 
 class TickHandlerDisplayName : TickHandler {

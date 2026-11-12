@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
-import com.willfp.eco.util.toNiceString
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.plugin
 import org.bukkit.command.CommandSender
+import wiki.ecohub.core.stdlib.toNiceString
+import wiki.ecohub.ui.text.StringUtils
 
 object CommandReload : Subcommand(
     plugin,

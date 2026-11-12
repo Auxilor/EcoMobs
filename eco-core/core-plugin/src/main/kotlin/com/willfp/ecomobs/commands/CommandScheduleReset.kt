@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMobs
@@ -11,6 +10,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
 import org.bukkit.util.StringUtil
+import wiki.ecohub.core.plugin.startup.Prerequisite
 import java.util.UUID
 
 object CommandScheduleReset : Subcommand(

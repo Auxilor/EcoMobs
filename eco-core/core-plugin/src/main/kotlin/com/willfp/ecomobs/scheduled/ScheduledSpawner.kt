@@ -1,7 +1,5 @@
 package com.willfp.ecomobs.scheduled
 
-import com.willfp.eco.core.scheduling.EcoTask
-import com.willfp.eco.util.formatEco
 import com.willfp.ecomobs.folia.atRegion
 import com.willfp.ecomobs.folia.chunkCentre
 import com.willfp.ecomobs.folia.isChunkOwnedByCurrentRegion
@@ -14,13 +12,15 @@ import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.mob.options.ScheduledSpawn
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.isInLoadedChunk
-import com.willfp.libreforge.EmptyProvidedHolder
-import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Mob
+import wiki.ecohub.core.scheduler.EcoTask
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.holder.EmptyProvidedHolder
+import wiki.ecohub.ui.text.formatEco
 import java.util.UUID
 import java.util.logging.Level
 

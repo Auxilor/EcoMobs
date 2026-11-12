@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.mob.event
 
-import com.willfp.eco.core.registry.Registry
 import com.willfp.ecomobs.mob.event.impl.MobEventAnyAttack
 import com.willfp.ecomobs.mob.event.impl.MobEventDamagePlayer
 import com.willfp.ecomobs.mob.event.impl.MobEventDeath
@@ -12,6 +11,7 @@ import com.willfp.ecomobs.mob.event.impl.MobEventMeleeAttack
 import com.willfp.ecomobs.mob.event.impl.MobEventRangedAttack
 import com.willfp.ecomobs.mob.event.impl.MobEventSpawn
 import com.willfp.ecomobs.mob.event.impl.MobEventTakeDamage
+import wiki.ecohub.core.registry.Registry
 
 object MobEvents : Registry<MobEvent>() {
     init {

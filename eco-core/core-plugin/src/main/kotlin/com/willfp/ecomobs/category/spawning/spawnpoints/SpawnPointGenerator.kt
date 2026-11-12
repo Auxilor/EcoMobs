@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.category.spawning.spawnpoints
 
-import com.willfp.eco.core.cache.EcoCache
 import com.willfp.ecomobs.EcoMobsPlugin
 import com.willfp.ecomobs.math.Int3
 import com.willfp.ecomobs.plugin
@@ -10,8 +9,9 @@ import org.bukkit.World
 import org.bukkit.block.data.Waterlogged
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
-import java.util.UUID
+import wiki.ecohub.data.cache.EcoCache
 import java.time.Duration
+import java.util.UUID
 
 private val spawnPointCache = EcoCache.builder<UUID, Set<SpawnPoint>>()
     .expireAfterWrite(Duration.ofSeconds(2))

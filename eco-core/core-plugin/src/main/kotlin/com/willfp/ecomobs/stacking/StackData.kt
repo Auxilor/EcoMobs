@@ -1,9 +1,9 @@
 package com.willfp.ecomobs.stacking
 
-import com.willfp.eco.util.namespacedKeyOf
 import org.bukkit.entity.Mob
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.core.platform.namespacedKeyOf
 
 val stackSizeKey = namespacedKeyOf("ecomobs", "stack_size")
 
