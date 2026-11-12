@@ -1,10 +1,5 @@
 package com.willfp.ecomobs.integrations.model
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.integrations.Integration
-import com.willfp.eco.core.integrations.model.ModelAnimation
-import com.willfp.eco.core.integrations.model.ModelManager
-import com.willfp.eco.core.integrations.model.ModelState
 import com.willfp.ecomobs.event.EcoMobDamageEvent
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.integrations.MobIntegration
@@ -15,15 +10,19 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.ProjectileLaunchEvent
+import wiki.ecohub.config.Config
+import wiki.ecohub.provider.ExternalProvider
+import wiki.ecohub.provider.content.ExternalModelService
+import wiki.ecohub.provider.content.ModelAnimation
+import wiki.ecohub.provider.content.ModelState
 
 /**
  * Puts a model from one model plugin on mobs that set `integrations.<config key>.id`, and
  * plays the animations under `integrations.<config key>.animations`.
  */
 class IntegrationModel(
-    configKey: String,
-    private val pluginName: String
-) : Listener, Integration {
+    configKey: String
+) : Listener, ExternalProvider {
     private val integration = MobIntegration(configKey)
 
     private val once = ModelAnimation.builder()
@@ -37,13 +36,13 @@ class IntegrationModel(
         val config = event.mob.mob.getIntegrationConfig(integration)
         val modelId = config.getStringOrNull("id")?.takeIf { it.isNotBlank() } ?: return
 
-        if (!ModelManager.attachModel(entity, integration.configKey, modelId)) {
+        if (!ExternalModelService.attachModel(entity, integration.configKey, modelId)) {
             return
         }
-        ModelManager.setBaseEntityVisible(entity, false)
+        ExternalModelService.setBaseEntityVisible(entity, false)
 
         for ((key, state) in STATE_ANIMATIONS) {
-            config.pickAnimation(key)?.let { ModelManager.setStateAnimation(entity, modelId, state, it) }
+            config.pickAnimation(key)?.let { ExternalModelService.setStateAnimation(entity, modelId, state, it) }
         }
 
         play(entity, "spawn")
@@ -70,7 +69,7 @@ class IntegrationModel(
         val animation = config.pickAnimation(key)
 
         if (modelId != null && animation != null) {
-            ModelManager.playAnimation(entity, modelId, animation, once)
+            ExternalModelService.playAnimation(entity, modelId, animation, once)
         }
     }
 
@@ -80,7 +79,7 @@ class IntegrationModel(
             .filter { it.isNotBlank() }
             .randomOrNull()
 
-    override fun getPluginName(): String = pluginName
+    override fun getListeners(): Collection<Listener> = listOf(this)
 
     private companion object {
         val STATE_ANIMATIONS = mapOf(

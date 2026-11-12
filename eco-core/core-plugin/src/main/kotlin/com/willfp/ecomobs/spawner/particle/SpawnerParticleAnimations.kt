@@ -1,6 +1,6 @@
 package com.willfp.ecomobs.spawner.particle
 
-import com.willfp.eco.core.registry.Registry
+import wiki.ecohub.core.registry.Registry
 
 object SpawnerParticleAnimations : Registry<ParticleAnimation>() {
     val CIRCLE: ParticleAnimation = CircleParticleAnimation

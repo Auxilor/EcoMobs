@@ -1,20 +1,20 @@
 package com.willfp.ecomobs.mob.options
 
-import com.willfp.eco.core.fast.FastItemStack
-import com.willfp.eco.core.fast.fast
-import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.display.BaseItem
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.SpawnReason
-import com.willfp.libreforge.conditions.ConditionList
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.core.platform.namespacedKeyOf
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.game.item.FastItemStack
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.rules.condition.ConditionList
+import wiki.ecohub.rules.trigger.TriggerData
 
 class SpawnEgg internal constructor(
     val mob: EcoMob,

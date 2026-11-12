@@ -1,12 +1,13 @@
 package com.willfp.ecomobs.trigger
 
 import com.willfp.ecomobs.event.EcoMobDropsEvent
-import com.willfp.libreforge.Dispatcher
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.game.world.toDispatcher
+import wiki.ecohub.rules.holder.Dispatcher
+import wiki.ecohub.rules.trigger.Trigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object TriggerMobDrops : Trigger("ecomobs_mob_drops") {
     override val description = "Fires when an EcoMob's drop table has been rolled, before anything is given out."

@@ -5,9 +5,9 @@ import com.willfp.ecomobs.event.EcoMobStackSplitEvent
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
+import com.willfp.ecomobs.spawner.entityFromSpawnerKey
 import com.willfp.ecomobs.stacking.MobStacks
 import com.willfp.ecomobs.stacking.StackSettings
-import com.willfp.ecomobs.spawner.entityFromSpawnerKey
 import com.willfp.ecomobs.stacking.stack
 import org.bukkit.Bukkit
 import org.bukkit.entity.Ageable

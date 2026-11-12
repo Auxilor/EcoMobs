@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.ecomobs.folia.atRegion
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.plugin
 import org.bukkit.Bukkit
+import wiki.ecohub.core.scheduler.EcoTask
 
 private const val LOOK_AT_RATE = 5
 

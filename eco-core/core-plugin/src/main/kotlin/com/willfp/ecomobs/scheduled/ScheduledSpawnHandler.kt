@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.scheduled
 
-import com.willfp.eco.core.Prerequisite
 import com.willfp.ecomobs.event.EcoMobDespawnEvent
 import com.willfp.ecomobs.mob.EcoMob
 import com.willfp.ecomobs.mob.impl.discard
@@ -13,6 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.world.EntitiesLoadEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
+import wiki.ecohub.core.plugin.startup.Prerequisite
 import java.util.UUID
 import java.util.logging.Level
 

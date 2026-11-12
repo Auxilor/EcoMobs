@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.trigger
 
 import com.willfp.ecomobs.event.EcoMobSpawnerBreakEvent
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.Trigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object TriggerBreakSpawner : Trigger("ecomobs_break_spawner") {
     override val description = "Fires when a player breaks a custom spawner and the whole thing comes up."

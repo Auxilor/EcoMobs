@@ -1,6 +1,6 @@
 package com.willfp.ecomobs.trigger
 
-import com.willfp.libreforge.triggers.Triggers
+import wiki.ecohub.rules.trigger.Triggers
 
 /**
  * The triggers EcoMobs adds to libreforge, so effects in any libreforge plugin can

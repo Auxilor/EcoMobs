@@ -1,13 +1,13 @@
 package com.willfp.ecomobs.mob.options
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.scheduled.ScheduledPoint
-import com.willfp.libreforge.ConfigViolation
-import com.willfp.libreforge.ConfigWarning
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.conditions.ConditionList
-import com.willfp.libreforge.conditions.Conditions
 import org.bukkit.util.Vector
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigViolation
+import wiki.ecohub.config.ConfigWarning
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.rules.condition.ConditionList
+import wiki.ecohub.rules.condition.Conditions
 import java.util.concurrent.TimeUnit
 
 private val pointIdPattern = Regex("[a-z0-9_]+")

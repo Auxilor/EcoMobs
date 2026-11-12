@@ -1,7 +1,7 @@
 package com.willfp.ecomobs.category.spawning
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.category.MobCategory
+import wiki.ecohub.config.Config
 
 abstract class SpawnMethod(
     val category: MobCategory,

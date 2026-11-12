@@ -1,28 +1,16 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.ecomobs.plugin
-import org.bukkit.command.CommandSender
+import wiki.ecohub.core.command.EcoCommand
+import wiki.ecohub.core.command.command
 
-object CommandEcoMobs : PluginCommand(
-    plugin,
-    "ecomobs",
-    "ecomobs.command.ecomobs",
-    false
-) {
-    override fun onExecute(
-        sender: CommandSender,
-        args: List<String>
-    ) {
-        sender.sendMessage(plugin.langYml.getMessage("invalid-command"))
+internal fun ecoMobsCommand(): EcoCommand =
+    plugin.command(name = "ecomobs", permission = "ecomobs.command.ecomobs") {
+        mount(CommandReload, CommandSpawn, CommandGive, CommandKillAll)
+        subcommand(name = "spawner", permission = "ecomobs.command.spawner") {
+            mount(CommandSpawnerGive, CommandSpawnerModify)
+        }
+        subcommand(name = "schedule", permission = "ecomobs.command.schedule") {
+            mount(CommandScheduleList, CommandScheduleReset)
+        }
     }
-
-    init {
-        this.addSubcommand(CommandReload)
-            .addSubcommand(CommandSpawn)
-            .addSubcommand(CommandGive)
-            .addSubcommand(CommandKillAll)
-            .addSubcommand(CommandSpawner)
-            .addSubcommand(CommandSchedule)
-    }
-}

@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.mob
 
-import com.willfp.eco.core.entities.ai.CustomGoal
-import com.willfp.eco.core.entities.ai.EntityController
-import com.willfp.eco.core.entities.ai.EntityGoal
-import com.willfp.eco.core.entities.ai.Goal
-import com.willfp.eco.core.entities.ai.TargetGoal
 import org.bukkit.entity.Mob
+import wiki.ecohub.game.entity.ai.CustomGoal
+import wiki.ecohub.game.entity.ai.EntityController
+import wiki.ecohub.game.entity.ai.EntityGoal
+import wiki.ecohub.game.entity.ai.Goal
+import wiki.ecohub.game.entity.ai.TargetGoal
 
 class ConfiguredGoal<T : Goal<*>>(
     val priority: Int,

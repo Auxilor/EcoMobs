@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.mob.placeholder
 
-import com.willfp.eco.core.registry.Registry
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHealth
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderHealthPercent
@@ -11,6 +10,7 @@ import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderStagePercent
 import com.willfp.ecomobs.mob.placeholder.impl.MobPlaceholderTime
 import com.willfp.ecomobs.mob.placeholder.impl.progressPlaceholders
 import com.willfp.ecomobs.mob.stage.DamageStageModes
+import wiki.ecohub.core.registry.Registry
 
 object MobPlaceholders : Registry<MobPlaceholder>() {
     init {

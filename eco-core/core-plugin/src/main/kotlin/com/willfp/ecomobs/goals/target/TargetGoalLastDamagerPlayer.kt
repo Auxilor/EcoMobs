@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.goals.target
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.serialization.KeyedDeserializer
-import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.plugin
 import org.bukkit.entity.Player
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.serial.KeyedDeserializer
+import wiki.ecohub.core.platform.namespacedKeyOf
 
 class TargetGoalLastDamagerPlayer(
     range: Double,

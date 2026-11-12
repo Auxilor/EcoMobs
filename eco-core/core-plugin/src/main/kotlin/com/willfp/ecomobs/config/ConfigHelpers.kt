@@ -1,6 +1,6 @@
 package com.willfp.ecomobs.config
 
-import com.willfp.libreforge.ConfigViolation
+import wiki.ecohub.config.ConfigViolation
 
 class ValidationScope<T>(
     private val value: T,
