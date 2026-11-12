@@ -21,7 +21,5 @@ object IntegrationLevelledMobs : Listener, ExternalProvider {
         }
     }
 
-    override fun getPluginName(): String {
-        return "LevelledMobs"
-    }
+    override fun getListeners(): Collection<Listener> = listOf(this)
 }

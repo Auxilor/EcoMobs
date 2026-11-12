@@ -1,8 +1,5 @@
 package com.willfp.ecomobs
 
-import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.eco.core.integrations.IntegrationLoader
-import com.willfp.eco.util.toSingletonList
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
 import com.willfp.ecomobs.commands.ecoMobsCommand
@@ -61,11 +58,13 @@ import com.willfp.ecomobs.trigger.EcoMobsTriggers
 import org.bukkit.entity.Mob
 import org.bukkit.event.Listener
 import wiki.ecohub.config.category.NativeConfigCategory
+import wiki.ecohub.core.command.EcoCommand
 import wiki.ecohub.core.plugin.EcoPlugin
 import wiki.ecohub.core.plugin.startup.Prerequisite
 import wiki.ecohub.game.entity.ai.EntityGoals
 import wiki.ecohub.game.entity.ai.TargetGoals
 import wiki.ecohub.game.item.Items
+import wiki.ecohub.provider.ExternalProviderLoader
 import wiki.ecohub.provider.metrics.EcoMetricsChart
 import wiki.ecohub.rules.holder.EntityProvidedHolder
 import wiki.ecohub.rules.holder.registerSpecificHolderProvider
@@ -75,7 +74,7 @@ import java.util.logging.Level
 internal lateinit var plugin: EcoMobsPlugin
     private set
 
-class EcoMobsPlugin : LibreforgePlugin() {
+class EcoMobsPlugin : EcoPlugin() {
     val spawnPointGenerator: SpawnPointGenerator = SpawnPointGenerator(this)
     val topDamagerHandler: TopDamagerHandler = TopDamagerHandler(this)
 
@@ -85,7 +84,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun handleEnable() {
         registerSpecificHolderProvider<Mob> {
-            it.ecoMob?.entityHolder.toSingletonList().map { holder ->
+            listOfNotNull(it.ecoMob?.entityHolder).map { holder ->
                 EntityProvidedHolder(holder, it)
             }
         }
@@ -107,7 +106,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
         EcoMobsTriggers.registerAll()
     }
 
-    override fun loadConfigCategories(): List<ConfigCategory> {
+    override fun loadConfigCategories(): List<NativeConfigCategory> {
         return listOf(
             MobCategories,
             EcoMobs,
@@ -188,25 +187,17 @@ class EcoMobsPlugin : LibreforgePlugin() {
         return listOf(SpawnEggDisplay, SpawnerItemDisplay)
     }
 
-    override fun loadIntegrationLoaders(): List<IntegrationLoader> {
+    override fun getExternalProviderLoaders(): List<ExternalProviderLoader> {
         return listOf(
-            IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs) },
-            IntegrationLoader("ModelEngine") {
-                this.eventManager.registerListener(
-                    IntegrationModel(configKey = "model-engine", pluginName = "ModelEngine")
-                )
-            },
-            IntegrationLoader("BetterModel") {
-                this.eventManager.registerListener(
-                    IntegrationModel(configKey = "better-model", pluginName = "BetterModel")
-                )
-            },
-            IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
-            IntegrationLoader("CoreProtect") { this.eventManager.registerListener(IntegrationCoreProtect) },
+            ExternalProviderLoader("LevelledMobs") { IntegrationLevelledMobs },
+            ExternalProviderLoader("ModelEngine") { IntegrationModel(configKey = "model-engine") },
+            ExternalProviderLoader("BetterModel") { IntegrationModel(configKey = "better-model") },
+            ExternalProviderLoader("LibsDisguises") { IntegrationLibsDisguises },
+            ExternalProviderLoader("CoreProtect") { IntegrationCoreProtect },
         )
     }
 
-    override fun loadPluginCommands(): List<PluginCommand> {
+    override fun loadPluginCommands(): List<EcoCommand> {
         return listOf(
             ecoMobsCommand()
         )

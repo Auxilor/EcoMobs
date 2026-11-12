@@ -22,7 +22,5 @@ object IntegrationLibsDisguises : Listener, ExternalProvider {
         DisguiseAPI.disguiseToAll(entity, disguise)
     }
 
-    override fun getPluginName(): String {
-        return "LibsDisguises"
-    }
+    override fun getListeners(): Collection<Listener> = listOf(this)
 }

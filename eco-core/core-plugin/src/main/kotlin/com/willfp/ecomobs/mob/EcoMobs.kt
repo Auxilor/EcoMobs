@@ -22,18 +22,18 @@ object EcoMobs : RegistrableCategory<EcoMob>("mob", "mobs") {
     val scheduled: List<EcoMob>
         get() = values().filter { it.scheduledSpawn != null }
 
-    override fun clear(plugin: LibreforgePlugin) {
+    override fun clear(plugin: EcoPlugin) {
         registry.clear()
         byCategory.clear()
     }
 
-    override fun afterReload(plugin: LibreforgePlugin) {
+    override fun afterReload(plugin: EcoPlugin) {
         ScheduledSpawnState.retain(
             registry.values().flatMap { it.scheduledSpawn?.points.orEmpty() }.map { it.key }.toSet()
         )
     }
 
-    override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
+    override fun acceptConfig(plugin: EcoPlugin, id: String, config: Config) {
         val context = ViolationContext(plugin, "Mob $id")
 
         try {

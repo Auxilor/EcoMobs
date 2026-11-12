@@ -21,8 +21,7 @@ import wiki.ecohub.provider.content.ModelState
  * plays the animations under `integrations.<config key>.animations`.
  */
 class IntegrationModel(
-    configKey: String,
-    private val pluginName: String
+    configKey: String
 ) : Listener, ExternalProvider {
     private val integration = MobIntegration(configKey)
 
@@ -80,7 +79,7 @@ class IntegrationModel(
             .filter { it.isNotBlank() }
             .randomOrNull()
 
-    override fun getPluginName(): String = pluginName
+    override fun getListeners(): Collection<Listener> = listOf(this)
 
     private companion object {
         val STATE_ANIMATIONS = mapOf(

@@ -162,7 +162,5 @@ object IntegrationCoreProtect : Listener, ExternalProvider {
         return state.spawner.isCustomSpawner
     }
 
-    override fun getPluginName(): String {
-        return "CoreProtect"
-    }
+    override fun getListeners(): Collection<Listener> = listOf(this)
 }
