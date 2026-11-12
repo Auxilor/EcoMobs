@@ -10,14 +10,13 @@ import wiki.ecohub.ui.display.DisplayModule
 import wiki.ecohub.ui.display.DisplayPriority
 import wiki.ecohub.ui.text.StringUtils
 import wiki.ecohub.ui.text.formatEco
-import wiki.ecohub.ui.text.titlecase
 
 private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
     val data = spawner
 
     return text
         .replace("%mob%", data.mob ?: "")
-        .replace("%mob_formatted%", data.mob?.replace("_", " ")?.titlecase() ?: "")
+        .replace("%mob_formatted%", StringUtils.toTitleCase(data.mob?.replace("_", " ").orEmpty()))
         .replace("%delay_min%", data.delayMin.toString())
         .replace("%delay_max%", data.delayMax.toString())
         .replace("%radius%", data.spawnRange.toString())
