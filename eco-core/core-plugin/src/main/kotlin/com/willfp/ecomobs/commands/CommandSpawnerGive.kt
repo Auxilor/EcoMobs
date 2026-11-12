@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.SpawnerAttributes
 import com.willfp.ecomobs.spawner.spawner
@@ -12,8 +11,8 @@ import org.bukkit.util.StringUtil
 import wiki.ecohub.game.drop.DropQueue
 import wiki.ecohub.game.item.fast
 
-object CommandSpawnerGive : Subcommand(
-    plugin, "give", "ecomobs.command.spawner.give", false
+object CommandSpawnerGive : EcoMobsSubcommand(
+    "give", "ecomobs.command.spawner.give", false
 ) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {

@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.impl.discard
@@ -13,8 +12,7 @@ import org.bukkit.util.StringUtil
 import wiki.ecohub.core.plugin.startup.Prerequisite
 import java.util.UUID
 
-object CommandScheduleReset : Subcommand(
-    plugin,
+object CommandScheduleReset : EcoMobsSubcommand(
     "reset",
     "ecomobs.command.schedule.reset",
     false

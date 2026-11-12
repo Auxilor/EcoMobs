@@ -5,7 +5,7 @@ import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.util.toSingletonList
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
-import com.willfp.ecomobs.commands.CommandEcoMobs
+import com.willfp.ecomobs.commands.ecoMobsCommand
 import com.willfp.ecomobs.display.SpawnEggDisplay
 import com.willfp.ecomobs.display.SpawnerItemDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
@@ -208,7 +208,7 @@ class EcoMobsPlugin : LibreforgePlugin() {
 
     override fun loadPluginCommands(): List<PluginCommand> {
         return listOf(
-            CommandEcoMobs
+            ecoMobsCommand()
         )
     }
 
