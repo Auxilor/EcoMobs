@@ -18,7 +18,7 @@ import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Mob
 import wiki.ecohub.core.scheduler.EcoTask
-import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.game.world.toDispatcher
 import wiki.ecohub.rules.holder.EmptyProvidedHolder
 import wiki.ecohub.ui.text.formatEco
 import java.util.UUID

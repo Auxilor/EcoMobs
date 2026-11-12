@@ -83,9 +83,9 @@ class EcoMobsPlugin : EcoPlugin() {
     }
 
     override fun handleEnable() {
-        registerSpecificHolderProvider<Mob> {
-            listOfNotNull(it.ecoMob?.entityHolder).map { holder ->
-                EntityProvidedHolder(holder, it)
+        registerSpecificHolderProvider<Mob> { mob ->
+            listOfNotNull(mob.ecoMob?.entityHolder).map { holder ->
+                EntityProvidedHolder(holder, mob)
             }
         }
     }
@@ -102,7 +102,7 @@ class EcoMobsPlugin : EcoPlugin() {
         TargetGoals.register(TargetGoalNotLookingPlayer.Deserializer)
         TargetGoals.register(TargetGoalRandomPlayer.Deserializer)
         TargetGoals.register(TargetGoalTopDamagerPlayer.Deserializer)
-        Items.registerItemProvider(SpawnerItems)
+        Items.registerProvider(SpawnerItems)
         EcoMobsTriggers.registerAll()
     }
 

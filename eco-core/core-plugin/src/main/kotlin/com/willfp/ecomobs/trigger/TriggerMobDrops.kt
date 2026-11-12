@@ -3,6 +3,7 @@ package com.willfp.ecomobs.trigger
 import com.willfp.ecomobs.event.EcoMobDropsEvent
 import org.bukkit.event.EventHandler
 import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.game.world.toDispatcher
 import wiki.ecohub.rules.holder.Dispatcher
 import wiki.ecohub.rules.trigger.Trigger
 import wiki.ecohub.rules.trigger.TriggerData

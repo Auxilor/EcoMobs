@@ -14,7 +14,7 @@ import wiki.ecohub.config.Config
 import wiki.ecohub.config.ViolationContext
 import wiki.ecohub.core.enumValueOfOrNull
 import wiki.ecohub.core.scheduler.EcoTask
-import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.game.world.toDispatcher
 import wiki.ecohub.math.randDouble
 import wiki.ecohub.rules.condition.Conditions
 import wiki.ecohub.rules.holder.EmptyProvidedHolder

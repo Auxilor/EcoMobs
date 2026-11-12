@@ -2,7 +2,7 @@ package com.willfp.ecomobs.trigger
 
 import com.willfp.ecomobs.event.EcoMobSpawnerSpawnEvent
 import org.bukkit.event.EventHandler
-import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.game.world.toDispatcher
 import wiki.ecohub.rules.trigger.Trigger
 import wiki.ecohub.rules.trigger.TriggerData
 import wiki.ecohub.rules.trigger.TriggerParameter

@@ -33,9 +33,9 @@ data class MobDrops(
             }
 
             if (player != null) {
-                rolled += drop.items.map { it.item }
+                rolled += drop.items.map { it.getItem() }
             } else {
-                rolled += drop.items.random().item
+                rolled += drop.items.random().getItem()
             }
         }
 

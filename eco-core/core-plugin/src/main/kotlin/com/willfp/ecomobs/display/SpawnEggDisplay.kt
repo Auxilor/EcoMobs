@@ -14,9 +14,9 @@ object SpawnEggDisplay : DisplayModule(
     DisplayPriority.LOW
 ) {
     override fun display(context: DisplayContext) {
-        val player = context.player ?: return
-        val egg = context.itemStack.fast().ecoMobEgg?.spawnEgg ?: return
+        val player = context.getPlayer() ?: return
+        val egg = context.getItemStack().fast().ecoMobEgg?.spawnEgg ?: return
 
-        egg.item.display(context, player, ItemProvidedHolder(BlankHolder, context.itemStack))
+        egg.item.display(context, player, ItemProvidedHolder(BlankHolder, context.getItemStack()))
     }
 }

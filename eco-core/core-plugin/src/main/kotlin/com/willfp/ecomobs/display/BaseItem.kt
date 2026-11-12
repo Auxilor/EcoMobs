@@ -17,7 +17,7 @@ class BaseItem(
     private val rawDisplayName: String,
     private val rawLore: List<String>
 ) {
-    private val itemFlags = baseItem.fast().itemFlags
+    private val itemFlags = baseItem.fast().getItemFlags()
 
     val item: ItemStack
         get() = display(baseItem.clone(), null, EmptyProvidedHolder)
@@ -42,11 +42,11 @@ class BaseItem(
             }
         }
 
-        lore.addAll(fis.lore)
-        fis.lore = lore
+        lore.addAll(fis.getLore())
+        fis.setLore(lore)
 
         // Handle display name
-        fis.displayName = rawDisplayName.formatEco(context)
+        fis.setDisplayName(rawDisplayName.formatEco(context))
 
         // Handle flags
         fis.addItemFlags(*itemFlags.toTypedArray())
@@ -55,9 +55,11 @@ class BaseItem(
     }
 
     fun display(context: DisplayContext, player: Player, holder: ProvidedHolder) {
-        val fis = context.itemStack.fast()
+        val fis = context.getItemStack().fast()
 
-        val lore = rawLore.map { StringUtils.formatToRichComponent(it, context.placeholderContext) }.toMutableList()
+        val lore = rawLore
+            .map { StringUtils.formatToRichComponent(it, context.getPlaceholderContext()) }
+            .toMutableList()
         val lines = holder.getNotMetLineComponents(player)
 
         if (lines.isNotEmpty()) {
@@ -65,9 +67,9 @@ class BaseItem(
             lore.addAll(lines)
         }
 
-        context.lore.prepend(lore)
+        context.getLore().prepend(lore)
 
-        fis.displayName = rawDisplayName.formatEco(context.placeholderContext)
+        fis.setDisplayName(rawDisplayName.formatEco(context.getPlaceholderContext()))
 
         fis.addItemFlags(*itemFlags.toTypedArray())
     }

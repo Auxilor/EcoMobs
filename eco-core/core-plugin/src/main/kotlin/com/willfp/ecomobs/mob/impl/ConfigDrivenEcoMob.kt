@@ -64,7 +64,6 @@ import wiki.ecohub.game.item.fast
 import wiki.ecohub.game.item.lookup.EmptyTestableItem
 import wiki.ecohub.modules.recipe.Recipes
 import wiki.ecohub.modules.recipe.crafting.CraftingRecipe
-import wiki.ecohub.rules.condition.ConditionList
 import wiki.ecohub.rules.condition.Conditions
 import wiki.ecohub.rules.condition.emptyConditionList
 import wiki.ecohub.rules.effect.EffectList
@@ -114,10 +113,10 @@ internal class ConfigDrivenEcoMob(
     val equipment = EquipmentSlot.values().associateWith {
         config.getStringOrNull("equipment.${it.toConfigKey()}")
             ?.let { lookup -> Items.lookup(lookup) }
-    }.onSpawn {
-        for ((slot, item) in it) {
+    }.onSpawn { equipment ->
+        for ((slot, item) in equipment) {
             @Suppress("UNNECESSARY_SAFE_CALL")
-            this.entity.equipment?.setItem(slot, item?.item)
+            this.entity.equipment?.setItem(slot, item?.getItem())
         }
     }
 
@@ -279,7 +278,7 @@ internal class ConfigDrivenEcoMob(
         val name = config.getString("spawn.egg.name")
         val lore = config.getStrings("spawn.egg.lore")
 
-        val item = Items.lookup(config.getString("spawn.egg.item")).item.apply {
+        val item = Items.lookup(config.getString("spawn.egg.item")).getItem().apply {
             this.fast().ecoMobEgg = this@ConfigDrivenEcoMob
         }
 
@@ -331,9 +330,9 @@ internal class ConfigDrivenEcoMob(
         SpawnTotemOptions(
             conditions,
             SpawnTotem(
-                top.item.type,
-                middle.item.type,
-                bottom.item.type
+                top.getItem().type,
+                middle.getItem().type,
+                bottom.getItem().type
             )
         )
     }
@@ -346,7 +345,7 @@ internal class ConfigDrivenEcoMob(
         plugin.createNamespacedKey(this.id),
         { (it as? Mob)?.ecoMob == this }
     ) {
-        this.spawn(it, SpawnReason.COMMAND)?.entity
+        this.spawn(it, SpawnReason.COMMAND)?.entity ?: error("Could not spawn mob $id")
     }.apply { register() }
 
     override val entityHolder = object : Holder {

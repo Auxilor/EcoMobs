@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.spawner
@@ -11,6 +10,7 @@ import wiki.ecohub.ui.display.DisplayModule
 import wiki.ecohub.ui.display.DisplayPriority
 import wiki.ecohub.ui.text.StringUtils
 import wiki.ecohub.ui.text.formatEco
+import wiki.ecohub.ui.text.titlecase
 
 private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
     val data = spawner
@@ -34,16 +34,16 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
 
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
     override fun display(context: DisplayContext) {
-        if (context.player == null) return
-        val fis = context.itemStack.fast()
+        if (context.getPlayer() == null) return
+        val fis = context.getItemStack().fast()
         if (!fis.spawner.isCustomSpawner) return
 
         val rawTitle = plugin.configYml.getString("spawner-display.title")
         if (rawTitle.isNotEmpty()) {
-            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context.placeholderContext))
+            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context.getPlaceholderContext()))
         }
 
-        context.lore.prepend(
+        context.getLore().prepend(
             (plugin.configYml.getStrings("spawner-display.lore") +
                     if (fis.spawner.stackSize > 1) {
                         plugin.configYml.getStrings("spawner-display.stacked-lore")
@@ -51,7 +51,7 @@ object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
                         emptyList()
                     })
                 .map { fis.applySpawnerPlaceholders(it) }
-                .map { StringUtils.formatToRichComponent(it, context.placeholderContext) }
+                .map { StringUtils.formatToRichComponent(it, context.getPlaceholderContext()) }
         )
     }
 }
