@@ -201,7 +201,7 @@ internal class LivingMobImpl(
     }
 
     override fun kill(player: Player?, removeTracking: Boolean) {
-        handleRemove(removeTracking = removeTracking)
+        handleRemove(removeTracking = removeTracking, forgetDamagers = !entity.isDead)
 
         if (!hasBeenKilled) {
             mob.spawnDrops(entity.location, player)
@@ -226,7 +226,7 @@ internal class LivingMobImpl(
         handleRemove()
     }
 
-    private fun handleRemove(removeTracking: Boolean = true) {
+    private fun handleRemove(removeTracking: Boolean = true, forgetDamagers: Boolean = true) {
         ticker?.cancel()
 
         // Untracking stays outside the guard: kill(removeTracking = false) leaves the
@@ -243,7 +243,9 @@ internal class LivingMobImpl(
 
         hasHandledRemove = true
 
-        plugin.topDamagerHandler.forget(entity.uniqueId)
+        if (forgetDamagers) {
+            plugin.topDamagerHandler.forget(entity.uniqueId)
+        }
 
         for (handler in this.tickHandlers) {
             handler.onRemove(this, tick)

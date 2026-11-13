@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -91,6 +92,15 @@ class TopDamagerHandler(private val plugin: EcoMobsPlugin) : Listener {
 
     fun getLastDamager(mob: Mob): UUID? {
         return lastDamagers[mob.uniqueId]
+    }
+
+    /**
+     * Drops the damage recorded against a mob that died, once every other handler of
+     * the death has run, so kill triggers in other plugins can still read it.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun handle(event: EntityDeathEvent) {
+        forget(event.entity.uniqueId)
     }
 
     /**
