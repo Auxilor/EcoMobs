@@ -1,5 +1,6 @@
 package com.willfp.ecomobs.goals.entity
 
+import com.willfp.ecomobs.plugin
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
@@ -7,10 +8,10 @@ import org.bukkit.entity.Mob
 import wiki.ecohub.config.Config
 import wiki.ecohub.config.serial.KeyedDeserializer
 import wiki.ecohub.core.platform.namespacedKeyOf
-import wiki.ecohub.core.plugin.startup.Prerequisite
 import wiki.ecohub.game.entity.ai.CustomGoal
 import wiki.ecohub.game.entity.ai.GoalFlag
 import java.util.EnumSet
+import wiki.ecohub.game.world.TeleportationService
 
 class EntityGoalRandomTeleport(
     private val interval: Int,
@@ -61,12 +62,9 @@ class EntityGoalRandomTeleport(
             return
         }
 
-        // teleportAsync where there is one: Folia removed the synchronous form, and the
-        // goal has nothing to do with the result either way. Spigot only has teleport.
-        if (Prerequisite.HAS_PAPER.isMet) {
-            mob.teleportAsync(validLocations.random())
-        } else {
-            mob.teleport(validLocations.random())
+        TeleportationService.teleport(mob, validLocations.random()).exceptionally { error ->
+            plugin.logger.warning("Could not teleport mob: $error")
+            false
         }
     }
 
