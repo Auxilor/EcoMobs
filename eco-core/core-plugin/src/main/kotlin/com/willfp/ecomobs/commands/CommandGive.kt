@@ -58,7 +58,7 @@ object CommandGive : Subcommand(
             .addItem(egg.item.item.apply {
                 setAmount(amount)
             })
-            .forceTelekinesis()
+            .giveDirectly()
             .push()
     }
 

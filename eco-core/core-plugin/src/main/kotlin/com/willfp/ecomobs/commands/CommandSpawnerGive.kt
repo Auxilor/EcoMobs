@@ -79,7 +79,7 @@ object CommandSpawnerGive : Subcommand(
 
         DropQueue(recipient)
             .addItem(fis.unwrap())
-            .forceTelekinesis()
+            .giveDirectly()
             .push()
 
         sender.sendMessage(
