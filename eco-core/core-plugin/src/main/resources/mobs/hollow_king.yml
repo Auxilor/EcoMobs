@@ -1,5 +1,5 @@
 # A base mob and modifiers
-mob: wither_skeleton attack-damage:10 movement-speed:1 follow-range:40 health:350
+mob: wither_skeleton attack-damage:10 follow-range:40 health:350
 
 # The ID of the mob category, handles spawning.
 category: bosses
