@@ -2,7 +2,7 @@ package com.willfp.ecomobs.tick
 
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.impl.LivingMobImpl
-import org.bukkit.attribute.Attribute
+import wiki.ecohub.game.entity.getAttributeValue
 
 class TickHandlerDamageStages : TickHandler {
     override fun tick(mob: LivingMob, tick: Int) {
@@ -17,7 +17,7 @@ class TickHandlerDamageStages : TickHandler {
             return
         }
 
-        val maxHealth = entity.getAttribute(Attribute.MAX_HEALTH)?.value ?: return
+        val maxHealth = entity.getAttributeValue("minecraft:max_health") ?: return
 
         if (tracker.isFinished) {
             // Safety net for a lethal hit that was absorbed anyway, e.g. Resistance V.

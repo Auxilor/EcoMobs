@@ -5,10 +5,10 @@ import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.options.BossBarOptions
 import com.willfp.ecomobs.plugin
 import net.kyori.adventure.bossbar.BossBar
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import wiki.ecohub.game.entity.getAttributeValue
 import wiki.ecohub.game.entity.player.asAudience
 import wiki.ecohub.ui.text.toComponent
 import java.util.UUID
@@ -28,7 +28,7 @@ class TickHandlerBossBar(
         }
 
         val entity = mob.entity
-        val maxHealth = entity.getAttribute(Attribute.MAX_HEALTH)?.value
+        val maxHealth = entity.getAttributeValue("minecraft:max_health")
 
         if (maxHealth == null) {
             if (warnedTypes.add(entity.type)) {

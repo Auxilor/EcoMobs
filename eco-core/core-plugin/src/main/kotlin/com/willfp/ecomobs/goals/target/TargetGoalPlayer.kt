@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.goals.target
 
 import org.bukkit.GameMode
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import wiki.ecohub.game.entity.ai.CustomGoal
 import wiki.ecohub.game.entity.ai.GoalFlag
+import wiki.ecohub.game.entity.getAttributeValue
 import java.util.EnumSet
 
 /**
@@ -27,7 +27,7 @@ abstract class TargetGoalPlayer(
     protected abstract fun select(players: List<Player>): Player?
 
     protected val Player.armor: Double
-        get() = getAttribute(Attribute.ARMOR)?.value ?: 0.0
+        get() = getAttributeValue("minecraft:armor") ?: 0.0
 
     override fun initialize(mob: Mob) {
         this.mob = mob
