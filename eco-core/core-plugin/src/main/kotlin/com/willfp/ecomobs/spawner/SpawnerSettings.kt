@@ -298,6 +298,8 @@ object VanillaSpawnerDefaults {
         private set
     var maxNearby = Stock.MAX_NEARBY
         private set
+    var pickup = SpawnerDefaults.PICKUP
+        private set
 
     internal fun reload(config: Config) {
         delayMin = config.getInt("spawners.vanilla-spawners.delay-min").coerceAtLeast(1)
@@ -306,5 +308,9 @@ object VanillaSpawnerDefaults {
         spawnRange = config.getInt("spawners.vanilla-spawners.spawn-range").coerceAtLeast(0)
         playerRange = config.getInt("spawners.vanilla-spawners.player-range").coerceAtLeast(0)
         maxNearby = config.getInt("spawners.vanilla-spawners.max-nearby").coerceAtLeast(0)
+        pickup = config.getString("spawners.vanilla-spawners.pickup")
+            .lowercase()
+            .takeIf { it in PICKUP_VALUES }
+            ?: SpawnerDefaults.PICKUP
     }
 }
