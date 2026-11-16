@@ -114,7 +114,8 @@ value class SpawnerData(val pdc: PersistentDataContainer) {
         set(value) = pdc.setInt(spawnerMaxNearbyKey, value)
 
     var pickup: String
-        get() = pdc.get(spawnerPickupKey, PersistentDataType.STRING) ?: SpawnerDefaults.PICKUP
+        get() = pdc.get(spawnerPickupKey, PersistentDataType.STRING)
+            ?: if (isAdopted) VanillaSpawnerDefaults.pickup else SpawnerDefaults.PICKUP
         set(value) {
             pdc.set(spawnerPickupKey, PersistentDataType.STRING, value)
         }
@@ -179,7 +180,7 @@ value class SpawnerData(val pdc: PersistentDataContainer) {
             if (value == null) other.pdc.remove(key) else other.pdc.setInt(key, value)
         }
 
-        other.pickup = pickup
+        other.pdc.setOrRemove(spawnerPickupKey, pdc.get(spawnerPickupKey, PersistentDataType.STRING))
         other.particleAnim = particleAnim
         other.explosionProof = explosionProof
         other.noAI = noAI
