@@ -3,9 +3,9 @@ version = rootProject.version
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-    compileOnly("io.github.arcaneplugins:levelledmobs-plugin:4.0.2")
-    compileOnly("me.libraryaddict.disguises:libsdisguises:11.0.14")
-    compileOnly("net.coreprotect:coreprotect:24.0")
+    compileOnly("io.github.arcaneplugins:levelledmobs-plugin:4.0.3.1")
+    compileOnly("me.libraryaddict.disguises:libsdisguises:11.0.18")
+    compileOnly("net.coreprotect:coreprotect:24.1")
 }
 
 tasks {
