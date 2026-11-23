@@ -1,18 +1,16 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.core.drops.DropQueue
-import com.willfp.eco.util.StringUtils
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.plugin
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
+import wiki.ecohub.game.drop.DropQueue
+import wiki.ecohub.ui.text.StringUtils
 
 private val amounts = listOf(1, 2, 3, 4, 5).map { it.toString() }
 
-object CommandGive : Subcommand(
-    plugin,
+object CommandGive : EcoMobsSubcommand(
     "give",
     "ecomobs.command.give",
     false

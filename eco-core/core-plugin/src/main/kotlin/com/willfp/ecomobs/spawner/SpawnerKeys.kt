@@ -1,8 +1,5 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.fast.FastItemStack
-import com.willfp.eco.core.fast.fast
-import com.willfp.eco.util.namespacedKeyOf
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.impl.ConfigDrivenEcoMob
 import org.bukkit.Material
@@ -12,6 +9,9 @@ import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.core.platform.namespacedKeyOf
+import wiki.ecohub.game.item.FastItemStack
+import wiki.ecohub.game.item.fast
 
 val spawnerMobKey = namespacedKeyOf("ecomobs", "spawner_mob")
 val entityFromSpawnerKey = namespacedKeyOf("ecomobs", "from_spawner")

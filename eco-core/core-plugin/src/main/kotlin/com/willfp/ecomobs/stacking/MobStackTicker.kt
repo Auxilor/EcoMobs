@@ -1,15 +1,15 @@
 package com.willfp.ecomobs.stacking
 
-import com.willfp.eco.core.scheduling.EcoTask
-import com.willfp.eco.util.formatEco
-import com.willfp.eco.util.setClientsideDisplayName
-import com.willfp.eco.util.toComponent
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
+import wiki.ecohub.core.scheduler.EcoTask
+import wiki.ecohub.game.entity.setClientsideDisplayName
+import wiki.ecohub.ui.text.formatEco
+import wiki.ecohub.ui.text.toComponent
 
 private const val NAMEPLATE_RATE = 5
 private const val NAMEPLATE_RADIUS = 20.0

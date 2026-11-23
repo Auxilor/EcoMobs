@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.mob.stage.impl
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.config.validate
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMob
@@ -11,14 +10,15 @@ import com.willfp.ecomobs.mob.stage.DamageStage
 import com.willfp.ecomobs.mob.stage.DamageStageMode
 import com.willfp.ecomobs.mob.stage.DamageStageModeFactory
 import com.willfp.ecomobs.plugin
-import com.willfp.libreforge.ConfigViolation
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.counters.Accumulator
-import com.willfp.libreforge.counters.Counter
-import com.willfp.libreforge.counters.Counters
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigViolation
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.rules.counter.Accumulator
+import wiki.ecohub.rules.counter.Counter
+import wiki.ecohub.rules.counter.Counters
 
 /**
  * A pool of counts fed by libreforge counters rather than by damage. Anything that can

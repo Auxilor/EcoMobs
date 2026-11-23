@@ -2,10 +2,10 @@ package com.willfp.ecomobs.trigger
 
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.plugin
-import com.willfp.libreforge.NamedValue
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.placeholders.TriggerPlaceholder
 import org.bukkit.entity.Mob
+import wiki.ecohub.core.stdlib.NamedValue
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.placeholder.TriggerPlaceholder
 
 /**
  * Adds the top damager placeholders to any libreforge trigger whose victim is an EcoMobs

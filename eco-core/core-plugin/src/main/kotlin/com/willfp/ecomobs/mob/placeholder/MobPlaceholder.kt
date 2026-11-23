@@ -1,8 +1,8 @@
 package com.willfp.ecomobs.mob.placeholder
 
-import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.mob.LivingMob
 import org.bukkit.event.Listener
+import wiki.ecohub.core.registry.KRegistrable
 
 abstract class MobPlaceholder(
     final override val id: String

@@ -1,9 +1,9 @@
 package com.willfp.ecomobs.mob.placeholder.impl
 
-import com.willfp.eco.util.toNiceString
 import com.willfp.ecomobs.mob.LivingMob
 import com.willfp.ecomobs.mob.placeholder.MobPlaceholder
 import com.willfp.ecomobs.mob.stage.DamageStageModeFactory
+import wiki.ecohub.core.stdlib.toNiceString
 
 /**
  * The progress placeholders a mode gets from its

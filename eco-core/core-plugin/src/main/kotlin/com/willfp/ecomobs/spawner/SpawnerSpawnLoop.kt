@@ -1,8 +1,8 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.scheduling.EcoTask
 import com.willfp.ecomobs.folia.atRegion
 import com.willfp.ecomobs.plugin
+import wiki.ecohub.core.scheduler.EcoTask
 
 /**
  * Ticks every spawner in place of the server.

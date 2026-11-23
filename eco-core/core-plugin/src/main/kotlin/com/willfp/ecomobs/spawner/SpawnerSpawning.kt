@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.entities.Entities
 import com.willfp.ecomobs.event.EcoMobSpawnerSpawnEvent
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
@@ -11,6 +10,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Mob
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.game.entity.Entities
 import java.util.concurrent.ConcurrentHashMap
 
 /**

@@ -1,7 +1,7 @@
 package com.willfp.ecomobs.spawner.particle
 
-import com.willfp.eco.util.NumberUtils
 import org.bukkit.util.Vector
+import wiki.ecohub.math.NumberUtils
 import kotlin.math.PI
 
 private fun lerp(start: Double, end: Double, fraction: Double): Double =

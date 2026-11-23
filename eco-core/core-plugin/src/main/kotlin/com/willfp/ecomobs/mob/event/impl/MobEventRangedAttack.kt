@@ -1,14 +1,14 @@
 package com.willfp.ecomobs.mob.event.impl
 
-import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import wiki.ecohub.game.entity.player.PlayerUtils
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.TriggerData
 
 object MobEventRangedAttack : MobEvent("ranged_attack") {
     @EventHandler
@@ -22,7 +22,7 @@ object MobEventRangedAttack : MobEvent("ranged_attack") {
             return
         }
 
-        val player = event.damager.tryAsPlayer() ?: return
+        val player = PlayerUtils.tryAsPlayer(event.damager) ?: return
 
         val data = TriggerData(
             player = player,

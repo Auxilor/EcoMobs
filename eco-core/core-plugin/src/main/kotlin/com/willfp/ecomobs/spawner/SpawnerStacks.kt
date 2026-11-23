@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.fast.FastItemStack
 import com.willfp.ecomobs.event.EcoMobSpawnerStackEvent
 import org.bukkit.Bukkit
 import org.bukkit.block.CreatureSpawner
 import org.bukkit.entity.Player
+import wiki.ecohub.game.item.FastItemStack
 
 object SpawnerStacks {
     /**

@@ -1,20 +1,20 @@
 package com.willfp.ecomobs.category.spawning.impl
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.entities.Entities
-import com.willfp.eco.util.randDouble
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethod
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactory
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.plugin
-import com.willfp.libreforge.ViolationContext
-import com.willfp.libreforge.enumValueOfOrNull
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ViolationContext
+import wiki.ecohub.core.enumValueOfOrNull
+import wiki.ecohub.game.entity.Entities
+import wiki.ecohub.math.randDouble
 
 object SpawnMethodFactoryReplace : SpawnMethodFactory("replace") {
     override fun create(

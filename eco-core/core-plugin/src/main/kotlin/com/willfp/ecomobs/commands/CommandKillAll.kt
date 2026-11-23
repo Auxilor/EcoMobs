@@ -1,14 +1,12 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecomobs.folia.onEntity
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.plugin
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
 
-object CommandKillAll : Subcommand(
-    plugin,
+object CommandKillAll : EcoMobsSubcommand(
     "killall",
     "ecomobs.command.killall",
     false

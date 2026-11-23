@@ -1,11 +1,11 @@
 package com.willfp.ecomobs.folia
 
-import com.willfp.eco.core.Eco
-import com.willfp.eco.core.Prerequisite
 import com.willfp.ecomobs.plugin
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Entity
+import wiki.ecohub.core.Eco
+import wiki.ecohub.core.plugin.startup.Prerequisite
 
 /**
  * Dispatch helpers for running work on the region that owns it.

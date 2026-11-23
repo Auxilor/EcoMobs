@@ -1,7 +1,7 @@
 package com.willfp.ecomobs.mob.stage
 
-import com.willfp.libreforge.effects.Chain
 import org.bukkit.entity.Player
+import wiki.ecohub.rules.chain.Chain
 
 internal class DamageStageTracker(
     private val stages: List<DamageStage>,

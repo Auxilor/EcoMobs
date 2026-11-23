@@ -1,5 +1,5 @@
 # A base mob and modifiers
-mob: fox movement-speed:1.2 health:20
+mob: fox speed:0.36 health:20
 
 # The ID of the mob category, handles spawning.
 category: wildlife

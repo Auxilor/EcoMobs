@@ -1,23 +1,22 @@
 package com.willfp.ecomobs.display
 
-import com.willfp.eco.core.display.DisplayContext
-import com.willfp.eco.core.display.DisplayModule
-import com.willfp.eco.core.display.DisplayPriority
-import com.willfp.eco.core.fast.FastItemStack
-import com.willfp.eco.core.fast.fast
-import com.willfp.eco.util.formatEco
-import com.willfp.eco.util.formatEcoRich
-import com.willfp.eco.util.titlecase
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.spawner
+import wiki.ecohub.game.item.FastItemStack
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.ui.display.DisplayContext
+import wiki.ecohub.ui.display.DisplayModule
+import wiki.ecohub.ui.display.DisplayPriority
+import wiki.ecohub.ui.text.StringUtils
+import wiki.ecohub.ui.text.formatEco
 
 private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
     val data = spawner
 
     return text
         .replace("%mob%", data.mob ?: "")
-        .replace("%mob_formatted%", data.mob?.replace("_", " ")?.titlecase() ?: "")
+        .replace("%mob_formatted%", StringUtils.toTitleCase(data.mob?.replace("_", " ").orEmpty()))
         .replace("%delay_min%", data.delayMin.toString())
         .replace("%delay_max%", data.delayMax.toString())
         .replace("%radius%", data.spawnRange.toString())
@@ -34,16 +33,16 @@ private fun FastItemStack.applySpawnerPlaceholders(text: String): String {
 
 object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
     override fun display(context: DisplayContext) {
-        if (context.player == null) return
-        val fis = context.itemStack.fast()
+        if (context.getPlayer() == null) return
+        val fis = context.getItemStack().fast()
         if (!fis.spawner.isCustomSpawner) return
 
         val rawTitle = plugin.configYml.getString("spawner-display.title")
         if (rawTitle.isNotEmpty()) {
-            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context.placeholderContext))
+            fis.setDisplayName(fis.applySpawnerPlaceholders(rawTitle).formatEco(context.getPlaceholderContext()))
         }
 
-        context.lore.prepend(
+        context.getLore().prepend(
             (plugin.configYml.getStrings("spawner-display.lore") +
                     if (fis.spawner.stackSize > 1) {
                         plugin.configYml.getStrings("spawner-display.stacked-lore")
@@ -51,7 +50,7 @@ object SpawnerItemDisplay : DisplayModule(plugin, DisplayPriority.LOW) {
                         emptyList()
                     })
                 .map { fis.applySpawnerPlaceholders(it) }
-                .formatEcoRich(context.placeholderContext)
+                .map { StringUtils.formatToRichComponent(it, context.getPlaceholderContext()) }
         )
     }
 }

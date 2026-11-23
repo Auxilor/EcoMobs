@@ -1,10 +1,10 @@
 package com.willfp.ecomobs.spawner.particle
 
-import com.willfp.eco.core.particle.SpawnableParticle
-import com.willfp.eco.core.registry.Registrable
 import com.willfp.ecomobs.plugin
 import org.bukkit.Location
 import org.bukkit.util.Vector
+import wiki.ecohub.core.registry.Registrable
+import wiki.ecohub.game.particle.SpawnableParticle
 
 abstract class ParticleAnimation(val id: String) : Registrable {
     protected open val config get() = plugin.configYml.getSubsection("animations.$id")

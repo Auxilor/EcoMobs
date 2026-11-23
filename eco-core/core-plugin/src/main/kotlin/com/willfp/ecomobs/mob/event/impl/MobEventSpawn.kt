@@ -2,9 +2,9 @@ package com.willfp.ecomobs.mob.event.impl
 
 import com.willfp.ecomobs.event.EcoMobSpawnEvent
 import com.willfp.ecomobs.mob.event.MobEvent
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.TriggerData
 
 object MobEventSpawn: MobEvent("spawn") {
     @EventHandler

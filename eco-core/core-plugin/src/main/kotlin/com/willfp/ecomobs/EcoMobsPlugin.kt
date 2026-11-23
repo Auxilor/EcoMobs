@@ -1,17 +1,8 @@
 package com.willfp.ecomobs
 
-import com.willfp.eco.core.Prerequisite
-import com.willfp.eco.core.bstats.EcoMetricsChart
-import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.eco.core.display.DisplayModule
-import com.willfp.eco.core.entities.ai.EntityGoals
-import com.willfp.eco.core.entities.ai.TargetGoals
-import com.willfp.eco.core.integrations.IntegrationLoader
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.util.toSingletonList
 import com.willfp.ecomobs.category.MobCategories
 import com.willfp.ecomobs.category.spawning.spawnpoints.SpawnPointGenerator
-import com.willfp.ecomobs.commands.CommandEcoMobs
+import com.willfp.ecomobs.commands.ecoMobsCommand
 import com.willfp.ecomobs.display.SpawnEggDisplay
 import com.willfp.ecomobs.display.SpawnerItemDisplay
 import com.willfp.ecomobs.goals.entity.EntityGoalRandomTeleport
@@ -28,21 +19,21 @@ import com.willfp.ecomobs.goals.target.TargetGoalTopDamagerPlayer
 import com.willfp.ecomobs.handler.ChunkHandler
 import com.willfp.ecomobs.handler.DamageModifierHandler
 import com.willfp.ecomobs.handler.DamageStageHandler
+import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.PaperSpawnerPickBlockHandler
 import com.willfp.ecomobs.handler.PaperWaterTeleportHandler
-import com.willfp.ecomobs.handler.SpigotSpawnerPickBlockHandler
-import com.willfp.ecomobs.handler.SpigotWaterTeleportHandler
-import com.willfp.ecomobs.handler.SunlightBurningHandler
-import com.willfp.ecomobs.handler.SunlightBurningSettings
-import com.willfp.ecomobs.handler.WaterSensitivityHandler
-import com.willfp.ecomobs.handler.WaterSensitivitySettings
-import com.willfp.ecomobs.handler.MountHandler
 import com.willfp.ecomobs.handler.SpawnEggHandler
 import com.willfp.ecomobs.handler.SpawnTotemHandler
 import com.willfp.ecomobs.handler.SpawnerHandler
 import com.willfp.ecomobs.handler.SpawnerStackHandler
+import com.willfp.ecomobs.handler.SpigotSpawnerPickBlockHandler
+import com.willfp.ecomobs.handler.SpigotWaterTeleportHandler
 import com.willfp.ecomobs.handler.StackHandler
+import com.willfp.ecomobs.handler.SunlightBurningHandler
+import com.willfp.ecomobs.handler.SunlightBurningSettings
 import com.willfp.ecomobs.handler.VanillaCompatibilityHandlers
+import com.willfp.ecomobs.handler.WaterSensitivityHandler
+import com.willfp.ecomobs.handler.WaterSensitivitySettings
 import com.willfp.ecomobs.integrations.coreprotect.IntegrationCoreProtect
 import com.willfp.ecomobs.integrations.levelledmobs.IntegrationLevelledMobs
 import com.willfp.ecomobs.integrations.libsdisguises.IntegrationLibsDisguises
@@ -57,25 +48,33 @@ import com.willfp.ecomobs.spawner.SpawnerAnimations
 import com.willfp.ecomobs.spawner.SpawnerDisplay
 import com.willfp.ecomobs.spawner.SpawnerHolograms
 import com.willfp.ecomobs.spawner.SpawnerItems
-import com.willfp.ecomobs.spawner.SpawnerStackSettings
 import com.willfp.ecomobs.spawner.SpawnerSettings
 import com.willfp.ecomobs.spawner.SpawnerSpawnLoop
+import com.willfp.ecomobs.spawner.SpawnerStackSettings
+import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
 import com.willfp.ecomobs.stacking.MobStackTicker
 import com.willfp.ecomobs.stacking.StackSettings
 import com.willfp.ecomobs.trigger.EcoMobsTriggers
-import com.willfp.ecomobs.spawner.particle.SpawnerParticleAnimations
-import com.willfp.libreforge.EntityProvidedHolder
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.ConfigCategory
-import com.willfp.libreforge.registerSpecificHolderProvider
 import org.bukkit.entity.Mob
 import org.bukkit.event.Listener
+import wiki.ecohub.config.category.NativeConfigCategory
+import wiki.ecohub.core.command.EcoCommand
+import wiki.ecohub.core.plugin.EcoPlugin
+import wiki.ecohub.core.plugin.startup.Prerequisite
+import wiki.ecohub.game.entity.ai.EntityGoals
+import wiki.ecohub.game.entity.ai.TargetGoals
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.provider.ExternalProviderLoader
+import wiki.ecohub.provider.metrics.EcoMetricsChart
+import wiki.ecohub.rules.holder.EntityProvidedHolder
+import wiki.ecohub.rules.holder.registerSpecificHolderProvider
+import wiki.ecohub.ui.display.DisplayModule
 import java.util.logging.Level
 
 internal lateinit var plugin: EcoMobsPlugin
     private set
 
-class EcoMobsPlugin : LibreforgePlugin() {
+class EcoMobsPlugin : EcoPlugin() {
     val spawnPointGenerator: SpawnPointGenerator = SpawnPointGenerator(this)
     val topDamagerHandler: TopDamagerHandler = TopDamagerHandler(this)
 
@@ -84,9 +83,9 @@ class EcoMobsPlugin : LibreforgePlugin() {
     }
 
     override fun handleEnable() {
-        registerSpecificHolderProvider<Mob> {
-            it.ecoMob?.entityHolder.toSingletonList().map { holder ->
-                EntityProvidedHolder(holder, it)
+        registerSpecificHolderProvider<Mob> { mob ->
+            listOfNotNull(mob.ecoMob?.entityHolder).map { holder ->
+                EntityProvidedHolder(holder, mob)
             }
         }
     }
@@ -103,11 +102,11 @@ class EcoMobsPlugin : LibreforgePlugin() {
         TargetGoals.register(TargetGoalNotLookingPlayer.Deserializer)
         TargetGoals.register(TargetGoalRandomPlayer.Deserializer)
         TargetGoals.register(TargetGoalTopDamagerPlayer.Deserializer)
-        Items.registerItemProvider(SpawnerItems)
+        Items.registerProvider(SpawnerItems)
         EcoMobsTriggers.registerAll()
     }
 
-    override fun loadConfigCategories(): List<ConfigCategory> {
+    override fun loadConfigCategories(): List<NativeConfigCategory> {
         return listOf(
             MobCategories,
             EcoMobs,
@@ -188,27 +187,19 @@ class EcoMobsPlugin : LibreforgePlugin() {
         return listOf(SpawnEggDisplay, SpawnerItemDisplay)
     }
 
-    override fun loadIntegrationLoaders(): List<IntegrationLoader> {
+    override fun getExternalProviderLoaders(): List<ExternalProviderLoader> {
         return listOf(
-            IntegrationLoader("LevelledMobs") { this.eventManager.registerListener(IntegrationLevelledMobs) },
-            IntegrationLoader("ModelEngine") {
-                this.eventManager.registerListener(
-                    IntegrationModel(configKey = "model-engine", pluginName = "ModelEngine")
-                )
-            },
-            IntegrationLoader("BetterModel") {
-                this.eventManager.registerListener(
-                    IntegrationModel(configKey = "better-model", pluginName = "BetterModel")
-                )
-            },
-            IntegrationLoader("LibsDisguises") { this.eventManager.registerListener(IntegrationLibsDisguises) },
-            IntegrationLoader("CoreProtect") { this.eventManager.registerListener(IntegrationCoreProtect) },
+            ExternalProviderLoader("LevelledMobs") { IntegrationLevelledMobs },
+            ExternalProviderLoader("ModelEngine") { IntegrationModel(configKey = "model-engine") },
+            ExternalProviderLoader("BetterModel") { IntegrationModel(configKey = "better-model") },
+            ExternalProviderLoader("LibsDisguises") { IntegrationLibsDisguises },
+            ExternalProviderLoader("CoreProtect") { IntegrationCoreProtect },
         )
     }
 
-    override fun loadPluginCommands(): List<PluginCommand> {
+    override fun loadPluginCommands(): List<EcoCommand> {
         return listOf(
-            CommandEcoMobs
+            ecoMobsCommand()
         )
     }
 

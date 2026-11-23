@@ -1,8 +1,8 @@
 package com.willfp.ecomobs.mob.event
 
-import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.plugin
 import org.bukkit.event.Listener
+import wiki.ecohub.core.registry.KRegistrable
 
 abstract class MobEvent(
     final override val id: String

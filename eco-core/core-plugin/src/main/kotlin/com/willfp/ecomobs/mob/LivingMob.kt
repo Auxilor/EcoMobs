@@ -3,9 +3,9 @@ package com.willfp.ecomobs.mob
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.stage.DamageStage
 import com.willfp.ecomobs.mob.stage.impl.DamageStageModeFactoryHits
-import com.willfp.libreforge.triggers.DispatchedTrigger
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
+import wiki.ecohub.rules.trigger.DispatchedTrigger
 
 interface LivingMob {
     val mob: EcoMob

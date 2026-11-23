@@ -1,6 +1,5 @@
 package com.willfp.ecomobs.handler
 
-import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.mob.impl.LivingMobImpl
 import com.willfp.ecomobs.mob.impl.ecoMob
 import com.willfp.ecomobs.mob.stage.DamageResponse
@@ -13,6 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
+import wiki.ecohub.game.entity.player.PlayerUtils
 
 @Suppress("DEPRECATION")
 private val reductionModifiers = listOf(
@@ -24,7 +24,7 @@ private val reductionModifiers = listOf(
 )
 
 internal fun EntityDamageEvent.attributedPlayer(): Player? =
-    (this as? EntityDamageByEntityEvent)?.damager?.tryAsPlayer()
+    PlayerUtils.tryAsPlayer((this as? EntityDamageByEntityEvent)?.damager)
 
 object DamageStageHandler : Listener {
     // HIGH, so that finalDamage already includes the plugin's own damage modifiers,

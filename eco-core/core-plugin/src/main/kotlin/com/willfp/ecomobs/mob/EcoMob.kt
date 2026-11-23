@@ -1,20 +1,20 @@
 package com.willfp.ecomobs.mob
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.entities.CustomEntity
-import com.willfp.eco.core.registry.KRegistrable
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.integrations.MobIntegration
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.options.ScheduledSpawn
 import com.willfp.ecomobs.mob.options.SpawnEgg
 import com.willfp.ecomobs.mob.stage.DamageStage
-import com.willfp.libreforge.Holder
-import com.willfp.libreforge.triggers.DispatchedTrigger
 import org.bukkit.Location
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
+import wiki.ecohub.config.Config
+import wiki.ecohub.core.registry.KRegistrable
+import wiki.ecohub.game.entity.CustomEntity
+import wiki.ecohub.rules.holder.Holder
+import wiki.ecohub.rules.trigger.DispatchedTrigger
 import java.util.UUID
 
 interface EcoMob : KRegistrable {

@@ -1,5 +1,5 @@
 # A base mob and modifiers
-mob: drowned attack-damage:6 movement-speed:1 health:28
+mob: drowned attack-damage:6 health:28
 
 # The ID of the mob category, handles spawning.
 category: common

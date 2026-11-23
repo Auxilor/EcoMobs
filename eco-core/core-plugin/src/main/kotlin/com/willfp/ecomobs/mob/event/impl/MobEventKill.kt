@@ -1,20 +1,20 @@
 package com.willfp.ecomobs.mob.event.impl
 
-import com.willfp.eco.core.events.EntityDeathByEntityEvent
-import com.willfp.eco.util.tryAsPlayer
 import com.willfp.ecomobs.event.EcoMobKillEvent
 import com.willfp.ecomobs.mob.event.MobEvent
 import com.willfp.ecomobs.mob.impl.ecoMob
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
+import wiki.ecohub.core.event.EntityDeathByEntityEvent
+import wiki.ecohub.game.entity.player.PlayerUtils
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.TriggerData
 
 object MobEventKill : MobEvent("kill") {
     @EventHandler
     fun handle(event: EntityDeathByEntityEvent) {
-        val player = event.killer.tryAsPlayer() ?: return
+        val player = PlayerUtils.tryAsPlayer(event.killer) ?: return
         val bukkitMob = event.victim as? Mob ?: return
         val ecoMob = bukkitMob.ecoMob ?: return
         val living = ecoMob.getLivingMob(bukkitMob) ?: return

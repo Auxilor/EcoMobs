@@ -46,7 +46,7 @@ Here is a complete mob with every part in place:
 
 ```yaml
 # === Mob info: the base entity and identity ===
-mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200 # Base entity plus stat modifiers; see the Entity Lookup System
+mob: zombie attack-damage:90 speed:0.345 follow-range:16 health:1000 # Base entity plus stat modifiers; see the Entity Lookup System
 category: common # The category ID; controls natural spawning. Optional.
 display-name: "&cNecrotic Soldier &7| &c%health%♥ &7| &e%time%" # Supports the internal placeholders below
 lifespan: 120 # Seconds before the mob despawns; set to -1 to disable
@@ -212,7 +212,7 @@ spawn:
 The top-level fields define what the mob is and how it identifies itself.
 
 ```yaml
-mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200 # Base entity plus stat modifiers
+mob: zombie attack-damage:90 speed:0.345 follow-range:16 health:1000 # Base entity plus stat modifiers
 category: common # The category ID; controls natural spawning. Optional.
 display-name: "&cNecrotic Soldier &7| &c%health%♥ &7| &e%time%" # Supports the internal placeholders below
 lifespan: 120 # Seconds before the mob despawns; set to -1 to disable

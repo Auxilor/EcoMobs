@@ -1,5 +1,5 @@
 # A base mob and modifiers
-mob: zombie attack-damage:5 movement-speed:1.05 health:26
+mob: zombie attack-damage:5 speed:0.24 health:26
 
 # The ID of the mob category, handles spawning.
 category: common

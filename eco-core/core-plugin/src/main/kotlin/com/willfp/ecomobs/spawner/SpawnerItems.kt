@@ -1,13 +1,13 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.fast.fast
-import com.willfp.eco.core.items.CustomItem
-import com.willfp.eco.core.items.TestableItem
-import com.willfp.eco.core.items.provider.ItemProvider
-import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.ecomobs.plugin
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.CustomItem
+import wiki.ecohub.game.item.ItemProvider
+import wiki.ecohub.game.item.fast
+import wiki.ecohub.game.item.lookup.EmptyTestableItem
+import wiki.ecohub.game.item.lookup.TestableItem
 
 private const val SPAWNER_SUFFIX = "_spawner"
 

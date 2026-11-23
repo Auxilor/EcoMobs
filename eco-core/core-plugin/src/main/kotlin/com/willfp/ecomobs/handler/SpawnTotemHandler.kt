@@ -6,8 +6,6 @@ import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.mob.SpawnReason
 import com.willfp.ecomobs.mob.SpawnTotem
 import com.willfp.ecomobs.plugin
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.TriggerData
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -15,6 +13,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.TriggerData
 
 object SpawnTotemHandler : Listener {
     @EventHandler(ignoreCancelled = true)

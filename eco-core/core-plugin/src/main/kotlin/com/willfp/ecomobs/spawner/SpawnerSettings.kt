@@ -1,12 +1,12 @@
 package com.willfp.ecomobs.spawner
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.particle.Particles
-import com.willfp.eco.core.particle.SpawnableParticle
-import com.willfp.eco.core.particle.impl.EmptyParticle
 import com.willfp.ecomobs.plugin
 import org.bukkit.World
 import org.bukkit.entity.EntityType
+import wiki.ecohub.config.Config
+import wiki.ecohub.game.particle.EmptyParticle
+import wiki.ecohub.game.particle.Particles
+import wiki.ecohub.game.particle.SpawnableParticle
 
 /**
  * The spawner settings, cached so the hot loop doesn't re-read the config every tick.

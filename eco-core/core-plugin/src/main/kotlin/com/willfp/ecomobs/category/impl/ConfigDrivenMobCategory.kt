@@ -1,12 +1,12 @@
 package com.willfp.ecomobs.category.impl
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecomobs.category.MobCategory
 import com.willfp.ecomobs.category.spawning.SpawnMethodFactories
 import com.willfp.ecomobs.config.ConfigViolationException
 import com.willfp.ecomobs.mob.LivingMob
-import com.willfp.libreforge.ConfigViolation
-import com.willfp.libreforge.ViolationContext
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.ConfigViolation
+import wiki.ecohub.config.ViolationContext
 
 class ConfigDrivenMobCategory(
     override val id: String,

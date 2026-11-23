@@ -1,7 +1,5 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.core.fast.fast
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.spawner.PlacedSpawners
 import com.willfp.ecomobs.spawner.SpawnerAttributes
@@ -13,9 +11,10 @@ import org.bukkit.block.CreatureSpawner
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
+import wiki.ecohub.game.item.fast
 
-object CommandSpawnerModify : Subcommand(
-    plugin, "modify", "ecomobs.command.spawner.modify", true
+object CommandSpawnerModify : EcoMobsSubcommand(
+    "modify", "ecomobs.command.spawner.modify", true
 ) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
         val player = sender as Player

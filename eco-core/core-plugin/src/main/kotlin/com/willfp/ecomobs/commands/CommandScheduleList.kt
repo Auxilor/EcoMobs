@@ -1,18 +1,16 @@
 package com.willfp.ecomobs.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
 import com.willfp.ecomobs.mob.EcoMobs
 import com.willfp.ecomobs.plugin
 import com.willfp.ecomobs.scheduled.ScheduledPoint
 import com.willfp.ecomobs.scheduled.ScheduledSpawnState
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
+import wiki.ecohub.ui.text.StringUtils
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-object CommandScheduleList : Subcommand(
-    plugin,
+object CommandScheduleList : EcoMobsSubcommand(
     "list",
     "ecomobs.command.schedule.list",
     false

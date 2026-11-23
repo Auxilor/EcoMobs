@@ -6,7 +6,7 @@
 
 # A base mob and modifiers
 # View an explanation for this system here: https://hub.auxilor.io/wiki/eco/the-entity-lookup-system
-mob: zombie attack-damage:90 movement-speed:1.5 follow-range:16 health:1200
+mob: zombie attack-damage:90 speed:0.345 follow-range:16 health:1000
 
 # The ID of the mob category, handles spawning.
 # Leave category out if the mob should never spawn naturally.

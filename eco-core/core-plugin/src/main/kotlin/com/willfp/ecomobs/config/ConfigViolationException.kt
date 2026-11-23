@@ -1,7 +1,7 @@
 package com.willfp.ecomobs.config
 
-import com.willfp.libreforge.ConfigViolation
-import com.willfp.libreforge.ViolationContext
+import wiki.ecohub.config.ConfigViolation
+import wiki.ecohub.config.ViolationContext
 import java.lang.Exception
 
 /**

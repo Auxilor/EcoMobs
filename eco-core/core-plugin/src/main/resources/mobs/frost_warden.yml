@@ -1,5 +1,5 @@
 # A base mob and modifiers
-mob: ravager attack-damage:14 movement-speed:0.9 follow-range:40 health:400
+mob: ravager attack-damage:14 follow-range:40 health:400
 
 # The ID of the mob category, handles spawning.
 category: bosses

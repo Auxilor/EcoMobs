@@ -1,5 +1,5 @@
 # A base mob and modifiers
-mob: skeleton attack-damage:5 movement-speed:1 follow-range:24 health:30
+mob: skeleton attack-damage:5 follow-range:24 health:30
 
 # The ID of the mob category, handles spawning.
 category: common

@@ -1,7 +1,7 @@
 package com.willfp.ecomobs.mob
 
-import com.willfp.libreforge.conditions.ConditionList
 import org.bukkit.Material
+import wiki.ecohub.rules.condition.ConditionList
 
 data class SpawnTotem(
     val top: Material,
