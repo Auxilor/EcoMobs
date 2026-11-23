@@ -56,7 +56,7 @@ object CommandGive : EcoMobsSubcommand(
             .addItem(egg.item.item.apply {
                 setAmount(amount)
             })
-            .forceTelekinesis()
+            .giveDirectly()
             .push()
     }
 

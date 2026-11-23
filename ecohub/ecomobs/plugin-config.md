@@ -62,6 +62,7 @@ spawners: # How spawners tick; see Custom Spawners
     spawn-range: 4
     player-range: 16
     max-nearby: 6
+    pickup: deny # What breaking an adopted spawner gives back: allow, silk_touch or deny
   checks: # The spawn requirements; every default is what vanilla does
     spawn-space: true # Whether a mob needs room where it would spawn
     solid-ground: false # Whether a mob needs solid ground; vanilla spawners do not require it

@@ -84,6 +84,7 @@ spawners:
     spawn-range: 4
     player-range: 16
     max-nearby: 6
+    pickup: deny
   checks:
     spawn-space: true
     solid-ground: false
@@ -164,10 +165,13 @@ The settings vanilla spawners tick with — dungeon spawners, `/setblock` and wo
 | `spawn-range` | `4` | `4` |
 | `player-range` | `16` | `16` |
 | `max-nearby` | `6` | `6` |
+| `pickup` | `deny` | - |
 
 The delay defaults are half vanilla's, so dungeon spawners fire twice as often. Set them to `200` and `800` for vanilla timing.
 
 These only apply where a spawner still has vanilla's stock value. A spawner given its own values, such as a map maker's custom NBT, keeps them. They are read live, so `/ecomobs reload` reaches every vanilla spawner, adopted ones included, and a value set on one spawner with `/ecomobs spawner modify` stays on that spawner.
+
+`pickup` is the pickup mode adopted spawners use, with the same values and permissions as the per-spawner `pickup` attribute (see [Picking spawners back up](#picking-spawners-back-up)). It needs `adopt-vanilla-spawners`: a spawner that was never adopted breaks the vanilla way. A picked-up adopted spawner keeps following this setting after it is placed again.
 
 ### `cycle-particles`
 

@@ -650,6 +650,8 @@ These placeholders work in the `display-name` and in effects on this mob.
 
 The number of places is set by `top-damager-places` in `config.yml`, and defaults to 10.
 
+The top damager placeholders also work in effects from other libreforge plugins, such as EcoJobs, EcoSkills or EcoItems, on any trigger whose victim is an EcoMobs mob. For example, a `kill` trigger can pay the killer by their rank on the board.
+
 :::tip Troubleshooting
 - **Mob won't load?** Check the ID rules above; the file name must be lowercase letters, numbers, and underscores only.
 - **Mob loads but never spawns naturally?** It needs a `category` whose spawning `type` is `replace` or `custom`; a missing or `none` category means no natural spawning.

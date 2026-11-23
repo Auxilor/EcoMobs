@@ -78,7 +78,7 @@ object CommandSpawnerGive : EcoMobsSubcommand(
 
         DropQueue(recipient)
             .addItem(fis.unwrap())
-            .forceTelekinesis()
+            .giveDirectly()
             .push()
 
         sender.sendMessage(

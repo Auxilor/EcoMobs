@@ -188,6 +188,9 @@ spawners:
     player-range: 16
     # The spawner holds off while this many of its mob are nearby.
     max-nearby: 6
+    # What breaking the spawner gives back: allow, silk_touch or deny. Only adopted
+    # spawners can be picked up, so this needs adopt-vanilla-spawners.
+    pickup: deny
 
   # The spawn requirements. Every default here is what vanilla does, so leaving them
   # alone leaves spawners feeling like vanilla spawners.
